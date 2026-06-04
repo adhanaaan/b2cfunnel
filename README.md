@@ -63,13 +63,14 @@ without a DOM. Screens render from config — copy is never hard-coded.
 
 ## Scoring (canonical: `src/engine/`)
 
-Max score **25** = Risk Factor Score (17) + Symptom Signal (8). Weights live in
-`src/config/questions.ts` (`option.score`). Two-axis safety logic: the final band
-is the **worse** of the total, risk-axis, and symptom-axis bands — lifestyle can
-never mask symptoms. **Safety override**: if the decline is persistent *and*
+Max score **100** = Risk Factor Score (68) + Symptom Signal (32). Weights live in
+`src/config/questions.ts` (`option.score`) and natively sum to 100 (the build
+brief §5 weights scaled x4). Two-axis safety logic: the final band is the
+**worse** of the total, risk-axis, and symptom-axis bands — lifestyle can never
+mask symptoms. **Safety override**: if the decline is persistent *and*
 someone else has noticed, the band is forced to a minimum of *Elevated*.
 
-Bands by total: `0–6` Low · `7–13` Moderate · `14–19` Elevated · `20+` High.
+Bands by total: `0–24` Low · `25–52` Moderate · `53–76` Elevated · `77–100` High.
 
 ## Supabase
 

@@ -23,11 +23,10 @@ export interface DrivingFactor {
 }
 
 export interface ScoreResult {
-  riskScore: number; // 0..17
-  symptomScore: number; // 0..8
-  total: number; // 0..25 (raw, per the §5 scoring table)
-  maxTotal: number; // 25 (raw maximum)
-  scoreOutOf100: number; // total normalised to a 0..100 scale (for display)
+  riskScore: number; // 0..68
+  symptomScore: number; // 0..32
+  total: number; // 0..100 (native; weights sum to 100)
+  maxTotal: number; // 100
   band: BandName; // FINAL band (worse-of-axes + safety override)
   bandFromTotal: BandName; // band implied by total alone (transparency/debug)
   riskBand: BandName; // band implied by the risk axis

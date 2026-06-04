@@ -4,9 +4,10 @@ import type { Question } from "@/types/question";
  * The question bank. This is the single source of truth for scoring weights:
  * the engine reads option.score from here, so weights live in exactly one place.
  *
- * Weights match the build brief §5 (Risk Factor Score max 17 + Symptom Signal
- * max 8 = max 25). Some option buckets / labels are tuned per Audrey's latest
- * direction; the per-option scores are working defaults, easy to retune here.
+ * Scores natively sum to 100 (Risk Factor Score max 68 + Symptom Signal max 32).
+ * These are the build brief §5 weights scaled up x4 so the headline score is a
+ * native 0-100 with whole-number points; the relative proportions, the two-axis
+ * "worse of" logic, and the safety override are unchanged.
  * Copy is British English and avoids HSA off-limits language (see compliance.ts).
  */
 export const QUESTIONS: Question[] = [
@@ -20,9 +21,9 @@ export const QUESTIONS: Question[] = [
     options: [
       { id: "18-29", label: "18 to 29", score: 0 },
       { id: "30-39", label: "30 to 39", score: 0 },
-      { id: "40-49", label: "40 to 49", score: 1 },
-      { id: "50-59", label: "50 to 59", score: 2 },
-      { id: "60+", label: "60 and older", score: 3 },
+      { id: "40-49", label: "40 to 49", score: 4 },
+      { id: "50-59", label: "50 to 59", score: 8 },
+      { id: "60+", label: "60 and older", score: 12 },
     ],
   },
   {
@@ -43,7 +44,7 @@ export const QUESTIONS: Question[] = [
     citation: "straw10",
     showIf: { questionId: "sex", equals: "female" },
     options: [
-      { id: "yes", label: "Yes", score: 1 },
+      { id: "yes", label: "Yes", score: 4 },
       { id: "no", label: "No", score: 0 },
     ],
   },
@@ -57,12 +58,12 @@ export const QUESTIONS: Question[] = [
       {
         id: "immediate",
         label: "Yes, immediate family (parents or siblings)",
-        score: 2,
+        score: 8,
       },
       {
         id: "extended",
         label: "Yes, extended family (grandparents, aunts, and uncles)",
-        score: 1,
+        score: 4,
       },
       { id: "none", label: "No", score: 0 },
       { id: "unsure", label: "I'm not sure", score: 0 },
@@ -75,7 +76,7 @@ export const QUESTIONS: Question[] = [
     prompt: "Do you have a history of high blood pressure?",
     citation: "lancet2024",
     options: [
-      { id: "yes", label: "Yes", score: 1 },
+      { id: "yes", label: "Yes", score: 4 },
       { id: "no", label: "No", score: 0 },
     ],
   },
@@ -86,7 +87,7 @@ export const QUESTIONS: Question[] = [
     prompt: "Do you have a history of high cholesterol?",
     citation: "lancet2024",
     options: [
-      { id: "yes", label: "Yes", score: 1 },
+      { id: "yes", label: "Yes", score: 4 },
       { id: "no", label: "No", score: 0 },
     ],
   },
@@ -97,7 +98,7 @@ export const QUESTIONS: Question[] = [
     prompt: "Do you have a history of diabetes or pre-diabetes?",
     citation: "lancet2024",
     options: [
-      { id: "yes", label: "Yes", score: 1 },
+      { id: "yes", label: "Yes", score: 4 },
       { id: "no", label: "No", score: 0 },
     ],
   },
@@ -109,7 +110,7 @@ export const QUESTIONS: Question[] = [
     helpText: "Untreated means without hearing aids or other support.",
     citation: "lancet2024",
     options: [
-      { id: "yes", label: "Yes", score: 2 },
+      { id: "yes", label: "Yes", score: 8 },
       { id: "no", label: "No", score: 0 },
     ],
   },
@@ -121,7 +122,7 @@ export const QUESTIONS: Question[] = [
     helpText: "Untreated means uncorrected by glasses, lenses, or surgery.",
     citation: "lancet2024",
     options: [
-      { id: "yes", label: "Yes", score: 1 },
+      { id: "yes", label: "Yes", score: 4 },
       { id: "no", label: "No", score: 0 },
     ],
   },
@@ -132,8 +133,8 @@ export const QUESTIONS: Question[] = [
     prompt: "Are you a current smoker, or were you a smoker within the last 10 years?",
     citation: "lancet2024",
     options: [
-      { id: "current", label: "I currently smoke", score: 1 },
-      { id: "past", label: "I smoked within the last 10 years", score: 0.5 },
+      { id: "current", label: "I currently smoke", score: 4 },
+      { id: "past", label: "I smoked within the last 10 years", score: 2 },
       { id: "never", label: "Never, or longer than 10 years ago", score: 0 },
     ],
   },
@@ -144,10 +145,10 @@ export const QUESTIONS: Question[] = [
     prompt: "On average, how long do you sleep at night?",
     citation: "lancet2024",
     options: [
-      { id: "lt6", label: "Less than 6 hours", score: 1 },
-      { id: "6to7", label: "6 to 7 hours", score: 0.5 },
+      { id: "lt6", label: "Less than 6 hours", score: 4 },
+      { id: "6to7", label: "6 to 7 hours", score: 2 },
       { id: "7to9", label: "7 to 9 hours", score: 0 },
-      { id: "gt9", label: "More than 9 hours", score: 0.5 },
+      { id: "gt9", label: "More than 9 hours", score: 2 },
     ],
   },
   {
@@ -157,8 +158,8 @@ export const QUESTIONS: Question[] = [
     prompt: "How much cardio exercise do you get per week?",
     citation: "lancet2024",
     options: [
-      { id: "lt75", label: "Less than 75 minutes", score: 1 },
-      { id: "75to149", label: "75 to 149 minutes", score: 0.5 },
+      { id: "lt75", label: "Less than 75 minutes", score: 4 },
+      { id: "75to149", label: "75 to 149 minutes", score: 2 },
       { id: "150to300", label: "150 to 300 minutes", score: 0 },
       { id: "gt300", label: "More than 300 minutes", score: 0 },
     ],
@@ -170,8 +171,8 @@ export const QUESTIONS: Question[] = [
     prompt: "How would you describe your diet?",
     citation: "lancet2024",
     options: [
-      { id: "poor", label: "Mostly processed or high in sugar", score: 1 },
-      { id: "moderate", label: "A mix of fresh and processed", score: 0.5 },
+      { id: "poor", label: "Mostly processed or high in sugar", score: 4 },
+      { id: "moderate", label: "A mix of fresh and processed", score: 2 },
       { id: "healthy", label: "Mostly fresh, balanced meals", score: 0 },
     ],
   },
@@ -186,8 +187,8 @@ export const QUESTIONS: Question[] = [
       { id: "none", label: "None", score: 0 },
       { id: "1to7", label: "1 to 7", score: 0 },
       { id: "8to14", label: "8 to 14", score: 0 },
-      { id: "15to21", label: "15 to 21", score: 0.5 },
-      { id: "gt21", label: "More than 21", score: 1 },
+      { id: "15to21", label: "15 to 21", score: 2 },
+      { id: "gt21", label: "More than 21", score: 4 },
     ],
   },
   {
@@ -240,8 +241,8 @@ export const QUESTIONS: Question[] = [
     prompt: "How often do you have trouble concentrating on meetings or sustained tasks?",
     citation: "scd",
     options: [
-      { id: "almostDaily", label: "Almost daily", score: 1 },
-      { id: "severalWeek", label: "Several times a week", score: 0.5 },
+      { id: "almostDaily", label: "Almost daily", score: 4 },
+      { id: "severalWeek", label: "Several times a week", score: 2 },
       { id: "rarely", label: "Rarely", score: 0 },
       { id: "notNotice", label: "Not that I notice", score: 0 },
     ],
@@ -254,8 +255,8 @@ export const QUESTIONS: Question[] = [
       "Compared to a few years ago, how often do you have problems with judgement or decision-making?",
     citation: "scd",
     options: [
-      { id: "almostDaily", label: "Almost daily", score: 1 },
-      { id: "severalWeek", label: "Several times a week", score: 0.5 },
+      { id: "almostDaily", label: "Almost daily", score: 4 },
+      { id: "severalWeek", label: "Several times a week", score: 2 },
       { id: "rarely", label: "Rarely", score: 0 },
       { id: "notNotice", label: "Not that I notice", score: 0 },
     ],
@@ -268,8 +269,8 @@ export const QUESTIONS: Question[] = [
       "How often do you experience forgetfulness, such as where you put things or what you meant to do?",
     citation: "scd",
     options: [
-      { id: "almostDaily", label: "Almost daily", score: 1 },
-      { id: "severalWeek", label: "Several times a week", score: 0.5 },
+      { id: "almostDaily", label: "Almost daily", score: 4 },
+      { id: "severalWeek", label: "Several times a week", score: 2 },
       { id: "rarely", label: "Rarely", score: 0 },
       { id: "notNotice", label: "Not that I notice", score: 0 },
     ],
@@ -286,7 +287,7 @@ export const QUESTIONS: Question[] = [
       equals: ["almostDaily", "severalWeek", "rarely"],
     },
     options: [
-      { id: "yes", label: "Yes, it has persisted", score: 3 },
+      { id: "yes", label: "Yes, it has persisted", score: 12 },
       { id: "no", label: "No, it comes and goes", score: 0 },
     ],
   },
@@ -297,7 +298,7 @@ export const QUESTIONS: Question[] = [
     prompt: "Has anyone else noticed these changes in your behaviour or habits?",
     citation: "scd",
     options: [
-      { id: "yes", label: "Yes", score: 2 },
+      { id: "yes", label: "Yes", score: 8 },
       { id: "no", label: "No", score: 0 },
     ],
   },

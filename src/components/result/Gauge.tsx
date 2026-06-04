@@ -36,7 +36,7 @@ function arcPath(pStart: number, pEnd: number) {
 /** 4-band semicircular gauge (green→yellow→orange→red) with a score needle. */
 export function Gauge({
   score,
-  max = 25,
+  max = 100,
   band,
   bandLabel,
   lowLabel,

@@ -14,7 +14,7 @@ describe("safety override", () => {
     };
     const r = computeScore(answers);
     expect(r.safetyOverrideApplied).toBe(true);
-    // total = 6 -> 'low' by total alone, but a symptomatic person must never be
+    // total = 24 -> 'low' by total alone, but a symptomatic person must never be
     // routed below Elevated. (Here the symptom axis already reaches it too.)
     expect(["elevated", "high"]).toContain(r.band);
     expect(r.bandFromTotal).toBe("low"); // proves the floor came from the safety logic

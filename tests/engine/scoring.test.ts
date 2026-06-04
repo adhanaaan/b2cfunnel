@@ -7,43 +7,35 @@ import {
 import type { Answers } from "@/types/question";
 
 const maxAnswers: Answers = {
-  age: "60+", // 3
+  age: "60+", // 12
   sex: "female",
-  hotFlushes: "yes", // 1
-  familyHistory: "immediate", // 2
-  highBp: "yes", // 1
-  highCholesterol: "yes", // 1
-  diabetes: "yes", // 1
-  hearingLoss: "yes", // 2
-  visionLoss: "yes", // 1
-  smoking: "current", // 1
-  sleep: "lt6", // 1
-  exercise: "lt75", // 1
-  diet: "poor", // 1
-  alcohol: "gt21", // 1
-  concentrating: "almostDaily", // 1
-  judgement: "almostDaily", // 1
-  forgetfulness: "almostDaily", // 1
-  persistence: "yes", // 3
-  someoneElseNoticed: "yes", // 2
+  hotFlushes: "yes", // 4
+  familyHistory: "immediate", // 8
+  highBp: "yes", // 4
+  highCholesterol: "yes", // 4
+  diabetes: "yes", // 4
+  hearingLoss: "yes", // 8
+  visionLoss: "yes", // 4
+  smoking: "current", // 4
+  sleep: "lt6", // 4
+  exercise: "lt75", // 4
+  diet: "poor", // 4
+  alcohol: "gt21", // 4
+  concentrating: "almostDaily", // 4
+  judgement: "almostDaily", // 4
+  forgetfulness: "almostDaily", // 4
+  persistence: "yes", // 12
+  someoneElseNoticed: "yes", // 8
 };
 
 describe("scoring engine", () => {
-  it("sums a maximal profile to 25 and bands it High", () => {
+  it("sums a maximal profile to 100 and bands it High", () => {
     const r = computeScore(maxAnswers);
-    expect(r.riskScore).toBe(17);
-    expect(r.symptomScore).toBe(8);
-    expect(r.total).toBe(25);
-    expect(r.scoreOutOf100).toBe(100);
+    expect(r.riskScore).toBe(68);
+    expect(r.symptomScore).toBe(32);
+    expect(r.total).toBe(100);
+    expect(r.maxTotal).toBe(100);
     expect(r.band).toBe("high");
-  });
-
-  it("normalises the raw total onto a 0-100 scale for display", () => {
-    expect(computeScore(maxAnswers).scoreOutOf100).toBe(100); // 25/25
-    // A raw total of ~12.5 maps to ~50; check a mid case stays proportional.
-    const mid = computeScore({ age: "60+", hearingLoss: "yes", highBp: "yes" }); // 3+2+1 = 6
-    expect(mid.total).toBe(6);
-    expect(mid.scoreOutOf100).toBe(Math.round((6 / 25) * 100)); // 24
   });
 
   it("scores an all-zero profile as 0 / Low", () => {
@@ -59,24 +51,23 @@ describe("scoring engine", () => {
       alcohol: "none",
     });
     expect(r.total).toBe(0);
-    expect(r.scoreOutOf100).toBe(0);
     expect(r.band).toBe("low");
   });
 
-  it("handles half-point lifestyle scores", () => {
-    const half: Answers = {
-      smoking: "past", // .5
-      sleep: "6to7", // .5
-      exercise: "75to149", // .5
-      diet: "moderate", // .5
-      alcohol: "15to21", // .5
+  it("handles partial-credit lifestyle scores", () => {
+    const partial: Answers = {
+      smoking: "past", // 2
+      sleep: "6to7", // 2
+      exercise: "75to149", // 2
+      diet: "moderate", // 2
+      alcohol: "15to21", // 2
     };
-    expect(scoreRiskAxis(half)).toBe(2.5);
+    expect(scoreRiskAxis(partial)).toBe(10);
   });
 
   it("does not count hot flushes for males", () => {
     expect(scoreRiskAxis({ sex: "male", hotFlushes: "yes" })).toBe(0);
-    expect(scoreRiskAxis({ sex: "female", hotFlushes: "yes" })).toBe(1);
+    expect(scoreRiskAxis({ sex: "female", hotFlushes: "yes" })).toBe(4);
   });
 
   it("sums the symptom axis independently", () => {
@@ -88,7 +79,7 @@ describe("scoring engine", () => {
         persistence: "yes",
         someoneElseNoticed: "yes",
       }),
-    ).toBe(8);
+    ).toBe(32);
   });
 
   it("exposes the per-axis bands for transparency", () => {
