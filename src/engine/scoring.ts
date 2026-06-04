@@ -13,6 +13,10 @@ import { detectPersona } from "@/engine/persona";
 // Axis maxima (build brief §5). Scores are capped to guard against config drift.
 const RISK_MAX = 17;
 const SYMPTOM_MAX = 8;
+// Raw total maximum (per the §5 scoring table). The headline score is this raw
+// total normalised onto a 0..100 scale for display; the engine and bands stay
+// anchored to the raw table so the safety logic is unchanged.
+export const MAX_TOTAL = RISK_MAX + SYMPTOM_MAX; // 25
 
 /** Sum the contributions of every answered question on a given axis. */
 function scoreAxis(answers: Answers, axis: Axis): number {
@@ -76,6 +80,8 @@ export function computeScore(answers: Answers): ScoreResult {
     riskScore,
     symptomScore,
     total,
+    maxTotal: MAX_TOTAL,
+    scoreOutOf100: Math.round((total / MAX_TOTAL) * 100),
     band,
     bandFromTotal,
     riskBand,

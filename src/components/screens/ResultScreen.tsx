@@ -29,7 +29,7 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
           {base.eyebrow}
         </p>
         <div className="mt-2">
-          <BigScore score={result.total} />
+          <BigScore score={result.scoreOutOf100} />
         </div>
 
         <p className="mx-auto mt-4 max-w-md text-center text-base leading-relaxed text-secondary">
@@ -38,7 +38,8 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
 
         <div className="mt-7">
           <Gauge
-            score={result.total}
+            score={result.scoreOutOf100}
+            max={100}
             band={result.band}
             bandLabel={bandLabel}
             lowLabel={base.gaugeLowLabel}

@@ -64,7 +64,8 @@ export const QUESTIONS: Question[] = [
         label: "Yes, extended family (grandparents, aunts, and uncles)",
         score: 1,
       },
-      { id: "none", label: "No, I'm not sure", score: 0 },
+      { id: "none", label: "No", score: 0 },
+      { id: "unsure", label: "I'm not sure", score: 0 },
     ],
   },
   {

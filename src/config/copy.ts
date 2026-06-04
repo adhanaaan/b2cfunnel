@@ -81,7 +81,7 @@ export const COPY: CopyConfig = {
         "Reviewed by A/Prof Kandiah, Senior Consultant Neurologist",
       reviewerInitials: "NK",
       eyebrow: "Here's your score",
-      scoreSuffix: "/25",
+      scoreSuffix: "/100",
       drivingHeading: "What's driving this",
       gaugeLowLabel: "Low",
       gaugeHighLabel: "High",

@@ -34,7 +34,16 @@ describe("scoring engine", () => {
     expect(r.riskScore).toBe(17);
     expect(r.symptomScore).toBe(8);
     expect(r.total).toBe(25);
+    expect(r.scoreOutOf100).toBe(100);
     expect(r.band).toBe("high");
+  });
+
+  it("normalises the raw total onto a 0-100 scale for display", () => {
+    expect(computeScore(maxAnswers).scoreOutOf100).toBe(100); // 25/25
+    // A raw total of ~12.5 maps to ~50; check a mid case stays proportional.
+    const mid = computeScore({ age: "60+", hearingLoss: "yes", highBp: "yes" }); // 3+2+1 = 6
+    expect(mid.total).toBe(6);
+    expect(mid.scoreOutOf100).toBe(Math.round((6 / 25) * 100)); // 24
   });
 
   it("scores an all-zero profile as 0 / Low", () => {
@@ -50,6 +59,7 @@ describe("scoring engine", () => {
       alcohol: "none",
     });
     expect(r.total).toBe(0);
+    expect(r.scoreOutOf100).toBe(0);
     expect(r.band).toBe("low");
   });
 
