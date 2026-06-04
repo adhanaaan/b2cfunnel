@@ -80,6 +80,7 @@ create table public.leads (
   id           uuid primary key default gen_random_uuid(),
   created_at   timestamptz not null default now(),
   email        text not null,
+  name         text,
   persona      text,
   risk_score   numeric,
   symptom_score numeric,

@@ -1,15 +1,13 @@
 import type { Question } from "@/types/question";
 
 /**
- * The question bank. This is the single source of truth for scoring weights —
+ * The question bank. This is the single source of truth for scoring weights:
  * the engine reads option.score from here, so weights live in exactly one place.
  *
- * Weights match the build brief §5 exactly:
- *   Risk Factor Score (max 17) + Symptom Signal (max 8) = max 25.
- *
- * Numeric lifestyle inputs (sleep, exercise, alcohol) are modelled as bucketed
- * single-selects so the discrete thresholds map cleanly with no input validation.
- * Copy here is British English and avoids HSA off-limits language (see compliance.ts).
+ * Weights match the build brief §5 (Risk Factor Score max 17 + Symptom Signal
+ * max 8 = max 25). Some option buckets / labels are tuned per Audrey's latest
+ * direction; the per-option scores are working defaults, easy to retune here.
+ * Copy is British English and avoids HSA off-limits language (see compliance.ts).
  */
 export const QUESTIONS: Question[] = [
   // ---- Universal ----
@@ -20,10 +18,11 @@ export const QUESTIONS: Question[] = [
     prompt: "What is your age?",
     citation: "caide",
     options: [
-      { id: "20-34", label: "20–34", score: 0 },
-      { id: "35-44", label: "35–44", score: 1 },
-      { id: "45-54", label: "45–54", score: 2 },
-      { id: "55+", label: "55 or older", score: 3 },
+      { id: "18-29", label: "18 to 29", score: 0 },
+      { id: "30-39", label: "30 to 39", score: 0 },
+      { id: "40-49", label: "40 to 49", score: 1 },
+      { id: "50-59", label: "50 to 59", score: 2 },
+      { id: "60+", label: "60 and older", score: 3 },
     ],
   },
   {
@@ -34,7 +33,6 @@ export const QUESTIONS: Question[] = [
     options: [
       { id: "female", label: "Female", score: 0 },
       { id: "male", label: "Male", score: 0 },
-      { id: "other", label: "Prefer not to say", score: 0 },
     ],
   },
   {
@@ -54,13 +52,19 @@ export const QUESTIONS: Question[] = [
     type: "single-select",
     axis: "risk",
     prompt: "Do you have a family history of dementia or Alzheimer's?",
-    helpText:
-      "Immediate means a parent or sibling. Extended means grandparents, aunts, or uncles.",
     citation: "caide",
     options: [
-      { id: "immediate", label: "Yes — an immediate relative", score: 2 },
-      { id: "extended", label: "Yes — an extended relative", score: 1 },
-      { id: "none", label: "No", score: 0 },
+      {
+        id: "immediate",
+        label: "Yes, immediate family (parents or siblings)",
+        score: 2,
+      },
+      {
+        id: "extended",
+        label: "Yes, extended family (grandparents, aunts, and uncles)",
+        score: 1,
+      },
+      { id: "none", label: "No, I'm not sure", score: 0 },
     ],
   },
   {
@@ -140,8 +144,8 @@ export const QUESTIONS: Question[] = [
     citation: "lancet2024",
     options: [
       { id: "lt6", label: "Less than 6 hours", score: 1 },
-      { id: "6to7", label: "6–7 hours", score: 0.5 },
-      { id: "7to9", label: "7–9 hours", score: 0 },
+      { id: "6to7", label: "6 to 7 hours", score: 0.5 },
+      { id: "7to9", label: "7 to 9 hours", score: 0 },
       { id: "gt9", label: "More than 9 hours", score: 0.5 },
     ],
   },
@@ -152,9 +156,10 @@ export const QUESTIONS: Question[] = [
     prompt: "How much cardio exercise do you get per week?",
     citation: "lancet2024",
     options: [
-      { id: "lt90", label: "Less than 90 minutes", score: 1 },
-      { id: "90to150", label: "90–150 minutes", score: 0.5 },
-      { id: "gt150", label: "More than 150 minutes", score: 0 },
+      { id: "lt75", label: "Less than 75 minutes", score: 1 },
+      { id: "75to149", label: "75 to 149 minutes", score: 0.5 },
+      { id: "150to300", label: "150 to 300 minutes", score: 0 },
+      { id: "gt300", label: "More than 300 minutes", score: 0 },
     ],
   },
   {
@@ -164,7 +169,7 @@ export const QUESTIONS: Question[] = [
     prompt: "How would you describe your diet?",
     citation: "lancet2024",
     options: [
-      { id: "poor", label: "Mostly processed / high in sugar", score: 1 },
+      { id: "poor", label: "Mostly processed or high in sugar", score: 1 },
       { id: "moderate", label: "A mix of fresh and processed", score: 0.5 },
       { id: "healthy", label: "Mostly fresh, balanced meals", score: 0 },
     ],
@@ -174,12 +179,14 @@ export const QUESTIONS: Question[] = [
     type: "single-select",
     axis: "risk",
     prompt: "How many alcoholic drinks do you have per week?",
-    helpText: "1 drink ≈ 1 small wine, ½ pint of beer, or 1 shot of spirits.",
+    helpText: "1 drink is about 1 small wine, half a pint of beer, or 1 shot of spirits.",
     citation: "whitehall",
     options: [
+      { id: "none", label: "None", score: 0 },
+      { id: "1to7", label: "1 to 7", score: 0 },
+      { id: "8to14", label: "8 to 14", score: 0 },
+      { id: "15to21", label: "15 to 21", score: 0.5 },
       { id: "gt21", label: "More than 21", score: 1 },
-      { id: "15to21", label: "15–21", score: 0.5 },
-      { id: "lt14", label: "Fewer than 14", score: 0 },
     ],
   },
   {
@@ -224,15 +231,18 @@ export const QUESTIONS: Question[] = [
   },
 
   // ---- Cognitive symptom block (weighted higher) ----
+  // The three experiential symptom questions use a shared frequency scale.
   {
     id: "concentrating",
     type: "single-select",
     axis: "symptom",
-    prompt: "Do you have trouble concentrating on meetings or sustained tasks?",
+    prompt: "How often do you have trouble concentrating on meetings or sustained tasks?",
     citation: "scd",
     options: [
-      { id: "yes", label: "Yes", score: 1 },
-      { id: "no", label: "No", score: 0 },
+      { id: "almostDaily", label: "Almost daily", score: 1 },
+      { id: "severalWeek", label: "Several times a week", score: 0.5 },
+      { id: "rarely", label: "Rarely", score: 0 },
+      { id: "notNotice", label: "Not that I notice", score: 0 },
     ],
   },
   {
@@ -240,11 +250,13 @@ export const QUESTIONS: Question[] = [
     type: "single-select",
     axis: "symptom",
     prompt:
-      "Compared to a few years ago, do you have more problems with judgement or decision-making?",
+      "Compared to a few years ago, how often do you have problems with judgement or decision-making?",
     citation: "scd",
     options: [
-      { id: "yes", label: "Yes", score: 1 },
-      { id: "no", label: "No", score: 0 },
+      { id: "almostDaily", label: "Almost daily", score: 1 },
+      { id: "severalWeek", label: "Several times a week", score: 0.5 },
+      { id: "rarely", label: "Rarely", score: 0 },
+      { id: "notNotice", label: "Not that I notice", score: 0 },
     ],
   },
   {
@@ -252,20 +264,26 @@ export const QUESTIONS: Question[] = [
     type: "single-select",
     axis: "symptom",
     prompt:
-      "Have you recently experienced forgetfulness — where you put things, what you meant to do, or explanations?",
+      "How often do you experience forgetfulness, such as where you put things or what you meant to do?",
     citation: "scd",
     options: [
-      { id: "yes", label: "Yes", score: 1 },
-      { id: "no", label: "No", score: 0 },
+      { id: "almostDaily", label: "Almost daily", score: 1 },
+      { id: "severalWeek", label: "Several times a week", score: 0.5 },
+      { id: "rarely", label: "Rarely", score: 0 },
+      { id: "notNotice", label: "Not that I notice", score: 0 },
     ],
   },
   {
     id: "persistence",
     type: "single-select",
     axis: "symptom",
-    prompt: "Has this decline been persistent rather than a one-off?",
+    prompt: "Has this forgetfulness been persistent rather than a one-off?",
     citation: "scd",
-    showIf: { questionId: "forgetfulness", equals: "yes" },
+    // Shown whenever the person notices forgetfulness at all.
+    showIf: {
+      questionId: "forgetfulness",
+      equals: ["almostDaily", "severalWeek", "rarely"],
+    },
     options: [
       { id: "yes", label: "Yes, it has persisted", score: 3 },
       { id: "no", label: "No, it comes and goes", score: 0 },

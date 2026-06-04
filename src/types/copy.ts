@@ -2,11 +2,19 @@ import type { BandName, Persona } from "@/types/engine";
 
 /** Shape of the editable copy config. British English throughout. */
 
+// Placeholder doctor card on the hook. Image and details to be filled in later.
+export interface DoctorCardCopy {
+  avatarInitials: string;
+  name: string;
+  credentials: string;
+  affiliation: string;
+}
+
 export interface HookCopy {
   eyebrow: string;
   heading: string;
   subheading: string;
-  credibility: string;
+  doctor: DoctorCardCopy;
   durationNote: string;
   cta: string;
   resourcesHeading: string;
@@ -18,13 +26,17 @@ export interface EmailGateCopy {
   eyebrow: string;
   heading: string;
   body: string;
+  nameLabel: string;
+  namePlaceholder: string;
   placeholder: string;
   cta: string;
   privacyNote: string;
 }
 
 export interface AnalysingCopy {
+  // Use {name} as a placeholder for the captured first name.
   heading: string;
+  headingFallback: string;
   crumbs: string[]; // credibility crumbs cycled during the suspense screen
 }
 

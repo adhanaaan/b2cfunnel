@@ -34,8 +34,12 @@ export const COPY: CopyConfig = {
       heading: "How well is your brain performing?",
       subheading:
         "Take this 5-minute quiz with 14 medically-backed risk factors to find out how well your brain is performing.",
-      credibility:
-        "Built with A/Prof Nagaendran Kandiah, Senior Consultant Neurologist, and the Dementia Research Centre at NTU Singapore.",
+      doctor: {
+        avatarInitials: "Dr",
+        name: "Dr. [Name]",
+        credentials: "[Credentials, e.g. MD, Neurologist]",
+        affiliation: "[Affiliation / role]",
+      },
       durationNote: "Takes about 5 minutes. No login needed.",
       cta: "Get started",
       resourcesHeading: "Backed by science",
@@ -53,14 +57,17 @@ export const COPY: CopyConfig = {
     emailGate: {
       eyebrow: "Almost there",
       heading: "Where should we send your score?",
-      body: "Your Brain Health Score is ready. Enter your email and we'll reveal it on the next screen — and keep a copy for you.",
+      body: "Your Brain Health Score is ready. Tell us your name and email, and we'll reveal it on the next screen and keep a copy for you.",
+      nameLabel: "First name",
+      namePlaceholder: "Your first name",
       placeholder: "you@example.com",
       cta: "Reveal my score",
       privacyNote:
-        "We'll only use your email to share your results and brain-health guidance. Unsubscribe any time.",
+        "We'll only use your details to share your results and brain-health guidance. Unsubscribe any time.",
     },
     analysing: {
-      heading: "Building your profile…",
+      heading: "{name}, we are building your profile",
+      headingFallback: "We are building your profile",
       crumbs: [
         "Reviewing your profile of factors…",
         "Comparing with an age-matched cohort…",
@@ -106,7 +113,7 @@ export const COPY: CopyConfig = {
         },
         {
           q: "Who is it for?",
-          a: "Anyone who wants a clearer baseline — whether you're noticing changes, supporting a loved one, or simply staying ahead of things.",
+          a: "Anyone who wants a clearer baseline, whether you're noticing changes, supporting a loved one, or simply staying ahead of things.",
         },
       ],
     },
@@ -121,7 +128,7 @@ export const COPY: CopyConfig = {
           "A few lifestyle and biomedical factors are adding up. Most are modifiable, and a check-in is worthwhile.",
         elevated:
           "Several lifestyle and biomedical factors are stacking up in your profile. The good news: most are modifiable when measured properly.",
-        high: "A number of lifestyle and biomedical factors are stacking up. Many are treatable when caught early — it's worth measuring properly.",
+        high: "A number of lifestyle and biomedical factors are stacking up. Many are treatable when caught early, so it's worth measuring properly.",
       },
       leadBlurSection: "cognitiveInterpretation",
       paywallAngle:
@@ -134,12 +141,12 @@ export const COPY: CopyConfig = {
         moderate:
           "A few lifestyle and biomedical factors are worth keeping an eye on. Knowing your baseline makes future changes easier to spot.",
         elevated:
-          "Several lifestyle and biomedical factors are adding up. Many — including vascular ones — are modifiable and respond well to early action.",
+          "Several lifestyle and biomedical factors are adding up. Many, including vascular ones, are modifiable and respond well to early action.",
         high: "A number of lifestyle and biomedical factors are stacking up. Vascular factors in particular are often treatable when caught early.",
       },
       leadBlurSection: "vascular",
       paywallAngle:
-        "A proper assessment can help tell apart treatable vascular changes from other causes — reviewed by a neurologist.",
+        "A proper assessment can help tell apart treatable vascular changes from other causes, reviewed by a neurologist.",
     },
     perimenopausal: {
       headline: "Is what you're feeling hormonal, or something else?",
@@ -153,7 +160,7 @@ export const COPY: CopyConfig = {
       },
       leadBlurSection: "cognitiveInterpretation",
       paywallAngle:
-        "Understand whether what you're feeling is hormonal or worth a closer look — with a neurologist review.",
+        "Understand whether what you're feeling is hormonal or worth a closer look, with a neurologist review.",
     },
     highPerformer: {
       headline: "You track everything else. Baseline the organ that runs it all.",
@@ -162,12 +169,12 @@ export const COPY: CopyConfig = {
         moderate:
           "A few lifestyle and biomedical factors are nudging your profile. Small, modifiable changes keep you ahead.",
         elevated:
-          "Several lifestyle and biomedical factors are stacking up. They're modifiable — and worth getting an objective baseline on.",
+          "Several lifestyle and biomedical factors are stacking up. They're modifiable, and worth getting an objective baseline on.",
         high: "A number of lifestyle and biomedical factors are stacking up. The earlier you baseline, the more you can act on.",
       },
       leadBlurSection: "percentile",
       paywallAngle:
-        "Get an objective cognitive baseline and see where you stand — reviewed by a neurologist.",
+        "Get an objective cognitive baseline and see where you stand, reviewed by a neurologist.",
     },
   },
 

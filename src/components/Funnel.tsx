@@ -22,9 +22,10 @@ export function Funnel() {
 
   // Post the lead, then advance to the analysing screen. We don't block the
   // funnel on the network — advance regardless of the insert result.
-  const handleEmailSubmit = async (email: string) => {
+  const handleEmailSubmit = async (name: string, email: string) => {
     const result = computeScore(state.answers);
     const payload: LeadPayload = {
+      name,
       email,
       persona: result.persona,
       riskScore: result.riskScore,
@@ -42,7 +43,7 @@ export function Funnel() {
     } catch {
       // Soft-fail: capturing the lead must never block the reveal.
     }
-    submitEmail(email);
+    submitEmail(name, email);
   };
 
   switch (step.kind) {
@@ -74,7 +75,7 @@ export function Funnel() {
       return <EmailGateScreen onSubmit={handleEmailSubmit} />;
 
     case "analysing":
-      return <AnalysingScreen onDone={analysisDone} />;
+      return <AnalysingScreen name={state.name} onDone={analysisDone} />;
 
     case "result":
       return state.result ? (

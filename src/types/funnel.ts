@@ -16,6 +16,7 @@ export type StepKind = FunnelStep["kind"];
 export interface FunnelState {
   cursor: number; // index into the resolved flow
   answers: Answers;
+  name?: string;
   email?: string;
   emailCaptured: boolean;
   result?: ScoreResult;
@@ -25,5 +26,5 @@ export type FunnelAction =
   | { type: "ANSWER"; questionId: string; value: AnswerValue }
   | { type: "NEXT" }
   | { type: "BACK" }
-  | { type: "SUBMIT_EMAIL"; email: string }
+  | { type: "SUBMIT_EMAIL"; name: string; email: string }
   | { type: "ANALYSIS_DONE" };

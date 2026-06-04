@@ -5,10 +5,10 @@ import type { Answers } from "@/types/question";
 describe("safety override", () => {
   it("forces at LEAST Elevated when persistence=yes AND noticed=yes, even on a low total", () => {
     const answers: Answers = {
-      age: "20-34",
+      age: "18-29",
       sex: "male",
       familyHistory: "none",
-      forgetfulness: "yes",
+      forgetfulness: "almostDaily", // 1
       persistence: "yes", // 3
       someoneElseNoticed: "yes", // 2
     };
@@ -22,7 +22,7 @@ describe("safety override", () => {
 
   it("never downgrades an already-High band", () => {
     const answers: Answers = {
-      age: "55+",
+      age: "60+",
       sex: "male",
       familyHistory: "immediate",
       highBp: "yes",
@@ -32,12 +32,12 @@ describe("safety override", () => {
       visionLoss: "yes",
       smoking: "current",
       sleep: "lt6",
-      exercise: "lt90",
+      exercise: "lt75",
       diet: "poor",
       alcohol: "gt21",
-      concentrating: "yes",
-      judgement: "yes",
-      forgetfulness: "yes",
+      concentrating: "almostDaily",
+      judgement: "almostDaily",
+      forgetfulness: "almostDaily",
       persistence: "yes",
       someoneElseNoticed: "yes",
     };

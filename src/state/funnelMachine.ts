@@ -39,11 +39,12 @@ export function funnelReducer(
     }
 
     case "SUBMIT_EMAIL": {
-      // Capture email and advance to the analysing screen.
+      // Capture name + email and advance to the analysing screen.
       const flow = resolveFlow(state.answers);
       const next = Math.min(state.cursor + 1, flow.length - 1);
       return {
         ...state,
+        name: action.name,
         email: action.email,
         emailCaptured: true,
         cursor: next,

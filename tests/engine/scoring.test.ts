@@ -7,7 +7,7 @@ import {
 import type { Answers } from "@/types/question";
 
 const maxAnswers: Answers = {
-  age: "55+", // 3
+  age: "60+", // 3
   sex: "female",
   hotFlushes: "yes", // 1
   familyHistory: "immediate", // 2
@@ -18,12 +18,12 @@ const maxAnswers: Answers = {
   visionLoss: "yes", // 1
   smoking: "current", // 1
   sleep: "lt6", // 1
-  exercise: "lt90", // 1
+  exercise: "lt75", // 1
   diet: "poor", // 1
   alcohol: "gt21", // 1
-  concentrating: "yes", // 1
-  judgement: "yes", // 1
-  forgetfulness: "yes", // 1
+  concentrating: "almostDaily", // 1
+  judgement: "almostDaily", // 1
+  forgetfulness: "almostDaily", // 1
   persistence: "yes", // 3
   someoneElseNoticed: "yes", // 2
 };
@@ -39,15 +39,15 @@ describe("scoring engine", () => {
 
   it("scores an all-zero profile as 0 / Low", () => {
     const r = computeScore({
-      age: "20-34",
+      age: "18-29",
       sex: "male",
       familyHistory: "none",
       highBp: "no",
       smoking: "never",
       sleep: "7to9",
-      exercise: "gt150",
+      exercise: "150to300",
       diet: "healthy",
-      alcohol: "lt14",
+      alcohol: "none",
     });
     expect(r.total).toBe(0);
     expect(r.band).toBe("low");
@@ -57,7 +57,7 @@ describe("scoring engine", () => {
     const half: Answers = {
       smoking: "past", // .5
       sleep: "6to7", // .5
-      exercise: "90to150", // .5
+      exercise: "75to149", // .5
       diet: "moderate", // .5
       alcohol: "15to21", // .5
     };
@@ -72,9 +72,9 @@ describe("scoring engine", () => {
   it("sums the symptom axis independently", () => {
     expect(
       scoreSymptomAxis({
-        concentrating: "yes",
-        judgement: "yes",
-        forgetfulness: "yes",
+        concentrating: "almostDaily",
+        judgement: "almostDaily",
+        forgetfulness: "almostDaily",
         persistence: "yes",
         someoneElseNoticed: "yes",
       }),

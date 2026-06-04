@@ -36,12 +36,12 @@ describe("worse-of-two-axes safety logic", () => {
     // Risk axis stays low; symptom axis = concentrating(1)+judgement(1)+
     // forgetfulness(1)+noticed(2) = 5 -> 'elevated' by per-axis map.
     const answers: Answers = {
-      age: "20-34",
+      age: "18-29",
       sex: "male",
       familyHistory: "none",
-      concentrating: "yes",
-      judgement: "yes",
-      forgetfulness: "yes",
+      concentrating: "almostDaily",
+      judgement: "almostDaily",
+      forgetfulness: "almostDaily",
       someoneElseNoticed: "yes",
     };
     const r = computeScore(answers);

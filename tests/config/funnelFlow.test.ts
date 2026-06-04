@@ -17,15 +17,15 @@ describe("funnel flow resolution", () => {
     ).toBe(true);
   });
 
-  it("prunes the persistence question unless forgetfulness=yes", () => {
-    const without = resolveFlow({ forgetfulness: "no" });
+  it("prunes the persistence question unless forgetfulness is noticed", () => {
+    const without = resolveFlow({ forgetfulness: "notNotice" });
     expect(
       without.some(
         (s) => s.kind === "question" && s.questionId === "persistence",
       ),
     ).toBe(false);
 
-    const withIt = resolveFlow({ forgetfulness: "yes" });
+    const withIt = resolveFlow({ forgetfulness: "almostDaily" });
     expect(
       withIt.some(
         (s) => s.kind === "question" && s.questionId === "persistence",
@@ -34,8 +34,8 @@ describe("funnel flow resolution", () => {
   });
 
   it("keeps the progress denominator honest as branches prune", () => {
-    const male = totalQuestions({ sex: "male", forgetfulness: "no" });
-    const female = totalQuestions({ sex: "female", forgetfulness: "yes" });
+    const male = totalQuestions({ sex: "male", forgetfulness: "notNotice" });
+    const female = totalQuestions({ sex: "female", forgetfulness: "almostDaily" });
     // Female + forgetfulness exposes 2 extra questions (hotFlushes, persistence).
     expect(female - male).toBe(2);
   });

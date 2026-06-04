@@ -16,21 +16,24 @@ export const FUNNEL_FLOW: FunnelStep[] = [
   { kind: "question", questionId: "hotFlushes" }, // pruned if sex !== female
   { kind: "question", questionId: "familyHistory" },
 
-  { kind: "statCard", cardId: "lancet2024" }, // stat card #1
-
+  // Biomedical / history block
   { kind: "question", questionId: "highBp" },
   { kind: "question", questionId: "highCholesterol" },
   { kind: "question", questionId: "diabetes" },
   { kind: "question", questionId: "hearingLoss" },
   { kind: "question", questionId: "visionLoss" },
 
-  { kind: "statCard", cardId: "imhWise" }, // stat card #2
+  { kind: "statCard", cardId: "lancet2024" }, // 45% modifiable-risk card, after history
 
+  // Lifestyle block
   { kind: "question", questionId: "smoking" },
   { kind: "question", questionId: "sleep" },
   { kind: "question", questionId: "exercise" },
   { kind: "question", questionId: "diet" },
   { kind: "question", questionId: "alcohol" },
+
+  { kind: "statCard", cardId: "imhWise" }, // 1-in-11 card, after lifestyle
+
   { kind: "question", questionId: "tracks" },
 
   // Cognitive symptom block

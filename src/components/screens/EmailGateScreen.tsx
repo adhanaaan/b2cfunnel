@@ -5,7 +5,7 @@ import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 
 interface EmailGateScreenProps {
-  onSubmit: (email: string) => Promise<void> | void;
+  onSubmit: (name: string, email: string) => Promise<void> | void;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -13,12 +13,17 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /** Screen 4 — email gate at peak perceived value, just before the reveal. */
 export function EmailGateScreen({ onSubmit }: EmailGateScreenProps) {
   const c = COPY.screens.emailGate;
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (name.trim().length === 0) {
+      setError("Please enter your first name.");
+      return;
+    }
     if (!EMAIL_RE.test(email.trim())) {
       setError("Please enter a valid email address.");
       return;
@@ -26,7 +31,7 @@ export function EmailGateScreen({ onSubmit }: EmailGateScreenProps) {
     setError(null);
     setSubmitting(true);
     try {
-      await onSubmit(email.trim());
+      await onSubmit(name.trim(), email.trim());
     } catch {
       setSubmitting(false);
       setError("Something went wrong. Please try again.");
@@ -44,7 +49,16 @@ export function EmailGateScreen({ onSubmit }: EmailGateScreenProps) {
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-secondary">{c.body}</p>
 
-        <form onSubmit={handleSubmit} className="mt-8">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-3">
+          <input
+            type="text"
+            autoComplete="given-name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={c.namePlaceholder}
+            aria-label={c.nameLabel}
+            className="w-full rounded-lg border-2 border-outline-variant bg-surface-lowest px-5 py-4 text-base text-charcoal outline-none transition focus:border-primary"
+          />
           <input
             type="email"
             inputMode="email"

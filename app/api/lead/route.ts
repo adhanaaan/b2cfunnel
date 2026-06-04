@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   // Gracefully no-op in local dev when Supabase isn't configured, so the funnel
   // is fully walkable without credentials.
   if (!isSupabaseConfigured()) {
-    console.warn("[lead] Supabase not configured — skipping insert.", { email });
+    console.warn("[lead] Supabase not configured, skipping insert.", { email });
     return NextResponse.json({ ok: true, stored: false });
   }
 
@@ -39,6 +39,7 @@ export async function POST(req: Request) {
 
   const row: LeadRow = {
     email,
+    name: typeof payload.name === "string" ? payload.name.trim() : null,
     persona: payload.persona ?? null,
     risk_score: payload.riskScore ?? null,
     symptom_score: payload.symptomScore ?? null,

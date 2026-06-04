@@ -12,8 +12,8 @@ export interface StatCard {
 export const STAT_CARDS: StatCard[] = [
   {
     id: "lancet2024",
-    stat: "Up to 45%",
-    body: "Up to 45% of dementia cases are associated with factors you can do something about — across your whole life.",
+    stat: "About 45%",
+    body: "About 45% of dementia cases worldwide could be prevented or delayed by addressing the modifiable risk factors across a person's life.",
     source: "2024 Lancet Commission on Dementia Prevention",
     citation: "lancet2024",
   },
@@ -27,7 +27,7 @@ export const STAT_CARDS: StatCard[] = [
   {
     id: "salthouse",
     stat: "From age 45",
-    body: "Processing speed — how quickly the brain handles information — can begin to gradually shift from around age 45.",
+    body: "Processing speed, which is how quickly the brain handles information, can begin to gradually shift from around age 45.",
     source: "Salthouse, Frontiers in Aging Neuroscience, 2017",
     citation: "salthouse",
   },

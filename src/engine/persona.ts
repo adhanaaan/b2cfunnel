@@ -11,9 +11,9 @@ import type { Persona } from "@/types/engine";
  */
 
 // Age bands that count as "40+" for the perimenopausal persona proxy.
-const PERIMENOPAUSAL_AGE_BANDS = ["35-44", "45-54", "55+"];
+const PERIMENOPAUSAL_AGE_BANDS = ["40-49", "50-59", "60+"];
 // Age bands that count as "younger / optimisation-led" for the high performer.
-const HIGH_PERFORMER_AGE_BANDS = ["20-34", "35-44"];
+const HIGH_PERFORMER_AGE_BANDS = ["18-29", "30-39", "40-49"];
 
 function asArray(value: Answers[string] | undefined): string[] {
   if (Array.isArray(value)) return value;

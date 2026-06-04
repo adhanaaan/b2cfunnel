@@ -20,7 +20,8 @@ export function useFunnel() {
   const next = useCallback(() => dispatch({ type: "NEXT" }), []);
   const back = useCallback(() => dispatch({ type: "BACK" }), []);
   const submitEmail = useCallback(
-    (email: string) => dispatch({ type: "SUBMIT_EMAIL", email }),
+    (name: string, email: string) =>
+      dispatch({ type: "SUBMIT_EMAIL", name, email }),
     [],
   );
   const analysisDone = useCallback(

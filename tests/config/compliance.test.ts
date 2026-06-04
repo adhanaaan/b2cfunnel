@@ -31,6 +31,14 @@ describe("regulatory compliance (HSA wellness rails)", () => {
     }
   });
 
+  it("contains no em dashes in user-facing copy", () => {
+    for (const text of allCopy) {
+      expect(text.includes("—"), `Em dash found in copy: "${text}"`).toBe(
+        false,
+      );
+    }
+  });
+
   it("ships the mandatory disclaimers in the copy config", () => {
     // They live in compliance.ts and are rendered by ComplianceFooter, but assert
     // the constant is intact so the result screen always has them to render.

@@ -8,7 +8,7 @@ describe("driving factors", () => {
     const answers: Answers = {
       highBp: "yes",
       highCholesterol: "yes",
-      exercise: "lt90",
+      exercise: "lt75",
       sleep: "lt6",
       diet: "healthy", // score 0 -> excluded
       smoking: "never", // score 0 -> excluded
@@ -24,7 +24,7 @@ describe("driving factors", () => {
   it("never includes symptom items", () => {
     const answers: Answers = {
       highBp: "yes",
-      concentrating: "yes",
+      concentrating: "almostDaily",
       persistence: "yes",
       someoneElseNoticed: "yes",
     };

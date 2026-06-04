@@ -34,8 +34,20 @@ export function HookScreen({ onStart }: HookScreenProps) {
           {c.subheading}
         </p>
 
-        <div className="mt-8 rounded-xl bg-surface-container px-5 py-4 text-sm leading-relaxed text-charcoal shadow-card">
-          {c.credibility}
+        {/* Reviewing doctor — placeholder card; avatar and details to be added later. */}
+        <div className="mt-8 flex items-center gap-4 rounded-xl bg-surface-container px-5 py-4 text-left shadow-card">
+          <span className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-surface-dim text-xl font-bold text-outline">
+            {c.doctor.avatarInitials}
+          </span>
+          <div className="min-w-0">
+            <p className="text-lg font-bold text-charcoal">{c.doctor.name}</p>
+            <p className="text-sm leading-snug text-outline">
+              {c.doctor.credentials}
+            </p>
+            <p className="text-sm leading-snug text-outline">
+              {c.doctor.affiliation}
+            </p>
+          </div>
         </div>
 
         {/* Resources / science the assessment is grounded in. */}
