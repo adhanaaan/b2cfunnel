@@ -12,14 +12,14 @@ export function HookScreen({ onStart }: HookScreenProps) {
   return (
     <ScreenShell>
       <div className="flex min-h-[80vh] flex-col justify-center text-center animate-fade-up">
-        {/* Logo beside the brand name. Swap public/brand-logo.svg for the exact asset. */}
+        {/* Logo beside the brand name. */}
         <div className="flex items-center justify-center gap-2.5">
           <Image
-            src="/brand-logo.svg"
+            src="/gms-logo.png"
             alt="Gray Matter Solutions logo"
-            width={32}
-            height={30}
-            className="h-8 w-auto"
+            width={442}
+            height={366}
+            className="h-9 w-auto"
             priority
           />
           <p className="text-sm font-bold uppercase tracking-widest text-primary">
