@@ -31,13 +31,24 @@ export const COPY: CopyConfig = {
   screens: {
     hook: {
       eyebrow: "Gray Matter Solutions",
-      heading: "What's your Brain Health Score?",
+      heading: "How well is your brain performing?",
       subheading:
-        "Answer a few questions about your lifestyle and how you've been feeling. We'll estimate your brain health profile and show you what's driving it.",
+        "Take this 5-minute quiz with 14 medically-backed risk factors to find out how well your brain is performing.",
       credibility:
         "Built with A/Prof Nagaendran Kandiah, Senior Consultant Neurologist, and the Dementia Research Centre at NTU Singapore.",
-      durationNote: "Takes about 3 minutes. No login needed.",
+      durationNote: "Takes about 5 minutes. No login needed.",
       cta: "Get started",
+      resourcesHeading: "Backed by science",
+      resourcesIntro:
+        "A scientifically backed assessment based on the 2024 Lancet Commission on Dementia Prevention, CAIDE, and the SCD framework.",
+      resources: [
+        "2024 Lancet Commission on Dementia Prevention",
+        "CAIDE midlife risk score",
+        "SCD framework (Jessen et al., 2014)",
+        "STRAW+10 menopause staging",
+        "Salthouse, processing speed (2017)",
+        "IMH WiSE Study (2024)",
+      ],
     },
     emailGate: {
       eyebrow: "Almost there",

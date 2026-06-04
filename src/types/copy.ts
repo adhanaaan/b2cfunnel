@@ -9,6 +9,9 @@ export interface HookCopy {
   credibility: string;
   durationNote: string;
   cta: string;
+  resourcesHeading: string;
+  resourcesIntro: string;
+  resources: string[];
 }
 
 export interface EmailGateCopy {
