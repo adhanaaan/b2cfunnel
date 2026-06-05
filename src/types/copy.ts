@@ -49,7 +49,9 @@ export interface ResultBaseCopy {
   gaugeLowLabel: string;
   gaugeHighLabel: string;
   unlockCta: string;
-  paywallPreviewHeading: string;
+  paywallPreviewHeading: string; // template containing {factors}
+  paywallPreviewHeadingFallback: string;
+  unlockOverlay: string;
 }
 
 export interface FaqItem {

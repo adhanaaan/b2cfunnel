@@ -33,7 +33,7 @@ export const COPY: CopyConfig = {
       eyebrow: "Gray Matter Solutions",
       heading: "Is your brain at its peak performance?",
       subheading:
-        "Take this 5-minute quiz with 14 medically-backed risk factors to find out how well your brain is performing.",
+        "A medically backed 5-minute quiz, built on 14 modifiable risk factors, to find out how well your brain is performing.",
       doctor: {
         avatarInitials: "Dr",
         name: "Dr. [Name]",
@@ -57,13 +57,13 @@ export const COPY: CopyConfig = {
     emailGate: {
       eyebrow: "Almost there",
       heading: "Where should we send your score?",
-      body: "Your Brain Health Score is ready. Tell us your name and email, and we'll reveal it on the next screen and keep a copy for you.",
+      body: "Your Brain Health Score is ready. Tell us your name and email, and we'll send you a copy.",
       nameLabel: "First name",
       namePlaceholder: "Your first name",
       placeholder: "you@example.com",
       cta: "Reveal my score",
       privacyNote:
-        "We'll only use your details to share your results and brain-health guidance. Unsubscribe any time.",
+        "We'll only use your details to share your results and brain health recommendations. Unsubscribe any time.",
     },
     analysing: {
       heading: "{name}, we are building your profile",
@@ -86,7 +86,11 @@ export const COPY: CopyConfig = {
       gaugeLowLabel: "Low",
       gaugeHighLabel: "High",
       unlockCta: "Unlock now →",
-      paywallPreviewHeading: "What this could mean for you",
+      // {factors} is replaced with the user's reported risk factors.
+      paywallPreviewHeading: "What your {factors} could mean for you",
+      paywallPreviewHeadingFallback: "What your results could mean for you",
+      unlockOverlay:
+        "Get a more in-depth brain health analysis and consult a certified medical professional.",
     },
     paywall: {
       eyebrow: "The full picture",

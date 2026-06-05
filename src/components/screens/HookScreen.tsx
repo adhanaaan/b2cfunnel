@@ -50,26 +50,6 @@ export function HookScreen({ onStart }: HookScreenProps) {
           </div>
         </div>
 
-        {/* Resources / science the assessment is grounded in. */}
-        <div className="mt-4 rounded-xl border border-outline-variant bg-surface-low px-5 py-4 text-left">
-          <p className="text-xs font-bold uppercase tracking-wide text-primary">
-            {c.resourcesHeading}
-          </p>
-          <p className="mt-1.5 text-sm leading-relaxed text-charcoal">
-            {c.resourcesIntro}
-          </p>
-          <ul className="mt-3 flex flex-wrap gap-1.5">
-            {c.resources.map((r) => (
-              <li
-                key={r}
-                className="rounded-full bg-surface-container px-3 py-1 text-xs font-medium text-secondary"
-              >
-                {r}
-              </li>
-            ))}
-          </ul>
-        </div>
-
         <button
           type="button"
           onClick={onStart}

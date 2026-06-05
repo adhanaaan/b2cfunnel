@@ -1,79 +1,70 @@
-import type { Persona } from "@/types/engine";
-import type { LeadBlurSection } from "@/types/copy";
+import type { DrivingFactor } from "@/types/engine";
 import { COPY } from "@/config/copy";
 
 interface BlurredPaywallPreviewProps {
-  persona: Persona;
+  factors: DrivingFactor[];
   onUnlock: () => void;
 }
 
-// The three blurred sections behind the paywall. The persona's lead section is
-// surfaced first (build brief §7).
-const SECTIONS: Record<LeadBlurSection, { title: string; lines: number }> = {
-  cognitiveInterpretation: {
-    title: "What your symptom answers suggest",
-    lines: 3,
-  },
-  vascular: { title: "Vascular vs other contributors", lines: 3 },
-  percentile: { title: "Where you sit versus your cohort", lines: 2 },
-};
+/**
+ * Build the dynamic heading from the user's reported risk factors, e.g.
+ * "What your blood pressure, sleep and cholesterol could mean for you".
+ * Falls back to a generic line when no factors stood out.
+ */
+function buildHeading(factors: DrivingFactor[]): string {
+  const labels = factors.map((f) => f.label.toLowerCase());
+  if (labels.length === 0) {
+    return COPY.screens.resultBase.paywallPreviewHeadingFallback;
+  }
 
-const ALL_SECTIONS: LeadBlurSection[] = [
-  "cognitiveInterpretation",
-  "vascular",
-  "percentile",
-];
+  let phrase: string;
+  if (labels.length <= 3) {
+    phrase =
+      labels.length === 1
+        ? labels[0]
+        : `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
+  } else {
+    phrase = `${labels.slice(0, 3).join(", ")} and other factors`;
+  }
 
-function orderedSections(lead: LeadBlurSection): LeadBlurSection[] {
-  return [lead, ...ALL_SECTIONS.filter((s) => s !== lead)];
+  return COPY.screens.resultBase.paywallPreviewHeading.replace(
+    "{factors}",
+    phrase,
+  );
 }
 
-/** Dark, blurred preview of the paywalled content + the unlock CTA. */
+/** Dark, blurred preview of the paywalled content with the unlock overlay + CTA. */
 export function BlurredPaywallPreview({
-  persona,
+  factors,
   onUnlock,
 }: BlurredPaywallPreviewProps) {
-  const { leadBlurSection, paywallAngle } = COPY.personas[persona];
-  const { unlockCta, paywallPreviewHeading } = COPY.screens.resultBase;
-  const sections = orderedSections(leadBlurSection);
+  const { unlockCta, unlockOverlay } = COPY.screens.resultBase;
+  const heading = buildHeading(factors);
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-charcoal px-6 pb-7 pt-6 text-white">
-      <h2 className="text-lg font-bold">{paywallPreviewHeading}</h2>
-      <p className="mt-1 text-sm text-white/70">{paywallAngle}</p>
+      <h2 className="text-lg font-bold leading-snug">{heading}</h2>
 
-      {/* Blurred faux-content. */}
-      <div
-        className="mt-5 space-y-5 select-none blur-sm"
-        aria-hidden
-      >
-        {sections.map((key, idx) => {
-          const section = SECTIONS[key];
-          return (
-            <div key={key}>
-              <p
-                className={[
-                  "mb-2 text-sm font-semibold",
-                  idx === 0 ? "text-primary" : "text-white/80",
-                ].join(" ")}
-              >
-                {section.title}
-              </p>
-              <div className="space-y-2">
-                {Array.from({ length: section.lines }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-3 rounded bg-white/15"
-                    style={{ width: `${90 - i * 12}%` }}
-                  />
-                ))}
-              </div>
-            </div>
-          );
-        })}
+      {/* A single blurred faux-content block with the unlock message overlaid. */}
+      <div className="relative mt-5">
+        <div className="space-y-2.5 select-none blur-sm" aria-hidden>
+          {[92, 80, 86, 72, 60].map((w, i) => (
+            <div
+              key={i}
+              className="h-3.5 rounded bg-white/15"
+              style={{ width: `${w}%` }}
+            />
+          ))}
+        </div>
+
+        {/* Overlay copy sits on top of the blur. */}
+        <div className="absolute inset-0 flex items-center justify-center px-2">
+          <p className="text-center text-base font-semibold leading-snug text-white">
+            {unlockOverlay}
+          </p>
+        </div>
       </div>
 
-      {/* CTA sits above the blur. */}
       <button
         type="button"
         onClick={onUnlock}

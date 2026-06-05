@@ -56,7 +56,7 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
 
         <div className="mt-8">
           <BlurredPaywallPreview
-            persona={result.persona}
+            factors={result.drivingFactors}
             onUnlock={onUnlock}
           />
         </div>
