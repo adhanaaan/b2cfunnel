@@ -13,12 +13,34 @@ interface ResultScreenProps {
   onUnlock: () => void;
 }
 
+// Factors that aren't "movable levers" (can't be acted on), excluded from the
+// calibrated blurb list.
+const NON_MODIFIABLE = new Set(["age", "familyHistory"]);
+
+/** Format the user's modifiable factors into a readable, sentence-start phrase. */
+function formatLevers(result: ScoreResult): string {
+  const labels = result.drivingFactors
+    .filter((f) => !NON_MODIFIABLE.has(f.id))
+    .map((f) => f.label.toLowerCase());
+
+  if (labels.length === 0) return "A few lifestyle and biomedical factors";
+
+  const joined =
+    labels.length === 1
+      ? labels[0]
+      : `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
+  return joined.charAt(0).toUpperCase() + joined.slice(1);
+}
+
 /** Screen 6 — the score reveal. Brand-critical layout (build brief §6). */
 export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
   const base = COPY.screens.resultBase;
-  const personaCopy = COPY.personas[result.persona];
   const bandLabel = COPY.bandLabels[result.band];
-  const blurb = personaCopy.blurb[result.band];
+  // Band-specific blurb, calibrated with the user's reported factors.
+  const blurb = COPY.resultBlurbs[result.band].replace(
+    "{factors}",
+    formatLevers(result),
+  );
 
   return (
     <ScreenShell>

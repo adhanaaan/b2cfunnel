@@ -35,10 +35,13 @@ export const COPY: CopyConfig = {
       subheading:
         "A medically backed 5-minute quiz, built on 14 modifiable risk factors, to find out how well your brain is performing.",
       doctor: {
-        avatarInitials: "Dr",
-        name: "Dr. [Name]",
-        credentials: "[Credentials, e.g. MD, Neurologist]",
-        affiliation: "[Affiliation / role]",
+        avatarInitials: "NK",
+        image: "/dr-kandiah.jpg",
+        name: "Prof Nagaendran Kandiah",
+        credentials:
+          "Senior Consultant Neurologist. MBBS, FRCP (Edinburgh), FAMS (Neurology).",
+        affiliation:
+          "Director, Dementia Research Centre Singapore. Clinician-scientist, National Medical Research Council of Singapore.",
       },
       durationNote: "Takes about 5 minutes. No login needed.",
       cta: "Get started",
@@ -171,6 +174,17 @@ export const COPY: CopyConfig = {
       paywallAngle:
         "Get an objective cognitive baseline and see where you stand, reviewed by a neurologist.",
     },
+  },
+
+  // Result-screen blurb per band. {factors} is replaced with the user's
+  // reported modifiable risk factors.
+  resultBlurbs: {
+    low: "Your brain health is in a strong shape with few risk factors and no major flags. The smartest move at this stage is to baseline now, while everything looks good. Measuring early gives you something to track against in years to come.",
+    moderate:
+      "A handful of modifiable factors are affecting your brain health performance. {factors} are the most movable levers, and that's where most of your risk is coming from. A clinically grounded check in now keeps every option open and tells you exactly what's worth focusing on first.",
+    elevated:
+      "Several factors in your profile are adding up, and they deserve attention. The good news is that most of them are modifiable, and many cognitive changes are reversible when caught at this stage. A proper brain health assessment now is the best next move, both to set a baseline and to flag anything that needs medical follow up.",
+    high: "Your profile carries enough risk factors that we'd encourage you to act now, not later. The earlier cognitive change is identified, the more can be done about it, and many of the underlying factors in your score respond well to treatment when caught early. Book a cognitive assessment with a certified medical professional as your next step.",
   },
 
   bandLabels: {

@@ -2,9 +2,10 @@ import type { BandName, Persona } from "@/types/engine";
 
 /** Shape of the editable copy config. British English throughout. */
 
-// Placeholder doctor card on the hook. Image and details to be filled in later.
+// Doctor card on the hook.
 export interface DoctorCardCopy {
-  avatarInitials: string;
+  avatarInitials: string; // fallback shown until the photo loads
+  image?: string; // path under /public, e.g. "/dr-kandiah.jpg"
   name: string;
   credentials: string;
   affiliation: string;
@@ -94,6 +95,9 @@ export interface PersonaResultCopy {
 export interface CopyConfig {
   screens: ScreenCopy;
   personas: Record<Persona, PersonaResultCopy>;
+  // Result-screen blurb per band. May contain {factors}, replaced with the
+  // user's reported modifiable risk factors.
+  resultBlurbs: Record<BandName, string>;
   bandLabels: Record<BandName, string>;
   factorLabels: Record<string, string>;
 }
