@@ -49,6 +49,20 @@ export function Gauge({
 
   const bandColour = BANDS[band].colour;
 
+  // Colour the arc proportional to the actual band ranges (not equal quarters),
+  // so the needle at score/max always lands in the segment whose band matches
+  // bandForTotal(score). Boundaries are the cumulative band upper bounds.
+  const segments = BAND_ORDER.map((name, i) => {
+    const prevMax = i === 0 ? 0 : BANDS[BAND_ORDER[i - 1]].totalMax;
+    const thisMax = BANDS[name].totalMax === Infinity ? max : BANDS[name].totalMax;
+    return {
+      name,
+      colour: BANDS[name].colour,
+      start: prevMax / max,
+      end: thisMax / max,
+    };
+  });
+
   return (
     <figure
       className="mx-auto w-full max-w-xs"
@@ -56,13 +70,13 @@ export function Gauge({
       aria-label={`Score ${score} out of ${max}: ${bandLabel}`}
     >
       <svg viewBox="0 0 200 120" className="w-full">
-        {/* Band arcs — four equal 45° segments. */}
-        {BAND_ORDER.map((name, i) => (
+        {/* Band arcs sized to the real band ranges. */}
+        {segments.map((seg) => (
           <path
-            key={name}
-            d={arcPath(i / 4, (i + 1) / 4)}
+            key={seg.name}
+            d={arcPath(seg.start, seg.end)}
             fill="none"
-            stroke={BANDS[name].colour}
+            stroke={seg.colour}
             strokeWidth={STROKE}
             strokeLinecap="butt"
           />

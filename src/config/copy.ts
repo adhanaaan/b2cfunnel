@@ -31,7 +31,7 @@ export const COPY: CopyConfig = {
   screens: {
     hook: {
       eyebrow: "Gray Matter Solutions",
-      heading: "How well is your brain performing?",
+      heading: "Is your brain at its peak performance?",
       subheading:
         "Take this 5-minute quiz with 14 medically-backed risk factors to find out how well your brain is performing.",
       doctor: {
