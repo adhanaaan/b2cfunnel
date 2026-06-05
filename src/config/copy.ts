@@ -36,7 +36,7 @@ export const COPY: CopyConfig = {
         "A medically backed 5-minute quiz, built on 14 modifiable risk factors, to find out how well your brain is performing.",
       doctor: {
         avatarInitials: "NK",
-        image: "/dr-kandiah.jpg",
+        image: "/Kandiah.png",
         name: "Prof Nagaendran Kandiah",
         credentials:
           "Senior Consultant Neurologist. MBBS, FRCP (Edinburgh), FAMS (Neurology).",
@@ -114,6 +114,36 @@ export const COPY: CopyConfig = {
           a: "Anyone who wants a clearer baseline, whether you're noticing changes, supporting a loved one, or simply staying ahead of things.",
         },
       ],
+    },
+    booking: {
+      title: "Brain Health Consultation",
+      priceOriginal: "S$390",
+      priceNow: "S$199",
+      bookCta: "Book now",
+      bookingUrl: "#",
+      includes: [
+        "125 biomarkers",
+        "Blood draw and urine test",
+        "1:1 clinician consultation",
+      ],
+      panels: [
+        {
+          title: "Cardiometabolic & weight regulation",
+          body: "An early read on cholesterol (including inherited risk), blood sugar, and the metabolic markers most associated with long-term brain health.",
+        },
+        {
+          title: "Thyroid, adrenal & sex hormones (mood and brain fog)",
+          body: "Brain fog and mood shifts commonly overlap with thyroid and hormone changes. This group gives a practical first pass across thyroid, adrenal, and sex-hormone balance.",
+        },
+        {
+          title: "Nutrients, anaemia & energy (brain fog support)",
+          body: "Key nutrients, iron status, and energy markers that, when low, can quietly affect focus, memory, and day-to-day mental sharpness.",
+        },
+      ],
+      doctorHeading: "Meet your doctor",
+      faqHeading: "FAQs",
+      trustHeading: "In partnership with",
+      trustLogos: ["NTU Singapore", "LKC Medicine"],
     },
   },
 

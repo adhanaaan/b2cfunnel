@@ -9,7 +9,8 @@ export type FunnelStep =
   | { kind: "emailGate" }
   | { kind: "analysing" }
   | { kind: "result" }
-  | { kind: "paywall" };
+  | { kind: "paywall" }
+  | { kind: "booking" };
 
 export type StepKind = FunnelStep["kind"];
 

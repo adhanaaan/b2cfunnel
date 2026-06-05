@@ -49,6 +49,7 @@ export const FUNNEL_FLOW: FunnelStep[] = [
   { kind: "analysing" },
   { kind: "result" },
   { kind: "paywall" },
+  { kind: "booking" },
 ];
 
 /** True when a question's showIf condition is satisfied by the current answers. */

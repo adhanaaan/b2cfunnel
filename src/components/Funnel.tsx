@@ -14,6 +14,7 @@ import { EmailGateScreen } from "@/components/screens/EmailGateScreen";
 import { AnalysingScreen } from "@/components/screens/AnalysingScreen";
 import { ResultScreen } from "@/components/screens/ResultScreen";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
+import { BookingScreen } from "@/components/screens/BookingScreen";
 
 /** Client host: owns the funnel state machine and renders the current screen. */
 export function Funnel() {
@@ -83,7 +84,12 @@ export function Funnel() {
       ) : null;
 
     case "paywall":
-      return state.result ? <PaywallScreen result={state.result} /> : null;
+      return state.result ? (
+        <PaywallScreen result={state.result} onBook={next} />
+      ) : null;
+
+    case "booking":
+      return <BookingScreen />;
 
     default:
       return null;

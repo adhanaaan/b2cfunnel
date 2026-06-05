@@ -70,12 +70,33 @@ export interface PaywallCopy {
   faqs: FaqItem[];
 }
 
+// A biomarker group shown on the booking page.
+export interface BiomarkerPanel {
+  title: string;
+  body: string;
+}
+
+export interface BookingCopy {
+  title: string;
+  priceOriginal: string; // struck-through original price
+  priceNow: string; // discounted price
+  bookCta: string;
+  bookingUrl: string; // external booking link (placeholder for now)
+  includes: string[]; // top-of-card checklist
+  panels: BiomarkerPanel[];
+  doctorHeading: string;
+  faqHeading: string;
+  trustHeading: string;
+  trustLogos: string[]; // placeholder labels until real logos are added
+}
+
 export interface ScreenCopy {
   hook: HookCopy;
   emailGate: EmailGateCopy;
   analysing: AnalysingCopy;
   resultBase: ResultBaseCopy;
   paywall: PaywallCopy;
+  booking: BookingCopy;
 }
 
 // What changes per persona on the result screen: the score blurb (per band) and

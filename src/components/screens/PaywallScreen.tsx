@@ -8,10 +8,11 @@ import { ComplianceFooter } from "@/components/ui/ComplianceFooter";
 
 interface PaywallScreenProps {
   result: ScoreResult;
+  onBook: () => void;
 }
 
 /** Screen 7 — the paywall / convert screen: named doctor, price, bundle, FAQ. */
-export function PaywallScreen({ result }: PaywallScreenProps) {
+export function PaywallScreen({ result, onBook }: PaywallScreenProps) {
   const c = COPY.screens.paywall;
   const angle = COPY.personas[result.persona].paywallAngle;
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -50,6 +51,7 @@ export function PaywallScreen({ result }: PaywallScreenProps) {
 
           <button
             type="button"
+            onClick={onBook}
             className="mt-6 w-full rounded-lg bg-primary px-6 py-4 text-lg font-bold text-primary-on shadow-float transition hover:brightness-105"
           >
             {c.cta}
