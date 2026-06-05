@@ -50,6 +50,13 @@ export function HookScreen({ onStart }: HookScreenProps) {
           </div>
         </div>
 
+        {/* Science the assessment is grounded in. */}
+        <div className="mt-4 rounded-xl border border-outline-variant bg-surface-low px-5 py-4">
+          <p className="text-sm leading-relaxed text-charcoal">
+            {c.resourcesIntro}
+          </p>
+        </div>
+
         <button
           type="button"
           onClick={onStart}

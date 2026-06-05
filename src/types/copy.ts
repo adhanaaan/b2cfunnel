@@ -17,9 +17,7 @@ export interface HookCopy {
   doctor: DoctorCardCopy;
   durationNote: string;
   cta: string;
-  resourcesHeading: string;
   resourcesIntro: string;
-  resources: string[];
 }
 
 export interface EmailGateCopy {

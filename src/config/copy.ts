@@ -42,17 +42,8 @@ export const COPY: CopyConfig = {
       },
       durationNote: "Takes about 5 minutes. No login needed.",
       cta: "Get started",
-      resourcesHeading: "Backed by science",
       resourcesIntro:
-        "A scientifically backed assessment based on the 2024 Lancet Commission on Dementia Prevention, CAIDE, and the SCD framework.",
-      resources: [
-        "2024 Lancet Commission on Dementia Prevention",
-        "CAIDE midlife risk score",
-        "SCD framework (Jessen et al., 2014)",
-        "STRAW+10 menopause staging",
-        "Salthouse, processing speed (2017)",
-        "IMH WiSE Study (2024)",
-      ],
+        "A medically backed quiz based on the 2024 Lancet Commission on Dementia Prevention, CAIDE, and the SCD framework.",
     },
     emailGate: {
       eyebrow: "Almost there",
