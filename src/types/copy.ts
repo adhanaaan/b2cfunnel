@@ -51,6 +51,29 @@ export interface ResultBaseCopy {
   paywallPreviewHeading: string; // template containing {factors}
   paywallPreviewHeadingFallback: string;
   unlockOverlay: string;
+  // Event variant: the score screen invites the player into the reaction game.
+  gameInviteHeading: string;
+  gameInviteBody: string;
+  gameInviteCta: string;
+}
+
+// The reaction game (event only) — kept separate from the brain-health score.
+export interface GameCopy {
+  eyebrow: string;
+  heading: string;
+  body: string;
+  placeholder: string;
+  cta: string;
+  disclaimer: string;
+}
+
+export interface LeaderboardCopy {
+  eyebrow: string;
+  heading: string;
+  prize: string;
+  youNote: string;
+  cta: string;
+  disclaimer: string;
 }
 
 export interface FaqItem {
@@ -97,6 +120,8 @@ export interface ScreenCopy {
   resultBase: ResultBaseCopy;
   paywall: PaywallCopy;
   booking: BookingCopy;
+  game: GameCopy;
+  leaderboard: LeaderboardCopy;
 }
 
 // What changes per persona on the result screen: the score blurb (per band) and

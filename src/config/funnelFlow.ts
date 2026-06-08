@@ -88,6 +88,10 @@ const EVENT_FLOW: FunnelStep[] = [
   { kind: "emailGate" },
   { kind: "analysing" },
   { kind: "result" },
+  // The reaction game is a separate, non-clinical experience (its score never
+  // feeds the brain-health score). Consult conversion follows the leaderboard.
+  { kind: "game" },
+  { kind: "leaderboard" },
   { kind: "paywall" },
   { kind: "booking" },
 ];

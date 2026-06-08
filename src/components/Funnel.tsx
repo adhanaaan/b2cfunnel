@@ -16,6 +16,8 @@ import { StatCardScreen } from "@/components/screens/StatCardScreen";
 import { EmailGateScreen } from "@/components/screens/EmailGateScreen";
 import { AnalysingScreen } from "@/components/screens/AnalysingScreen";
 import { ResultScreen } from "@/components/screens/ResultScreen";
+import { GameScreen } from "@/components/screens/GameScreen";
+import { LeaderboardScreen } from "@/components/screens/LeaderboardScreen";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
 import { BookingScreen } from "@/components/screens/BookingScreen";
 
@@ -101,6 +103,12 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       return state.result ? (
         <ResultScreen result={state.result} onUnlock={next} />
       ) : null;
+
+    case "game":
+      return <GameScreen onDone={next} />;
+
+    case "leaderboard":
+      return <LeaderboardScreen name={state.name} onDone={next} />;
 
     case "paywall":
       return state.result ? (
