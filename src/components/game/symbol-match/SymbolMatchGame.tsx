@@ -18,7 +18,7 @@ interface Props {
  * NOTE: a game — its result never feeds the brain-health score.
  */
 export function SymbolMatchGame({ onComplete }: Props) {
-  const [phase, setPhase] = useState<"countdown" | "play">("countdown");
+  const [phase, setPhase] = useState<"demo" | "countdown" | "play">("demo");
   const [count, setCount] = useState(3);
   const [correct, setCorrect] = useState(0);
   const [elapsed, setElapsed] = useState(0);
@@ -52,30 +52,73 @@ export function SymbolMatchGame({ onComplete }: Props) {
     });
   };
 
+  // Interactive practice: try one before the clock starts.
+  if (phase === "demo") {
+    return (
+      <div
+        className="fixed inset-0 z-50 overflow-hidden"
+        style={{ background: "radial-gradient(#E4E3FF78, #D68DE878)" }}
+      >
+        <Task2Game
+          tiles={TILES}
+          onSuccess={() => setPhase("countdown")}
+          onError={() => {}}
+        >
+          <div className="z-40 w-full max-w-md text-center">
+            <p className="text-sm font-bold uppercase tracking-widest text-[#8735AC]">
+              How to play
+            </p>
+            <p className="mx-auto mt-1 max-w-sm text-[15px] font-semibold leading-snug text-charcoal">
+              Each symbol has a number in the key below. Tap the number that
+              matches the symbol shown. Try one to begin!
+            </p>
+          </div>
+        </Task2Game>
+        <button
+          type="button"
+          onClick={() => setPhase("countdown")}
+          className="absolute right-4 z-50 rounded-full bg-white/70 px-4 py-2 text-sm font-bold text-[#5b2c6f] shadow-md"
+          style={{ bottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+        >
+          Skip →
+        </button>
+      </div>
+    );
+  }
+
   if (phase === "countdown") {
     return (
       <div
-        className="cc h-dvh w-full text-center"
-        style={{ background: "radial-gradient(#E4E3FF78, #D68DE878)" }}
+        className="fixed inset-0 z-50 cc text-center"
+        style={{
+          background: "radial-gradient(#E4E3FF78, #D68DE878)",
+          paddingTop: "env(safe-area-inset-top)",
+          paddingBottom: "env(safe-area-inset-bottom)",
+        }}
       >
-        <p className="text-sm font-bold uppercase tracking-widest text-[#8735AC]">
-          Reaction Time Challenge
-        </p>
-        <p className="mt-3 max-w-xs text-base text-charcoal">
-          Match {GOAL} symbols as fast as you can. Ready…
-        </p>
-        <div
-          key={count}
-          className="mt-6 font-display text-8xl font-extrabold text-[#8735AC] animate-fade-up"
-        >
-          {count === 0 ? "GO!" : count}
+        <div>
+          <p className="text-sm font-bold uppercase tracking-widest text-[#8735AC]">
+            Reaction Time Challenge
+          </p>
+          <p className="mx-auto mt-3 max-w-xs text-base text-charcoal">
+            Match {GOAL} symbols as fast as you can. Ready…
+          </p>
+          <div
+            key={count}
+            className="mt-6 font-display text-8xl font-extrabold text-[#8735AC] animate-fade-up"
+          >
+            {count === 0 ? "GO!" : count}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative h-dvh w-full overflow-hidden">
+    <div
+      className="fixed inset-0 z-50 overflow-hidden"
+      style={{ background: "radial-gradient(#E4E3FF78, #D68DE878)" }}
+    >
       <Task2Game tiles={TILES} onSuccess={onSuccess} onError={() => {}}>
         {/* Live timer + progress, rendered at the top of the game. */}
         <div className="z-40 w-full max-w-md">
@@ -102,7 +145,10 @@ export function SymbolMatchGame({ onComplete }: Props) {
         </div>
       </Task2Game>
 
-      <p className="pointer-events-none absolute inset-x-0 bottom-2 px-4 text-center text-[11px] italic text-[#5b2c6f]/70">
+      <p
+        className="pointer-events-none absolute inset-x-0 px-4 text-center text-[11px] italic text-[#5b2c6f]/70"
+        style={{ bottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
+      >
         Reaction-time games are fun, but not a cognitive assessment.
       </p>
     </div>

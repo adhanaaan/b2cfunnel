@@ -44,8 +44,12 @@ export const Task2Game: React.FC<{
 
   return (
     <div
-      className="items-center max-h-dvh h-full fc px-6 py-3 justify-between gap-1"
-      style={{ background: "radial-gradient(#E4E3FF78, #D68DE878)" }}
+      className="items-center h-full fc px-6 justify-between gap-1"
+      style={{
+        background: "radial-gradient(#E4E3FF78, #D68DE878)",
+        paddingTop: "max(0.75rem, env(safe-area-inset-top))",
+        paddingBottom: "max(2.25rem, calc(env(safe-area-inset-bottom) + 1.5rem))",
+      }}
     >
       <ResultOverlay result={result} />
 
