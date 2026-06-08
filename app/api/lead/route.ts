@@ -46,6 +46,7 @@ export async function POST(req: Request) {
     total_score: payload.totalScore ?? null,
     band: payload.band ?? null,
     answers: storeAnswers ? (payload.answers ?? null) : null,
+    game_time_ms: payload.gameTimeMs ?? null,
     user_agent: req.headers.get("user-agent"),
   };
 

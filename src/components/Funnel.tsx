@@ -24,42 +24,31 @@ import { BookingScreen } from "@/components/screens/BookingScreen";
 
 /** Client host: owns the funnel state machine and renders the current screen. */
 export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
-  const {
-    state,
-    step,
-    answer,
-    next,
-    back,
-    submitName,
-    submitEmail,
-    analysisDone,
-    gameDone,
-  } = useFunnel(variant);
+  const { state, step, answer, next, back, submitEmail, analysisDone, gameDone } =
+    useFunnel(variant);
 
-  // Post the lead, then advance to the analysing screen. We don't block the
-  // funnel on the network — advance regardless of the insert result.
-  const handleEmailSubmit = async (name: string, email: string) => {
+  // Post the complete lead (name + email captured earlier, plus the computed
+  // score and game time) when the profile is built. Fire-and-forget: capturing
+  // the lead must never block the reveal.
+  const handleAnalysisDone = () => {
     const result = computeScore(state.answers);
     const payload: LeadPayload = {
-      name,
-      email,
+      name: state.name,
+      email: state.email ?? "",
       persona: result.persona,
       riskScore: result.riskScore,
       symptomScore: result.symptomScore,
       totalScore: result.total,
       band: result.band,
       answers: state.answers,
+      gameTimeMs: state.gameTimeMs,
     };
-    try {
-      await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    } catch {
-      // Soft-fail: capturing the lead must never block the reveal.
-    }
-    submitEmail(name, email);
+    void fetch("/api/lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).catch(() => {});
+    analysisDone();
   };
 
   const screen = (() => {
@@ -68,7 +57,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       return <HookScreen onStart={next} />;
 
     case "nameGate":
-      return <NameGateScreen onSubmit={submitName} />;
+      return <NameGateScreen onSubmit={submitEmail} />;
 
     case "question": {
       const question = QUESTIONS_BY_ID[step.questionId];
@@ -108,11 +97,11 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "emailGate":
       return (
-        <EmailGateScreen onSubmit={handleEmailSubmit} knownName={state.name} />
+        <EmailGateScreen onSubmit={submitEmail} knownName={state.name} />
       );
 
     case "analysing":
-      return <AnalysingScreen name={state.name} onDone={analysisDone} />;
+      return <AnalysingScreen name={state.name} onDone={handleAnalysisDone} />;
 
     case "result":
       return state.result ? (

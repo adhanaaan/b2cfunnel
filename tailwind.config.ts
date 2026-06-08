@@ -12,6 +12,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        // Height-based variants used by the ported symbol-matching game.
+        tall: { raw: "(min-height: 720px)" },
+        "tall-lg": { raw: "(min-height: 786px)" },
+      },
       colors: {
         // Brand & interactive
         primary: {

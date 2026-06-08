@@ -57,16 +57,16 @@ const FULL_FLOW: FunnelStep[] = [
 ];
 
 const EVENT_FLOW: FunnelStep[] = [
-  { kind: "hook" },
-
-  // Game first: capture a name for the leaderboard, play, then see standings.
-  // The reaction game is a separate, non-clinical experience (its result never
-  // feeds the brain-health score).
+  // Page 1: the challenge pitch + name and Accenture email (for the leaderboard
+  // and prize). The reaction game is a separate, non-clinical experience (its
+  // result never feeds the brain-health score).
   { kind: "nameGate" },
   { kind: "game" },
   { kind: "leaderboard" },
 
-  // Then the brain-health quiz funnel.
+  // Hook bridges from the game into the brain-health quiz.
+  { kind: "hook" },
+
   { kind: "question", questionId: "age" },
   { kind: "question", questionId: "sex" },
 
@@ -93,7 +93,7 @@ const EVENT_FLOW: FunnelStep[] = [
 
   { kind: "statCard", cardId: "salthouse" },
 
-  { kind: "emailGate" },
+  // Email already captured on page 1, so no separate gate here.
   { kind: "analysing" },
   { kind: "result" },
   { kind: "paywall" },

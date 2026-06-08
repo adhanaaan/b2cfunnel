@@ -11,6 +11,7 @@ export interface LeadRow {
   total_score?: number | null;
   band?: BandName | null;
   answers?: Answers | null;
+  game_time_ms?: number | null;
   user_agent?: string | null;
 }
 
@@ -24,4 +25,5 @@ export interface LeadPayload {
   totalScore?: number;
   band?: BandName;
   answers?: Answers;
+  gameTimeMs?: number;
 }
