@@ -24,6 +24,10 @@ export function useFunnel(variant: QuizVariant) {
   );
   const next = useCallback(() => dispatch({ type: "NEXT" }), []);
   const back = useCallback(() => dispatch({ type: "BACK" }), []);
+  const submitName = useCallback(
+    (name: string) => dispatch({ type: "SUBMIT_NAME", name }),
+    [],
+  );
   const submitEmail = useCallback(
     (name: string, email: string) =>
       dispatch({ type: "SUBMIT_EMAIL", name, email }),
@@ -33,6 +37,10 @@ export function useFunnel(variant: QuizVariant) {
     () => dispatch({ type: "ANALYSIS_DONE" }),
     [],
   );
+  const gameDone = useCallback(
+    (timeMs: number) => dispatch({ type: "GAME_DONE", timeMs }),
+    [],
+  );
 
   return {
     state,
@@ -40,7 +48,9 @@ export function useFunnel(variant: QuizVariant) {
     answer,
     next,
     back,
+    submitName,
     submitEmail,
     analysisDone,
+    gameDone,
   };
 }

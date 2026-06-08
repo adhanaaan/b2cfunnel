@@ -10,6 +10,7 @@ import type { QuizVariant } from "@/types/funnel";
 import { VariantProvider } from "@/components/VariantContext";
 
 import { HookScreen } from "@/components/screens/HookScreen";
+import { NameGateScreen } from "@/components/screens/NameGateScreen";
 import { QuestionScreen } from "@/components/screens/QuestionScreen";
 import { QuestionGroupScreen } from "@/components/screens/QuestionGroupScreen";
 import { StatCardScreen } from "@/components/screens/StatCardScreen";
@@ -23,8 +24,17 @@ import { BookingScreen } from "@/components/screens/BookingScreen";
 
 /** Client host: owns the funnel state machine and renders the current screen. */
 export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
-  const { state, step, answer, next, back, submitEmail, analysisDone } =
-    useFunnel(variant);
+  const {
+    state,
+    step,
+    answer,
+    next,
+    back,
+    submitName,
+    submitEmail,
+    analysisDone,
+    gameDone,
+  } = useFunnel(variant);
 
   // Post the lead, then advance to the analysing screen. We don't block the
   // funnel on the network — advance regardless of the insert result.
@@ -56,6 +66,9 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     switch (step.kind) {
     case "hook":
       return <HookScreen onStart={next} />;
+
+    case "nameGate":
+      return <NameGateScreen onSubmit={submitName} />;
 
     case "question": {
       const question = QUESTIONS_BY_ID[step.questionId];
@@ -94,7 +107,9 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "emailGate":
-      return <EmailGateScreen onSubmit={handleEmailSubmit} />;
+      return (
+        <EmailGateScreen onSubmit={handleEmailSubmit} knownName={state.name} />
+      );
 
     case "analysing":
       return <AnalysingScreen name={state.name} onDone={analysisDone} />;
@@ -105,10 +120,16 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       ) : null;
 
     case "game":
-      return <GameScreen onDone={next} />;
+      return <GameScreen onComplete={gameDone} />;
 
     case "leaderboard":
-      return <LeaderboardScreen name={state.name} onDone={next} />;
+      return (
+        <LeaderboardScreen
+          name={state.name}
+          timeMs={state.gameTimeMs}
+          onDone={next}
+        />
+      );
 
     case "paywall":
       return state.result ? (

@@ -41,6 +41,12 @@ export function funnelReducer(
       return { ...state, cursor: Math.max(state.cursor - 1, 0) };
     }
 
+    case "SUBMIT_NAME": {
+      const flow = resolveFlow(state.answers, state.variant);
+      const next = Math.min(state.cursor + 1, flow.length - 1);
+      return { ...state, name: action.name, cursor: next };
+    }
+
     case "SUBMIT_EMAIL": {
       // Capture name + email and advance to the analysing screen.
       const flow = resolveFlow(state.answers, state.variant);
@@ -52,6 +58,12 @@ export function funnelReducer(
         emailCaptured: true,
         cursor: next,
       };
+    }
+
+    case "GAME_DONE": {
+      const flow = resolveFlow(state.answers, state.variant);
+      const next = Math.min(state.cursor + 1, flow.length - 1);
+      return { ...state, gameTimeMs: action.timeMs, cursor: next };
     }
 
     case "ANALYSIS_DONE": {

@@ -9,7 +9,6 @@ import { BigScore } from "@/components/result/BigScore";
 import { Gauge } from "@/components/result/Gauge";
 import { DrivingFactorPills } from "@/components/result/DrivingFactorPills";
 import { BlurredPaywallPreview } from "@/components/result/BlurredPaywallPreview";
-import { useIsEvent } from "@/components/VariantContext";
 
 interface ResultScreenProps {
   result: ScoreResult;
@@ -38,7 +37,6 @@ function formatLevers(result: ScoreResult): string {
 /** Screen 6 — the score reveal. Brand-critical layout (build brief §6). */
 export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
   const base = COPY.screens.resultBase;
-  const event = useIsEvent();
   const bandLabel = COPY.bandLabels[result.band];
   // Band-specific blurb, calibrated with the user's reported factors.
   const blurb = COPY.resultBlurbs[result.band].replace(
@@ -77,32 +75,14 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
           <DrivingFactorPills factors={result.drivingFactors} />
         </div>
 
-        {/* Hard divider into the next section. */}
+        {/* Hard divider into the consult unlock section. */}
         <div className="-mx-5 mt-8 border-t border-outline-variant sm:-mx-7" />
 
         <div className="mt-8">
-          {event ? (
-            <div className="rounded-2xl bg-gradient-to-br from-primary to-[#ec5e3b] px-6 pb-7 pt-6 text-primary-on shadow-[0_16px_40px_-12px_rgba(247,117,40,0.6)]">
-              <p className="text-xs font-bold uppercase tracking-widest text-primary-on/80">
-                {base.gameInviteHeading}
-              </p>
-              <p className="mt-2 text-lg font-bold leading-snug">
-                {base.gameInviteBody}
-              </p>
-              <button
-                type="button"
-                onClick={onUnlock}
-                className="mt-5 w-full rounded-lg bg-charcoal px-6 py-4 text-base font-bold text-white transition hover:brightness-110"
-              >
-                {base.gameInviteCta}
-              </button>
-            </div>
-          ) : (
-            <BlurredPaywallPreview
-              factors={result.drivingFactors}
-              onUnlock={onUnlock}
-            />
-          )}
+          <BlurredPaywallPreview
+            factors={result.drivingFactors}
+            onUnlock={onUnlock}
+          />
         </div>
 
         <ComplianceFooter />

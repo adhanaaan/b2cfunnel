@@ -6,13 +6,16 @@ import { ScreenShell } from "@/components/ui/ScreenShell";
 
 interface EmailGateScreenProps {
   onSubmit: (name: string, email: string) => Promise<void> | void;
+  /** If set, the name is already known (captured earlier) — ask email only. */
+  knownName?: string;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** Screen 4 — email gate at peak perceived value, just before the reveal. */
-export function EmailGateScreen({ onSubmit }: EmailGateScreenProps) {
+/** Email gate at peak perceived value, just before the reveal. */
+export function EmailGateScreen({ onSubmit, knownName }: EmailGateScreenProps) {
   const c = COPY.screens.emailGate;
+  const askName = !knownName;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +23,8 @@ export function EmailGateScreen({ onSubmit }: EmailGateScreenProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim().length === 0) {
+    const finalName = knownName ?? name.trim();
+    if (askName && finalName.length === 0) {
       setError("Please enter your first name.");
       return;
     }
@@ -31,7 +35,7 @@ export function EmailGateScreen({ onSubmit }: EmailGateScreenProps) {
     setError(null);
     setSubmitting(true);
     try {
-      await onSubmit(name.trim(), email.trim());
+      await onSubmit(finalName, email.trim());
     } catch {
       setSubmitting(false);
       setError("Something went wrong. Please try again.");
@@ -45,20 +49,26 @@ export function EmailGateScreen({ onSubmit }: EmailGateScreenProps) {
           {c.eyebrow}
         </p>
         <h1 className="mt-3 font-display text-3xl font-extrabold text-charcoal">
-          {c.heading}
+          {knownName ? `Almost there, ${knownName}` : c.heading}
         </h1>
-        <p className="mt-4 text-lg leading-relaxed text-secondary">{c.body}</p>
+        <p className="mt-4 text-lg leading-relaxed text-secondary">
+          {knownName
+            ? "Pop in your email and we'll send your Brain Health Score."
+            : c.body}
+        </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-3">
-          <input
-            type="text"
-            autoComplete="given-name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={c.namePlaceholder}
-            aria-label={c.nameLabel}
-            className="w-full rounded-lg border-2 border-outline-variant bg-surface-lowest px-5 py-4 text-base text-charcoal outline-none transition focus:border-primary"
-          />
+          {askName && (
+            <input
+              type="text"
+              autoComplete="given-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={c.namePlaceholder}
+              aria-label={c.nameLabel}
+              className="w-full rounded-lg border-2 border-outline-variant bg-surface-lowest px-5 py-4 text-base text-charcoal outline-none transition focus:border-primary"
+            />
+          )}
           <input
             type="email"
             inputMode="email"

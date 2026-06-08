@@ -21,6 +21,14 @@ export interface HookCopy {
   resourcesIntro: string;
 }
 
+export interface NameGateCopy {
+  eyebrow: string;
+  heading: string;
+  body: string;
+  placeholder: string;
+  cta: string;
+}
+
 export interface EmailGateCopy {
   eyebrow: string;
   heading: string;
@@ -115,6 +123,7 @@ export interface BookingCopy {
 
 export interface ScreenCopy {
   hook: HookCopy;
+  nameGate: NameGateCopy;
   emailGate: EmailGateCopy;
   analysing: AnalysingCopy;
   resultBase: ResultBaseCopy;
