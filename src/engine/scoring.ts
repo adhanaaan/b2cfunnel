@@ -5,7 +5,6 @@ import {
   bandForRiskAxis,
   bandForSymptomAxis,
   bandForTotal,
-  worseBand,
 } from "@/engine/bands";
 import { getDrivingFactors } from "@/engine/drivingFactors";
 import { detectPersona } from "@/engine/persona";
@@ -66,15 +65,13 @@ export function computeScore(answers: Answers): ScoreResult {
   const riskBand = bandForRiskAxis(riskScore);
   const symptomBand = bandForSymptomAxis(symptomScore);
 
-  // The displayed band follows the total score, so the band always matches the
-  // headline number and the band table. The safety override is the only
-  // exception: a persistent decline that someone else has noticed is floored at
-  // Elevated (it can raise the band, never lowers it).
+  // The band always follows the total score, so it matches the headline number
+  // and the band table. A persistent decline is captured through its score
+  // weight (persistence = 12, someone-else-noticed = 8) rather than by shifting
+  // the band. We still surface the flag for analytics.
+  const band = bandFromTotal;
   const safetyOverrideApplied =
     answers.persistence === "yes" && answers.someoneElseNoticed === "yes";
-  const band = safetyOverrideApplied
-    ? worseBand(bandFromTotal, "elevated")
-    : bandFromTotal;
 
   return {
     riskScore,
