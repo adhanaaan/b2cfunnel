@@ -35,17 +35,40 @@ function initials(name: string) {
   );
 }
 
-/** Prize image at /public/fitbit.png if present, else a trophy. */
+/** Prize image at /public/fitbit.{webp,png,jpg} if present, else a trophy. */
+const PRIZE_SRCS = ["/fitbit.webp", "/fitbit.png", "/fitbit.jpg"];
 function PrizeImage() {
-  const [hasImg, setHasImg] = useState(false);
+  const [src, setSrc] = useState<string | null>(null);
   useEffect(() => {
-    const img = new Image();
-    img.onload = () => setHasImg(true);
-    img.src = "/fitbit.png";
+    let cancelled = false;
+    (async () => {
+      for (const s of PRIZE_SRCS) {
+        const ok = await new Promise<boolean>((res) => {
+          const img = new Image();
+          img.onload = () => res(true);
+          img.onerror = () => res(false);
+          img.src = s;
+        });
+        if (cancelled) return;
+        if (ok) {
+          setSrc(s);
+          return;
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
-  if (!hasImg) return <span className="text-[18vh] leading-none">🏆</span>;
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src="/fitbit.png" alt={PRIZE} className="h-[22vh] w-auto object-contain drop-shadow-xl" />;
+  if (!src) return <span className="text-[18vh] leading-none">🏆</span>;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={PRIZE}
+      className="h-[26vh] w-auto rounded-2xl object-contain drop-shadow-xl"
+    />
+  );
 }
 
 export default function LeaderboardBoard() {
