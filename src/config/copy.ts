@@ -50,11 +50,11 @@ export const COPY: CopyConfig = {
     },
     nameGate: {
       eyebrow: "Reaction Time Challenge",
-      heading: "Got the fastest brain at Accenture?",
-      body: "Match 20 symbols as fast as you can. The fastest time today wins a Fitbit. Add your details to join the leaderboard.",
+      heading: "How fast does your brain process?",
+      body: "A quick symbol-matching challenge, inspired by the tasks researchers use to study processing speed. See how you do, then explore your full brain health profile, built with NTU's Dementia Research Centre.",
       placeholder: "Your name",
       emailPlaceholder: "Your Accenture email",
-      emailNote: "Accenture email, for prize consideration.",
+      emailNote: "Your Accenture email goes on the leaderboard and into the Fitbit draw.",
       cta: "Start the challenge →",
     },
     emailGate: {
