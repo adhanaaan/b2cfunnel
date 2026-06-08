@@ -191,11 +191,36 @@ export const COPY: CopyConfig = {
       shareHeading: "📸 Screenshot your rank",
       shareBody: "Share it and dare a colleague to beat your time.",
       shareCta: "Share",
-      bridgeHeading: "Fast reflexes. But how healthy is the brain behind them?",
+      bridgeHeading: "Fast reflexes. But what does your speed actually mean?",
       bridgeBody:
-        "Reaction time is just one slice. If you'd like, take an optional 3-minute brain health check, built with NTU's Dementia Research Centre.",
-      cta: "Check my brain health →",
+        "Your reaction time is one slice of the picture. See what it says about your brain, and what else shapes your brain health.",
+      cta: "See what this means →",
       disclaimer: "Reaction-time games are fun, but not a cognitive assessment.",
+    },
+    eventHook: {
+      eyebrow: "Brain Health",
+      rankHeading: "You just tested your processing speed",
+      topLabel: "Fastest today",
+      youLabel: "Your time",
+      whatHeading: "What is processing speed?",
+      whatBody:
+        "It's how quickly your brain takes in information and responds, the engine behind quick thinking. It's also one of the first things to shift as the brain ages.",
+      domainsHeading: "Unlock the full picture",
+      domainsBody:
+        "Processing speed is just one domain. Memory, attention and executive function each tell a different story, and they don't always change together.",
+      testedDomain: "Processing Speed",
+      testedLabel: "Tested",
+      lockedDomains: ["Memory", "Attention", "Executive function"],
+      lockedLabel: "Not tested",
+      understandHeading: "Understand your brain better",
+      understandBody:
+        "Your brain health is shaped by factors you can change. Take an optional 3-minute check to see your profile and what protects these areas over time.",
+      cta: "Explore your brain health →",
+      decline: "No thanks, just the game",
+      credibility:
+        "Built with NTU's Dementia Research Centre · 2024 Lancet Commission",
+      disclaimer:
+        "Reaction-time games are fun, but not a cognitive assessment.",
     },
   },
 

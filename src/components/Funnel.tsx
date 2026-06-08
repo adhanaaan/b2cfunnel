@@ -10,6 +10,7 @@ import type { QuizVariant } from "@/types/funnel";
 import { VariantProvider } from "@/components/VariantContext";
 
 import { HookScreen } from "@/components/screens/HookScreen";
+import { PostGameHook } from "@/components/screens/PostGameHook";
 import { NameGateScreen } from "@/components/screens/NameGateScreen";
 import { QuestionScreen } from "@/components/screens/QuestionScreen";
 import { QuestionGroupScreen } from "@/components/screens/QuestionGroupScreen";
@@ -75,11 +76,18 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
   const screen = (() => {
     switch (step.kind) {
     case "hook":
-      return (
-        <HookScreen
+      // Event: the post-game opt-in hook (recap + locked domains). Full quiz:
+      // the cold-open intro hook.
+      return state.variant === "event" ? (
+        <PostGameHook
+          name={state.name}
+          email={state.email}
+          timeMs={state.gameTimeMs}
           onStart={next}
-          onDecline={state.variant === "event" ? back : undefined}
+          onDecline={back}
         />
+      ) : (
+        <HookScreen onStart={next} />
       );
 
     case "nameGate":
