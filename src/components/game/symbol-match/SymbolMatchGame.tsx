@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Task2Game } from "./Task2Game";
+import { SymbolMatchTour } from "./demo/SymbolMatchTour";
 import { formatTime } from "@/lib/format";
 
 const GOAL = 20;
@@ -52,38 +53,9 @@ export function SymbolMatchGame({ onComplete }: Props) {
     });
   };
 
-  // Interactive practice: try one before the clock starts.
+  // The real recognaizelite guided tour, then the timed run.
   if (phase === "demo") {
-    return (
-      <div
-        className="fixed inset-0 z-50 overflow-hidden"
-        style={{ background: "radial-gradient(#E4E3FF78, #D68DE878)" }}
-      >
-        <Task2Game
-          tiles={TILES}
-          onSuccess={() => setPhase("countdown")}
-          onError={() => {}}
-        >
-          <div className="z-40 w-full max-w-md text-center">
-            <p className="text-sm font-bold uppercase tracking-widest text-[#8735AC]">
-              How to play
-            </p>
-            <p className="mx-auto mt-1 max-w-sm text-[15px] font-semibold leading-snug text-charcoal">
-              Each symbol has a number in the key below. Tap the number that
-              matches the symbol shown. Try one to begin!
-            </p>
-          </div>
-        </Task2Game>
-        <button
-          type="button"
-          onClick={() => setPhase("countdown")}
-          className="absolute right-4 z-50 rounded-full bg-white/70 px-4 py-2 text-sm font-bold text-[#5b2c6f] shadow-md"
-          style={{ bottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
-        >
-          Skip →
-        </button>
-      </div>
-    );
+    return <SymbolMatchTour onDone={() => setPhase("countdown")} />;
   }
 
   if (phase === "countdown") {
