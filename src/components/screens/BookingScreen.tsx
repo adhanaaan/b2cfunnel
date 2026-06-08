@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { ComplianceFooter } from "@/components/ui/ComplianceFooter";
@@ -90,7 +91,7 @@ export function BookingScreen() {
             />
             <div className="min-w-0">
               <p className="text-lg font-bold text-charcoal">{doctor.name}</p>
-              <p className="text-sm leading-snug text-outline">
+              <p className="text-sm font-semibold leading-snug text-charcoal">
                 {doctor.credentials}
               </p>
               <p className="text-sm leading-snug text-outline">
@@ -134,20 +135,19 @@ export function BookingScreen() {
           })}
         </div>
 
-        {/* Trust logos (placeholders until real assets are added) */}
+        {/* Partner logo */}
         <div className="mt-9 text-center">
           <p className="text-xs font-bold uppercase tracking-widest text-outline">
             {c.trustHeading}
           </p>
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
-            {c.trustLogos.map((logo) => (
-              <span
-                key={logo}
-                className="rounded-lg border border-outline-variant bg-surface-lowest px-4 py-2 text-sm font-semibold text-secondary"
-              >
-                {logo}
-              </span>
-            ))}
+          <div className="mt-4 flex items-center justify-center">
+            <Image
+              src={c.trustLogo}
+              alt="Partner: LKC Medicine Dementia Research Centre"
+              width={2560}
+              height={976}
+              className="h-auto w-full max-w-xs"
+            />
           </div>
         </div>
 
