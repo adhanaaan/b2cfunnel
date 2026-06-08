@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import { useFunnel } from "@/state/useFunnel";
+import { track } from "@/lib/analytics";
 import { computeScore } from "@/engine/scoring";
+import type { FunnelStep } from "@/types/funnel";
 import { QUESTIONS_BY_ID } from "@/config/questions";
 import { STAT_CARDS_BY_ID } from "@/config/statCards";
 import { totalQuestions, questionNumber } from "@/config/funnelFlow";
@@ -23,6 +26,20 @@ import { LeaderboardScreen } from "@/components/screens/LeaderboardScreen";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
 import { BookingScreen } from "@/components/screens/BookingScreen";
 
+/** A stable, human-readable name for a funnel step (for drop-off analytics). */
+function stepKey(step: FunnelStep): string {
+  switch (step.kind) {
+    case "question":
+      return `question:${step.questionId}`;
+    case "questionGroup":
+      return `questionGroup:${step.title}`;
+    case "statCard":
+      return `statCard:${step.cardId}`;
+    default:
+      return step.kind;
+  }
+}
+
 /** Client host: owns the funnel state machine and renders the current screen. */
 export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
   const {
@@ -36,6 +53,12 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     analysisDone,
     gameDone,
   } = useFunnel(variant);
+
+  // Anonymous drop-off tracking: a step view fires whenever the step changes.
+  const stepName = stepKey(step);
+  useEffect(() => {
+    track("step_view", { variant: state.variant, step: stepName });
+  }, [stepName, state.variant]);
 
   // Post the complete lead (name + email captured earlier, plus the computed
   // score and game time) when the profile is built. Fire-and-forget: capturing
@@ -84,7 +107,10 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           email={state.email}
           timeMs={state.gameTimeMs}
           onStart={next}
-          onDecline={back}
+          onDecline={() => {
+            track("hook_declined", { variant: state.variant });
+            back();
+          }}
         />
       ) : (
         <HookScreen onStart={next} />

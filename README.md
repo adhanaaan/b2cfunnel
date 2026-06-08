@@ -119,6 +119,30 @@ alter table public.game_scores enable row level security;
 The leaderboard shows **today's best time per email** (Singapore time), fastest
 first. Players may retry; only their best counts.
 
+And a `funnel_events` table for **anonymous drop-off analytics** (no PII — a
+random per-session id, the step name and the variant):
+
+```sql
+create table public.funnel_events (
+  id         bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  session_id text not null,
+  event      text not null,       -- e.g. 'step_view', 'hook_declined'
+  step       text,                -- e.g. 'question:age', 'leaderboard'
+  variant    text                 -- 'full' | 'event'
+);
+create index on public.funnel_events (created_at);
+create index on public.funnel_events (session_id);
+
+-- Writes go only through the server API route (service-role key).
+alter table public.funnel_events enable row level security;
+```
+
+A `step_view` row is written each time a participant reaches a step, plus a
+`hook_declined` row when they opt out of the brain-health check. To see the
+funnel, count **distinct `session_id` per `step`** (ordered by where each step
+sits in the flow); the gap between consecutive steps is your drop-off.
+
 Env vars (see `.env.example`): `NEXT_PUBLIC_SUPABASE_URL`,
 `SUPABASE_SERVICE_ROLE_KEY` (server only — never `NEXT_PUBLIC`), and
 `STORE_ANSWERS` (PDPA-safe default: raw answers are **not** persisted unless this
