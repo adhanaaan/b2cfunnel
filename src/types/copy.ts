@@ -2,23 +2,29 @@ import type { BandName, Persona } from "@/types/engine";
 
 /** Shape of the editable copy config. British English throughout. */
 
-// Doctor card on the hook.
-export interface DoctorCardCopy {
-  avatarInitials: string; // fallback shown until the photo loads
-  image?: string; // path under /public, e.g. "/dr-kandiah.jpg"
-  name: string;
-  credentials: string;
-  affiliation: string;
+// Institutional / evidence credibility block (replaces the named clinician).
+export interface CredibilityCopy {
+  heading: string;
+  points: string[];
+  logo?: string; // path under /public to the partner logo
 }
 
 export interface HookCopy {
   eyebrow: string;
   heading: string;
   subheading: string;
-  doctor: DoctorCardCopy;
+  credibility: CredibilityCopy;
   durationNote: string;
   cta: string;
   resourcesIntro: string;
+  // Event variant: this screen is an explicit opt-in after the game, not a
+  // cold open or a sell. Accenture requires players to opt in to continue.
+  eventEyebrow: string;
+  eventHeading: string;
+  eventSubheading: string;
+  eventCta: string;
+  eventDurationNote: string;
+  eventDecline: string; // copy on the "no thanks" path
 }
 
 export interface NameGateCopy {
@@ -40,6 +46,14 @@ export interface EmailGateCopy {
   placeholder: string;
   cta: string;
   privacyNote: string;
+  // Event variant: collected at the end for the personalised score, kept
+  // separate from the Accenture/leaderboard email captured up front.
+  personalEyebrow: string;
+  personalHeading: string;
+  personalBody: string;
+  personalPlaceholder: string;
+  personalCta: string;
+  personalPrivacyNote: string;
 }
 
 export interface AnalysingCopy {
@@ -51,7 +65,6 @@ export interface AnalysingCopy {
 
 export interface ResultBaseCopy {
   reviewerStrap: string;
-  reviewerInitials: string;
   eyebrow: string;
   scoreSuffix: string; // '/25'
   drivingHeading: string;
@@ -99,8 +112,8 @@ export interface FaqItem {
 export interface PaywallCopy {
   eyebrow: string;
   heading: string;
-  doctorName: string;
-  doctorTitle: string;
+  offerName: string;
+  offerNote: string;
   bundle: string;
   price: string;
   priceNote: string;
@@ -122,7 +135,7 @@ export interface BookingCopy {
   bookingUrl: string; // external booking link (placeholder for now)
   includes: string[]; // top-of-card checklist
   panels: BiomarkerPanel[];
-  doctorHeading: string;
+  credibilityHeading: string;
   faqHeading: string;
   trustHeading: string;
   trustLogo: string; // path under /public to the partner logo image

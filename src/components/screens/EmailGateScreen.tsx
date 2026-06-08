@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
+import { useIsEvent } from "@/components/VariantContext";
 
 interface EmailGateScreenProps {
   onSubmit: (name: string, email: string) => Promise<void> | void;
@@ -14,7 +15,22 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /** Email gate at peak perceived value, just before the reveal. */
 export function EmailGateScreen({ onSubmit, knownName }: EmailGateScreenProps) {
-  const c = COPY.screens.emailGate;
+  const base = COPY.screens.emailGate;
+  const event = useIsEvent();
+  // Event collects a personal email at the end (separate from the Accenture
+  // address captured up front for the leaderboard).
+  const c = event
+    ? {
+        eyebrow: base.personalEyebrow,
+        heading: base.personalHeading,
+        body: base.personalBody,
+        nameLabel: base.nameLabel,
+        namePlaceholder: base.namePlaceholder,
+        placeholder: base.personalPlaceholder,
+        cta: base.personalCta,
+        privacyNote: base.personalPrivacyNote,
+      }
+    : base;
   const askName = !knownName;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -49,10 +65,10 @@ export function EmailGateScreen({ onSubmit, knownName }: EmailGateScreenProps) {
           {c.eyebrow}
         </p>
         <h1 className="mt-3 font-display text-3xl font-extrabold text-charcoal">
-          {knownName ? `Almost there, ${knownName}` : c.heading}
+          {!event && knownName ? `Almost there, ${knownName}` : c.heading}
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-secondary">
-          {knownName
+          {!event && knownName
             ? "Pop in your email and we'll send your Brain Health Score."
             : c.body}
         </p>

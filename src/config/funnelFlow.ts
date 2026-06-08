@@ -93,7 +93,9 @@ const EVENT_FLOW: FunnelStep[] = [
 
   { kind: "statCard", cardId: "salthouse" },
 
-  // Email already captured on page 1, so no separate gate here.
+  // Personal email at the end, for the personalised score (separate from the
+  // Accenture/leaderboard email captured on page 1).
+  { kind: "emailGate" },
   { kind: "analysing" },
   { kind: "result" },
   { kind: "paywall" },

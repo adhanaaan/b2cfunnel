@@ -26,7 +26,8 @@ export interface FunnelState {
   cursor: number; // index into the resolved flow
   answers: Answers;
   name?: string;
-  email?: string;
+  email?: string; // event: the Accenture/leaderboard email captured up front
+  personalEmail?: string; // event: personal email captured at the end for results
   emailCaptured: boolean;
   result?: ScoreResult;
   gameTimeMs?: number; // reaction-game result (event only)
@@ -38,5 +39,6 @@ export type FunnelAction =
   | { type: "BACK" }
   | { type: "SUBMIT_NAME"; name: string }
   | { type: "SUBMIT_EMAIL"; name: string; email: string }
+  | { type: "SUBMIT_PERSONAL_EMAIL"; name: string; email: string }
   | { type: "ANALYSIS_DONE" }
   | { type: "GAME_DONE"; timeMs: number };

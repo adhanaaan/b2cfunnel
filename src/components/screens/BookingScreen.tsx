@@ -5,7 +5,7 @@ import Image from "next/image";
 import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { ComplianceFooter } from "@/components/ui/ComplianceFooter";
-import { DoctorAvatar } from "@/components/result/DoctorAvatar";
+import { CredibilitySignals } from "@/components/result/CredibilitySignals";
 
 /** A primary "Book now" call to action, linking to the booking destination. */
 function BookButton({ label, url }: { label: string; url: string }) {
@@ -22,7 +22,7 @@ function BookButton({ label, url }: { label: string; url: string }) {
 /** Final screen — the consultation booking page. */
 export function BookingScreen() {
   const c = COPY.screens.booking;
-  const doctor = COPY.screens.hook.doctor;
+  const credibility = COPY.screens.hook.credibility;
   const faqs = COPY.screens.paywall.faqs;
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
@@ -78,27 +78,12 @@ export function BookingScreen() {
           </div>
         </div>
 
-        {/* Meet your doctor */}
+        {/* Why this is credible (institutional / evidence). */}
         <h2 className="mt-9 font-display text-2xl font-bold text-charcoal">
-          {c.doctorHeading}
+          {c.credibilityHeading}
         </h2>
         <div className="mt-4 rounded-2xl bg-surface-lowest p-6 shadow-card">
-          <div className="flex items-center gap-4">
-            <DoctorAvatar
-              image={doctor.image}
-              initials={doctor.avatarInitials}
-              className="h-24 w-24"
-            />
-            <div className="min-w-0">
-              <p className="text-lg font-bold text-charcoal">{doctor.name}</p>
-              <p className="text-sm font-bold leading-snug text-charcoal">
-                {doctor.credentials}
-              </p>
-              <p className="text-sm leading-snug text-outline">
-                {doctor.affiliation}
-              </p>
-            </div>
-          </div>
+          <CredibilitySignals points={credibility.points} />
           <div className="mt-5">
             <BookButton label={c.bookCta} url={c.bookingUrl} />
           </div>
