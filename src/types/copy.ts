@@ -26,6 +26,8 @@ export interface NameGateCopy {
   heading: string;
   body: string;
   placeholder: string;
+  emailPlaceholder: string;
+  emailNote: string;
   cta: string;
 }
 
@@ -80,6 +82,9 @@ export interface LeaderboardCopy {
   heading: string;
   prize: string;
   youNote: string;
+  shareHeading: string;
+  shareBody: string;
+  shareCta: string;
   cta: string;
   disclaimer: string;
 }
