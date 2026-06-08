@@ -1,32 +1,83 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 
 interface LeaderboardScreenProps {
   name?: string;
+  email?: string;
   timeMs?: number;
   onDone: () => void;
 }
 
-// Placeholder standings (seconds to 20 correct) until the game is wired to
-// Supabase for a real shared leaderboard.
+interface Entry {
+  name: string;
+  timeMs: number;
+  you?: boolean;
+}
+
+// Fallback standings (seconds to 20 correct) shown only when the leaderboard
+// API returns nothing (e.g. Supabase not configured yet).
 const MOCK = [
-  { name: "Wei Jie", t: 15.8 },
-  { name: "Aisha", t: 17.4 },
-  { name: "Marcus", t: 19.1 },
-  { name: "Priya", t: 22.6 },
-  { name: "Daniel", t: 26.3 },
+  { name: "Wei Jie", timeMs: 15800 },
+  { name: "Aisha", timeMs: 17400 },
+  { name: "Marcus", timeMs: 19100 },
+  { name: "Priya", timeMs: 22600 },
+  { name: "Daniel", timeMs: 26300 },
 ];
 
 /** The reaction-game leaderboard. Kept separate from the brain-health score. */
 export function LeaderboardScreen({
   name,
+  email,
   timeMs,
   onDone,
 }: LeaderboardScreenProps) {
   const c = COPY.screens.leaderboard;
   const youT = timeMs != null ? timeMs / 1000 : null;
+  const [rows, setRows] = useState<Entry[] | null>(null);
+  const [rank, setRank] = useState<number | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/leaderboard?limit=10${email ? `&email=${encodeURIComponent(email)}` : ""}`,
+        );
+        const data = await res.json();
+        if (cancelled) return;
+        if (Array.isArray(data.entries) && data.entries.length > 0) {
+          setRows(
+            data.entries.map((e: { name: string; timeMs: number }) => ({
+              name: e.name,
+              timeMs: e.timeMs,
+              you:
+                !!email &&
+                data.you != null &&
+                e.timeMs === data.you.timeMs &&
+                e.name === name,
+            })),
+          );
+          setRank(data.you?.rank ?? null);
+          return;
+        }
+      } catch {
+        /* fall back to mock below */
+      }
+      // Fallback: mock standings + the player's own time slotted in.
+      const merged: Entry[] = [
+        ...MOCK,
+        ...(timeMs != null ? [{ name: name || "You", timeMs, you: true }] : []),
+      ].sort((a, b) => a.timeMs - b.timeMs);
+      setRows(merged);
+      setRank(merged.findIndex((r) => r.you) + 1 || null);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [email, name, timeMs]);
 
   const onShare = async () => {
     const text =
@@ -40,16 +91,9 @@ export function LeaderboardScreen({
         await navigator.clipboard?.writeText(text);
       }
     } catch {
-      /* user cancelled or unsupported — screenshot prompt still stands */
+      /* cancelled/unsupported — the screenshot prompt still stands */
     }
   };
-
-  const rows = [
-    ...MOCK.map((m) => ({ ...m, you: false })),
-    ...(youT != null ? [{ name: name || "You", t: youT, you: true }] : []),
-  ].sort((a, b) => a.t - b.t);
-
-  const yourRank = rows.findIndex((r) => r.you) + 1;
 
   return (
     <ScreenShell>
@@ -63,7 +107,7 @@ export function LeaderboardScreen({
               {youT.toFixed(1)}s
             </p>
             <p className="mt-1 text-sm font-semibold">
-              20 correct · ranked #{yourRank} today
+              20 correct{rank ? ` · ranked #${rank} today` : ""}
             </p>
           </div>
         )}
@@ -79,7 +123,7 @@ export function LeaderboardScreen({
         </p>
 
         <ol className="mt-6 space-y-2">
-          {rows.map((row, i) => (
+          {(rows ?? []).map((row, i) => (
             <li
               key={`${row.name}-${i}`}
               className={[
@@ -103,7 +147,7 @@ export function LeaderboardScreen({
                 {row.you ? `${row.name} (you)` : row.name}
               </span>
               <span className="font-bold tabular-nums text-primary">
-                {row.t.toFixed(1)}s
+                {(row.timeMs / 1000).toFixed(1)}s
               </span>
             </li>
           ))}

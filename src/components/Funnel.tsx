@@ -51,6 +51,16 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     analysisDone();
   };
 
+  // Record the game result to the leaderboard, then advance.
+  const handleGameDone = (timeMs: number) => {
+    void fetch("/api/score", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: state.name, email: state.email, timeMs }),
+    }).catch(() => {});
+    gameDone(timeMs);
+  };
+
   const screen = (() => {
     switch (step.kind) {
     case "hook":
@@ -109,12 +119,13 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       ) : null;
 
     case "game":
-      return <GameScreen onComplete={gameDone} />;
+      return <GameScreen onComplete={handleGameDone} />;
 
     case "leaderboard":
       return (
         <LeaderboardScreen
           name={state.name}
+          email={state.email}
           timeMs={state.gameTimeMs}
           onDone={next}
         />
