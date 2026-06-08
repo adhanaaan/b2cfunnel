@@ -24,6 +24,10 @@ export function useFunnel(variant: QuizVariant) {
   );
   const next = useCallback(() => dispatch({ type: "NEXT" }), []);
   const back = useCallback(() => dispatch({ type: "BACK" }), []);
+  const submitName = useCallback(
+    (name: string) => dispatch({ type: "SUBMIT_NAME", name }),
+    [],
+  );
   const submitEmail = useCallback(
     (name: string, email: string) =>
       dispatch({ type: "SUBMIT_EMAIL", name, email }),
@@ -44,6 +48,7 @@ export function useFunnel(variant: QuizVariant) {
     answer,
     next,
     back,
+    submitName,
     submitEmail,
     analysisDone,
     gameDone,

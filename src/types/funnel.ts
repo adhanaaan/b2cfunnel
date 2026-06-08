@@ -7,6 +7,7 @@ export type QuizVariant = "full" | "event";
 /** A single step in the funnel flow. */
 export type FunnelStep =
   | { kind: "hook" }
+  | { kind: "nameGate" }
   | { kind: "question"; questionId: string }
   | { kind: "questionGroup"; title: string; questionIds: string[] }
   | { kind: "statCard"; cardId: string }
@@ -35,6 +36,7 @@ export type FunnelAction =
   | { type: "ANSWER"; questionId: string; value: AnswerValue }
   | { type: "NEXT" }
   | { type: "BACK" }
+  | { type: "SUBMIT_NAME"; name: string }
   | { type: "SUBMIT_EMAIL"; name: string; email: string }
   | { type: "ANALYSIS_DONE" }
   | { type: "GAME_DONE"; timeMs: number };

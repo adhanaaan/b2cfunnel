@@ -10,6 +10,7 @@ import type { QuizVariant } from "@/types/funnel";
 import { VariantProvider } from "@/components/VariantContext";
 
 import { HookScreen } from "@/components/screens/HookScreen";
+import { NameGateScreen } from "@/components/screens/NameGateScreen";
 import { QuestionScreen } from "@/components/screens/QuestionScreen";
 import { QuestionGroupScreen } from "@/components/screens/QuestionGroupScreen";
 import { StatCardScreen } from "@/components/screens/StatCardScreen";
@@ -29,6 +30,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     answer,
     next,
     back,
+    submitName,
     submitEmail,
     analysisDone,
     gameDone,
@@ -64,6 +66,9 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     switch (step.kind) {
     case "hook":
       return <HookScreen onStart={next} />;
+
+    case "nameGate":
+      return <NameGateScreen onSubmit={submitName} />;
 
     case "question": {
       const question = QUESTIONS_BY_ID[step.questionId];
@@ -102,7 +107,9 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "emailGate":
-      return <EmailGateScreen onSubmit={handleEmailSubmit} />;
+      return (
+        <EmailGateScreen onSubmit={handleEmailSubmit} knownName={state.name} />
+      );
 
     case "analysing":
       return <AnalysingScreen name={state.name} onDone={analysisDone} />;

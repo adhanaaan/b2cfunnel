@@ -48,6 +48,13 @@ export const COPY: CopyConfig = {
       resourcesIntro:
         "Based on the 2024 Lancet Commission on Dementia Prevention, CAIDE, and the SCD framework.",
     },
+    nameGate: {
+      eyebrow: "Reaction Time Challenge",
+      heading: "First up: the challenge",
+      body: "Match 20 symbols as fast as you can. The fastest of the day wins a Fitbit. Add your name to the board to play.",
+      placeholder: "Your first name",
+      cta: "Start the challenge →",
+    },
     emailGate: {
       eyebrow: "Almost there",
       heading: "Where should we send your score?",
@@ -162,7 +169,7 @@ export const COPY: CopyConfig = {
       heading: "Fastest minds today",
       prize: "🏆 Top of the day wins a Fitbit.",
       youNote: "Your result will appear here once the game is live.",
-      cta: "What's next →",
+      cta: "Now get your Brain Health Score →",
       disclaimer: "Reaction-time games are fun, but not a cognitive assessment.",
     },
   },
