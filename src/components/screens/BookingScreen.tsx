@@ -91,7 +91,7 @@ export function BookingScreen() {
             />
             <div className="min-w-0">
               <p className="text-lg font-bold text-charcoal">{doctor.name}</p>
-              <p className="text-sm font-semibold leading-snug text-charcoal">
+              <p className="text-sm font-bold leading-snug text-charcoal">
                 {doctor.credentials}
               </p>
               <p className="text-sm leading-snug text-outline">
@@ -143,9 +143,10 @@ export function BookingScreen() {
           <div className="mt-4 flex items-center justify-center">
             <Image
               src={c.trustLogo}
-              alt="Partner: LKC Medicine Dementia Research Centre"
+              alt="Partner: NTU and Lee Kong Chian School of Medicine, Dementia Research Centre Singapore"
               width={2560}
               height={976}
+              loading="eager"
               className="h-auto w-full max-w-xs"
             />
           </div>

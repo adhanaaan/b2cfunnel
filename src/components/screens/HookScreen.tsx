@@ -43,7 +43,7 @@ export function HookScreen({ onStart }: HookScreenProps) {
           />
           <div className="min-w-0">
             <p className="text-lg font-bold text-charcoal">{c.doctor.name}</p>
-            <p className="text-sm font-semibold leading-snug text-charcoal">
+            <p className="text-sm font-bold leading-snug text-charcoal">
               {c.doctor.credentials}
             </p>
             <p className="text-sm leading-snug text-outline">
