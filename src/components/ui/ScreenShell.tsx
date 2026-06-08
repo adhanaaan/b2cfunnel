@@ -1,3 +1,7 @@
+"use client";
+
+import { useIsEvent } from "@/components/VariantContext";
+
 interface ScreenShellProps {
   children: React.ReactNode;
   wide?: boolean;
@@ -5,9 +9,30 @@ interface ScreenShellProps {
 
 /** Centred, responsive container shared by every screen. */
 export function ScreenShell({ children, wide = false }: ScreenShellProps) {
+  const event = useIsEvent();
+
   return (
-    <main className="flex min-h-screen flex-col items-center px-4 py-8 sm:py-12">
-      <div className={wide ? "w-full max-w-2xl" : "w-full max-w-lg"}>
+    <main
+      className={[
+        "relative flex min-h-screen flex-col items-center overflow-hidden px-4 py-8 sm:py-12",
+        event ? "bg-gradient-to-b from-[#fff4ee] via-surface to-[#fbe7de]" : "",
+      ].join(" ")}
+    >
+      {/* Premium ambient glow for the event experience. */}
+      {event && (
+        <>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-primary/20 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-[#ffb37a]/30 blur-3xl"
+          />
+        </>
+      )}
+
+      <div className={["relative w-full", wide ? "max-w-2xl" : "max-w-lg"].join(" ")}>
         {children}
       </div>
     </main>

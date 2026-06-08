@@ -7,6 +7,7 @@ import { STAT_CARDS_BY_ID } from "@/config/statCards";
 import { totalQuestions, questionNumber } from "@/config/funnelFlow";
 import type { LeadPayload } from "@/lib/supabase/types";
 import type { QuizVariant } from "@/types/funnel";
+import { VariantProvider } from "@/components/VariantContext";
 
 import { HookScreen } from "@/components/screens/HookScreen";
 import { QuestionScreen } from "@/components/screens/QuestionScreen";
@@ -49,7 +50,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     submitEmail(name, email);
   };
 
-  switch (step.kind) {
+  const screen = (() => {
+    switch (step.kind) {
     case "hook":
       return <HookScreen onStart={next} />;
 
@@ -110,5 +112,10 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     default:
       return null;
-  }
+    }
+  })();
+
+  return (
+    <VariantProvider value={state.variant}>{screen}</VariantProvider>
+  );
 }
