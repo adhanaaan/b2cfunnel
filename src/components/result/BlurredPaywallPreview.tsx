@@ -42,7 +42,7 @@ export function BlurredPaywallPreview({
   const heading = buildHeading(factors);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-charcoal px-6 pb-7 pt-6 text-white">
+    <div className="relative overflow-hidden rounded-2xl bg-primary px-6 pb-7 pt-6 text-primary-on">
       <h2 className="text-lg font-bold leading-snug">{heading}</h2>
 
       {/* A single blurred faux-content block with the unlock message overlaid. */}
@@ -51,7 +51,7 @@ export function BlurredPaywallPreview({
           {[92, 80, 86, 72, 60].map((w, i) => (
             <div
               key={i}
-              className="h-3.5 rounded bg-white/15"
+              className="h-3.5 rounded bg-primary-on/25"
               style={{ width: `${w}%` }}
             />
           ))}
@@ -59,7 +59,7 @@ export function BlurredPaywallPreview({
 
         {/* Overlay copy sits on top of the blur. */}
         <div className="absolute inset-0 flex items-center justify-center px-2">
-          <p className="text-center text-base font-semibold leading-snug text-white">
+          <p className="text-center text-lg font-bold leading-snug text-primary-on">
             {unlockOverlay}
           </p>
         </div>
@@ -68,7 +68,7 @@ export function BlurredPaywallPreview({
       <button
         type="button"
         onClick={onUnlock}
-        className="mt-7 w-full rounded-lg bg-primary px-6 py-4 text-base font-bold text-primary-on shadow-float transition hover:brightness-105"
+        className="mt-7 w-full rounded-lg bg-charcoal px-6 py-4 text-base font-bold text-white shadow-float transition hover:brightness-110"
       >
         {unlockCta}
       </button>

@@ -1,6 +1,9 @@
 import type { Answers, AnswerValue } from "@/types/question";
 import type { ScoreResult } from "@/types/engine";
 
+/** Which quiz variant is being served. */
+export type QuizVariant = "full" | "event";
+
 /** A single step in the funnel flow. */
 export type FunnelStep =
   | { kind: "hook" }
@@ -16,6 +19,7 @@ export type FunnelStep =
 export type StepKind = FunnelStep["kind"];
 
 export interface FunnelState {
+  variant: QuizVariant;
   cursor: number; // index into the resolved flow
   answers: Answers;
   name?: string;

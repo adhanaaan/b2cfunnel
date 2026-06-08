@@ -6,6 +6,7 @@ import { QUESTIONS_BY_ID } from "@/config/questions";
 import { STAT_CARDS_BY_ID } from "@/config/statCards";
 import { totalQuestions, questionNumber } from "@/config/funnelFlow";
 import type { LeadPayload } from "@/lib/supabase/types";
+import type { QuizVariant } from "@/types/funnel";
 
 import { HookScreen } from "@/components/screens/HookScreen";
 import { QuestionScreen } from "@/components/screens/QuestionScreen";
@@ -18,9 +19,9 @@ import { PaywallScreen } from "@/components/screens/PaywallScreen";
 import { BookingScreen } from "@/components/screens/BookingScreen";
 
 /** Client host: owns the funnel state machine and renders the current screen. */
-export function Funnel() {
+export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
   const { state, step, answer, next, back, submitEmail, analysisDone } =
-    useFunnel();
+    useFunnel(variant);
 
   // Post the lead, then advance to the analysing screen. We don't block the
   // funnel on the network — advance regardless of the insert result.
@@ -58,8 +59,8 @@ export function Funnel() {
         <QuestionScreen
           question={question}
           value={state.answers[question.id]}
-          current={questionNumber(state.answers, state.cursor)}
-          total={totalQuestions(state.answers)}
+          current={questionNumber(state.answers, state.cursor, state.variant)}
+          total={totalQuestions(state.answers, state.variant)}
           canGoBack={state.cursor > 0}
           onAnswer={(value) => answer(question.id, value)}
           onNext={next}
@@ -74,8 +75,8 @@ export function Funnel() {
           title={step.title}
           questions={step.questionIds.map((id) => QUESTIONS_BY_ID[id])}
           answers={state.answers}
-          current={questionNumber(state.answers, state.cursor)}
-          total={totalQuestions(state.answers)}
+          current={questionNumber(state.answers, state.cursor, state.variant)}
+          total={totalQuestions(state.answers, state.variant)}
           canGoBack={state.cursor > 0}
           onAnswer={answer}
           onNext={next}

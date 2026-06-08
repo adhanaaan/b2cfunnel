@@ -33,7 +33,7 @@ export const COPY: CopyConfig = {
       eyebrow: "Gray Matter Solutions",
       heading: "Is your brain at its peak performance?",
       subheading:
-        "A medically backed 5-minute quiz, built on 14 modifiable risk factors, to find out how well your brain is performing.",
+        "Take a medically backed 5-minute quiz, built on 14 modifiable risk factors, to find out how well your brain is performing.",
       doctor: {
         avatarInitials: "NK",
         image: "/Kandiah.png",
@@ -46,7 +46,7 @@ export const COPY: CopyConfig = {
       durationNote: "Takes about 5 minutes. No login needed.",
       cta: "Get started",
       resourcesIntro:
-        "A medically backed quiz based on the 2024 Lancet Commission on Dementia Prevention, CAIDE, and the SCD framework.",
+        "Based on the 2024 Lancet Commission on Dementia Prevention, CAIDE, and the SCD framework.",
     },
     emailGate: {
       eyebrow: "Almost there",
@@ -79,12 +79,11 @@ export const COPY: CopyConfig = {
       drivingHeading: "What's driving this",
       gaugeLowLabel: "Low",
       gaugeHighLabel: "High",
-      unlockCta: "Unlock now →",
+      unlockCta: "Unlock Now →",
       // {factors} is replaced with the user's reported risk factors.
       paywallPreviewHeading: "What your {factors} could mean for you",
       paywallPreviewHeadingFallback: "What your results could mean for you",
-      unlockOverlay:
-        "Get a more in-depth brain health analysis and consult a certified medical professional.",
+      unlockOverlay: "Get your in-depth brain health analysis.",
     },
     paywall: {
       eyebrow: "The full picture",
@@ -143,7 +142,7 @@ export const COPY: CopyConfig = {
       doctorHeading: "Meet your doctor",
       faqHeading: "FAQs",
       trustHeading: "In partnership with",
-      trustLogos: ["NTU Singapore", "LKC Medicine"],
+      trustLogo: "/LKCMedicine-Dementia-Research-Centre-2.png",
     },
   },
 

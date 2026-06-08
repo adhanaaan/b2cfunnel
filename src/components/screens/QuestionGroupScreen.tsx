@@ -1,6 +1,6 @@
 "use client";
 
-import type { Answers, AnswerValue, Question } from "@/types/question";
+import type { Answers, AnswerValue, Option, Question } from "@/types/question";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 
@@ -14,6 +14,14 @@ interface QuestionGroupScreenProps {
   onAnswer: (questionId: string, value: AnswerValue) => void;
   onNext: () => void;
   onBack: () => void;
+}
+
+/** Choose how many columns of options to show, based on the longest label. */
+function colsClass(options: Option[]): string {
+  const maxLen = Math.max(...options.map((o) => o.label.length));
+  if (maxLen <= 12) return "grid-cols-3"; // e.g. Yes / No / Not sure
+  if (maxLen <= 22) return "grid-cols-2"; // e.g. sleep / exercise bands
+  return "grid-cols-1"; // long labels (smoking, diet)
 }
 
 /** A page that stacks several yes/no/not-sure questions (e.g. health history). */
@@ -52,7 +60,9 @@ export function QuestionGroupScreen({
                 {q.helpText && (
                   <p className="mt-0.5 text-sm text-outline">{q.helpText}</p>
                 )}
-                <div className="mt-3 grid grid-cols-3 gap-2">
+                <div
+                  className={`mt-3 grid gap-2 ${colsClass(q.options ?? [])}`}
+                >
                   {q.options?.map((opt) => {
                     const isSel = selected === opt.id;
                     return (

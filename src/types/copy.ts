@@ -87,7 +87,7 @@ export interface BookingCopy {
   doctorHeading: string;
   faqHeading: string;
   trustHeading: string;
-  trustLogos: string[]; // placeholder labels until real logos are added
+  trustLogo: string; // path under /public to the partner logo image
 }
 
 export interface ScreenCopy {

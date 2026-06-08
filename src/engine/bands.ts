@@ -15,24 +15,24 @@ import type { Band, BandName } from "@/types/engine";
  */
 
 export const BANDS: Record<BandName, Band> = {
-  low: { name: "low", totalMin: 0, totalMax: 24, colour: "#97c459", order: 0 },
+  low: { name: "low", totalMin: 0, totalMax: 25, colour: "#97c459", order: 0 },
   moderate: {
     name: "moderate",
-    totalMin: 25,
-    totalMax: 52,
+    totalMin: 26,
+    totalMax: 50,
     colour: "#fac775",
     order: 1,
   },
   elevated: {
     name: "elevated",
-    totalMin: 53,
-    totalMax: 76,
+    totalMin: 51,
+    totalMax: 75,
     colour: "#ef9f27",
     order: 2,
   },
   high: {
     name: "high",
-    totalMin: 77,
+    totalMin: 76,
     totalMax: Infinity,
     colour: "#f09595",
     order: 3,
@@ -43,9 +43,9 @@ export const BAND_ORDER: BandName[] = ["low", "moderate", "elevated", "high"];
 
 /** Map a TOTAL score (0-100) to its band. */
 export function bandForTotal(total: number): BandName {
-  if (total <= 24) return "low";
-  if (total <= 52) return "moderate";
-  if (total <= 76) return "elevated";
+  if (total <= 25) return "low";
+  if (total <= 50) return "moderate";
+  if (total <= 75) return "elevated";
   return "high";
 }
 

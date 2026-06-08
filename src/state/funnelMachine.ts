@@ -1,16 +1,19 @@
-import type { FunnelAction, FunnelState, FunnelStep } from "@/types/funnel";
+import type {
+  FunnelAction,
+  FunnelState,
+  FunnelStep,
+  QuizVariant,
+} from "@/types/funnel";
 import { resolveFlow } from "@/config/funnelFlow";
 import { computeScore } from "@/engine/scoring";
 
-export const initialFunnelState: FunnelState = {
-  cursor: 0,
-  answers: {},
-  emailCaptured: false,
-};
+export function createInitialState(variant: QuizVariant): FunnelState {
+  return { variant, cursor: 0, answers: {}, emailCaptured: false };
+}
 
 /** The step currently shown, given the resolved (pruned) flow. */
 export function currentStep(state: FunnelState): FunnelStep {
-  const flow = resolveFlow(state.answers);
+  const flow = resolveFlow(state.answers, state.variant);
   const index = Math.min(state.cursor, flow.length - 1);
   return flow[index];
 }
@@ -29,7 +32,7 @@ export function funnelReducer(
     }
 
     case "NEXT": {
-      const flow = resolveFlow(state.answers);
+      const flow = resolveFlow(state.answers, state.variant);
       const next = Math.min(state.cursor + 1, flow.length - 1);
       return { ...state, cursor: next };
     }
@@ -40,7 +43,7 @@ export function funnelReducer(
 
     case "SUBMIT_EMAIL": {
       // Capture name + email and advance to the analysing screen.
-      const flow = resolveFlow(state.answers);
+      const flow = resolveFlow(state.answers, state.variant);
       const next = Math.min(state.cursor + 1, flow.length - 1);
       return {
         ...state,
@@ -53,7 +56,7 @@ export function funnelReducer(
 
     case "ANALYSIS_DONE": {
       // Compute the score once, store it, and advance to the result screen.
-      const flow = resolveFlow(state.answers);
+      const flow = resolveFlow(state.answers, state.variant);
       const next = Math.min(state.cursor + 1, flow.length - 1);
       return {
         ...state,
