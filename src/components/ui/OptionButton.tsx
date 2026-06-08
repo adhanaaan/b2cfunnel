@@ -21,7 +21,7 @@ export function OptionButton({
         "flex w-full items-center gap-3 rounded-lg border-2 px-5 py-4 text-left text-base font-medium transition",
         "shadow-card hover:-translate-y-0.5 hover:shadow-float",
         selected
-          ? "border-primary bg-primary-container text-primary-onContainer"
+          ? "border-primary bg-primary text-primary-on"
           : "border-outline-variant bg-surface-lowest text-charcoal hover:border-primary",
       ].join(" ")}
     >
@@ -29,12 +29,12 @@ export function OptionButton({
         className={[
           "flex h-5 w-5 flex-shrink-0 items-center justify-center border-2 transition",
           multi ? "rounded" : "rounded-full",
-          selected ? "border-primary bg-primary" : "border-outline",
+          selected ? "border-primary-on bg-primary-on" : "border-outline",
         ].join(" ")}
         aria-hidden
       >
         {selected && (
-          <svg viewBox="0 0 12 12" className="h-3 w-3 text-primary-on">
+          <svg viewBox="0 0 12 12" className="h-3 w-3 text-primary">
             <path
               d="M2 6l3 3 5-6"
               fill="none"

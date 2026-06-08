@@ -74,7 +74,7 @@ export function QuestionGroupScreen({
                         className={[
                           "rounded-lg border-2 px-3 py-3 text-center text-sm font-medium transition",
                           isSel
-                            ? "border-primary bg-primary-container text-primary-onContainer"
+                            ? "border-primary bg-primary text-primary-on"
                             : "border-outline-variant bg-surface-lowest text-charcoal hover:border-primary",
                         ].join(" ")}
                       >
