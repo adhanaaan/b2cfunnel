@@ -5,16 +5,23 @@ import {
 } from "@/config/funnelFlow";
 
 describe("funnel flow resolution", () => {
-  it("prunes the hot-flushes question for non-female users", () => {
-    const male = resolveFlow({ sex: "male" });
-    expect(
-      male.some((s) => s.kind === "question" && s.questionId === "hotFlushes"),
-    ).toBe(false);
-
-    const female = resolveFlow({ sex: "female" });
-    expect(
-      female.some((s) => s.kind === "question" && s.questionId === "hotFlushes"),
-    ).toBe(true);
+  it("does not include the removed questions in the lite flow", () => {
+    const removed = [
+      "hotFlushes",
+      "familyHistory",
+      "hearingLoss",
+      "visionLoss",
+      "someoneElseNoticed",
+    ];
+    const flow = resolveFlow({ sex: "female", forgetfulness: "almostDaily" });
+    const presentIds = flow.flatMap((s) =>
+      s.kind === "question"
+        ? [s.questionId]
+        : s.kind === "questionGroup"
+          ? s.questionIds
+          : [],
+    );
+    for (const id of removed) expect(presentIds).not.toContain(id);
   });
 
   it("prunes the persistence question unless forgetfulness is noticed", () => {
@@ -34,10 +41,10 @@ describe("funnel flow resolution", () => {
   });
 
   it("keeps the progress denominator honest as branches prune", () => {
-    const male = totalQuestions({ sex: "male", forgetfulness: "notNotice" });
-    const female = totalQuestions({ sex: "female", forgetfulness: "almostDaily" });
-    // Female + forgetfulness exposes 2 extra questions (hotFlushes, persistence).
-    expect(female - male).toBe(2);
+    const base = totalQuestions({ forgetfulness: "notNotice" });
+    const withPersistence = totalQuestions({ forgetfulness: "almostDaily" });
+    // Noticing forgetfulness exposes 1 extra question (persistence).
+    expect(withPersistence - base).toBe(1);
   });
 
   it("includes the lite flow's two stat cards", () => {

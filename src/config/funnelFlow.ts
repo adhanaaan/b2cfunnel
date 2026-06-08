@@ -13,19 +13,12 @@ export const FUNNEL_FLOW: FunnelStep[] = [
 
   { kind: "question", questionId: "age" },
   { kind: "question", questionId: "sex" },
-  { kind: "question", questionId: "hotFlushes" }, // pruned if sex !== female
 
   // Biomedical / history block — all on one page.
   {
     kind: "questionGroup",
     title: "A bit of health history",
-    questionIds: [
-      "highBp",
-      "highCholesterol",
-      "diabetes",
-      "hearingLoss",
-      "visionLoss",
-    ],
+    questionIds: ["highBp", "highCholesterol", "diabetes"],
   },
 
   { kind: "statCard", cardId: "lancet2024" }, // 45% modifiable-risk card, after history
@@ -43,8 +36,7 @@ export const FUNNEL_FLOW: FunnelStep[] = [
   { kind: "question", questionId: "concentrating" },
   { kind: "question", questionId: "judgement" },
   { kind: "question", questionId: "forgetfulness" },
-  { kind: "question", questionId: "persistence" }, // pruned if forgetfulness !== yes
-  { kind: "question", questionId: "someoneElseNoticed" },
+  { kind: "question", questionId: "persistence" }, // pruned if forgetfulness not noticed
 
   { kind: "statCard", cardId: "salthouse" }, // stat card #3, just before the gate
 
