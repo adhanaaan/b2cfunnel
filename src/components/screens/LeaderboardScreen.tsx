@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
+import { formatTime } from "@/lib/format";
 
 interface LeaderboardScreenProps {
   name?: string;
@@ -35,7 +36,7 @@ export function LeaderboardScreen({
   onDone,
 }: LeaderboardScreenProps) {
   const c = COPY.screens.leaderboard;
-  const youT = timeMs != null ? timeMs / 1000 : null;
+  const hasTime = timeMs != null;
   const [rows, setRows] = useState<Entry[] | null>(null);
   const [rank, setRank] = useState<number | null>(null);
 
@@ -81,8 +82,8 @@ export function LeaderboardScreen({
 
   const onShare = async () => {
     const text =
-      youT != null
-        ? `I scored ${youT.toFixed(1)}s on the Reaction Time Challenge. Think you're faster?`
+      timeMs != null
+        ? `I scored ${formatTime(timeMs)} on the Reaction Time Challenge. Think you're faster?`
         : "Try the Reaction Time Challenge!";
     try {
       if (navigator.share) {
@@ -98,13 +99,13 @@ export function LeaderboardScreen({
   return (
     <ScreenShell>
       <div className="flex min-h-[80vh] flex-col justify-center animate-fade-up">
-        {youT != null && (
+        {hasTime && (
           <div className="mb-6 rounded-2xl bg-gradient-to-br from-primary to-[#ec5e3b] px-6 py-5 text-center text-primary-on shadow-[0_16px_40px_-12px_rgba(247,117,40,0.6)]">
             <p className="text-xs font-bold uppercase tracking-widest text-primary-on/80">
               Your time
             </p>
             <p className="font-display text-5xl font-extrabold tabular-nums">
-              {youT.toFixed(1)}s
+              {formatTime(timeMs!)}
             </p>
             <p className="mt-1 text-sm font-semibold">
               20 correct{rank ? ` · ranked #${rank} today` : ""}
@@ -147,7 +148,7 @@ export function LeaderboardScreen({
                 {row.you ? `${row.name} (you)` : row.name}
               </span>
               <span className="font-bold tabular-nums text-primary">
-                {(row.timeMs / 1000).toFixed(1)}s
+                {formatTime(row.timeMs)}
               </span>
             </li>
           ))}

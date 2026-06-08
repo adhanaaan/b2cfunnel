@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatTime } from "@/lib/format";
 
 interface Entry {
   name: string;
@@ -88,7 +89,7 @@ export default function LeaderboardBoard() {
                   {e.name}
                 </span>
                 <span className="font-display text-2xl font-extrabold tabular-nums">
-                  {(e.timeMs / 1000).toFixed(1)}s
+                  {formatTime(e.timeMs)}
                 </span>
               </li>
             ))}
