@@ -9,6 +9,7 @@ import type { LeadPayload } from "@/lib/supabase/types";
 
 import { HookScreen } from "@/components/screens/HookScreen";
 import { QuestionScreen } from "@/components/screens/QuestionScreen";
+import { QuestionGroupScreen } from "@/components/screens/QuestionGroupScreen";
 import { StatCardScreen } from "@/components/screens/StatCardScreen";
 import { EmailGateScreen } from "@/components/screens/EmailGateScreen";
 import { AnalysingScreen } from "@/components/screens/AnalysingScreen";
@@ -66,6 +67,21 @@ export function Funnel() {
         />
       );
     }
+
+    case "questionGroup":
+      return (
+        <QuestionGroupScreen
+          title={step.title}
+          questions={step.questionIds.map((id) => QUESTIONS_BY_ID[id])}
+          answers={state.answers}
+          current={questionNumber(state.answers, state.cursor)}
+          total={totalQuestions(state.answers)}
+          canGoBack={state.cursor > 0}
+          onAnswer={answer}
+          onNext={next}
+          onBack={back}
+        />
+      );
 
     case "statCard":
       return (

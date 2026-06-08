@@ -5,6 +5,7 @@ import type { ScoreResult } from "@/types/engine";
 export type FunnelStep =
   | { kind: "hook" }
   | { kind: "question"; questionId: string }
+  | { kind: "questionGroup"; title: string; questionIds: string[] }
   | { kind: "statCard"; cardId: string }
   | { kind: "emailGate" }
   | { kind: "analysing" }

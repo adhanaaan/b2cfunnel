@@ -16,12 +16,18 @@ export const FUNNEL_FLOW: FunnelStep[] = [
   { kind: "question", questionId: "hotFlushes" }, // pruned if sex !== female
   { kind: "question", questionId: "familyHistory" },
 
-  // Biomedical / history block
-  { kind: "question", questionId: "highBp" },
-  { kind: "question", questionId: "highCholesterol" },
-  { kind: "question", questionId: "diabetes" },
-  { kind: "question", questionId: "hearingLoss" },
-  { kind: "question", questionId: "visionLoss" },
+  // Biomedical / history block — all on one page.
+  {
+    kind: "questionGroup",
+    title: "A bit of health history",
+    questionIds: [
+      "highBp",
+      "highCholesterol",
+      "diabetes",
+      "hearingLoss",
+      "visionLoss",
+    ],
+  },
 
   { kind: "statCard", cardId: "lancet2024" }, // 45% modifiable-risk card, after history
 
@@ -73,17 +79,22 @@ export function resolveFlow(answers: Answers): FunnelStep[] {
   );
 }
 
-/** Total number of question steps in the resolved flow (progress-bar denominator). */
+// A question page is either a single question or a grouped page; both count as
+// one step for the progress bar.
+const isQuestionPage = (kind: FunnelStep["kind"]) =>
+  kind === "question" || kind === "questionGroup";
+
+/** Total number of question pages in the resolved flow (progress-bar denominator). */
 export function totalQuestions(answers: Answers): number {
-  return resolveFlow(answers).filter((s) => s.kind === "question").length;
+  return resolveFlow(answers).filter((s) => isQuestionPage(s.kind)).length;
 }
 
-/** 1-based index of a question step among questions in the resolved flow. */
+/** 1-based index of the current question page among question pages. */
 export function questionNumber(answers: Answers, cursor: number): number {
   const flow = resolveFlow(answers);
   let n = 0;
   for (let i = 0; i <= cursor && i < flow.length; i++) {
-    if (flow[i].kind === "question") n++;
+    if (isQuestionPage(flow[i].kind)) n++;
   }
   return n;
 }
