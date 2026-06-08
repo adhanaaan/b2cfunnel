@@ -75,7 +75,7 @@ export function SymbolMatchGame({ onComplete }: Props) {
   }
 
   return (
-    <div className="relative h-dvh w-full">
+    <div className="relative h-dvh w-full overflow-hidden">
       <Task2Game tiles={TILES} onSuccess={onSuccess} onError={() => {}}>
         {/* Live timer + progress, rendered at the top of the game. */}
         <div className="z-40 w-full max-w-md">
@@ -101,6 +101,10 @@ export function SymbolMatchGame({ onComplete }: Props) {
           </div>
         </div>
       </Task2Game>
+
+      <p className="pointer-events-none absolute inset-x-0 bottom-2 px-4 text-center text-[11px] italic text-[#5b2c6f]/70">
+        Reaction-time games are fun, but not a cognitive assessment.
+      </p>
     </div>
   );
 }
