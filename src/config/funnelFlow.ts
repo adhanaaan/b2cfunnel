@@ -14,7 +14,6 @@ export const FUNNEL_FLOW: FunnelStep[] = [
   { kind: "question", questionId: "age" },
   { kind: "question", questionId: "sex" },
   { kind: "question", questionId: "hotFlushes" }, // pruned if sex !== female
-  { kind: "question", questionId: "familyHistory" },
 
   // Biomedical / history block — all on one page.
   {
@@ -37,8 +36,6 @@ export const FUNNEL_FLOW: FunnelStep[] = [
     title: "Your lifestyle",
     questionIds: ["smoking", "sleep", "exercise", "diet", "alcohol"],
   },
-
-  { kind: "statCard", cardId: "imhWise" }, // 1-in-11 card, after lifestyle
 
   { kind: "question", questionId: "tracks" },
 

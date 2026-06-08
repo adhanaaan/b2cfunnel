@@ -40,8 +40,8 @@ describe("funnel flow resolution", () => {
     expect(female - male).toBe(2);
   });
 
-  it("includes exactly three stat cards", () => {
+  it("includes the lite flow's two stat cards", () => {
     const cards = resolveFlow({}).filter((s) => s.kind === "statCard");
-    expect(cards).toHaveLength(3);
+    expect(cards).toHaveLength(2);
   });
 });
