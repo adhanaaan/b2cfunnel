@@ -2,15 +2,20 @@
 
 import { useReducer, useCallback } from "react";
 import type { AnswerValue } from "@/types/question";
+import type { QuizVariant } from "@/types/funnel";
 import {
   funnelReducer,
-  initialFunnelState,
+  createInitialState,
   currentStep,
 } from "@/state/funnelMachine";
 
 /** React hook wrapping the funnel reducer with convenience actions. */
-export function useFunnel() {
-  const [state, dispatch] = useReducer(funnelReducer, initialFunnelState);
+export function useFunnel(variant: QuizVariant) {
+  const [state, dispatch] = useReducer(
+    funnelReducer,
+    variant,
+    createInitialState,
+  );
 
   const answer = useCallback(
     (questionId: string, value: AnswerValue) =>
