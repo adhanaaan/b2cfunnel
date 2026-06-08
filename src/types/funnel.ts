@@ -28,6 +28,7 @@ export interface FunnelState {
   email?: string;
   emailCaptured: boolean;
   result?: ScoreResult;
+  gameTimeMs?: number; // reaction-game result (event only)
 }
 
 export type FunnelAction =
@@ -35,4 +36,5 @@ export type FunnelAction =
   | { type: "NEXT" }
   | { type: "BACK" }
   | { type: "SUBMIT_EMAIL"; name: string; email: string }
-  | { type: "ANALYSIS_DONE" };
+  | { type: "ANALYSIS_DONE" }
+  | { type: "GAME_DONE"; timeMs: number };

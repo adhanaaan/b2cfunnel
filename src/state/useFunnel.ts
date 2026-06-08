@@ -33,6 +33,10 @@ export function useFunnel(variant: QuizVariant) {
     () => dispatch({ type: "ANALYSIS_DONE" }),
     [],
   );
+  const gameDone = useCallback(
+    (timeMs: number) => dispatch({ type: "GAME_DONE", timeMs }),
+    [],
+  );
 
   return {
     state,
@@ -42,5 +46,6 @@ export function useFunnel(variant: QuizVariant) {
     back,
     submitEmail,
     analysisDone,
+    gameDone,
   };
 }

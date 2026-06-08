@@ -54,6 +54,12 @@ export function funnelReducer(
       };
     }
 
+    case "GAME_DONE": {
+      const flow = resolveFlow(state.answers, state.variant);
+      const next = Math.min(state.cursor + 1, flow.length - 1);
+      return { ...state, gameTimeMs: action.timeMs, cursor: next };
+    }
+
     case "ANALYSIS_DONE": {
       // Compute the score once, store it, and advance to the result screen.
       const flow = resolveFlow(state.answers, state.variant);

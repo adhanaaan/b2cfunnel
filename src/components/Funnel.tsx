@@ -23,8 +23,16 @@ import { BookingScreen } from "@/components/screens/BookingScreen";
 
 /** Client host: owns the funnel state machine and renders the current screen. */
 export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
-  const { state, step, answer, next, back, submitEmail, analysisDone } =
-    useFunnel(variant);
+  const {
+    state,
+    step,
+    answer,
+    next,
+    back,
+    submitEmail,
+    analysisDone,
+    gameDone,
+  } = useFunnel(variant);
 
   // Post the lead, then advance to the analysing screen. We don't block the
   // funnel on the network — advance regardless of the insert result.
@@ -105,10 +113,16 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       ) : null;
 
     case "game":
-      return <GameScreen onDone={next} />;
+      return <GameScreen onComplete={gameDone} />;
 
     case "leaderboard":
-      return <LeaderboardScreen name={state.name} onDone={next} />;
+      return (
+        <LeaderboardScreen
+          name={state.name}
+          timeMs={state.gameTimeMs}
+          onDone={next}
+        />
+      );
 
     case "paywall":
       return state.result ? (
