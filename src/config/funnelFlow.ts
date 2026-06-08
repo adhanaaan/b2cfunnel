@@ -31,12 +31,12 @@ export const FUNNEL_FLOW: FunnelStep[] = [
 
   { kind: "statCard", cardId: "lancet2024" }, // 45% modifiable-risk card, after history
 
-  // Lifestyle block
-  { kind: "question", questionId: "smoking" },
-  { kind: "question", questionId: "sleep" },
-  { kind: "question", questionId: "exercise" },
-  { kind: "question", questionId: "diet" },
-  { kind: "question", questionId: "alcohol" },
+  // Lifestyle block — all on one page.
+  {
+    kind: "questionGroup",
+    title: "Your lifestyle",
+    questionIds: ["smoking", "sleep", "exercise", "diet", "alcohol"],
+  },
 
   { kind: "statCard", cardId: "imhWise" }, // 1-in-11 card, after lifestyle
 
