@@ -23,3 +23,7 @@ export function genRandomIconList(tiles: number) {
   }
   return randomNumbersArr(tiles, tiles - 1);
 }
+
+export function resetSkipShuffle() {
+  skipShuffle = true;
+}
