@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import { formatTime } from "@/lib/format";
 
 interface Entry {
@@ -8,22 +9,32 @@ interface Entry {
   timeMs: number;
 }
 
-/** Standalone leaderboard for a booth TV/second screen. Auto-refreshes. */
+const TOP_N = 10;
+
+/**
+ * Standalone leaderboard for a 65" landscape TV at the booth's main spot.
+ * Left: today's fastest. Right: a big "scan to play" QR. Auto-refreshes.
+ */
 export default function LeaderboardBoard() {
   const [entries, setEntries] = useState<Entry[]>([]);
-  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  const [total, setTotal] = useState(0);
+  const [playUrl, setPlayUrl] = useState("");
+
+  useEffect(() => {
+    setPlayUrl(`${window.location.origin}/event`);
+  }, []);
 
   useEffect(() => {
     let active = true;
     const load = async () => {
       try {
-        const res = await fetch("/api/leaderboard?limit=20", {
+        const res = await fetch(`/api/leaderboard?limit=${TOP_N}`, {
           cache: "no-store",
         });
         const data = await res.json();
         if (active && Array.isArray(data.entries)) {
           setEntries(data.entries);
-          setUpdatedAt(new Date());
+          setTotal(data.total ?? data.entries.length);
         }
       } catch {
         /* keep last good standings */
@@ -38,70 +49,107 @@ export default function LeaderboardBoard() {
   }, []);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#fff4ee] via-surface to-[#fbe7de] px-6 py-10">
+    <main className="relative flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-br from-[#fff4ee] via-surface to-[#f7d2c1] px-[3vw] py-[3vh]">
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary/20 blur-3xl"
+        className="pointer-events-none absolute -right-40 -top-40 h-[40vw] w-[40vw] rounded-full bg-primary/20 blur-3xl"
       />
-      <div className="relative mx-auto max-w-3xl">
-        <p className="text-center text-sm font-bold uppercase tracking-[0.3em] text-primary">
-          Reaction Time Challenge
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-40 -left-40 h-[36vw] w-[36vw] rounded-full bg-[#ffb37a]/25 blur-3xl"
+      />
+
+      {/* Header */}
+      <header className="relative shrink-0 text-center">
+        <p className="font-bold uppercase tracking-[0.4em] text-primary text-[1.6vh]">
+          Gray Matter Solutions · Reaction Time Challenge
         </p>
-        <h1 className="mt-2 text-center font-display text-5xl font-extrabold text-charcoal">
-          Today&apos;s fastest minds
+        <h1 className="mt-[0.5vh] font-display font-extrabold leading-none text-charcoal text-[6vh]">
+          Today&apos;s Fastest Minds
         </h1>
-        <p className="mt-2 text-center text-xl font-semibold text-secondary">
+        <p className="mt-[0.6vh] font-semibold text-secondary text-[2.6vh]">
           🏆 Top of the day wins a Fitbit
         </p>
+      </header>
 
-        {entries.length === 0 ? (
-          <p className="mt-16 text-center text-lg text-outline">
-            No scores yet today. Be the first on the board!
-          </p>
-        ) : (
-          <ol className="mt-8 space-y-2.5">
-            {entries.map((e, i) => (
-              <li
-                key={`${e.name}-${i}`}
-                className={[
-                  "flex items-center gap-4 rounded-2xl px-6 py-4 shadow-card",
-                  i === 0
-                    ? "bg-gradient-to-r from-primary to-[#ff9a4d] text-primary-on"
-                    : "bg-surface-lowest",
-                ].join(" ")}
-              >
-                <span
+      {/* Body: leaderboard | QR */}
+      <div className="relative mt-[2.5vh] flex min-h-0 flex-1 gap-[3vw]">
+        {/* Leaderboard */}
+        <div className="flex min-h-0 flex-[1.5] flex-col">
+          {entries.length === 0 ? (
+            <div className="flex flex-1 items-center justify-center rounded-3xl bg-surface-lowest/70 text-center text-[3vh] text-outline">
+              No scores yet today. Scan to be the first on the board! →
+            </div>
+          ) : (
+            <ol className="flex min-h-0 flex-1 flex-col justify-between gap-[1vh]">
+              {entries.map((e, i) => (
+                <li
+                  key={`${e.name}-${i}`}
                   className={[
-                    "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-lg font-extrabold",
+                    "flex flex-1 items-center gap-[1.5vw] rounded-2xl px-[2vw] shadow-card",
                     i === 0
-                      ? "bg-white/25 text-primary-on"
-                      : "bg-primary-container text-primary-onContainer",
+                      ? "bg-gradient-to-r from-primary to-[#ff9a4d] text-primary-on"
+                      : "bg-surface-lowest",
                   ].join(" ")}
                 >
-                  {i + 1}
-                </span>
-                <span
-                  className={[
-                    "flex-1 truncate text-2xl font-bold",
-                    i === 0 ? "text-primary-on" : "text-charcoal",
-                  ].join(" ")}
-                >
-                  {e.name}
-                </span>
-                <span className="font-display text-2xl font-extrabold tabular-nums">
-                  {formatTime(e.timeMs)}
-                </span>
-              </li>
-            ))}
-          </ol>
-        )}
+                  <span
+                    className={[
+                      "flex aspect-square h-[5vh] flex-shrink-0 items-center justify-center rounded-full font-extrabold text-[2.6vh]",
+                      i === 0
+                        ? "bg-white/25 text-primary-on"
+                        : "bg-primary-container text-primary-onContainer",
+                    ].join(" ")}
+                  >
+                    {i + 1}
+                  </span>
+                  <span
+                    className={[
+                      "flex-1 truncate font-bold text-[3.4vh]",
+                      i === 0 ? "text-primary-on" : "text-charcoal",
+                    ].join(" ")}
+                  >
+                    {e.name}
+                  </span>
+                  <span className="font-display font-extrabold tabular-nums text-[3.4vh]">
+                    {formatTime(e.timeMs)}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
 
-        <p className="mt-10 text-center text-xs text-outline">
-          Resets daily · Updates live
-          {updatedAt ? ` · ${updatedAt.toLocaleTimeString()}` : ""} · Reaction-time
-          games are fun, but not a cognitive assessment.
-        </p>
+        {/* QR / scan to play */}
+        <div className="flex flex-1 flex-col items-center justify-center rounded-3xl bg-charcoal px-[2vw] py-[3vh] text-center text-white">
+          <p className="font-bold uppercase tracking-[0.3em] text-primary text-[2vh]">
+            Play now
+          </p>
+          <p className="mt-[1vh] font-display font-extrabold leading-tight text-[3.2vh]">
+            Scan to take the challenge
+          </p>
+          <div className="mt-[2.5vh] rounded-2xl bg-white p-[1.5vh]">
+            {playUrl && (
+              <QRCodeSVG
+                value={playUrl}
+                className="h-[26vh] w-[26vh]"
+                level="M"
+              />
+            )}
+          </div>
+          <p className="mt-[2vh] font-semibold text-white/80 text-[2vh]">
+            {total > 0
+              ? `${total} ${total === 1 ? "person has" : "people have"} played today`
+              : "Be the first to play"}
+          </p>
+        </div>
       </div>
+
+      <footer className="relative shrink-0 pt-[1.5vh] text-center text-white/0">
+        <p className="text-[1.5vh] text-outline">
+          Resets daily (SGT) · Updates live · Reaction-time games are fun, but not
+          a cognitive assessment.
+        </p>
+      </footer>
     </main>
   );
 }

@@ -167,13 +167,22 @@ export function LeaderboardScreen({
           </button>
         </div>
 
-        <button
-          type="button"
-          onClick={onDone}
-          className="mt-6 w-full rounded-lg bg-gradient-to-r from-primary to-[#ff9a4d] px-6 py-4 text-lg font-bold text-primary-on shadow-[0_12px_34px_-8px_rgba(247,117,40,0.65)] transition hover:brightness-105"
-        >
-          {c.cta}
-        </button>
+        {/* Hook into the brain-health step. */}
+        <div className="mt-8 rounded-2xl bg-surface-container px-5 py-5 text-center shadow-card">
+          <p className="font-display text-xl font-extrabold leading-snug text-charcoal">
+            {c.bridgeHeading}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-secondary">
+            {c.bridgeBody}
+          </p>
+          <button
+            type="button"
+            onClick={onDone}
+            className="mt-4 w-full rounded-lg bg-gradient-to-r from-primary to-[#ff9a4d] px-6 py-4 text-lg font-bold text-primary-on shadow-[0_12px_34px_-8px_rgba(247,117,40,0.65)] transition hover:brightness-105"
+          >
+            {c.cta}
+          </button>
+        </div>
         <p className="mt-4 text-center text-xs italic text-outline">
           {c.disclaimer}
         </p>
