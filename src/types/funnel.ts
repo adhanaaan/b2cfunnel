@@ -13,6 +13,8 @@ export type FunnelStep =
   | { kind: "emailGate" }
   | { kind: "analysing" }
   | { kind: "result" }
+  | { kind: "game" }
+  | { kind: "leaderboard" }
   | { kind: "paywall" }
   | { kind: "booking" };
 

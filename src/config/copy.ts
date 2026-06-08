@@ -84,6 +84,10 @@ export const COPY: CopyConfig = {
       paywallPreviewHeading: "What your {factors} could mean for you",
       paywallPreviewHeadingFallback: "What your results could mean for you",
       unlockOverlay: "Get your in-depth brain health analysis.",
+      gameInviteHeading: "Reaction Time Challenge",
+      gameInviteBody:
+        "You've baselined your brain. Now test your reflexes: the fastest scores of the day win a Fitbit.",
+      gameInviteCta: "Play now →",
     },
     paywall: {
       eyebrow: "The full picture",
@@ -143,6 +147,23 @@ export const COPY: CopyConfig = {
       faqHeading: "FAQs",
       trustHeading: "In partnership with",
       trustLogo: "/LKCMedicine-Dementia-Research-Centre-2.png",
+    },
+    game: {
+      eyebrow: "Reaction Time Challenge",
+      heading: "Symbol Match",
+      body: "Match the symbols against the clock. The fastest scores of the day win a Fitbit.",
+      placeholder:
+        "Game placeholder: your symbol-matching game will drop in here.",
+      cta: "Continue to the leaderboard",
+      disclaimer: "Reaction-time games are fun, but not a cognitive assessment.",
+    },
+    leaderboard: {
+      eyebrow: "Today's leaderboard",
+      heading: "Fastest minds today",
+      prize: "🏆 Top of the day wins a Fitbit.",
+      youNote: "Your result will appear here once the game is live.",
+      cta: "What's next →",
+      disclaimer: "Reaction-time games are fun, but not a cognitive assessment.",
     },
   },
 
