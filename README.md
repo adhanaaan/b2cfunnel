@@ -91,10 +91,33 @@ create table public.leads (
   user_agent   text
 );
 
+-- add this column if the table already existed:
+alter table public.leads add column if not exists game_time_ms integer;
+
 -- RLS on, with NO anon insert policy: writes happen only through the server
 -- route using the service-role key, so the public key can never write.
 alter table public.leads enable row level security;
 ```
+
+And a `game_scores` table for the event Reaction Time Challenge leaderboard:
+
+```sql
+create table public.game_scores (
+  id         uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  name       text not null,
+  email      text not null,
+  time_ms    integer not null
+);
+create index on public.game_scores (created_at);
+create index on public.game_scores (email);
+
+-- Reads/writes go only through the server API routes (service-role key).
+alter table public.game_scores enable row level security;
+```
+
+The leaderboard shows **today's best time per email** (Singapore time), fastest
+first. Players may retry; only their best counts.
 
 Env vars (see `.env.example`): `NEXT_PUBLIC_SUPABASE_URL`,
 `SUPABASE_SERVICE_ROLE_KEY` (server only — never `NEXT_PUBLIC`), and

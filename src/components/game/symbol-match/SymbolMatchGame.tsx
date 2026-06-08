@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Task2Game } from "./Task2Game";
+import { formatTime } from "@/lib/format";
 
 const GOAL = 20;
 const TILES = 10;
@@ -84,7 +85,7 @@ export function SymbolMatchGame({ onComplete }: Props) {
                 Time
               </p>
               <p className="font-display text-3xl font-extrabold tabular-nums text-[#3a0c52]">
-                {(elapsed / 1000).toFixed(1)}s
+                {formatTime(elapsed)}
               </p>
             </div>
             <p className="font-display text-3xl font-extrabold tabular-nums text-[#8735AC]">
