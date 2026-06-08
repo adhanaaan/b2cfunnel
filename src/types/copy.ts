@@ -85,6 +85,8 @@ export interface LeaderboardCopy {
   shareHeading: string;
   shareBody: string;
   shareCta: string;
+  bridgeHeading: string;
+  bridgeBody: string;
   cta: string;
   disclaimer: string;
 }

@@ -174,7 +174,10 @@ export const COPY: CopyConfig = {
       shareHeading: "📸 Screenshot your rank",
       shareBody: "Share it and dare a colleague to beat your time.",
       shareCta: "Share",
-      cta: "Now, how healthy is your brain? →",
+      bridgeHeading: "Fast reflexes. But how healthy is the brain behind them?",
+      bridgeBody:
+        "Reaction time is just one slice. Take the free 3-minute check to see your full brain health profile, reviewed by a neurologist.",
+      cta: "Reveal my Brain Health Score →",
       disclaimer: "Reaction-time games are fun, but not a cognitive assessment.",
     },
   },
