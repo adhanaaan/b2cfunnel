@@ -59,7 +59,7 @@ export function BlurredPaywallPreview({
 
         {/* Overlay copy sits on top of the blur. */}
         <div className="absolute inset-0 flex items-center justify-center px-2">
-          <p className="text-center text-base font-semibold leading-snug text-white">
+          <p className="text-center text-lg font-bold leading-snug text-primary">
             {unlockOverlay}
           </p>
         </div>

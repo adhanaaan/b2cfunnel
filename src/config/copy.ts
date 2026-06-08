@@ -79,12 +79,11 @@ export const COPY: CopyConfig = {
       drivingHeading: "What's driving this",
       gaugeLowLabel: "Low",
       gaugeHighLabel: "High",
-      unlockCta: "Unlock now →",
+      unlockCta: "Unlock Now →",
       // {factors} is replaced with the user's reported risk factors.
       paywallPreviewHeading: "What your {factors} could mean for you",
       paywallPreviewHeadingFallback: "What your results could mean for you",
-      unlockOverlay:
-        "Get a more in-depth brain health analysis and consult a certified medical professional.",
+      unlockOverlay: "Get your in-depth brain health analysis.",
     },
     paywall: {
       eyebrow: "The full picture",

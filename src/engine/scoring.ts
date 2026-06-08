@@ -66,13 +66,15 @@ export function computeScore(answers: Answers): ScoreResult {
   const riskBand = bandForRiskAxis(riskScore);
   const symptomBand = bandForSymptomAxis(symptomScore);
 
-  let band = worseBand(bandFromTotal, riskBand, symptomBand);
-
+  // The displayed band follows the total score, so the band always matches the
+  // headline number and the band table. The safety override is the only
+  // exception: a persistent decline that someone else has noticed is floored at
+  // Elevated (it can raise the band, never lowers it).
   const safetyOverrideApplied =
     answers.persistence === "yes" && answers.someoneElseNoticed === "yes";
-  if (safetyOverrideApplied) {
-    band = worseBand(band, "elevated");
-  }
+  const band = safetyOverrideApplied
+    ? worseBand(bandFromTotal, "elevated")
+    : bandFromTotal;
 
   return {
     riskScore,
