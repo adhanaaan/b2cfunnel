@@ -60,6 +60,19 @@ export function funnelReducer(
       };
     }
 
+    case "SUBMIT_PERSONAL_EMAIL": {
+      // Event: personal email at the end, kept separate from the Accenture
+      // address. Advance to the analysing screen.
+      const flow = resolveFlow(state.answers, state.variant);
+      const next = Math.min(state.cursor + 1, flow.length - 1);
+      return {
+        ...state,
+        name: action.name || state.name,
+        personalEmail: action.email,
+        cursor: next,
+      };
+    }
+
     case "GAME_DONE": {
       const flow = resolveFlow(state.answers, state.variant);
       const next = Math.min(state.cursor + 1, flow.length - 1);

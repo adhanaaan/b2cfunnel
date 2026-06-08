@@ -34,19 +34,27 @@ export const COPY: CopyConfig = {
       heading: "Is your brain at its peak performance?",
       subheading:
         "Take a medically backed 5-minute quiz, built on 14 modifiable risk factors, to find out how well your brain is performing.",
-      doctor: {
-        avatarInitials: "NK",
-        image: "/Kandiah.png",
-        name: "Prof Nagaendran Kandiah",
-        credentials:
-          "Senior Consultant Neurologist. MBBS, FRCP (Edinburgh), FAMS (Neurology).",
-        affiliation:
-          "Director, Dementia Research Centre Singapore. Clinician-scientist, National Medical Research Council of Singapore.",
+      credibility: {
+        heading: "Built on the science",
+        points: [
+          "Developed with NTU's Lee Kong Chian School of Medicine, Dementia Research Centre Singapore.",
+          "Grounded in the 2024 Lancet Commission on dementia prevention.",
+          "Methodology from the CAIDE risk model and the SCD framework.",
+        ],
+        logo: "/LKCMedicine-Dementia-Research-Centre-2.png",
       },
       durationNote: "Takes about 5 minutes. No login needed.",
       cta: "Get started",
       resourcesIntro:
         "Based on the 2024 Lancet Commission on Dementia Prevention, CAIDE, and the SCD framework.",
+      // Event opt-in (shown after the game). No hard sell, fully optional.
+      eventEyebrow: "Optional · Brain Health",
+      eventHeading: "Want to see how healthy your brain is?",
+      eventSubheading:
+        "Reaction time is just reflexes. If you'd like, take an optional 3-minute brain health check, built on 14 modifiable risk factors. Entirely up to you.",
+      eventCta: "Yes, check my brain health →",
+      eventDurationNote: "About 3 minutes. Your choice to continue.",
+      eventDecline: "No thanks, just the game",
     },
     nameGate: {
       eyebrow: "Reaction Time Challenge",
@@ -67,6 +75,15 @@ export const COPY: CopyConfig = {
       cta: "Reveal my score",
       privacyNote:
         "We'll only use your details to share your results and brain health recommendations. Unsubscribe any time.",
+      // Event: personal email at the end, for the personalised score.
+      personalEyebrow: "Your results",
+      personalHeading: "Where should we send your results?",
+      personalBody:
+        "Your Brain Health Score is ready. Add a personal email and we'll send your full profile and recommendations. This is separate from the leaderboard, and only used to send your results.",
+      personalPlaceholder: "Your personal email",
+      personalCta: "Send my Brain Health Score →",
+      personalPrivacyNote:
+        "We'll only use this to send your results and brain health recommendations. Unsubscribe any time.",
     },
     analysing: {
       heading: "{name}, we are building your profile",
@@ -81,8 +98,7 @@ export const COPY: CopyConfig = {
     },
     resultBase: {
       reviewerStrap:
-        "Reviewed by A/Prof Kandiah, Senior Consultant Neurologist",
-      reviewerInitials: "NK",
+        "Grounded in the 2024 Lancet Commission, built with NTU's Dementia Research Centre",
       eyebrow: "Here's your score",
       scoreSuffix: "/100",
       drivingHeading: "What's driving this",
@@ -101,17 +117,18 @@ export const COPY: CopyConfig = {
     paywall: {
       eyebrow: "The full picture",
       heading: "Get measured properly with ReCOGnAIze",
-      doctorName: "A/Prof Nagaendran Kandiah",
-      doctorTitle: "Senior Consultant Neurologist",
+      offerName: "ReCOGnAIze cognitive assessment",
+      offerNote:
+        "Developed at NTU's Dementia Research Centre · Registered with Singapore's HSA",
       bundle:
         "A 10–15 minute digital cognitive assessment plus a teleconsult to review your results.",
       price: "S$199",
-      priceNote: "One-off. Includes your neurologist review.",
+      priceNote: "One-off. Includes a clinician teleconsult.",
       cta: "Book my consult",
       faqs: [
         {
           q: "Is this quiz a diagnosis?",
-          a: "No. This is an educational tool that estimates your profile of factors. ReCOGnAIze is the proper assessment, reviewed by a neurologist.",
+          a: "No. This is an educational tool that estimates your profile of factors. ReCOGnAIze is the proper assessment, developed at NTU's Dementia Research Centre and reviewed in a clinician teleconsult.",
         },
         {
           q: "What is ReCOGnAIze?",
@@ -152,7 +169,7 @@ export const COPY: CopyConfig = {
           body: "Key nutrients, iron status, and energy markers that, when low, can quietly affect focus, memory, and day-to-day mental sharpness.",
         },
       ],
-      doctorHeading: "Meet your doctor",
+      credibilityHeading: "Why this is credible",
       faqHeading: "FAQs",
       trustHeading: "In partnership with",
       trustLogo: "/LKCMedicine-Dementia-Research-Centre-2.png",
@@ -176,8 +193,8 @@ export const COPY: CopyConfig = {
       shareCta: "Share",
       bridgeHeading: "Fast reflexes. But how healthy is the brain behind them?",
       bridgeBody:
-        "Reaction time is just one slice. Take the free 3-minute check to see your full brain health profile, reviewed by a neurologist.",
-      cta: "Reveal my Brain Health Score →",
+        "Reaction time is just one slice. If you'd like, take an optional 3-minute brain health check, built with NTU's Dementia Research Centre.",
+      cta: "Check my brain health →",
       disclaimer: "Reaction-time games are fun, but not a cognitive assessment.",
     },
   },
@@ -195,7 +212,7 @@ export const COPY: CopyConfig = {
       },
       leadBlurSection: "cognitiveInterpretation",
       paywallAngle:
-        "See the full picture with a proper assessment and a neurologist review.",
+        "See the full picture with a proper assessment, grounded in the 2024 Lancet Commission and NTU's Dementia Research Centre.",
     },
     caregiver: {
       headline: "Is this normal ageing, or something worth checking?",
@@ -209,7 +226,7 @@ export const COPY: CopyConfig = {
       },
       leadBlurSection: "vascular",
       paywallAngle:
-        "A proper assessment can help tell apart treatable vascular changes from other causes, reviewed by a neurologist.",
+        "A proper assessment can help tell apart treatable vascular changes from other causes, grounded in NTU's Dementia Research Centre.",
     },
     perimenopausal: {
       headline: "Is what you're feeling hormonal, or something else?",
@@ -223,7 +240,7 @@ export const COPY: CopyConfig = {
       },
       leadBlurSection: "cognitiveInterpretation",
       paywallAngle:
-        "Understand whether what you're feeling is hormonal or worth a closer look, with a neurologist review.",
+        "Understand whether what you're feeling is hormonal or worth a closer look, with an assessment built on the latest dementia-prevention science.",
     },
     highPerformer: {
       headline: "You track everything else. Baseline the organ that runs it all.",
@@ -237,7 +254,7 @@ export const COPY: CopyConfig = {
       },
       leadBlurSection: "percentile",
       paywallAngle:
-        "Get an objective cognitive baseline and see where you stand, reviewed by a neurologist.",
+        "Get an objective cognitive baseline and see where you stand, with a method grounded in the 2024 Lancet Commission.",
     },
   },
 

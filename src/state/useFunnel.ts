@@ -33,6 +33,11 @@ export function useFunnel(variant: QuizVariant) {
       dispatch({ type: "SUBMIT_EMAIL", name, email }),
     [],
   );
+  const submitPersonalEmail = useCallback(
+    (name: string, email: string) =>
+      dispatch({ type: "SUBMIT_PERSONAL_EMAIL", name, email }),
+    [],
+  );
   const analysisDone = useCallback(
     () => dispatch({ type: "ANALYSIS_DONE" }),
     [],
@@ -50,6 +55,7 @@ export function useFunnel(variant: QuizVariant) {
     back,
     submitName,
     submitEmail,
+    submitPersonalEmail,
     analysisDone,
     gameDone,
   };

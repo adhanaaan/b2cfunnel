@@ -3,17 +3,27 @@
 import Image from "next/image";
 import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
-import { DoctorAvatar } from "@/components/result/DoctorAvatar";
+import { CredibilitySignals } from "@/components/result/CredibilitySignals";
 import { useIsEvent } from "@/components/VariantContext";
 
 interface HookScreenProps {
   onStart: () => void;
+  /** Event opt-in only: decline the optional brain-health check. */
+  onDecline?: () => void;
 }
 
-/** Screen 1 — the hook. Logo + brand, the promise, doctor/NTU credibility, science. */
-export function HookScreen({ onStart }: HookScreenProps) {
+/** Screen 1 — the hook. Logo + brand, the promise, credibility, science. */
+export function HookScreen({ onStart, onDecline }: HookScreenProps) {
   const c = COPY.screens.hook;
   const event = useIsEvent();
+
+  // Event: this is an explicit, optional opt-in shown after the game.
+  const eyebrow = event ? c.eventEyebrow : c.eyebrow;
+  const heading = event ? c.eventHeading : c.heading;
+  const subheading = event ? c.eventSubheading : c.subheading;
+  const cta = event ? c.eventCta : c.cta;
+  const durationNote = event ? c.eventDurationNote : c.durationNote;
+
   return (
     <ScreenShell>
       <div className="flex min-h-[80vh] flex-col justify-center text-center animate-fade-up">
@@ -28,7 +38,7 @@ export function HookScreen({ onStart }: HookScreenProps) {
             priority
           />
           <p className="text-sm font-bold uppercase tracking-widest text-primary">
-            {c.eyebrow}
+            {eyebrow}
           </p>
         </div>
 
@@ -40,35 +50,19 @@ export function HookScreen({ onStart }: HookScreenProps) {
               : "text-charcoal",
           ].join(" ")}
         >
-          {c.heading}
+          {heading}
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-secondary">
-          {c.subheading}
+          {subheading}
         </p>
 
-        {/* Reviewing doctor card. */}
-        <div className="mt-8 flex items-center gap-4 rounded-xl bg-surface-container px-5 py-4 text-left shadow-card">
-          <DoctorAvatar
-            image={c.doctor.image}
-            initials={c.doctor.avatarInitials}
-          />
-          <div className="min-w-0">
-            <p className="text-lg font-bold text-charcoal">{c.doctor.name}</p>
-            <p className="text-sm font-bold leading-snug text-charcoal">
-              {c.doctor.credentials}
-            </p>
-            <p className="text-sm leading-snug text-outline">
-              {c.doctor.affiliation}
-            </p>
-          </div>
-        </div>
-
-        {/* Science the assessment is grounded in. */}
-        <div className="mt-4 rounded-xl border border-outline-variant bg-surface-low px-5 py-4">
-          <p className="text-sm leading-relaxed text-charcoal">
-            {c.resourcesIntro}
-          </p>
-        </div>
+        {/* Institutional / evidence credibility (replaces the clinician card). */}
+        <CredibilitySignals
+          heading={c.credibility.heading}
+          points={c.credibility.points}
+          logo={c.credibility.logo}
+          className="mt-8"
+        />
 
         <button
           type="button"
@@ -80,9 +74,20 @@ export function HookScreen({ onStart }: HookScreenProps) {
               : "bg-primary shadow-float",
           ].join(" ")}
         >
-          {c.cta}
+          {cta}
         </button>
-        <p className="mt-3 text-xs text-outline">{c.durationNote}</p>
+        <p className="mt-3 text-xs text-outline">{durationNote}</p>
+
+        {/* Event: declining is a first-class option (opt-in, no hard sell). */}
+        {event && onDecline && (
+          <button
+            type="button"
+            onClick={onDecline}
+            className="mt-4 text-sm font-semibold text-outline underline-offset-4 hover:underline"
+          >
+            {c.eventDecline}
+          </button>
+        )}
       </div>
     </ScreenShell>
   );

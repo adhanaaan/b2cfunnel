@@ -24,8 +24,17 @@ import { BookingScreen } from "@/components/screens/BookingScreen";
 
 /** Client host: owns the funnel state machine and renders the current screen. */
 export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
-  const { state, step, answer, next, back, submitEmail, analysisDone, gameDone } =
-    useFunnel(variant);
+  const {
+    state,
+    step,
+    answer,
+    next,
+    back,
+    submitEmail,
+    submitPersonalEmail,
+    analysisDone,
+    gameDone,
+  } = useFunnel(variant);
 
   // Post the complete lead (name + email captured earlier, plus the computed
   // score and game time) when the profile is built. Fire-and-forget: capturing
@@ -34,7 +43,9 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     const result = computeScore(state.answers);
     const payload: LeadPayload = {
       name: state.name,
-      email: state.email ?? "",
+      // Personal email (event end-gate) is where results go; fall back to the
+      // up-front email for the full quiz.
+      email: state.personalEmail ?? state.email ?? "",
       persona: result.persona,
       riskScore: result.riskScore,
       symptomScore: result.symptomScore,
@@ -64,7 +75,12 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
   const screen = (() => {
     switch (step.kind) {
     case "hook":
-      return <HookScreen onStart={next} />;
+      return (
+        <HookScreen
+          onStart={next}
+          onDecline={state.variant === "event" ? back : undefined}
+        />
+      );
 
     case "nameGate":
       return <NameGateScreen onSubmit={submitEmail} />;
@@ -107,7 +123,10 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "emailGate":
       return (
-        <EmailGateScreen onSubmit={submitEmail} knownName={state.name} />
+        <EmailGateScreen
+          onSubmit={state.variant === "event" ? submitPersonalEmail : submitEmail}
+          knownName={state.name}
+        />
       );
 
     case "analysing":

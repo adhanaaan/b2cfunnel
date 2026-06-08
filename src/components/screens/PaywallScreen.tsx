@@ -31,12 +31,28 @@ export function PaywallScreen({ result, onBook }: PaywallScreenProps) {
         {/* Offer card */}
         <div className="mt-7 rounded-2xl bg-surface-lowest p-6 shadow-card">
           <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-secondary text-base font-bold text-secondary-on">
-              {COPY.screens.resultBase.reviewerInitials}
+            <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-container text-primary-onContainer">
+              <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
+                <path
+                  d="M12 2l7 3v6c0 4.5-3 8.3-7 9-4-.7-7-4.5-7-9V5l7-3z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M8.5 12l2.5 2.5L16 9"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </span>
             <div>
-              <p className="font-bold text-charcoal">{c.doctorName}</p>
-              <p className="text-sm text-secondary">{c.doctorTitle}</p>
+              <p className="font-bold text-charcoal">{c.offerName}</p>
+              <p className="text-sm text-secondary">{c.offerNote}</p>
             </div>
           </div>
 
