@@ -119,6 +119,63 @@ alter table public.game_scores enable row level security;
 The leaderboard shows **today's best time per email** (Singapore time), fastest
 first. Players may retry; only their best counts.
 
+And a `funnel_events` table for **anonymous drop-off analytics** (no PII — a
+random per-session id, the step name and the variant):
+
+```sql
+create table public.funnel_events (
+  id         bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  session_id text not null,
+  event      text not null,       -- e.g. 'step_view', 'hook_declined'
+  step       text,                -- e.g. 'question:age', 'leaderboard'
+  variant    text                 -- 'full' | 'event'
+);
+create index on public.funnel_events (created_at);
+create index on public.funnel_events (session_id);
+
+-- Writes go only through the server API route (service-role key).
+alter table public.funnel_events enable row level security;
+```
+
+A `step_view` row is written each time a participant reaches a step, plus a
+`hook_declined` row when they opt out of the brain-health check. To see the
+funnel, count **distinct `session_id` per `step`** (ordered by where each step
+sits in the flow); the gap between consecutive steps is your drop-off.
+
+And a `quiz_responses` table for **anonymous audience insights** — a
+participant's demographics, brain-health profile and risk-factor answers,
+written when the score is computed. **No name or email** (keyed to the random
+session id only), so it's aggregate-only and can't identify a person:
+
+```sql
+create table public.quiz_responses (
+  id            bigint generated always as identity primary key,
+  created_at    timestamptz not null default now(),
+  session_id    text not null,
+  variant       text,            -- 'full' | 'event'
+  age           text,            -- e.g. '40-49'
+  sex           text,
+  band          text,            -- low | moderate | elevated | high
+  persona       text,
+  risk_score    integer,
+  symptom_score integer,
+  total_score   integer,         -- 0-100
+  game_time_ms  integer,         -- reaction-game time (event)
+  answers       jsonb            -- full per-question map (lifestyle, biomedical, etc.)
+);
+create index on public.quiz_responses (created_at);
+create index on public.quiz_responses (band);
+
+-- Writes go only through the server API route (service-role key).
+alter table public.quiz_responses enable row level security;
+```
+
+Example queries: band mix `select band, count(*) from quiz_responses group by band`;
+age split `select age, count(*) ... group by age`; a lifestyle factor
+`select answers->>'sleep' as sleep, count(*) ... group by 1`; speed vs profile
+`select band, round(avg(game_time_ms)) ... group by band`.
+
 Env vars (see `.env.example`): `NEXT_PUBLIC_SUPABASE_URL`,
 `SUPABASE_SERVICE_ROLE_KEY` (server only — never `NEXT_PUBLIC`), and
 `STORE_ANSWERS` (PDPA-safe default: raw answers are **not** persisted unless this

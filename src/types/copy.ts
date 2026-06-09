@@ -104,6 +104,30 @@ export interface LeaderboardCopy {
   disclaimer: string;
 }
 
+// Post-game opt-in hook (event only). Recaps the player's processing-speed
+// result, then teases the locked cognitive domains and invites them into the
+// optional brain-health check. Inspired by the recognaizelite hook report.
+export interface EventHookCopy {
+  eyebrow: string;
+  rankHeading: string;
+  topLabel: string;
+  youLabel: string;
+  whatHeading: string;
+  whatBody: string;
+  domainsHeading: string;
+  domainsBody: string;
+  testedDomain: string;
+  testedLabel: string;
+  lockedDomains: string[];
+  lockedLabel: string;
+  understandHeading: string;
+  understandBody: string;
+  cta: string;
+  decline: string;
+  credibility: string;
+  disclaimer: string;
+}
+
 export interface FaqItem {
   q: string;
   a: string;
@@ -151,6 +175,7 @@ export interface ScreenCopy {
   booking: BookingCopy;
   game: GameCopy;
   leaderboard: LeaderboardCopy;
+  eventHook: EventHookCopy;
 }
 
 // What changes per persona on the result screen: the score blurb (per band) and

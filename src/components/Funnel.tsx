@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import { useFunnel } from "@/state/useFunnel";
+import { track, recordResponse } from "@/lib/analytics";
 import { computeScore } from "@/engine/scoring";
+import type { FunnelStep } from "@/types/funnel";
 import { QUESTIONS_BY_ID } from "@/config/questions";
 import { STAT_CARDS_BY_ID } from "@/config/statCards";
 import { totalQuestions, questionNumber } from "@/config/funnelFlow";
@@ -10,6 +13,7 @@ import type { QuizVariant } from "@/types/funnel";
 import { VariantProvider } from "@/components/VariantContext";
 
 import { HookScreen } from "@/components/screens/HookScreen";
+import { PostGameHook } from "@/components/screens/PostGameHook";
 import { NameGateScreen } from "@/components/screens/NameGateScreen";
 import { QuestionScreen } from "@/components/screens/QuestionScreen";
 import { QuestionGroupScreen } from "@/components/screens/QuestionGroupScreen";
@@ -21,6 +25,20 @@ import { GameScreen } from "@/components/screens/GameScreen";
 import { LeaderboardScreen } from "@/components/screens/LeaderboardScreen";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
 import { BookingScreen } from "@/components/screens/BookingScreen";
+
+/** A stable, human-readable name for a funnel step (for drop-off analytics). */
+function stepKey(step: FunnelStep): string {
+  switch (step.kind) {
+    case "question":
+      return `question:${step.questionId}`;
+    case "questionGroup":
+      return `questionGroup:${step.title}`;
+    case "statCard":
+      return `statCard:${step.cardId}`;
+    default:
+      return step.kind;
+  }
+}
 
 /** Client host: owns the funnel state machine and renders the current screen. */
 export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
@@ -35,6 +53,12 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     analysisDone,
     gameDone,
   } = useFunnel(variant);
+
+  // Anonymous drop-off tracking: a step view fires whenever the step changes.
+  const stepName = stepKey(step);
+  useEffect(() => {
+    track("step_view", { variant: state.variant, step: stepName });
+  }, [stepName, state.variant]);
 
   // Post the complete lead (name + email captured earlier, plus the computed
   // score and game time) when the profile is built. Fire-and-forget: capturing
@@ -59,6 +83,21 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     }).catch(() => {});
+
+    // Anonymous audience profile (no name/email) for aggregate insights.
+    recordResponse({
+      variant: state.variant,
+      age: typeof state.answers.age === "string" ? state.answers.age : undefined,
+      sex: typeof state.answers.sex === "string" ? state.answers.sex : undefined,
+      band: result.band,
+      persona: result.persona,
+      riskScore: result.riskScore,
+      symptomScore: result.symptomScore,
+      totalScore: result.total,
+      gameTimeMs: state.gameTimeMs,
+      answers: state.answers,
+    });
+
     analysisDone();
   };
 
@@ -75,11 +114,21 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
   const screen = (() => {
     switch (step.kind) {
     case "hook":
-      return (
-        <HookScreen
+      // Event: the post-game opt-in hook (recap + locked domains). Full quiz:
+      // the cold-open intro hook.
+      return state.variant === "event" ? (
+        <PostGameHook
+          name={state.name}
+          email={state.email}
+          timeMs={state.gameTimeMs}
           onStart={next}
-          onDecline={state.variant === "event" ? back : undefined}
+          onDecline={() => {
+            track("hook_declined", { variant: state.variant });
+            back();
+          }}
         />
+      ) : (
+        <HookScreen onStart={next} />
       );
 
     case "nameGate":

@@ -11,6 +11,12 @@ interface Entry {
 
 const TOP_N = 10;
 const PRIZE = "Fitbit Air";
+const PRIZE_VALUE = "Worth S$189";
+const HOW_TO_WIN = [
+  "Scan the code",
+  "Match 20 symbols, fast",
+  "Top the leaderboard",
+];
 
 // Design tokens (Gray Matter Solutions Event Design System v1.1).
 const C = {
@@ -60,13 +66,13 @@ function PrizeImage() {
       cancelled = true;
     };
   }, []);
-  if (!src) return <span className="text-[18vh] leading-none">🏆</span>;
+  if (!src) return <span className="text-[26vh] leading-none">🏆</span>;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
       alt={PRIZE}
-      className="h-[26vh] w-auto rounded-2xl object-contain drop-shadow-xl"
+      className="h-full max-h-[46vh] w-auto rounded-2xl object-contain drop-shadow-2xl"
     />
   );
 }
@@ -143,22 +149,61 @@ export default function LeaderboardBoard() {
       <div className="flex min-h-0 flex-1 gap-[1.5vw] p-[2.5vh_3vw]">
         {/* Prize */}
         <section
-          className="flex flex-[0.95] flex-col items-center justify-center rounded-lg p-[3vh] text-center"
+          className="flex flex-[1.1] flex-col items-center justify-between rounded-lg p-[3vh] text-center"
           style={{ background: C.card, border: `1px solid ${C.border}` }}
         >
           <p
-            className="font-bold uppercase tracking-[0.25em] text-[1.6vh]"
+            className="font-bold uppercase tracking-[0.25em] text-[1.7vh]"
             style={{ color: C.primary }}
           >
             Today&apos;s Prize
           </p>
-          <div className="my-[2vh] flex flex-1 items-center justify-center">
+
+          <div className="flex flex-1 items-center justify-center">
             <PrizeImage />
           </div>
-          <h2 className="font-extrabold leading-none text-[4.6vh]">Win a {PRIZE}</h2>
-          <p className="mt-[1.2vh] font-medium text-[2vh]" style={{ color: C.textVar }}>
-            The fastest time today takes it home.
-          </p>
+
+          <div>
+            <h2 className="font-extrabold leading-none text-[5.4vh]">
+              Win a {PRIZE}
+            </h2>
+            <p
+              className="mt-[1.6vh] inline-block rounded-full px-[1.6vw] py-[0.9vh] font-extrabold text-[2.1vh]"
+              style={{ background: `${C.primary}1A`, color: C.primary }}
+            >
+              {PRIZE_VALUE}
+            </p>
+            <p
+              className="mt-[1.6vh] font-medium text-[2.2vh]"
+              style={{ color: C.textVar }}
+            >
+              The single fastest time today takes it home.
+            </p>
+          </div>
+
+          {/* How to win — so the board explains itself, no host needed. */}
+          <div className="mt-[2.4vh] flex w-full items-stretch justify-center gap-[0.8vw]">
+            {HOW_TO_WIN.map((t, i) => (
+              <div
+                key={t}
+                className="flex flex-1 flex-col items-center gap-[1vh] rounded-lg px-[0.7vw] py-[1.6vh]"
+                style={{ background: C.surface }}
+              >
+                <span
+                  className="flex aspect-square h-[3.4vh] items-center justify-center rounded-full font-extrabold text-[1.8vh]"
+                  style={{ background: C.primary, color: "#fff" }}
+                >
+                  {i + 1}
+                </span>
+                <span
+                  className="font-semibold leading-tight text-[1.6vh]"
+                  style={{ color: C.textVar }}
+                >
+                  {t}
+                </span>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Standings */}
