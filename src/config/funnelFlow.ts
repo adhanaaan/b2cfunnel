@@ -62,9 +62,10 @@ const EVENT_FLOW: FunnelStep[] = [
   // result never feeds the brain-health score).
   { kind: "nameGate" },
   { kind: "game" },
-  { kind: "leaderboard" },
 
-  // Hook bridges from the game into the brain-health quiz.
+  // Straight from their time into the opt-in hook: processing-speed result +
+  // locked cognitive domains + the invite into the brain-health check. The
+  // full standings live on the TV board (/event/leaderboard), not here.
   { kind: "hook" },
 
   { kind: "question", questionId: "age" },
