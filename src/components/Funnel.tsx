@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useFunnel } from "@/state/useFunnel";
-import { track } from "@/lib/analytics";
+import { track, recordResponse } from "@/lib/analytics";
 import { computeScore } from "@/engine/scoring";
 import type { FunnelStep } from "@/types/funnel";
 import { QUESTIONS_BY_ID } from "@/config/questions";
@@ -83,6 +83,21 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     }).catch(() => {});
+
+    // Anonymous audience profile (no name/email) for aggregate insights.
+    recordResponse({
+      variant: state.variant,
+      age: typeof state.answers.age === "string" ? state.answers.age : undefined,
+      sex: typeof state.answers.sex === "string" ? state.answers.sex : undefined,
+      band: result.band,
+      persona: result.persona,
+      riskScore: result.riskScore,
+      symptomScore: result.symptomScore,
+      totalScore: result.total,
+      gameTimeMs: state.gameTimeMs,
+      answers: state.answers,
+    });
+
     analysisDone();
   };
 

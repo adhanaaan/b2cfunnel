@@ -31,18 +31,15 @@ export interface TrackProps {
   step?: string;
 }
 
-/** Fire an anonymous funnel event. Fire-and-forget; never blocks the UI. */
-export function track(event: string, props: TrackProps = {}): void {
+/** POST a JSON body to an analytics endpoint. Fire-and-forget; never blocks. */
+function send(url: string, payload: Record<string, unknown>): void {
   if (typeof window === "undefined") return;
-  const body = JSON.stringify({ sessionId: sessionId(), event, ...props });
+  const body = JSON.stringify({ sessionId: sessionId(), ...payload });
   try {
     if (navigator.sendBeacon) {
-      navigator.sendBeacon(
-        "/api/event",
-        new Blob([body], { type: "application/json" }),
-      );
+      navigator.sendBeacon(url, new Blob([body], { type: "application/json" }));
     } else {
-      void fetch("/api/event", {
+      void fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body,
@@ -52,4 +49,31 @@ export function track(event: string, props: TrackProps = {}): void {
   } catch {
     /* analytics must never break the funnel */
   }
+}
+
+/** Fire an anonymous funnel event (drop-off tracking). */
+export function track(event: string, props: TrackProps = {}): void {
+  send("/api/event", { event, ...props });
+}
+
+/**
+ * Anonymous audience profile, recorded when the score is computed. No name or
+ * email — keyed to the random session id only, so it can never identify a
+ * person. Lets us understand who showed up in aggregate.
+ */
+export interface ResponsePayload {
+  variant?: string;
+  age?: string;
+  sex?: string;
+  band?: string;
+  persona?: string;
+  riskScore?: number;
+  symptomScore?: number;
+  totalScore?: number;
+  gameTimeMs?: number;
+  answers?: Record<string, unknown>;
+}
+
+export function recordResponse(p: ResponsePayload): void {
+  send("/api/response", { ...p });
 }
