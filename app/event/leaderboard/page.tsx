@@ -147,9 +147,9 @@ export default function LeaderboardBoard() {
 
       {/* Body: Prize | Standings | QR */}
       <div className="flex min-h-0 flex-1 gap-[1.5vw] p-[2.5vh_3vw]">
-        {/* Prize */}
+        {/* Prize — the hero: the main reason to scan. */}
         <section
-          className="flex flex-[1.1] flex-col items-center justify-between rounded-lg p-[3vh] text-center"
+          className="flex flex-[1.4] flex-col items-center justify-between rounded-lg p-[3vh] text-center"
           style={{ background: C.card, border: `1px solid ${C.border}` }}
         >
           <p
@@ -208,7 +208,7 @@ export default function LeaderboardBoard() {
 
         {/* Standings */}
         <section
-          className="flex min-h-0 flex-[1.25] flex-col rounded-lg p-[2vh_1.8vw]"
+          className="flex min-h-0 flex-[1.15] flex-col rounded-lg p-[2vh_1.8vw]"
           style={{ background: C.card, border: `1px solid ${C.border}` }}
         >
           <p
@@ -253,12 +253,29 @@ export default function LeaderboardBoard() {
                       <span className="flex-1 truncate font-bold text-[2.5vh]">
                         {e.name}
                       </span>
-                      <span
-                        className="font-extrabold tabular-nums text-[2.6vh]"
-                        style={{ color: C.primary }}
-                      >
-                        {formatTime(e.timeMs)}
-                      </span>
+                      {i === 0 ? (
+                        <span className="flex flex-col items-end leading-none">
+                          <span
+                            className="text-[1.2vh] font-bold uppercase tracking-[0.2em]"
+                            style={{ color: C.textVar }}
+                          >
+                            Time to beat
+                          </span>
+                          <span
+                            className="mt-[0.4vh] font-extrabold tabular-nums text-[3.8vh]"
+                            style={{ color: C.primary }}
+                          >
+                            {formatTime(e.timeMs)}
+                          </span>
+                        </span>
+                      ) : (
+                        <span
+                          className="font-extrabold tabular-nums text-[2.6vh]"
+                          style={{ color: C.primary }}
+                        >
+                          {formatTime(e.timeMs)}
+                        </span>
+                      )}
                     </>
                   ) : (
                     <>
@@ -286,9 +303,9 @@ export default function LeaderboardBoard() {
           </ol>
         </section>
 
-        {/* QR interaction zone */}
+        {/* QR interaction zone — just the door. */}
         <section
-          className="flex flex-[0.95] flex-col items-center justify-center rounded-lg p-[3vh] text-center"
+          className="flex flex-[0.85] flex-col items-center justify-center rounded-lg p-[3vh] text-center"
           style={{ background: C.primary, color: "#fff" }}
         >
           <p className="font-bold uppercase tracking-[0.3em] text-[1.7vh] text-white/85">

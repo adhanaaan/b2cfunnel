@@ -19,7 +19,17 @@ interface Props {
  * NOTE: a game — its result never feeds the brain-health score.
  */
 export function SymbolMatchGame({ onComplete }: Props) {
-  const [phase, setPhase] = useState<"demo" | "countdown" | "play">("demo");
+  const [phase, setPhase] = useState<"demo" | "countdown" | "play">(() => {
+    // Skip the guided tour on replays within the same session.
+    if (typeof window !== "undefined") {
+      try {
+        if (sessionStorage.getItem("sm_demo_done")) return "countdown";
+      } catch {
+        /* ignore */
+      }
+    }
+    return "demo";
+  });
   const [count, setCount] = useState(3);
   const [correct, setCorrect] = useState(0);
   const [elapsed, setElapsed] = useState(0);
@@ -55,7 +65,18 @@ export function SymbolMatchGame({ onComplete }: Props) {
 
   // The real recognaizelite guided tour, then the timed run.
   if (phase === "demo") {
-    return <SymbolMatchTour onDone={() => setPhase("countdown")} />;
+    return (
+      <SymbolMatchTour
+        onDone={() => {
+          try {
+            sessionStorage.setItem("sm_demo_done", "1");
+          } catch {
+            /* ignore */
+          }
+          setPhase("countdown");
+        }}
+      />
+    );
   }
 
   if (phase === "countdown") {
