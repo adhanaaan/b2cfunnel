@@ -72,7 +72,7 @@ function PrizeImage() {
     <img
       src={src}
       alt={PRIZE}
-      className="h-full max-h-[46vh] w-auto rounded-2xl object-contain drop-shadow-2xl"
+      className="h-full max-h-[40vh] w-auto rounded-2xl object-contain drop-shadow-2xl"
     />
   );
 }
@@ -149,32 +149,41 @@ export default function LeaderboardBoard() {
       <div className="flex min-h-0 flex-1 gap-[1.5vw] p-[2.5vh_3vw]">
         {/* Prize — the hero: the main reason to scan. */}
         <section
-          className="flex flex-[1.4] flex-col items-center justify-between rounded-lg p-[3vh] text-center"
-          style={{ background: C.card, border: `1px solid ${C.border}` }}
+          className="flex flex-[1.55] flex-col items-center justify-between rounded-lg p-[3.5vh_2.5vw] text-center"
+          style={{
+            background: `linear-gradient(160deg, #FFFFFF 0%, #FFF3EB 55%, #FFE6D5 100%)`,
+            border: `2px solid ${C.primary}`,
+            boxShadow: `0 0 0 1px ${C.primary}22, 0 1.6vh 4vh -1.6vh ${C.primary}66`,
+          }}
         >
           <p
-            className="font-bold uppercase tracking-[0.25em] text-[1.7vh]"
-            style={{ color: C.primary }}
+            className="rounded-full px-[1.4vw] py-[0.8vh] font-extrabold uppercase tracking-[0.25em] text-[1.8vh] text-white"
+            style={{ background: C.primary }}
           >
             Today&apos;s Prize
           </p>
 
-          <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-1 items-center justify-center py-[1vh]">
             <PrizeImage />
           </div>
 
           <div>
-            <h2 className="font-extrabold leading-none text-[5.4vh]">
-              Win a {PRIZE}
+            <h2 className="font-extrabold uppercase leading-[0.95] tracking-tight">
+              <span className="block text-[3vh]" style={{ color: C.textVar }}>
+                Win a
+              </span>
+              <span className="block text-[7.5vh]" style={{ color: C.text }}>
+                {PRIZE}
+              </span>
             </h2>
             <p
-              className="mt-[1.6vh] inline-block rounded-full px-[1.6vw] py-[0.9vh] font-extrabold text-[2.1vh]"
-              style={{ background: `${C.primary}1A`, color: C.primary }}
+              className="mt-[1.8vh] inline-block rounded-full px-[2vw] py-[1.1vh] font-extrabold text-[2.8vh] text-white"
+              style={{ background: C.primary }}
             >
               {PRIZE_VALUE}
             </p>
             <p
-              className="mt-[1.6vh] font-medium text-[2.2vh]"
+              className="mt-[1.8vh] font-semibold text-[2.4vh]"
               style={{ color: C.textVar }}
             >
               The single fastest time today takes it home.
@@ -187,17 +196,17 @@ export default function LeaderboardBoard() {
               <div
                 key={t}
                 className="flex flex-1 flex-col items-center gap-[1vh] rounded-lg px-[0.7vw] py-[1.6vh]"
-                style={{ background: C.surface }}
+                style={{ background: "#FFFFFFB3" }}
               >
                 <span
-                  className="flex aspect-square h-[3.4vh] items-center justify-center rounded-full font-extrabold text-[1.8vh]"
+                  className="flex aspect-square h-[3.8vh] items-center justify-center rounded-full font-extrabold text-[2vh]"
                   style={{ background: C.primary, color: "#fff" }}
                 >
                   {i + 1}
                 </span>
                 <span
-                  className="font-semibold leading-tight text-[1.6vh]"
-                  style={{ color: C.textVar }}
+                  className="font-bold leading-tight text-[1.7vh]"
+                  style={{ color: C.text }}
                 >
                   {t}
                 </span>
@@ -208,7 +217,7 @@ export default function LeaderboardBoard() {
 
         {/* Standings */}
         <section
-          className="flex min-h-0 flex-[1.15] flex-col rounded-lg p-[2vh_1.8vw]"
+          className="flex min-h-0 flex-[1.1] flex-col rounded-lg p-[2vh_1.8vw]"
           style={{ background: C.card, border: `1px solid ${C.border}` }}
         >
           <p
@@ -224,8 +233,14 @@ export default function LeaderboardBoard() {
               return (
                 <li
                   key={i}
-                  className="flex flex-1 items-center gap-[1.2vw] transition-all"
-                  style={{ borderBottom: i < TOP_N - 1 ? `1px solid ${C.border}` : "none" }}
+                  className="flex flex-1 items-center gap-[1.2vw] px-[1vw] transition-all"
+                  style={{
+                    borderBottom:
+                      i < TOP_N - 1 ? `1px solid ${C.border}` : "none",
+                    background:
+                      i === 0 && e ? `${C.primary}12` : "transparent",
+                    borderRadius: i === 0 && e ? "0.6vw" : 0,
+                  }}
                 >
                   {/* Rank badge */}
                   <span
@@ -305,7 +320,7 @@ export default function LeaderboardBoard() {
 
         {/* QR interaction zone — just the door. */}
         <section
-          className="flex flex-[0.85] flex-col items-center justify-center rounded-lg p-[3vh] text-center"
+          className="flex flex-[0.8] flex-col items-center justify-center rounded-lg p-[3vh] text-center"
           style={{ background: C.primary, color: "#fff" }}
         >
           <p className="font-bold uppercase tracking-[0.3em] text-[1.7vh] text-white/85">
