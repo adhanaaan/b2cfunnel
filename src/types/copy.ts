@@ -63,8 +63,21 @@ export interface AnalysingCopy {
   crumbs: string[]; // credibility crumbs cycled during the suspense screen
 }
 
+// Event closing (no sell): the result screen ends with a "speak to our team"
+// prompt instead of the paywall, and a final ConsultScreen.
+export interface ConsultCopy {
+  eyebrow: string;
+  heading: string;
+  body: string;
+  closing: string;
+}
+
 export interface ResultBaseCopy {
   reviewerStrap: string;
+  // Event-only closing prompt shown in place of the paywall preview.
+  eventClosingHeading: string;
+  eventClosingBody: string;
+  eventClosingCta: string;
   eyebrow: string;
   scoreSuffix: string; // '/25'
   drivingHeading: string;
@@ -176,6 +189,7 @@ export interface ScreenCopy {
   game: GameCopy;
   leaderboard: LeaderboardCopy;
   eventHook: EventHookCopy;
+  consult: ConsultCopy;
 }
 
 // What changes per persona on the result screen: the score blurb (per band) and

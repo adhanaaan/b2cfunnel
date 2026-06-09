@@ -99,8 +99,9 @@ const EVENT_FLOW: FunnelStep[] = [
   { kind: "emailGate" },
   { kind: "analysing" },
   { kind: "result" },
-  { kind: "paywall" },
-  { kind: "booking" },
+  // No selling at the event: close with a soft "speak to our team" instead of
+  // the paywall + booking pages.
+  { kind: "consult" },
 ];
 
 const FLOWS: Record<QuizVariant, FunnelStep[]> = {
