@@ -9,6 +9,7 @@ import { BigScore } from "@/components/result/BigScore";
 import { Gauge } from "@/components/result/Gauge";
 import { DrivingFactorPills } from "@/components/result/DrivingFactorPills";
 import { BlurredPaywallPreview } from "@/components/result/BlurredPaywallPreview";
+import { useIsEvent } from "@/components/VariantContext";
 
 interface ResultScreenProps {
   result: ScoreResult;
@@ -37,6 +38,7 @@ function formatLevers(result: ScoreResult): string {
 /** Screen 6 — the score reveal. Brand-critical layout (build brief §6). */
 export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
   const base = COPY.screens.resultBase;
+  const event = useIsEvent();
   const bandLabel = COPY.bandLabels[result.band];
   // Band-specific blurb, calibrated with the user's reported factors.
   const blurb = COPY.resultBlurbs[result.band].replace(
@@ -75,14 +77,33 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
           <DrivingFactorPills factors={result.drivingFactors} />
         </div>
 
-        {/* Hard divider into the consult unlock section. */}
+        {/* Hard divider into the closing section. */}
         <div className="-mx-5 mt-8 border-t border-outline-variant sm:-mx-7" />
 
         <div className="mt-8">
-          <BlurredPaywallPreview
-            factors={result.drivingFactors}
-            onUnlock={onUnlock}
-          />
+          {event ? (
+            // Event: no sell — a soft prompt to speak to the team.
+            <div className="rounded-2xl bg-surface-container px-6 py-7 text-center">
+              <h2 className="font-display text-xl font-extrabold leading-snug text-charcoal">
+                {base.eventClosingHeading}
+              </h2>
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-secondary">
+                {base.eventClosingBody}
+              </p>
+              <button
+                type="button"
+                onClick={onUnlock}
+                className="mt-6 w-full rounded-lg bg-primary px-6 py-4 text-lg font-bold text-primary-on shadow-float transition hover:brightness-105"
+              >
+                {base.eventClosingCta}
+              </button>
+            </div>
+          ) : (
+            <BlurredPaywallPreview
+              factors={result.drivingFactors}
+              onUnlock={onUnlock}
+            />
+          )}
         </div>
 
         <ComplianceFooter />

@@ -17,7 +17,8 @@ export type FunnelStep =
   | { kind: "game" }
   | { kind: "leaderboard" }
   | { kind: "paywall" }
-  | { kind: "booking" };
+  | { kind: "booking" }
+  | { kind: "consult" }; // event-only, non-sales closing
 
 export type StepKind = FunnelStep["kind"];
 

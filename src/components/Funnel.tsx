@@ -25,6 +25,7 @@ import { GameScreen } from "@/components/screens/GameScreen";
 import { LeaderboardScreen } from "@/components/screens/LeaderboardScreen";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
 import { BookingScreen } from "@/components/screens/BookingScreen";
+import { ConsultScreen } from "@/components/screens/ConsultScreen";
 
 /** A stable, human-readable name for a funnel step (for drop-off analytics). */
 function stepKey(step: FunnelStep): string {
@@ -206,6 +207,9 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "booking":
       return <BookingScreen />;
+
+    case "consult":
+      return <ConsultScreen />;
 
     default:
       return null;

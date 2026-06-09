@@ -99,6 +99,10 @@ export const COPY: CopyConfig = {
     resultBase: {
       reviewerStrap:
         "Grounded in the 2024 Lancet Commission, built with NTU's Dementia Research Centre",
+      eventClosingHeading: "Want to understand what this means?",
+      eventClosingBody:
+        "Your Brain Health Score and recommendations are on their way to your inbox. Our team can walk you through your profile and the science behind it.",
+      eventClosingCta: "Speak to our team",
       eyebrow: "Here's your score",
       scoreSuffix: "/100",
       drivingHeading: "What's driving this",
@@ -221,6 +225,12 @@ export const COPY: CopyConfig = {
         "Built with NTU's Dementia Research Centre · 2024 Lancet Commission",
       disclaimer:
         "Reaction-time games are fun, but not a cognitive assessment.",
+    },
+    consult: {
+      eyebrow: "Let's talk",
+      heading: "Come and speak to our team",
+      body: "We'd love to walk you through what your Brain Health Score means and the science behind it. Find us here at the booth, your full results are also on their way to your inbox.",
+      closing: "Built with NTU's Dementia Research Centre.",
     },
   },
 
