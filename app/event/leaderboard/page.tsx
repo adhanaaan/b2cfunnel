@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { formatTime } from "@/lib/format";
+import { EVENT_PAUSED } from "@/config/event";
 
 interface Entry {
   name: string;
@@ -141,7 +142,7 @@ export default function LeaderboardBoard() {
           className="rounded-lg px-[1.5vw] py-[1vh] text-[1.6vh] font-bold"
           style={{ background: C.card, border: `1px solid ${C.border}`, color: C.textVar }}
         >
-          ● Live standings
+          {EVENT_PAUSED ? "Final standings" : "● Live standings"}
         </p>
       </header>
 
@@ -191,6 +192,7 @@ export default function LeaderboardBoard() {
           </div>
 
           {/* How to win — so the board explains itself, no host needed. */}
+          {!EVENT_PAUSED && (
           <div className="mt-[2.4vh] flex w-full items-stretch justify-center gap-[0.8vw]">
             {HOW_TO_WIN.map((t, i) => (
               <div
@@ -213,6 +215,7 @@ export default function LeaderboardBoard() {
               </div>
             ))}
           </div>
+          )}
         </section>
 
         {/* Standings */}
@@ -318,25 +321,48 @@ export default function LeaderboardBoard() {
           </ol>
         </section>
 
-        {/* QR interaction zone — just the door. */}
+        {/* QR interaction zone — the door, or a thank-you once the event ends. */}
         <section
           className="flex flex-[0.8] flex-col items-center justify-center rounded-lg p-[3vh] text-center"
           style={{ background: C.primary, color: "#fff" }}
         >
-          <p className="font-bold uppercase tracking-[0.3em] text-[1.7vh] text-white/85">
-            ⚡ Play now
-          </p>
-          <p className="mt-[1vh] font-extrabold leading-tight text-[3.6vh]">
-            Scan to take the challenge
-          </p>
-          <div className="mt-[3vh] rounded-lg bg-white p-[1.6vh]">
-            {playUrl && <QRCodeSVG value={playUrl} className="h-[30vh] w-[30vh]" level="M" />}
-          </div>
-          <p className="mt-[2.4vh] font-semibold text-[2.1vh] text-white/90">
-            {total > 0
-              ? `${total} ${total === 1 ? "player" : "players"} so far · be #1`
-              : "Be the first to play!"}
-          </p>
+          {EVENT_PAUSED ? (
+            <>
+              <p className="font-bold uppercase tracking-[0.3em] text-[1.7vh] text-white/85">
+                That&apos;s a wrap
+              </p>
+              <p className="mt-[2vh] font-extrabold leading-tight text-[4.2vh]">
+                The challenge has ended
+              </p>
+              <p className="mt-[2.4vh] font-semibold text-[2.4vh] text-white/90">
+                Thanks for playing
+              </p>
+              <p className="mt-[1.2vh] text-[2vh] text-white/85">
+                {total > 0
+                  ? `${total} ${total === 1 ? "player" : "players"} took part`
+                  : ""}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="font-bold uppercase tracking-[0.3em] text-[1.7vh] text-white/85">
+                ⚡ Play now
+              </p>
+              <p className="mt-[1vh] font-extrabold leading-tight text-[3.6vh]">
+                Scan to take the challenge
+              </p>
+              <div className="mt-[3vh] rounded-lg bg-white p-[1.6vh]">
+                {playUrl && (
+                  <QRCodeSVG value={playUrl} className="h-[30vh] w-[30vh]" level="M" />
+                )}
+              </div>
+              <p className="mt-[2.4vh] font-semibold text-[2.1vh] text-white/90">
+                {total > 0
+                  ? `${total} ${total === 1 ? "player" : "players"} so far · be #1`
+                  : "Be the first to play!"}
+              </p>
+            </>
+          )}
         </section>
       </div>
 

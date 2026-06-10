@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { submitScore } from "@/lib/supabase/game";
+import { EVENT_PAUSED } from "@/config/event";
 
 export const runtime = "nodejs";
 
@@ -12,6 +13,11 @@ interface ScorePayload {
 }
 
 export async function POST(req: Request) {
+  // Event paused: accept the request but don't record new scores.
+  if (EVENT_PAUSED) {
+    return NextResponse.json({ ok: true, stored: false });
+  }
+
   let payload: ScorePayload;
   try {
     payload = (await req.json()) as ScorePayload;
