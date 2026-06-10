@@ -1,6 +1,8 @@
 import type { Answers, Axis } from "@/types/question";
 import type { ScoreResult } from "@/types/engine";
+import type { QuizVariant } from "@/types/funnel";
 import { QUESTIONS_BY_ID } from "@/config/questions";
+import { achievableAxisMax } from "@/config/funnelFlow";
 import {
   bandForRiskAxis,
   bandForSymptomAxis,
@@ -37,12 +39,37 @@ function scoreAxis(answers: Answers, axis: Axis): number {
   return total;
 }
 
-export function scoreRiskAxis(answers: Answers): number {
-  return Math.min(scoreAxis(answers, "risk"), RISK_MAX);
+/**
+ * Scale a raw axis score onto the full-quiz scale (`target`). The event quiz
+ * asks fewer questions, so its achievable max is lower; normalising keeps the
+ * /100 total and the bands comparable across variants. For the full variant the
+ * achievable max equals the target, so the factor is 1 (no change).
+ */
+function normaliseAxis(
+  answers: Answers,
+  axis: Axis,
+  variant: QuizVariant,
+  target: number,
+): number {
+  const raw = scoreAxis(answers, axis);
+  const achievable = achievableAxisMax(variant, axis);
+  if (achievable <= 0) return 0;
+  const scaled = Math.round((raw * target) / achievable);
+  return Math.min(scaled, target);
 }
 
-export function scoreSymptomAxis(answers: Answers): number {
-  return Math.min(scoreAxis(answers, "symptom"), SYMPTOM_MAX);
+export function scoreRiskAxis(
+  answers: Answers,
+  variant: QuizVariant = "full",
+): number {
+  return normaliseAxis(answers, "risk", variant, RISK_MAX);
+}
+
+export function scoreSymptomAxis(
+  answers: Answers,
+  variant: QuizVariant = "full",
+): number {
+  return normaliseAxis(answers, "symptom", variant, SYMPTOM_MAX);
 }
 
 /**
@@ -56,9 +83,12 @@ export function scoreSymptomAxis(answers: Answers): number {
  * else has noticed, the band is forced to at least 'elevated' regardless of the
  * total. The override only ever raises the band, never lowers it.
  */
-export function computeScore(answers: Answers): ScoreResult {
-  const riskScore = scoreRiskAxis(answers);
-  const symptomScore = scoreSymptomAxis(answers);
+export function computeScore(
+  answers: Answers,
+  variant: QuizVariant = "full",
+): ScoreResult {
+  const riskScore = scoreRiskAxis(answers, variant);
+  const symptomScore = scoreSymptomAxis(answers, variant);
   const total = riskScore + symptomScore;
 
   const bandFromTotal = bandForTotal(total);

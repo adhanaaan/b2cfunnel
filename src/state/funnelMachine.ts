@@ -85,7 +85,7 @@ export function funnelReducer(
       const next = Math.min(state.cursor + 1, flow.length - 1);
       return {
         ...state,
-        result: state.result ?? computeScore(state.answers),
+        result: state.result ?? computeScore(state.answers, state.variant),
         cursor: next,
       };
     }

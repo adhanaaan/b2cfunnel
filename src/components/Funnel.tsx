@@ -65,7 +65,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
   // score and game time) when the profile is built. Fire-and-forget: capturing
   // the lead must never block the reveal.
   const handleAnalysisDone = () => {
-    const result = computeScore(state.answers);
+    const result = computeScore(state.answers, state.variant);
     const payload: LeadPayload = {
       name: state.name,
       // Personal email (event end-gate) is where results go; fall back to the
