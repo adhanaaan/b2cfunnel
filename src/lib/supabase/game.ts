@@ -6,18 +6,6 @@ export interface LeaderboardEntry {
   timeMs: number;
 }
 
-/** ISO timestamp for the start of "today" in Singapore time (UTC+8, no DST). */
-export function todayStartIso(): string {
-  const SGT_OFFSET = 8 * 60 * 60 * 1000;
-  const sgt = new Date(Date.now() + SGT_OFFSET);
-  const sgtMidnightAsUtc = Date.UTC(
-    sgt.getUTCFullYear(),
-    sgt.getUTCMonth(),
-    sgt.getUTCDate(),
-  );
-  return new Date(sgtMidnightAsUtc - SGT_OFFSET).toISOString();
-}
-
 /** Record a game result. No-ops gracefully if Supabase isn't configured. */
 export async function submitScore(
   name: string,
@@ -32,10 +20,10 @@ export async function submitScore(
 }
 
 /**
- * Today's leaderboard (Singapore time): best time per email, fastest first.
- * Returns [] when Supabase isn't configured.
+ * Event leaderboard: best time per email, fastest first, across the whole
+ * event (no daily reset). Returns [] when Supabase isn't configured.
  */
-export async function getTodayLeaderboard(
+export async function getLeaderboard(
   limit = 50,
 ): Promise<LeaderboardEntry[]> {
   if (!isSupabaseConfigured()) return [];
@@ -43,7 +31,6 @@ export async function getTodayLeaderboard(
   const { data, error } = await sb
     .from("game_scores")
     .select("name, email, time_ms")
-    .gte("created_at", todayStartIso())
     .order("time_ms", { ascending: true });
 
   if (error || !data) return [];

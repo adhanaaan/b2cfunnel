@@ -133,7 +133,7 @@ export default function LeaderboardBoard() {
               Reaction Time Challenge
             </p>
             <h1 className="font-extrabold leading-none text-[4.4vh]">
-              Today&apos;s Fastest Minds
+              Fastest Minds of the Event
             </h1>
           </div>
         </div>
@@ -141,7 +141,7 @@ export default function LeaderboardBoard() {
           className="rounded-lg px-[1.5vw] py-[1vh] text-[1.6vh] font-bold"
           style={{ background: C.card, border: `1px solid ${C.border}`, color: C.textVar }}
         >
-          Live · Resets daily (SGT)
+          ● Live standings
         </p>
       </header>
 
@@ -160,7 +160,7 @@ export default function LeaderboardBoard() {
             className="rounded-full px-[1.4vw] py-[0.8vh] font-extrabold uppercase tracking-[0.25em] text-[1.8vh] text-white"
             style={{ background: C.primary }}
           >
-            Today&apos;s Prize
+            The Prize
           </p>
 
           <div className="flex flex-1 items-center justify-center py-[1vh]">
@@ -186,7 +186,7 @@ export default function LeaderboardBoard() {
               className="mt-[1.8vh] font-semibold text-[2.4vh]"
               style={{ color: C.textVar }}
             >
-              The single fastest time today takes it home.
+              The single fastest time of the event takes it home.
             </p>
           </div>
 
@@ -334,7 +334,7 @@ export default function LeaderboardBoard() {
           </div>
           <p className="mt-[2.4vh] font-semibold text-[2.1vh] text-white/90">
             {total > 0
-              ? `${total} ${total === 1 ? "player" : "players"} today · be #1`
+              ? `${total} ${total === 1 ? "player" : "players"} so far · be #1`
               : "Be the first to play!"}
           </p>
         </section>

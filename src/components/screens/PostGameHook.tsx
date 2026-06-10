@@ -93,7 +93,7 @@ export function PostGameHook({
               {timeMs != null ? formatTime(timeMs) : "—"}
             </p>
             <p className="mt-0.5 text-xs font-semibold">
-              {rank ? `Ranked #${rank} today` : "20 correct"}
+              {rank ? `Ranked #${rank}` : "20 correct"}
             </p>
           </div>
           <div className="rounded-2xl bg-surface-container px-4 py-4 text-center shadow-card">

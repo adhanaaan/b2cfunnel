@@ -188,10 +188,10 @@ export const COPY: CopyConfig = {
       disclaimer: "Reaction-time games are fun, but not a cognitive assessment.",
     },
     leaderboard: {
-      eyebrow: "Today's leaderboard",
-      heading: "Fastest minds today",
-      prize: "🏆 Top of the day wins a Fitbit.",
-      youNote: "Live standings reset daily.",
+      eyebrow: "Event leaderboard",
+      heading: "Fastest minds",
+      prize: "🏆 The fastest of the event wins a Fitbit.",
+      youNote: "Live standings across the whole event.",
       shareHeading: "📸 Screenshot your rank",
       shareBody: "Share it and dare a colleague to beat your time.",
       shareCta: "Share",
@@ -204,7 +204,7 @@ export const COPY: CopyConfig = {
     eventHook: {
       eyebrow: "Brain Health",
       rankHeading: "You just tested your processing speed",
-      topLabel: "Fastest today",
+      topLabel: "Fastest so far",
       youLabel: "Your time",
       whatHeading: "What is processing speed?",
       whatBody:
