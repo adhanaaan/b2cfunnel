@@ -89,3 +89,62 @@ describe("scoring engine", () => {
     expect(r.bandFromTotal).toBe("high");
   });
 });
+
+describe("event variant scoring (normalised to /100)", () => {
+  // The event quiz drops several questions (lower achievable max), so its
+  // scores are scaled back onto the /100 scale to stay comparable.
+  const eventMax: Answers = {
+    age: "60+", // 12
+    sex: "female",
+    highBp: "yes", // 4
+    highCholesterol: "yes", // 4
+    diabetes: "yes", // 4
+    smoking: "current", // 4
+    sleep: "lt6", // 4
+    exercise: "lt75", // 4
+    diet: "poor", // 4
+    alcohol: "gt21", // 4  -> raw risk 44
+    concentrating: "almostDaily", // 4
+    judgement: "almostDaily", // 4
+    forgetfulness: "almostDaily", // 4
+    persistence: "yes", // 12  -> raw symptom 24
+  };
+
+  it("scales a maxed event profile up to 100 / High", () => {
+    const r = computeScore(eventMax, "event");
+    expect(r.riskScore).toBe(68); // 44 raw * 68/44
+    expect(r.symptomScore).toBe(32); // 24 raw * 32/24
+    expect(r.total).toBe(100);
+    expect(r.band).toBe("high");
+  });
+
+  // A real, moderate event profile that the old (deflated) scoring buried.
+  const eventModerate: Answers = {
+    age: "50-59", // 8
+    highBp: "yes", // 4
+    diabetes: "yes", // 4
+    exercise: "lt75", // 4
+    diet: "poor", // 4  -> raw risk 24
+  };
+
+  it("lifts a mid event profile out of the artificial 'low' band", () => {
+    const r = computeScore(eventModerate, "event");
+    expect(r.total).toBe(37); // round(24 * 68/44)
+    expect(r.band).toBe("moderate");
+  });
+
+  it("leaves the full quiz unchanged for the same answers", () => {
+    const r = computeScore(eventModerate, "full");
+    expect(r.total).toBe(24); // scale factor 1
+    expect(r.band).toBe("low");
+  });
+
+  it("keeps a zero event profile at 0 / Low", () => {
+    const r = computeScore(
+      { age: "18-29", sex: "male", highBp: "no", smoking: "never" },
+      "event",
+    );
+    expect(r.total).toBe(0);
+    expect(r.band).toBe("low");
+  });
+});

@@ -1,5 +1,5 @@
 import type { FunnelStep, QuizVariant } from "@/types/funnel";
-import type { Answers } from "@/types/question";
+import type { Answers, Axis } from "@/types/question";
 import { QUESTIONS_BY_ID } from "@/config/questions";
 
 /**
@@ -108,6 +108,39 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   full: FULL_FLOW,
   event: EVENT_FLOW,
 };
+
+/** All question ids in a variant's flow (single questions + grouped pages). */
+function questionIdsIn(variant: QuizVariant): string[] {
+  const ids: string[] = [];
+  for (const step of FLOWS[variant]) {
+    if (step.kind === "question") ids.push(step.questionId);
+    else if (step.kind === "questionGroup") ids.push(...step.questionIds);
+  }
+  return ids;
+}
+
+const axisMaxCache = new Map<string, number>();
+
+/**
+ * The maximum score achievable on an axis for a variant — the sum of each
+ * in-flow question's highest option score on that axis (assuming all
+ * conditional questions fire). Used to normalise the trimmed event quiz back
+ * onto the /100 scale so its bands match the full quiz. Memoised.
+ */
+export function achievableAxisMax(variant: QuizVariant, axis: Axis): number {
+  const key = `${variant}:${axis}`;
+  const cached = axisMaxCache.get(key);
+  if (cached !== undefined) return cached;
+
+  let max = 0;
+  for (const id of questionIdsIn(variant)) {
+    const q = QUESTIONS_BY_ID[id];
+    if (!q || q.axis !== axis || !q.options) continue;
+    max += Math.max(0, ...q.options.map((o) => o.score));
+  }
+  axisMaxCache.set(key, max);
+  return max;
+}
 
 /** True when a question's showIf condition is satisfied by the current answers. */
 function questionVisible(questionId: string, answers: Answers): boolean {
