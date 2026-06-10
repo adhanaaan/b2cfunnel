@@ -108,7 +108,7 @@ export function LeaderboardScreen({
               {formatTime(timeMs!)}
             </p>
             <p className="mt-1 text-sm font-semibold">
-              20 correct{rank ? ` · ranked #${rank} today` : ""}
+              20 correct{rank ? ` · ranked #${rank}` : ""}
             </p>
           </div>
         )}

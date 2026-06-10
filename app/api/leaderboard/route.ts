@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getTodayLeaderboard } from "@/lib/supabase/game";
+import { getLeaderboard } from "@/lib/supabase/game";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -9,7 +9,7 @@ export async function GET(req: Request) {
   const email = url.searchParams.get("email")?.trim().toLowerCase() ?? null;
   const limit = Math.min(Number(url.searchParams.get("limit")) || 10, 100);
 
-  const all = await getTodayLeaderboard(200);
+  const all = await getLeaderboard(200);
 
   const rankIndex = email
     ? all.findIndex((e) => e.email.toLowerCase() === email)
