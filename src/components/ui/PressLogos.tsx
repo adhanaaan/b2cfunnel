@@ -17,7 +17,7 @@ function PressLogo({ src, alt }: PressItem) {
       src={src}
       alt={alt}
       onError={() => setOk(false)}
-      className="h-7 w-auto object-contain opacity-80 sm:h-8"
+      className="h-9 w-auto object-contain opacity-80 sm:h-10"
     />
   );
 }

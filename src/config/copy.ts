@@ -44,7 +44,7 @@ export const COPY: CopyConfig = {
       },
       asSeenOnLabel: "As seen on",
       asSeenOn: [
-        { alt: "The Straits Times", src: "/press-straits-times.png" },
+        { alt: "The Straits Times", src: "/press-st.png" },
         { alt: "CNA", src: "/press-cna.png" },
         { alt: "Alzheimer's Association", src: "/press-alzheimers.svg" },
       ],
