@@ -5,21 +5,28 @@ import { useIsEvent } from "@/components/VariantContext";
 interface ScreenShellProps {
   children: React.ReactNode;
   wide?: boolean;
+  /** Premium gradient backdrop + ambient glow (also always on for the event). */
+  premium?: boolean;
 }
 
 /** Centred, responsive container shared by every screen. */
-export function ScreenShell({ children, wide = false }: ScreenShellProps) {
+export function ScreenShell({
+  children,
+  wide = false,
+  premium = false,
+}: ScreenShellProps) {
   const event = useIsEvent();
+  const glow = event || premium;
 
   return (
     <main
       className={[
         "relative flex min-h-screen flex-col items-center overflow-hidden px-4 py-8 sm:py-12",
-        event ? "bg-gradient-to-b from-[#fff4ee] via-surface to-[#fbe7de]" : "",
+        glow ? "bg-gradient-to-b from-[#fff4ee] via-surface to-[#fbe7de]" : "",
       ].join(" ")}
     >
-      {/* Premium ambient glow for the event experience. */}
-      {event && (
+      {/* Premium ambient glow. */}
+      {glow && (
         <>
           <div
             aria-hidden

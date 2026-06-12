@@ -102,8 +102,7 @@ export const COPY: CopyConfig = {
       ],
     },
     resultBase: {
-      reviewerStrap:
-        "Grounded in the 2024 Lancet Commission, built with NTU's Dementia Research Centre",
+      reviewerStrap: "Grounded in the 2024 L.C. report & CAIDE Risk Model",
       eventClosingHeading: "Want to understand what this means?",
       eventClosingBody:
         "Your Brain Health Score and recommendations are on their way to your inbox. Our team can walk you through your profile and the science behind it.",
