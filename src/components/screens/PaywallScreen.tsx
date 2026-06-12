@@ -59,7 +59,7 @@ export function PaywallScreen({ result }: PaywallScreenProps) {
             {pubmedOk && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src="/pubmed-logo.png"
+                src="/pubmed-logo-blue.svg"
                 alt="PubMed"
                 onError={() => setPubmedOk(false)}
                 className="h-5 w-auto flex-shrink-0 object-contain"
