@@ -1,36 +1,7 @@
-import type { DrivingFactor } from "@/types/engine";
 import { COPY } from "@/config/copy";
 
 interface BlurredPaywallPreviewProps {
-  factors: DrivingFactor[];
   onUnlock: () => void;
-}
-
-/**
- * Build the dynamic heading from the user's reported risk factors, e.g.
- * "What your blood pressure, sleep and cholesterol could mean for you".
- * Falls back to a generic line when no factors stood out.
- */
-function buildHeading(factors: DrivingFactor[]): string {
-  const labels = factors.map((f) => f.label.toLowerCase());
-  if (labels.length === 0) {
-    return COPY.screens.resultBase.paywallPreviewHeadingFallback;
-  }
-
-  let phrase: string;
-  if (labels.length <= 3) {
-    phrase =
-      labels.length === 1
-        ? labels[0]
-        : `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
-  } else {
-    phrase = `${labels.slice(0, 3).join(", ")} and other factors`;
-  }
-
-  return COPY.screens.resultBase.paywallPreviewHeading.replace(
-    "{factors}",
-    phrase,
-  );
 }
 
 function LockIcon({ className = "" }: { className?: string }) {
@@ -49,13 +20,9 @@ function LockIcon({ className = "" }: { className?: string }) {
   );
 }
 
-/** Premium "locked analysis" card teasing the full report, with the unlock CTA. */
-export function BlurredPaywallPreview({
-  factors,
-  onUnlock,
-}: BlurredPaywallPreviewProps) {
-  const { unlockCta, unlockOverlay, unlockTeasers } = COPY.screens.resultBase;
-  const heading = buildHeading(factors);
+/** Locked preview: a clean title over a blurred faux-report, with the CTA. */
+export function BlurredPaywallPreview({ onUnlock }: BlurredPaywallPreviewProps) {
+  const { unlockCta, unlockOverlay } = COPY.screens.resultBase;
 
   return (
     <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-[#ec5e3b] p-6 text-primary-on shadow-[0_20px_50px_-20px_rgba(247,117,40,0.6)]">
@@ -64,22 +31,23 @@ export function BlurredPaywallPreview({
         Locked
       </span>
 
-      <h2 className="mt-3 text-xl font-extrabold leading-snug">{heading}</h2>
-      <p className="mt-2 text-sm leading-relaxed text-white/85">
+      <h2 className="mt-3 text-xl font-extrabold leading-snug">
         {unlockOverlay}
-      </p>
+      </h2>
 
-      <ul className="mt-5 space-y-2">
-        {unlockTeasers.map((t) => (
-          <li
-            key={t}
-            className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3"
-          >
-            <LockIcon className="h-4 w-4 flex-shrink-0 text-white/80" />
-            <span className="text-sm font-semibold">{t}</span>
-          </li>
+      {/* Blurred faux-report content behind the lock. */}
+      <div
+        className="mt-5 select-none space-y-2.5 opacity-90 blur-[3px]"
+        aria-hidden
+      >
+        {[94, 82, 88, 74, 90, 64].map((w, i) => (
+          <div
+            key={i}
+            className="h-3.5 rounded bg-white/30"
+            style={{ width: `${w}%` }}
+          />
         ))}
-      </ul>
+      </div>
 
       <button
         type="button"

@@ -99,10 +99,7 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
               </button>
             </div>
           ) : (
-            <BlurredPaywallPreview
-              factors={result.drivingFactors}
-              onUnlock={onUnlock}
-            />
+            <BlurredPaywallPreview onUnlock={onUnlock} />
           )}
         </div>
 

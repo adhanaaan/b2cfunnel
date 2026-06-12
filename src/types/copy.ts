@@ -160,7 +160,8 @@ export interface PaywallCopy {
   price: string;
   priceNote: string;
   cta: string;
-  bookingUrl: string; // external booking destination the CTA links to
+  whatsappNumber: string; // digits only, incl. country code, for the wa.me link
+  whatsappMessage: string; // prefilled message template the user fills in
   faqs: FaqItem[];
 }
 

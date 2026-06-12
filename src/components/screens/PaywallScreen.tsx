@@ -16,6 +16,11 @@ export function PaywallScreen({ result }: PaywallScreenProps) {
   const angle = COPY.personas[result.persona].paywallAngle;
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
+  // Book now opens WhatsApp to Adnan with a prefilled, fill-in message.
+  const bookHref = `https://wa.me/${c.whatsappNumber}?text=${encodeURIComponent(
+    c.whatsappMessage,
+  )}`;
+
   return (
     <ScreenShell>
       <div className="animate-fade-up">
@@ -88,7 +93,7 @@ export function PaywallScreen({ result }: PaywallScreenProps) {
           <p className="mt-1 text-right text-sm text-outline">{c.priceNote}</p>
 
           <a
-            href={c.bookingUrl}
+            href={bookHref}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-6 block w-full rounded-lg bg-primary px-6 py-4 text-center text-lg font-bold text-primary-on shadow-float transition hover:brightness-105"

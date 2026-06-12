@@ -144,7 +144,9 @@ export const COPY: CopyConfig = {
       price: "S$99",
       priceNote: "One-off. Includes a clinician teleconsult.",
       cta: "Book now",
-      bookingUrl: "#",
+      whatsappNumber: "6500000000",
+      whatsappMessage:
+        "Hi Adnan! I'd like to book the ReCOGnAIze Brain Health Consult (S$99). Here are my details:\n\nName:\nEmail:\nBrain Health Score:\nPreferred date/time:",
       faqs: [
         {
           q: "Is this quiz a diagnosis?",
