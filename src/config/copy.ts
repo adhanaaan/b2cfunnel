@@ -46,7 +46,7 @@ export const COPY: CopyConfig = {
       asSeenOn: [
         { alt: "The Straits Times", src: "/press-straits-times.png" },
         { alt: "CNA", src: "/press-cna.png" },
-        { alt: "Alzheimer's Association", src: "/press-alzheimers.png" },
+        { alt: "Alzheimer's Association", src: "/press-alzheimers.svg" },
       ],
       durationNote: "Takes about 5 minutes. No login needed.",
       cta: "Get started",

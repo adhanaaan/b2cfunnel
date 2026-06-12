@@ -24,7 +24,50 @@ function colsClass(options: Option[]): string {
   return "grid-cols-1"; // long labels (smoking, diet)
 }
 
-/** A page that stacks several yes/no/not-sure questions (e.g. health history). */
+/**
+ * Discrete slider over an ordinal option set. Options are shown low→high
+ * severity (the source array is worst-first, so we reverse it). An untouched
+ * slider sits at the lowest-severity end and records nothing — which scores the
+ * same as that option (0), so leaving it is equivalent to "no change noticed".
+ */
+function OptionSlider({
+  question,
+  value,
+  onChange,
+}: {
+  question: Question;
+  value?: AnswerValue;
+  onChange: (id: string) => void;
+}) {
+  const opts = [...(question.options ?? [])].reverse(); // low → high severity
+  const max = opts.length - 1;
+  const found = opts.findIndex((o) => o.id === value);
+  const idx = found >= 0 ? found : 0;
+
+  return (
+    <div className="mt-4">
+      <p className="text-center text-base font-bold text-primary">
+        {opts[idx]?.label}
+      </p>
+      <input
+        type="range"
+        min={0}
+        max={max}
+        step={1}
+        value={idx}
+        onChange={(e) => onChange(opts[Number(e.target.value)].id)}
+        aria-label={question.prompt}
+        className="mt-3 w-full cursor-pointer accent-[#f77528]"
+      />
+      <div className="mt-2 flex justify-between text-[11px] font-medium text-outline">
+        <span>{opts[0]?.label}</span>
+        <span>{opts[max]?.label}</span>
+      </div>
+    </div>
+  );
+}
+
+/** A page that stacks several questions (health history, or the symptom sliders). */
 export function QuestionGroupScreen({
   title,
   questions,
@@ -36,8 +79,10 @@ export function QuestionGroupScreen({
   onNext,
   onBack,
 }: QuestionGroupScreenProps) {
+  // Slider questions always have a valid default position, so they don't gate
+  // the Continue button; button questions must be explicitly answered.
   const allAnswered = questions.every(
-    (q) => typeof answers[q.id] === "string",
+    (q) => q.control === "slider" || typeof answers[q.id] === "string",
   );
 
   return (
@@ -60,29 +105,38 @@ export function QuestionGroupScreen({
                 {q.helpText && (
                   <p className="mt-0.5 text-sm text-outline">{q.helpText}</p>
                 )}
-                <div
-                  className={`mt-3 grid gap-2 ${colsClass(q.options ?? [])}`}
-                >
-                  {q.options?.map((opt) => {
-                    const isSel = selected === opt.id;
-                    return (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => onAnswer(q.id, opt.id)}
-                        aria-pressed={isSel}
-                        className={[
-                          "rounded-lg border-2 px-3 py-3 text-center text-sm font-medium transition",
-                          isSel
-                            ? "border-primary bg-primary-container text-primary-onContainer"
-                            : "border-outline-variant bg-surface-lowest text-charcoal hover:border-primary",
-                        ].join(" ")}
-                      >
-                        {opt.label}
-                      </button>
-                    );
-                  })}
-                </div>
+
+                {q.control === "slider" ? (
+                  <OptionSlider
+                    question={q}
+                    value={selected}
+                    onChange={(id) => onAnswer(q.id, id)}
+                  />
+                ) : (
+                  <div
+                    className={`mt-3 grid gap-2 ${colsClass(q.options ?? [])}`}
+                  >
+                    {q.options?.map((opt) => {
+                      const isSel = selected === opt.id;
+                      return (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => onAnswer(q.id, opt.id)}
+                          aria-pressed={isSel}
+                          className={[
+                            "rounded-lg border-2 px-3 py-3 text-center text-sm font-medium transition",
+                            isSel
+                              ? "border-primary bg-primary-container text-primary-onContainer"
+                              : "border-outline-variant bg-surface-lowest text-charcoal hover:border-primary",
+                          ].join(" ")}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             );
           })}

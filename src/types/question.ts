@@ -52,6 +52,9 @@ export interface Question {
   showIf?: ShowCondition; // conditional visibility (Q3 hot flushes, Q19 persistence)
   citation?: CitationTag;
   multiSelect?: boolean; // convenience flag for Q15
+  // Render hint for single-select ordinal scales: "slider" shows a discrete
+  // slider over the options instead of buttons.
+  control?: "slider";
 }
 
 export type AnswerValue = string | number | string[];

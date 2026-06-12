@@ -19,7 +19,7 @@ const FULL_FLOW: FunnelStep[] = [
 
   {
     kind: "questionGroup",
-    title: "A bit of health history",
+    title: "Some risk factors",
     questionIds: [
       "highBp",
       "highCholesterol",
@@ -41,9 +41,13 @@ const FULL_FLOW: FunnelStep[] = [
 
   { kind: "question", questionId: "tracks" },
 
-  { kind: "question", questionId: "concentrating" },
-  { kind: "question", questionId: "judgement" },
-  { kind: "question", questionId: "forgetfulness" },
+  // The three experiential symptom questions share a frequency scale — merged
+  // onto one page as sliders.
+  {
+    kind: "questionGroup",
+    title: "Changes you might have noticed",
+    questionIds: ["concentrating", "judgement", "forgetfulness"],
+  },
   { kind: "question", questionId: "persistence" }, // pruned if forgetfulness not noticed
   { kind: "question", questionId: "someoneElseNoticed" },
 
