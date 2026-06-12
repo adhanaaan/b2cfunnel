@@ -8,11 +8,10 @@ import { ComplianceFooter } from "@/components/ui/ComplianceFooter";
 
 interface PaywallScreenProps {
   result: ScoreResult;
-  onBook: () => void;
 }
 
-/** Screen 7 — the paywall / convert screen: named doctor, price, bundle, FAQ. */
-export function PaywallScreen({ result, onBook }: PaywallScreenProps) {
+/** Final convert screen: the ReCOGnAIze offer, what's included, price, FAQ. */
+export function PaywallScreen({ result }: PaywallScreenProps) {
   const c = COPY.screens.paywall;
   const angle = COPY.personas[result.persona].paywallAngle;
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -58,6 +57,28 @@ export function PaywallScreen({ result, onBook }: PaywallScreenProps) {
 
           <p className="mt-5 leading-relaxed text-charcoal">{c.bundle}</p>
 
+          {/* What's included */}
+          <ul className="mt-5 space-y-2.5 border-t border-outline-variant pt-5">
+            {c.includes.map((item) => (
+              <li key={item} className="flex items-start gap-2.5 text-charcoal">
+                <svg
+                  viewBox="0 0 16 16"
+                  className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
+                >
+                  <path
+                    d="M3 8.5l3 3 7-8"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="font-medium leading-snug">{item}</span>
+              </li>
+            ))}
+          </ul>
+
           <div className="mt-6 flex items-end gap-2">
             <span className="font-display text-4xl font-extrabold text-charcoal">
               {c.price}
@@ -65,13 +86,14 @@ export function PaywallScreen({ result, onBook }: PaywallScreenProps) {
           </div>
           <p className="mt-1 text-sm text-outline">{c.priceNote}</p>
 
-          <button
-            type="button"
-            onClick={onBook}
-            className="mt-6 w-full rounded-lg bg-primary px-6 py-4 text-lg font-bold text-primary-on shadow-float transition hover:brightness-105"
+          <a
+            href={c.bookingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 block w-full rounded-lg bg-primary px-6 py-4 text-center text-lg font-bold text-primary-on shadow-float transition hover:brightness-105"
           >
             {c.cta}
-          </button>
+          </a>
         </div>
 
         {/* FAQ */}

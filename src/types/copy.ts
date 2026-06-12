@@ -154,9 +154,11 @@ export interface PaywallCopy {
   offerName: string;
   offerNote: string;
   bundle: string;
+  includes: string[]; // what the offer includes (checklist)
   price: string;
   priceNote: string;
   cta: string;
+  bookingUrl: string; // external booking destination the CTA links to
   faqs: FaqItem[];
 }
 

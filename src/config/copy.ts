@@ -130,9 +130,15 @@ export const COPY: CopyConfig = {
         "Developed at NTU's Dementia Research Centre · Registered with Singapore's HSA",
       bundle:
         "A 10–15 minute digital cognitive assessment plus a teleconsult to review your results.",
+      includes: [
+        "Brain assessment",
+        "Full in-depth report",
+        "Dr's telehealth consult: review & recommendations",
+      ],
       price: "S$199",
       priceNote: "One-off. Includes a clinician teleconsult.",
-      cta: "Book my consult",
+      cta: "Book now",
+      bookingUrl: "#",
       faqs: [
         {
           q: "Is this quiz a diagnosis?",

@@ -56,8 +56,9 @@ const FULL_FLOW: FunnelStep[] = [
   { kind: "emailGate" },
   { kind: "analysing" },
   { kind: "result" },
+  // Final page: the paywall now carries the offer + a direct booking link
+  // (the separate booking page was redundant).
   { kind: "paywall" },
-  { kind: "booking" },
 ];
 
 const EVENT_FLOW: FunnelStep[] = [
