@@ -113,6 +113,11 @@ export const COPY: CopyConfig = {
       gaugeLowLabel: "Low",
       gaugeHighLabel: "High",
       unlockCta: "Unlock Now →",
+      unlockTeasers: [
+        "Your full risk breakdown",
+        "What's driving your score",
+        "Personalised next steps",
+      ],
       // {factors} is replaced with the user's reported risk factors.
       paywallPreviewHeading: "What your {factors} could mean for you",
       paywallPreviewHeadingFallback: "What your results could mean for you",
@@ -131,11 +136,10 @@ export const COPY: CopyConfig = {
       bundle:
         "A 10–15 minute digital cognitive assessment plus a teleconsult to review your results.",
       includes: [
-        "Brain assessment",
-        "Full in-depth report",
-        "Dr's telehealth consult: review & recommendations",
+        "1:1 consultation with medical professional",
+        "Review & recommendations with a full in-depth report",
       ],
-      price: "S$199",
+      price: "S$99",
       priceNote: "One-off. Includes a clinician teleconsult.",
       cta: "Book now",
       bookingUrl: "#",
@@ -285,7 +289,7 @@ export const COPY: CopyConfig = {
       },
       leadBlurSection: "cognitiveInterpretation",
       paywallAngle:
-        "Understand whether what you're feeling is hormonal or worth a closer look, with an assessment built on the latest dementia-prevention science.",
+        "Understand whether what you're feeling is worth a closer look, with an assessment built and validated with NTU's LKC Dementia Research Centre.",
     },
     highPerformer: {
       headline: "You track everything else. Baseline the organ that runs it all.",

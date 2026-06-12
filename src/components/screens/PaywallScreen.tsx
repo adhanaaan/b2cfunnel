@@ -61,19 +61,13 @@ export function PaywallScreen({ result }: PaywallScreenProps) {
           <ul className="mt-5 space-y-2.5 border-t border-outline-variant pt-5">
             {c.includes.map((item) => (
               <li key={item} className="flex items-start gap-2.5 text-charcoal">
-                <svg
-                  viewBox="0 0 16 16"
-                  className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
-                >
-                  <path
-                    d="M3 8.5l3 3 7-8"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/gms-logo.png"
+                  alt=""
+                  aria-hidden
+                  className="mt-0.5 h-5 w-5 flex-shrink-0 object-contain"
+                />
                 <span className="font-medium leading-snug">{item}</span>
               </li>
             ))}

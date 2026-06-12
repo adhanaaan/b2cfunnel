@@ -86,6 +86,7 @@ export interface ResultBaseCopy {
   gaugeLowLabel: string;
   gaugeHighLabel: string;
   unlockCta: string;
+  unlockTeasers: string[]; // locked items teased on the result preview
   paywallPreviewHeading: string; // template containing {factors}
   paywallPreviewHeadingFallback: string;
   unlockOverlay: string;
