@@ -1,4 +1,6 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
 
 interface CredibilitySignalsProps {
   heading?: string;
@@ -8,8 +10,10 @@ interface CredibilitySignalsProps {
 }
 
 /**
- * Institutional / evidence credibility block. Replaces the named-clinician card
- * for now — leans on the partner institution and the published science.
+ * Institutional / evidence credibility block. Leans on the partner institution
+ * and the published science. The logo degrades gracefully — if the file isn't
+ * present it simply renders nothing (so a not-yet-uploaded asset never shows a
+ * broken image), and appears automatically once the file exists.
  */
 export function CredibilitySignals({
   heading,
@@ -17,6 +21,7 @@ export function CredibilitySignals({
   logo,
   className = "",
 }: CredibilitySignalsProps) {
+  const [logoOk, setLogoOk] = useState(true);
   return (
     <div
       className={`rounded-xl border border-outline-variant bg-surface-low px-5 py-4 text-left ${className}`}
@@ -43,14 +48,14 @@ export function CredibilitySignals({
           </li>
         ))}
       </ul>
-      {logo && (
+      {logo && logoOk && (
         <div className="mt-4 border-t border-outline-variant pt-4">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={logo}
-            alt="NTU Lee Kong Chian School of Medicine, Dementia Research Centre Singapore"
-            width={2560}
-            height={976}
-            className="h-auto w-full max-w-[220px]"
+            alt="Gray Matter Solutions and NTU Lee Kong Chian School of Medicine"
+            onError={() => setLogoOk(false)}
+            className="h-auto w-full max-w-[240px]"
           />
         </div>
       )}

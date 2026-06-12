@@ -35,14 +35,15 @@ export const COPY: CopyConfig = {
       subheading:
         "Take a medically backed 5-minute quiz, built on 14 modifiable risk factors, to find out how well your brain is performing.",
       credibility: {
-        heading: "Built on the science",
+        heading: "Built on science",
         points: [
-          "Developed with NTU's Lee Kong Chian School of Medicine, Dementia Research Centre Singapore.",
-          "Grounded in the 2024 Lancet Commission on dementia prevention.",
-          "Methodology from the CAIDE risk model and the SCD framework.",
+          "Developed and validated at NTU's Lee Kong Chian School of Medicine, Dementia Research Centre.",
+          "Grounded in the 2024 Lancet Commission Risk Report and the CAIDE (Cardiovascular Risk Factors, Aging, and Incidence of Dementia) Dementia Risk Score.",
         ],
-        logo: "/LKCMedicine-Dementia-Research-Centre-2.png",
+        logo: "/gms-ntu-logo.png",
       },
+      asSeenOnLabel: "As seen on",
+      asSeenOn: ["The Straits Times", "CNA", "Alzheimer's Association"],
       durationNote: "Takes about 5 minutes. No login needed.",
       cta: "Get started",
       resourcesIntro:

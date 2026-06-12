@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { CredibilitySignals } from "@/components/result/CredibilitySignals";
@@ -15,22 +14,11 @@ export function HookScreen({ onStart }: HookScreenProps) {
   return (
     <ScreenShell>
       <div className="flex min-h-[80vh] flex-col justify-center text-center animate-fade-up">
-        {/* Logo beside the brand name. */}
-        <div className="flex items-center justify-center gap-2.5">
-          <Image
-            src="/gms-logo.png"
-            alt="Gray Matter Solutions logo"
-            width={442}
-            height={366}
-            className="h-9 w-auto"
-            priority
-          />
-          <p className="text-sm font-bold uppercase tracking-widest text-primary">
-            {c.eyebrow}
-          </p>
-        </div>
+        <p className="text-sm font-bold uppercase tracking-widest text-primary">
+          {c.eyebrow}
+        </p>
 
-        <h1 className="mt-4 font-display text-4xl font-extrabold leading-tight text-charcoal sm:text-5xl">
+        <h1 className="mt-3 font-display text-4xl font-extrabold leading-tight text-charcoal sm:text-5xl">
           {c.heading}
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-secondary">
@@ -44,6 +32,23 @@ export function HookScreen({ onStart }: HookScreenProps) {
           logo={c.credibility.logo}
           className="mt-8"
         />
+
+        {/* As seen on — press / endorsement wordmarks. */}
+        <div className="mt-6">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-outline">
+            {c.asSeenOnLabel}
+          </p>
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            {c.asSeenOn.map((name) => (
+              <span
+                key={name}
+                className="text-sm font-bold tracking-tight text-secondary"
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+        </div>
 
         <button
           type="button"

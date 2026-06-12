@@ -14,6 +14,8 @@ export interface HookCopy {
   heading: string;
   subheading: string;
   credibility: CredibilityCopy;
+  asSeenOnLabel: string;
+  asSeenOn: string[]; // press / endorsement wordmarks
   durationNote: string;
   cta: string;
   resourcesIntro: string;
