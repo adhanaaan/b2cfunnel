@@ -47,7 +47,7 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
   );
 
   return (
-    <ScreenShell premium>
+    <ScreenShell>
       <div className="animate-fade-up rounded-3xl bg-gradient-to-b from-white to-[#fff6f0] p-6 shadow-[0_30px_80px_-30px_rgba(247,117,40,0.45)] ring-1 ring-black/5 sm:p-8">
         <ScoreHeader />
 
