@@ -134,7 +134,7 @@ export const COPY: CopyConfig = {
       offerNote:
         "Developed at NTU's Dementia Research Centre · Registered with Singapore's HSA",
       paperNote: "ReCOGnAIze, validated in peer-reviewed research",
-      paperUrl: "#",
+      paperUrl: "https://pubmed.ncbi.nlm.nih.gov/41685533/",
       includes: [
         "Brain assessment",
         "1:1 consultation with medical professional",
@@ -144,7 +144,7 @@ export const COPY: CopyConfig = {
       price: "S$99",
       priceNote: "One-off. Includes a clinician teleconsult.",
       cta: "Book now",
-      whatsappNumber: "6500000000",
+      whatsappNumber: "6587424150",
       whatsappMessage:
         "Hi Adnan! I'd like to book the ReCOGnAIze Brain Health Consult (S$99). Here are my details:\n\nName:\nEmail:\nBrain Health Score:\nPreferred date/time:",
       faqs: [
