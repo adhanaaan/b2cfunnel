@@ -146,7 +146,7 @@ export const COPY: CopyConfig = {
       cta: "Book now",
       whatsappNumber: "6587424150",
       whatsappMessage:
-        "Hi Adnan! I'd like to book the ReCOGnAIze Brain Health Consult (S$99). Here are my details:\n\nName:\nEmail:\nBrain Health Score:\nPreferred date/time:",
+        "Hi GrayMatterSolutions! I'd like to book the ReCOGnAIze Brain Health Consult (S$99). Here are my details:\n\nName:\nEmail:\nBrain Health Score:\nPreferred date/time:",
       faqs: [
         {
           q: "Is this quiz a diagnosis?",

@@ -201,7 +201,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "paywall":
-      return state.result ? <PaywallScreen result={state.result} /> : null;
+      return state.result ? <PaywallScreen /> : null;
 
     case "booking":
       return <BookingScreen />;

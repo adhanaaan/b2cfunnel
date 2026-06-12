@@ -1,19 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import type { ScoreResult } from "@/types/engine";
 import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { ComplianceFooter } from "@/components/ui/ComplianceFooter";
 
-interface PaywallScreenProps {
-  result: ScoreResult;
-}
-
 /** Final convert screen: the ReCOGnAIze offer, what's included, order summary. */
-export function PaywallScreen({ result }: PaywallScreenProps) {
+export function PaywallScreen() {
   const c = COPY.screens.paywall;
-  const angle = COPY.personas[result.persona].paywallAngle;
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [pubmedOk, setPubmedOk] = useState(true);
 
@@ -53,8 +47,6 @@ export function PaywallScreen({ result }: PaywallScreenProps) {
           </span>
           <span className="ml-auto flex-shrink-0 text-primary">→</span>
         </a>
-
-        <p className="mt-4 text-lg leading-relaxed text-secondary">{angle}</p>
 
         {/* Product card */}
         <div className="mt-7 rounded-2xl bg-surface-lowest p-6 shadow-card">
