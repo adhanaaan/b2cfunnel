@@ -21,9 +21,9 @@ describe("persistent decline scoring", () => {
       someoneElseNoticed: "yes",
     };
     const r = computeScore(answers);
-    expect(r.total).toBe(24);
+    expect(r.total).toBe(76); // 24 risk -> inverted health score 100 - 24
     expect(r.band).toBe(r.bandFromTotal);
-    expect(r.band).toBe("low"); // 24 -> Low; persistence raised the score, not the band
+    expect(r.band).toBe("low"); // 24 risk -> Low band; persistence lowered the health score, not the band
   });
 
   it("still surfaces the persistent-decline flag for analytics", () => {

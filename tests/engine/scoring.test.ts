@@ -29,16 +29,16 @@ const maxAnswers: Answers = {
 };
 
 describe("scoring engine", () => {
-  it("sums a maximal profile to 100 and bands it High", () => {
+  it("inverts a maximal-risk profile to a health score of 0 / High band", () => {
     const r = computeScore(maxAnswers);
     expect(r.riskScore).toBe(68);
     expect(r.symptomScore).toBe(32);
-    expect(r.total).toBe(100);
+    expect(r.total).toBe(0); // 100 - 100 risk
     expect(r.maxTotal).toBe(100);
     expect(r.band).toBe("high");
   });
 
-  it("scores an all-zero profile as 0 / Low", () => {
+  it("scores a zero-risk profile as 100 / Low band", () => {
     const r = computeScore({
       age: "18-29",
       sex: "male",
@@ -50,7 +50,7 @@ describe("scoring engine", () => {
       diet: "healthy",
       alcohol: "none",
     });
-    expect(r.total).toBe(0);
+    expect(r.total).toBe(100);
     expect(r.band).toBe("low");
   });
 
@@ -110,11 +110,11 @@ describe("event variant scoring (normalised to /100)", () => {
     persistence: "yes", // 12  -> raw symptom 24
   };
 
-  it("scales a maxed event profile up to 100 / High", () => {
+  it("scales a maxed event profile to risk 100 / health 0 / High band", () => {
     const r = computeScore(eventMax, "event");
     expect(r.riskScore).toBe(68); // 44 raw * 68/44
     expect(r.symptomScore).toBe(32); // 24 raw * 32/24
-    expect(r.total).toBe(100);
+    expect(r.total).toBe(0); // inverted: 100 - 100
     expect(r.band).toBe("high");
   });
 
@@ -129,22 +129,23 @@ describe("event variant scoring (normalised to /100)", () => {
 
   it("lifts a mid event profile out of the artificial 'low' band", () => {
     const r = computeScore(eventModerate, "event");
-    expect(r.total).toBe(37); // round(24 * 68/44)
+    // risk 24 raw * 68/44 = 37 -> health score 100 - 37 = 63
+    expect(r.total).toBe(63);
     expect(r.band).toBe("moderate");
   });
 
   it("leaves the full quiz unchanged for the same answers", () => {
     const r = computeScore(eventModerate, "full");
-    expect(r.total).toBe(24); // scale factor 1
+    expect(r.total).toBe(76); // risk 24 (scale 1) -> health 100 - 24
     expect(r.band).toBe("low");
   });
 
-  it("keeps a zero event profile at 0 / Low", () => {
+  it("keeps a zero event profile at 100 / Low", () => {
     const r = computeScore(
       { age: "18-29", sex: "male", highBp: "no", smoking: "never" },
       "event",
     );
-    expect(r.total).toBe(0);
+    expect(r.total).toBe(100);
     expect(r.band).toBe("low");
   });
 });

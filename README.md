@@ -70,7 +70,12 @@ brief §5 weights scaled x4). Two-axis safety logic: the final band is the
 mask symptoms. **Safety override**: if the decline is persistent *and*
 someone else has noticed, the band is forced to a minimum of *Elevated*.
 
-Bands by total: `0–24` Low · `25–52` Moderate · `53–76` Elevated · `77–100` High.
+Risk bands (on the **risk** total): `0–25` Low · `26–50` Moderate · `51–75`
+Elevated · `76–100` High.
+
+**The displayed Brain Health Score is inverted**: `score = 100 − riskTotal`, so
+**higher = healthier** (low risk → high score). Bands still classify risk, so a
+high score maps to the Low band.
 
 ## Supabase
 

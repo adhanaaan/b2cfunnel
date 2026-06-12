@@ -35,8 +35,9 @@ describe("worseBand", () => {
 describe("displayed band follows the total score", () => {
   it("does not escalate the band from a loud symptom axis alone", () => {
     // Symptom axis = concentrating(4)+judgement(4)+forgetfulness(4)+noticed(8)
-    // = 20, total = 20. Without the safety override (persistence not 'yes'),
-    // the band follows the total, so 20 -> Low.
+    // = 20 risk, so the inverted health score = 100 - 20 = 80. Without the
+    // safety override (persistence not 'yes'), the band follows the risk, so
+    // 20 risk -> Low.
     const answers: Answers = {
       age: "18-29",
       sex: "male",
@@ -46,9 +47,9 @@ describe("displayed band follows the total score", () => {
       someoneElseNoticed: "yes",
     };
     const r = computeScore(answers);
-    expect(r.total).toBe(20);
+    expect(r.total).toBe(80);
     expect(r.bandFromTotal).toBe("low");
-    expect(r.band).toBe("low"); // band tracks the score
+    expect(r.band).toBe("low"); // band tracks the risk
   });
 
   it("a moderate score reads as Moderate, not High", () => {

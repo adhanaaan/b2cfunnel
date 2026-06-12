@@ -49,18 +49,21 @@ export function Gauge({
 
   const bandColour = BANDS[band].colour;
 
-  // Colour the arc proportional to the actual band ranges (not equal quarters),
-  // so the needle at score/max always lands in the segment whose band matches
-  // bandForTotal(score). Boundaries are the cumulative band upper bounds.
-  const segments = BAND_ORDER.map((name, i) => {
+  // The score is a Brain Health Score (high = healthy), so the arc runs red
+  // (low score / high risk) on the LEFT to green (high score / low risk) on the
+  // RIGHT — the risk bands reversed. The needle at score/max then lands in the
+  // colour that matches the band.
+  const widths = BAND_ORDER.map((name, i) => {
     const prevMax = i === 0 ? 0 : BANDS[BAND_ORDER[i - 1]].totalMax;
     const thisMax = BANDS[name].totalMax === Infinity ? max : BANDS[name].totalMax;
-    return {
-      name,
-      colour: BANDS[name].colour,
-      start: prevMax / max,
-      end: thisMax / max,
-    };
+    return { name, colour: BANDS[name].colour, width: thisMax - prevMax };
+  });
+  let acc = 0;
+  const segments = [...widths].reverse().map((w) => {
+    const start = acc / max;
+    acc += w.width;
+    const end = acc / max;
+    return { name: w.name, colour: w.colour, start, end };
   });
 
   return (

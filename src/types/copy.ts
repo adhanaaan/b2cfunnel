@@ -211,7 +211,6 @@ export interface PersonaResultCopy {
   headline: string;
   blurb: Record<BandName, string>; // 1–2 sentences, lifestyle/biomedical ONLY
   leadBlurSection: LeadBlurSection;
-  paywallAngle: string;
 }
 
 export interface CopyConfig {

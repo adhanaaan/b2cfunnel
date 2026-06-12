@@ -136,7 +136,7 @@ export const COPY: CopyConfig = {
       paperNote: "ReCOGnAIze, validated in peer-reviewed research",
       paperUrl: "https://pubmed.ncbi.nlm.nih.gov/41685533/",
       includes: [
-        "Brain assessment",
+        "Clinically-validated neuroscientific games to detect specific brain functions",
         "1:1 consultation with medical professional",
         "Review & recommendations with a full in-depth report",
       ],
@@ -264,8 +264,6 @@ export const COPY: CopyConfig = {
         high: "A number of lifestyle and biomedical factors are stacking up. Many are treatable when caught early, so it's worth measuring properly.",
       },
       leadBlurSection: "cognitiveInterpretation",
-      paywallAngle:
-        "See the full picture with a proper assessment, grounded in the 2024 Lancet Commission and NTU's Dementia Research Centre.",
     },
     caregiver: {
       headline: "Is this normal ageing, or something worth checking?",
@@ -278,8 +276,6 @@ export const COPY: CopyConfig = {
         high: "A number of lifestyle and biomedical factors are stacking up. Vascular factors in particular are often treatable when caught early.",
       },
       leadBlurSection: "vascular",
-      paywallAngle:
-        "A proper assessment can help tell apart treatable vascular changes from other causes, grounded in NTU's Dementia Research Centre.",
     },
     perimenopausal: {
       headline: "Is what you're feeling hormonal, or something else?",
@@ -292,8 +288,6 @@ export const COPY: CopyConfig = {
         high: "A number of lifestyle and biomedical factors are stacking up. Measuring properly helps make sense of what you've been feeling.",
       },
       leadBlurSection: "cognitiveInterpretation",
-      paywallAngle:
-        "Understand whether what you're feeling is worth a closer look, with an assessment built and validated with NTU's LKC Dementia Research Centre.",
     },
     highPerformer: {
       headline: "You track everything else. Baseline the organ that runs it all.",
@@ -306,8 +300,6 @@ export const COPY: CopyConfig = {
         high: "A number of lifestyle and biomedical factors are stacking up. The earlier you baseline, the more you can act on.",
       },
       leadBlurSection: "percentile",
-      paywallAngle:
-        "Get an objective cognitive baseline and see where you stand, with a method grounded in the 2024 Lancet Commission.",
     },
   },
 

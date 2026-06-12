@@ -89,16 +89,21 @@ export function computeScore(
 ): ScoreResult {
   const riskScore = scoreRiskAxis(answers, variant);
   const symptomScore = scoreSymptomAxis(answers, variant);
-  const total = riskScore + symptomScore;
 
-  const bandFromTotal = bandForTotal(total);
+  // Risk points accumulate (higher = more risk). The displayed Brain Health
+  // Score is INVERTED: low risk -> high score, high risk -> low score.
+  const riskTotal = riskScore + symptomScore;
+  const total = MAX_TOTAL - riskTotal;
+
+  // Bands classify RISK, so they're derived from the risk total (not the
+  // inverted score): a high score (low risk) maps to the "low" band.
+  const bandFromTotal = bandForTotal(riskTotal);
   const riskBand = bandForRiskAxis(riskScore);
   const symptomBand = bandForSymptomAxis(symptomScore);
 
-  // The band always follows the total score, so it matches the headline number
-  // and the band table. A persistent decline is captured through its score
-  // weight (persistence = 12, someone-else-noticed = 8) rather than by shifting
-  // the band. We still surface the flag for analytics.
+  // A persistent decline is captured through its score weight (persistence =
+  // 12, someone-else-noticed = 8) rather than by shifting the band. We still
+  // surface the flag for analytics.
   const band = bandFromTotal;
   const safetyOverrideApplied =
     answers.persistence === "yes" && answers.someoneElseNoticed === "yes";

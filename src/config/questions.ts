@@ -305,6 +305,12 @@ export const QUESTIONS: Question[] = [
     axis: "symptom",
     prompt: "Has anyone else noticed these changes in your behaviour or habits?",
     citation: "scd",
+    // Follow-up: only when forgetfulness is frequent (several times a week) or
+    // almost daily.
+    showIf: {
+      questionId: "forgetfulness",
+      equals: ["almostDaily", "severalWeek"],
+    },
     options: [
       { id: "yes", label: "Yes", score: 8 },
       { id: "no", label: "No", score: 0 },
