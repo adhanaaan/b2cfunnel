@@ -136,9 +136,11 @@ export const COPY: CopyConfig = {
       bundle:
         "A 10–15 minute digital cognitive assessment plus a teleconsult to review your results.",
       includes: [
+        "Brain assessment",
         "1:1 consultation with medical professional",
         "Review & recommendations with a full in-depth report",
       ],
+      lineItem: "ReCOGnAIze Brain Health Consult",
       price: "S$99",
       priceNote: "One-off. Includes a clinician teleconsult.",
       cta: "Book now",

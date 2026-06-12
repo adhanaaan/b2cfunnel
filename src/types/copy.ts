@@ -156,6 +156,7 @@ export interface PaywallCopy {
   offerNote: string;
   bundle: string;
   includes: string[]; // what the offer includes (checklist)
+  lineItem: string; // product name shown in the order summary
   price: string;
   priceNote: string;
   cta: string;
