@@ -15,6 +15,7 @@ export function PaywallScreen({ result }: PaywallScreenProps) {
   const c = COPY.screens.paywall;
   const angle = COPY.personas[result.persona].paywallAngle;
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [pubmedOk, setPubmedOk] = useState(true);
 
   // Book now opens WhatsApp to Adnan with a prefilled, fill-in message.
   const bookHref = `https://wa.me/${c.whatsappNumber}?text=${encodeURIComponent(
@@ -48,7 +49,27 @@ export function PaywallScreen({ result }: PaywallScreenProps) {
             </div>
           </div>
 
-          <p className="mt-5 leading-relaxed text-charcoal">{c.bundle}</p>
+          {/* Peer-reviewed reference (PubMed). */}
+          <a
+            href={c.paperUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-5 flex items-center gap-2.5 rounded-xl border border-outline-variant bg-surface-low px-4 py-3 transition hover:border-primary"
+          >
+            {pubmedOk && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src="/pubmed-logo.png"
+                alt="PubMed"
+                onError={() => setPubmedOk(false)}
+                className="h-5 w-auto flex-shrink-0 object-contain"
+              />
+            )}
+            <span className="text-sm font-medium leading-snug text-charcoal">
+              {c.paperNote}
+            </span>
+            <span className="ml-auto flex-shrink-0 text-primary">→</span>
+          </a>
 
           {/* What's included */}
           <ul className="mt-5 space-y-2.5 border-t border-outline-variant pt-5">

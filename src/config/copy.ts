@@ -133,8 +133,8 @@ export const COPY: CopyConfig = {
       offerName: "ReCOGnAIze cognitive assessment",
       offerNote:
         "Developed at NTU's Dementia Research Centre · Registered with Singapore's HSA",
-      bundle:
-        "A 10–15 minute digital cognitive assessment plus a teleconsult to review your results.",
+      paperNote: "ReCOGnAIze, validated in peer-reviewed research",
+      paperUrl: "#",
       includes: [
         "Brain assessment",
         "1:1 consultation with medical professional",

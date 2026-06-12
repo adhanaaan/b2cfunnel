@@ -154,7 +154,8 @@ export interface PaywallCopy {
   heading: string;
   offerName: string;
   offerNote: string;
-  bundle: string;
+  paperNote: string; // short peer-reviewed reference (replaces the long blurb)
+  paperUrl: string; // link to the ReCOGnAIze paper on PubMed
   includes: string[]; // what the offer includes (checklist)
   lineItem: string; // product name shown in the order summary
   price: string;
