@@ -3,6 +3,7 @@
 import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { CredibilitySignals } from "@/components/result/CredibilitySignals";
+import { PressLogos } from "@/components/ui/PressLogos";
 
 interface HookScreenProps {
   onStart: () => void;
@@ -33,21 +34,12 @@ export function HookScreen({ onStart }: HookScreenProps) {
           className="mt-8"
         />
 
-        {/* As seen on — press / endorsement wordmarks. */}
+        {/* As seen on — press / endorsement logos. */}
         <div className="mt-6">
           <p className="text-[11px] font-bold uppercase tracking-widest text-outline">
             {c.asSeenOnLabel}
           </p>
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-            {c.asSeenOn.map((name) => (
-              <span
-                key={name}
-                className="text-sm font-bold tracking-tight text-secondary"
-              >
-                {name}
-              </span>
-            ))}
-          </div>
+          <PressLogos items={c.asSeenOn} className="mt-3" />
         </div>
 
         <button

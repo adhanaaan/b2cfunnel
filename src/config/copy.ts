@@ -43,7 +43,11 @@ export const COPY: CopyConfig = {
         logo: "/gms-ntu-logo.png",
       },
       asSeenOnLabel: "As seen on",
-      asSeenOn: ["The Straits Times", "CNA", "Alzheimer's Association"],
+      asSeenOn: [
+        { alt: "The Straits Times", src: "/press-straits-times.png" },
+        { alt: "CNA", src: "/press-cna.png" },
+        { alt: "Alzheimer's Association", src: "/press-alzheimers.png" },
+      ],
       durationNote: "Takes about 5 minutes. No login needed.",
       cta: "Get started",
       resourcesIntro:

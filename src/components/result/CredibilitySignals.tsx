@@ -49,7 +49,7 @@ export function CredibilitySignals({
         ))}
       </ul>
       {logo && logoOk && (
-        <div className="mt-4 border-t border-outline-variant pt-4">
+        <div className="mt-4 flex justify-center border-t border-outline-variant pt-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={logo}
