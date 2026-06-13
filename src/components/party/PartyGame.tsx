@@ -196,12 +196,16 @@ export function PartyGame() {
 
   return (
     <Shell>
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-xl">
         <div className="text-center">
-          <h1 className="font-display text-4xl font-extrabold sm:text-5xl">
-            🍻 Reaction Time Party
+          <h1 className="font-display text-5xl font-black tracking-tight sm:text-6xl">
+            <span className="bg-gradient-to-r from-fuchsia-400 via-violet-300 to-amber-300 bg-clip-text text-transparent">
+              Reaction Time
+            </span>
+            <br />
+            <span className="text-white">Party 🍻</span>
           </h1>
-          <p className="mt-2 text-white/70">
+          <p className="mx-auto mt-3 max-w-md text-white/60">
             Sober vs after-drinks. Fastest sharp mind wins, biggest drop buys
             the next round.
           </p>
@@ -209,15 +213,19 @@ export function PartyGame() {
 
         {/* Join QR — guests scan to play on their own phones. */}
         {joinUrl && (
-          <div className="mt-6 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-            <div className="rounded-lg bg-white p-2">
-              <QRCodeSVG value={joinUrl} className="h-20 w-20" level="M" />
+          <div className="mt-7 flex items-center gap-5 rounded-3xl bg-white/[0.06] p-5 ring-1 ring-white/10 backdrop-blur-sm">
+            <div className="rounded-2xl bg-white p-3 shadow-lg">
+              <QRCodeSVG value={joinUrl} className="h-24 w-24" level="M" />
             </div>
             <div>
-              <p className="font-bold">📱 Scan to join</p>
-              <p className="text-sm text-white/60">
-                Play on your phone, this board updates live.
+              <p className="text-lg font-extrabold">📱 Scan to join</p>
+              <p className="mt-1 text-sm text-white/60">
+                Play on your phone — this board updates live.
               </p>
+              <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-400/15 px-2.5 py-1 text-xs font-bold text-emerald-300">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+                Live
+              </span>
             </div>
           </div>
         )}
@@ -230,8 +238,8 @@ export function PartyGame() {
         )}
 
         {/* Table */}
-        <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-          <div className="grid grid-cols-[2rem_1fr_5rem_6.5rem_4.5rem] gap-2 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-white/50">
+        <div className="mt-6 overflow-hidden rounded-3xl bg-white/[0.06] ring-1 ring-white/10 backdrop-blur-sm">
+          <div className="grid grid-cols-[2rem_1fr_5rem_6.5rem_4.5rem] gap-2 bg-white/5 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-white/50">
             <span>#</span>
             <span>Name</span>
             <span className="text-right">🧠 Sober</span>
@@ -239,8 +247,8 @@ export function PartyGame() {
             <span className="text-right">Δ</span>
           </div>
           {ranked.length === 0 && (
-            <p className="px-4 py-10 text-center text-white/50">
-              No times yet. Scan to be the first 👆
+            <p className="px-4 py-8 text-center text-base font-semibold text-white/50">
+              No times yet — scan the QR or hit play to kick it off 👇
             </p>
           )}
           {ranked.map((p, i) => {
@@ -290,7 +298,7 @@ export function PartyGame() {
 
         <button
           onClick={() => setView("setup")}
-          className="mt-6 w-full rounded-xl bg-gradient-to-r from-fuchsia-500 to-violet-600 px-6 py-4 text-lg font-extrabold shadow-lg transition hover:brightness-110"
+          className="mt-6 w-full rounded-2xl bg-gradient-to-r from-fuchsia-500 via-violet-500 to-violet-600 px-6 py-5 text-lg font-extrabold shadow-[0_18px_50px_-12px_rgba(217,70,239,0.6)] transition hover:brightness-110"
         >
           ▶ New attempt
         </button>
@@ -322,7 +330,7 @@ function Award({
   d: number | null;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center">
+    <div className="rounded-2xl bg-white/[0.06] px-4 py-3 text-center ring-1 ring-white/10 backdrop-blur-sm">
       <p className="text-2xl">{emoji}</p>
       <p className="mt-1 text-[11px] font-bold uppercase tracking-wider text-white/50">
         {label}
@@ -340,8 +348,12 @@ function Award({
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#1a1033] via-[#2a1245] to-[#0d0820] px-4 py-10 text-white">
-      {children}
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#0c0718] px-4 py-10 text-white">
+      {/* Ambient party glows. */}
+      <div className="pointer-events-none absolute -left-40 -top-24 h-[28rem] w-[28rem] rounded-full bg-fuchsia-600/30 blur-[120px]" />
+      <div className="pointer-events-none absolute -right-40 top-32 h-[28rem] w-[28rem] rounded-full bg-violet-600/30 blur-[120px]" />
+      <div className="pointer-events-none absolute -bottom-40 left-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-amber-500/20 blur-[130px]" />
+      <div className="relative flex w-full flex-col items-center">{children}</div>
     </main>
   );
 }
