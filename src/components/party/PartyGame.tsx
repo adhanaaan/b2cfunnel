@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { SymbolMatchGame } from "@/components/game/symbol-match/SymbolMatchGame";
 import { formatTime } from "@/lib/format";
 
-type Mode = "sober" | "drunk";
-
 interface Player {
   name: string;
   sober?: number;
@@ -33,34 +31,22 @@ function save(players: Player[]) {
   }
 }
 
-const MODE = {
-  sober: { label: "Sober", emoji: "🧠", grad: "from-emerald-400 to-teal-500" },
-  drunk: {
-    label: "After drinks",
-    emoji: "🍺",
-    grad: "from-amber-400 to-orange-500",
-  },
-} as const;
-
 export function PartyGame() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [view, setView] = useState<"board" | "setup" | "play">("board");
   const [name, setName] = useState("");
-  const [mode, setMode] = useState<Mode | null>(null);
-  const [drinks, setDrinks] = useState(1);
-  const [pending, setPending] = useState<{
-    name: string;
-    mode: Mode;
-    drinks: number;
-  } | null>(null);
+  const [drinks, setDrinks] = useState(0);
+  const [pending, setPending] = useState<{ name: string; drinks: number } | null>(
+    null,
+  );
   const [justPlayed, setJustPlayed] = useState<string | null>(null);
 
   useEffect(() => setPlayers(load()), []);
 
   const start = () => {
     const n = name.trim();
-    if (!n || !mode) return;
-    setPending({ name: n, mode, drinks: mode === "drunk" ? drinks : 0 });
+    if (!n) return;
+    setPending({ name: n, drinks });
     setView("play");
   };
 
@@ -73,15 +59,13 @@ export function PartyGame() {
       const next = [...prev];
       const existing = i >= 0 ? next[i] : { name: pending.name };
       const updated: Player = { ...existing };
-      if (pending.mode === "sober") {
+      // 0 drinks -> Sober column; anything else -> After-drinks column.
+      if (pending.drinks === 0) {
         updated.sober =
           updated.sober != null ? Math.min(updated.sober, ms) : ms;
-      } else {
-        // keep the best after-drinks time, and the drinks count that goes with it
-        if (updated.drunk == null || ms < updated.drunk) {
-          updated.drunk = ms;
-          updated.drunkDrinks = pending.drinks;
-        }
+      } else if (updated.drunk == null || ms < updated.drunk) {
+        updated.drunk = ms;
+        updated.drunkDrinks = pending.drinks;
       }
       if (i >= 0) next[i] = updated;
       else next.push(updated);
@@ -91,8 +75,7 @@ export function PartyGame() {
     setJustPlayed(pending.name);
     setPending(null);
     setName("");
-    setMode(null);
-    setDrinks(1);
+    setDrinks(0);
     setView("board");
   };
 
@@ -136,52 +119,32 @@ export function PartyGame() {
           />
 
           <p className="mt-6 text-sm font-bold uppercase tracking-widest text-white/50">
-            Pick your round
+            🍺 How many drinks have you had?
           </p>
-          <div className="mt-3 grid grid-cols-2 gap-3">
-            {(["sober", "drunk"] as Mode[]).map((m) => (
-              <button
-                key={m}
-                onClick={() => setMode(m)}
-                className={`flex flex-col items-center gap-2 rounded-2xl bg-gradient-to-br ${MODE[m].grad} px-4 py-6 text-lg font-extrabold text-black shadow-lg transition hover:brightness-110 ${
-                  mode === m ? "ring-4 ring-white" : "opacity-80"
-                }`}
-              >
-                <span className="text-4xl">{MODE[m].emoji}</span>
-                {MODE[m].label}
-              </button>
-            ))}
+          <div className="mt-3 flex items-center justify-center gap-5">
+            <button
+              onClick={() => setDrinks((d) => Math.max(0, d - 1))}
+              className="h-14 w-14 rounded-full bg-white/10 text-3xl font-bold transition hover:bg-white/20"
+            >
+              –
+            </button>
+            <span className="w-16 text-center font-display text-5xl font-extrabold tabular-nums">
+              {drinks}
+            </span>
+            <button
+              onClick={() => setDrinks((d) => d + 1)}
+              className="h-14 w-14 rounded-full bg-white/10 text-3xl font-bold transition hover:bg-white/20"
+            >
+              +
+            </button>
           </div>
-
-          {/* Drinks count — only for the after-drinks round. */}
-          {mode === "drunk" && (
-            <>
-              <p className="mt-6 text-sm font-bold uppercase tracking-widest text-white/50">
-                🍺 How many drinks have you had?
-              </p>
-              <div className="mt-3 flex items-center justify-center gap-5">
-                <button
-                  onClick={() => setDrinks((d) => Math.max(1, d - 1))}
-                  className="h-12 w-12 rounded-full bg-white/10 text-3xl font-bold transition hover:bg-white/20"
-                >
-                  –
-                </button>
-                <span className="w-14 text-center font-display text-5xl font-extrabold tabular-nums">
-                  {drinks}
-                </span>
-                <button
-                  onClick={() => setDrinks((d) => d + 1)}
-                  className="h-12 w-12 rounded-full bg-white/10 text-3xl font-bold transition hover:bg-white/20"
-                >
-                  +
-                </button>
-              </div>
-            </>
-          )}
+          <p className="mt-3 text-center text-sm text-white/50">
+            {drinks === 0 ? "🧠 Sober run" : "🍺 After-drinks run"}
+          </p>
 
           <button
             onClick={start}
-            disabled={!name.trim() || !mode}
+            disabled={!name.trim()}
             className="mt-8 w-full rounded-xl bg-gradient-to-r from-fuchsia-500 to-violet-600 px-6 py-4 text-lg font-extrabold shadow-lg transition hover:brightness-110 disabled:opacity-30"
           >
             ▶ Play
