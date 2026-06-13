@@ -174,12 +174,14 @@ export function PartyGame() {
 
   // ---- LEADERBOARD ----
   const players = aggregate(attempts);
-  const ranked = [...players].sort((a, b) => {
-    const as = a.sober ?? Infinity;
-    const bs = b.sober ?? Infinity;
-    if (as !== bs) return as - bs;
-    return (a.drunk ?? Infinity) - (b.drunk ?? Infinity);
-  });
+  const soberRows = players
+    .filter((p) => p.sober != null)
+    .sort((a, b) => a.sober! - b.sober!)
+    .map((p) => ({ name: p.name, ms: p.sober! }));
+  const drunkRows = players
+    .filter((p) => p.drunk != null)
+    .sort((a, b) => a.drunk! - b.drunk!)
+    .map((p) => ({ name: p.name, ms: p.drunk!, drinks: p.drunkDrinks }));
 
   const delta = (p: Player) =>
     p.sober != null && p.drunk != null ? p.drunk - p.sober : null;
@@ -201,9 +203,8 @@ export function PartyGame() {
           <h1 className="font-display text-5xl font-black tracking-tight sm:text-6xl">
             <span className="bg-gradient-to-r from-fuchsia-400 via-violet-300 to-amber-300 bg-clip-text text-transparent">
               Reaction Time
-            </span>
-            <br />
-            <span className="text-white">Party 🍻</span>
+            </span>{" "}
+            🍻
           </h1>
           <p className="mx-auto mt-3 max-w-md text-white/60">
             Sober vs after-drinks. Fastest sharp mind wins, biggest drop buys
@@ -237,64 +238,29 @@ export function PartyGame() {
           </div>
         )}
 
-        {/* Table */}
-        <div className="mt-6 overflow-hidden rounded-3xl bg-white/[0.06] ring-1 ring-white/10 backdrop-blur-sm">
-          <div className="grid grid-cols-[2rem_1fr_5rem_6.5rem_4.5rem] gap-2 bg-white/5 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-white/50">
-            <span>#</span>
-            <span>Name</span>
-            <span className="text-right">🧠 Sober</span>
-            <span className="text-right">🍺 After drinks</span>
-            <span className="text-right">Δ</span>
+        {/* Two columns: sober ranking | after-drinks ranking. */}
+        {players.length === 0 ? (
+          <p className="mt-6 rounded-3xl bg-white/[0.06] px-4 py-8 text-center text-base font-semibold text-white/50 ring-1 ring-white/10 backdrop-blur-sm">
+            No times yet — scan the QR or hit play to kick it off 👇
+          </p>
+        ) : (
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <LeaderColumn
+              title="Sober"
+              emoji="🧠"
+              accent="text-emerald-300"
+              rows={soberRows}
+              justPlayed={justPlayed}
+            />
+            <LeaderColumn
+              title="After drinks"
+              emoji="🍺"
+              accent="text-amber-300"
+              rows={drunkRows}
+              justPlayed={justPlayed}
+            />
           </div>
-          {ranked.length === 0 && (
-            <p className="px-4 py-8 text-center text-base font-semibold text-white/50">
-              No times yet — scan the QR or hit play to kick it off 👇
-            </p>
-          )}
-          {ranked.map((p, i) => {
-            const d = delta(p);
-            const mine = p.name === justPlayed;
-            return (
-              <div
-                key={p.name}
-                className={`grid grid-cols-[2rem_1fr_5rem_6.5rem_4.5rem] items-center gap-2 border-t border-white/10 px-4 py-3 ${
-                  mine ? "bg-white/10" : ""
-                }`}
-              >
-                <span className="font-bold text-white/50">
-                  {i === 0 ? "🥇" : i + 1}
-                </span>
-                <span className="truncate font-bold">{p.name}</span>
-                <span className="text-right font-mono tabular-nums text-emerald-300">
-                  {p.sober != null ? formatTime(p.sober) : "—"}
-                </span>
-                <span className="text-right font-mono tabular-nums text-amber-300">
-                  {p.drunk != null ? (
-                    <>
-                      {formatTime(p.drunk)}
-                      {p.drunkDrinks != null && (
-                        <span className="ml-1 text-xs text-amber-300/70">
-                          🍺{p.drunkDrinks}
-                        </span>
-                      )}
-                    </>
-                  ) : (
-                    "—"
-                  )}
-                </span>
-                <span
-                  className={`text-right font-mono tabular-nums ${
-                    d == null ? "text-white/30" : d > 0 ? "text-red-400" : "text-emerald-400"
-                  }`}
-                >
-                  {d == null
-                    ? "—"
-                    : `${d > 0 ? "+" : ""}${(d / 1000).toFixed(1)}s`}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+        )}
 
         <button
           onClick={() => setView("setup")}
@@ -315,6 +281,58 @@ export function PartyGame() {
         </p>
       </div>
     </Shell>
+  );
+}
+
+const MEDAL = ["🥇", "🥈", "🥉"];
+
+function LeaderColumn({
+  title,
+  emoji,
+  accent,
+  rows,
+  justPlayed,
+}: {
+  title: string;
+  emoji: string;
+  accent: string;
+  rows: { name: string; ms: number; drinks?: number }[];
+  justPlayed: string | null;
+}) {
+  return (
+    <div className="overflow-hidden rounded-3xl bg-white/[0.06] ring-1 ring-white/10 backdrop-blur-sm">
+      <div className="bg-white/5 px-4 py-3 text-sm font-extrabold uppercase tracking-wider">
+        <span className={accent}>
+          {emoji} {title}
+        </span>
+      </div>
+      {rows.length === 0 && (
+        <p className="px-4 py-6 text-center text-sm text-white/40">
+          No times yet
+        </p>
+      )}
+      {rows.map((r, i) => (
+        <div
+          key={r.name}
+          className={`flex items-center gap-3 border-t border-white/10 px-4 py-3 ${
+            r.name === justPlayed ? "bg-white/10" : ""
+          }`}
+        >
+          <span className="w-6 flex-shrink-0 font-bold text-white/50">
+            {i < 3 ? MEDAL[i] : i + 1}
+          </span>
+          <span className="flex-1 truncate font-bold">{r.name}</span>
+          {r.drinks != null && (
+            <span className="flex-shrink-0 text-xs text-amber-300/70">
+              🍺{r.drinks}
+            </span>
+          )}
+          <span className={`flex-shrink-0 font-mono tabular-nums ${accent}`}>
+            {formatTime(r.ms)}
+          </span>
+        </div>
+      ))}
+    </div>
   );
 }
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PartyGame } from "@/components/party/PartyGame";
 
 export const metadata: Metadata = {
-  title: "Reaction Time Party 🍻",
+  title: "Reaction Time 🍻",
   description: "Sober vs after-drinks reaction-time showdown.",
 };
 
