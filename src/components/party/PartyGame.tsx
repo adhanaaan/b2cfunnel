@@ -214,7 +214,7 @@ export function PartyGame() {
 
         {/* Join QR — guests scan to play on their own phones. */}
         {joinUrl && (
-          <div className="mt-7 flex items-center gap-5 rounded-3xl bg-white/[0.06] p-5 ring-1 ring-white/10 backdrop-blur-sm">
+          <div className="mt-7 flex items-center gap-5 rounded-3xl bg-white/[0.06] p-5 ring-1 ring-white/10">
             <div className="rounded-2xl bg-white p-3 shadow-lg">
               <QRCodeSVG value={joinUrl} className="h-24 w-24" level="M" />
             </div>
@@ -240,7 +240,7 @@ export function PartyGame() {
 
         {/* Two columns: sober ranking | after-drinks ranking. */}
         {players.length === 0 ? (
-          <p className="mt-6 rounded-3xl bg-white/[0.06] px-4 py-8 text-center text-base font-semibold text-white/50 ring-1 ring-white/10 backdrop-blur-sm">
+          <p className="mt-6 rounded-3xl bg-white/[0.06] px-4 py-8 text-center text-base font-semibold text-white/50 ring-1 ring-white/10">
             No times yet — scan the QR or hit play to kick it off 👇
           </p>
         ) : (
@@ -300,7 +300,7 @@ function LeaderColumn({
   justPlayed: string | null;
 }) {
   return (
-    <div className="overflow-hidden rounded-3xl bg-white/[0.06] ring-1 ring-white/10 backdrop-blur-sm">
+    <div className="overflow-hidden rounded-3xl bg-white/[0.06] ring-1 ring-white/10">
       <div className="bg-white/5 px-4 py-3 text-sm font-extrabold uppercase tracking-wider">
         <span className={accent}>
           {emoji} {title}
@@ -348,7 +348,7 @@ function Award({
   d: number | null;
 }) {
   return (
-    <div className="rounded-2xl bg-white/[0.06] px-4 py-3 text-center ring-1 ring-white/10 backdrop-blur-sm">
+    <div className="rounded-2xl bg-white/[0.06] px-4 py-3 text-center ring-1 ring-white/10">
       <p className="text-2xl">{emoji}</p>
       <p className="mt-1 text-[11px] font-bold uppercase tracking-wider text-white/50">
         {label}
@@ -366,12 +366,15 @@ function Award({
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#0c0718] px-4 py-10 text-white">
-      {/* Ambient party glows. */}
-      <div className="pointer-events-none absolute -left-40 -top-24 h-[28rem] w-[28rem] rounded-full bg-fuchsia-600/30 blur-[120px]" />
-      <div className="pointer-events-none absolute -right-40 top-32 h-[28rem] w-[28rem] rounded-full bg-violet-600/30 blur-[120px]" />
-      <div className="pointer-events-none absolute -bottom-40 left-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-amber-500/20 blur-[130px]" />
-      <div className="relative flex w-full flex-col items-center">{children}</div>
+    <main
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-10 text-white"
+      style={{
+        // Baked-in radial glows (no blur filter — cheap to render).
+        background:
+          "radial-gradient(55rem 38rem at 8% -10%, rgba(217,70,239,0.28), transparent 60%), radial-gradient(55rem 40rem at 108% 28%, rgba(139,92,246,0.26), transparent 60%), radial-gradient(50rem 40rem at 50% 120%, rgba(245,158,11,0.18), transparent 60%), #0c0718",
+      }}
+    >
+      <div className="flex w-full flex-col items-center">{children}</div>
     </main>
   );
 }
