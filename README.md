@@ -78,7 +78,6 @@ Elevated · `76–100` High.
 high score maps to the Low band.
 
 ## Supabase
-
 Create a `leads` table:
 
 ```sql
@@ -180,6 +179,28 @@ Example queries: band mix `select band, count(*) from quiz_responses group by ba
 age split `select age, count(*) ... group by age`; a lifestyle factor
 `select answers->>'sleep' as sleep, count(*) ... group by 1`; speed vs profile
 `select band, round(avg(game_time_ms)) ... group by band`.
+
+And a `party_scores` table for the standalone `/party` game (sober vs
+after-drinks reaction-time leaderboard; `drinks = 0` is a sober run):
+
+```sql
+create table public.party_scores (
+  id         bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  name       text not null,
+  drinks     integer not null default 0,
+  time_ms    integer not null
+);
+create index on public.party_scores (time_ms);
+
+-- Reads/writes go only through the server API route (service-role key).
+alter table public.party_scores enable row level security;
+```
+
+`/party` reads/writes via `/api/party` (GET all attempts, POST one, DELETE to
+reset). Every phone feeds this one table and the board polls every 5s, so a
+tablet/TV left on `/party` shows the live leaderboard. A join QR on the board
+points guests at `/party`.
 
 Env vars (see `.env.example`): `NEXT_PUBLIC_SUPABASE_URL`,
 `SUPABASE_SERVICE_ROLE_KEY` (server only — never `NEXT_PUBLIC`), and

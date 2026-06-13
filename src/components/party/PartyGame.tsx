@@ -1,38 +1,42 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import { SymbolMatchGame } from "@/components/game/symbol-match/SymbolMatchGame";
 import { formatTime } from "@/lib/format";
+
+interface Attempt {
+  name: string;
+  drinks: number;
+  timeMs: number;
+}
 
 interface Player {
   name: string;
   sober?: number;
   drunk?: number;
-  drunkDrinks?: number; // drinks reported on their best after-drinks run
+  drunkDrinks?: number;
 }
 
-const STORE_KEY = "party_reaction_v3";
-
-function load(): Player[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(STORE_KEY);
-    return raw ? (JSON.parse(raw) as Player[]) : [];
-  } catch {
-    return [];
+/** Aggregate raw attempts into one row per player (best sober + best after-drinks). */
+function aggregate(attempts: Attempt[]): Player[] {
+  const byName = new Map<string, Player>();
+  for (const a of attempts) {
+    const key = a.name.toLowerCase();
+    const p = byName.get(key) ?? { name: a.name };
+    if (a.drinks === 0) {
+      if (p.sober == null || a.timeMs < p.sober) p.sober = a.timeMs;
+    } else if (p.drunk == null || a.timeMs < p.drunk) {
+      p.drunk = a.timeMs;
+      p.drunkDrinks = a.drinks;
+    }
+    byName.set(key, p);
   }
-}
-
-function save(players: Player[]) {
-  try {
-    localStorage.setItem(STORE_KEY, JSON.stringify(players));
-  } catch {
-    /* ignore */
-  }
+  return [...byName.values()];
 }
 
 export function PartyGame() {
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [view, setView] = useState<"board" | "setup" | "play">("board");
   const [name, setName] = useState("");
   const [drinks, setDrinks] = useState(0);
@@ -40,8 +44,29 @@ export function PartyGame() {
     null,
   );
   const [justPlayed, setJustPlayed] = useState<string | null>(null);
+  const [joinUrl, setJoinUrl] = useState("");
 
-  useEffect(() => setPlayers(load()), []);
+  const refresh = useCallback(async () => {
+    try {
+      const res = await fetch("/api/party", { cache: "no-store" });
+      const data = await res.json();
+      if (Array.isArray(data.attempts)) setAttempts(data.attempts);
+    } catch {
+      /* keep last good board */
+    }
+  }, []);
+
+  useEffect(() => {
+    setJoinUrl(`${window.location.origin}/party`);
+    refresh();
+  }, [refresh]);
+
+  // Live board: poll while showing the leaderboard so every phone stays in sync.
+  useEffect(() => {
+    if (view !== "board") return;
+    const id = setInterval(refresh, 5000);
+    return () => clearInterval(id);
+  }, [view, refresh]);
 
   const start = () => {
     const n = name.trim();
@@ -50,44 +75,38 @@ export function PartyGame() {
     setView("play");
   };
 
-  const finish = (ms: number) => {
+  const finish = async (ms: number) => {
     if (!pending) return;
-    setPlayers((prev) => {
-      const i = prev.findIndex(
-        (p) => p.name.toLowerCase() === pending.name.toLowerCase(),
-      );
-      const next = [...prev];
-      const existing = i >= 0 ? next[i] : { name: pending.name };
-      const updated: Player = { ...existing };
-      // 0 drinks -> Sober column; anything else -> After-drinks column.
-      if (pending.drinks === 0) {
-        updated.sober =
-          updated.sober != null ? Math.min(updated.sober, ms) : ms;
-      } else if (updated.drunk == null || ms < updated.drunk) {
-        updated.drunk = ms;
-        updated.drunkDrinks = pending.drinks;
-      }
-      if (i >= 0) next[i] = updated;
-      else next.push(updated);
-      save(next);
-      return next;
-    });
+    const attempt = { name: pending.name, drinks: pending.drinks, timeMs: ms };
     setJustPlayed(pending.name);
     setPending(null);
     setName("");
     setDrinks(0);
     setView("board");
+    // optimistic, then persist + refetch the shared board
+    setAttempts((prev) => [...prev, attempt]);
+    try {
+      await fetch("/api/party", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(attempt),
+      });
+    } catch {
+      /* optimistic row already shown */
+    }
+    refresh();
   };
 
-  const resetAll = () => {
-    if (!confirm("Clear the whole leaderboard?")) return;
-    setPlayers([]);
-    save([]);
+  const resetAll = async () => {
+    if (!confirm("Clear the whole leaderboard for everyone?")) return;
+    setAttempts([]);
     try {
       sessionStorage.removeItem("sm_demo_done");
     } catch {
       /* ignore */
     }
+    await fetch("/api/party", { method: "DELETE" }).catch(() => {});
+    refresh();
   };
 
   // ---- PLAY ----
@@ -106,8 +125,7 @@ export function PartyGame() {
           </button>
           <h1 className="font-display text-3xl font-extrabold">Who's playing?</h1>
           <p className="mt-2 text-white/70">
-            Match 20 symbols as fast as you can. Same name lines up your sober
-            and after-drinks times.
+            Match 20 symbols as fast as you can.
           </p>
 
           <input
@@ -155,6 +173,7 @@ export function PartyGame() {
   }
 
   // ---- LEADERBOARD ----
+  const players = aggregate(attempts);
   const ranked = [...players].sort((a, b) => {
     const as = a.sober ?? Infinity;
     const bs = b.sober ?? Infinity;
@@ -188,8 +207,23 @@ export function PartyGame() {
           </p>
         </div>
 
+        {/* Join QR — guests scan to play on their own phones. */}
+        {joinUrl && (
+          <div className="mt-6 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div className="rounded-lg bg-white p-2">
+              <QRCodeSVG value={joinUrl} className="h-20 w-20" level="M" />
+            </div>
+            <div>
+              <p className="font-bold">📱 Scan to join</p>
+              <p className="text-sm text-white/60">
+                Play on your phone, this board updates live.
+              </p>
+            </div>
+          </div>
+        )}
+
         {withBoth.length > 0 && (
-          <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+          <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
             <Award emoji="😎" label="Holds their liquor" who={ironLiver} d={ironLiver ? delta(ironLiver) : null} />
             <Award emoji="🍺" label="Most wrecked" who={mostWrecked} d={mostWrecked ? delta(mostWrecked) : null} />
           </div>
@@ -206,7 +240,7 @@ export function PartyGame() {
           </div>
           {ranked.length === 0 && (
             <p className="px-4 py-10 text-center text-white/50">
-              No times yet. Be the first 👇
+              No times yet. Scan to be the first 👆
             </p>
           )}
           {ranked.map((p, i) => {
