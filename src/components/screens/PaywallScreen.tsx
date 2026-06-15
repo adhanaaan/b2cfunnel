@@ -4,12 +4,15 @@ import { useState } from "react";
 import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { ComplianceFooter } from "@/components/ui/ComplianceFooter";
+import { DoctorAvatar } from "@/components/result/DoctorAvatar";
 
 /** Final convert screen: the ReCOGnAIze offer, what's included, order summary. */
 export function PaywallScreen() {
   const c = COPY.screens.paywall;
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [pubmedOk, setPubmedOk] = useState(true);
+  const [doctorOpen, setDoctorOpen] = useState(false);
+  const doc = c.doctor;
 
   // Book now opens WhatsApp to Adnan with a prefilled, fill-in message.
   const bookHref = `https://wa.me/${c.whatsappNumber}?text=${encodeURIComponent(
@@ -85,6 +88,34 @@ export function PaywallScreen() {
               </li>
             ))}
           </ul>
+        </div>
+
+        {/* Teleconsult clinician */}
+        <div className="mt-5 rounded-2xl bg-surface-lowest p-5 shadow-card">
+          <div className="flex items-center gap-3">
+            <DoctorAvatar initials={doc.initials} className="h-12 w-12 text-sm" />
+            <div className="min-w-0">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-primary">
+                {doc.eyebrow}
+              </p>
+              <p className="font-bold leading-snug text-charcoal">{doc.name}</p>
+              <p className="text-sm text-secondary">{doc.credentials}</p>
+              <p className="text-sm text-secondary">{doc.role}</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setDoctorOpen((o) => !o)}
+            aria-expanded={doctorOpen}
+            className="mt-3 text-sm font-semibold text-primary"
+          >
+            {doctorOpen ? "Hide bio –" : "About the doctor +"}
+          </button>
+          {doctorOpen && (
+            <p className="mt-2 text-sm leading-relaxed text-secondary">
+              {doc.bio}
+            </p>
+          )}
         </div>
 
         {/* Order summary / checkout */}

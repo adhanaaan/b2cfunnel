@@ -149,6 +149,15 @@ export interface FaqItem {
   a: string;
 }
 
+export interface PaywallDoctorCopy {
+  eyebrow: string;
+  name: string;
+  credentials: string;
+  role: string;
+  initials: string;
+  bio: string;
+}
+
 export interface PaywallCopy {
   eyebrow: string;
   heading: string;
@@ -157,6 +166,7 @@ export interface PaywallCopy {
   paperNote: string; // short peer-reviewed reference (replaces the long blurb)
   paperUrl: string; // link to the ReCOGnAIze paper on PubMed
   includes: string[]; // what the offer includes (checklist)
+  doctor: PaywallDoctorCopy; // teleconsult clinician card
   lineItem: string; // product name shown in the order summary
   price: string;
   priceNote: string;
