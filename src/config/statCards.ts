@@ -27,7 +27,7 @@ export const STAT_CARDS: StatCard[] = [
   {
     id: "salthouse",
     stat: "From age 45",
-    body: "Processing speed, which is how quickly the brain handles information, can begin to gradually slow down from around age 45.",
+    body: "Processing speed, which is how quickly the brain handles information, can begin to gradually slow down.",
     source: "Salthouse, Frontiers in Aging Neuroscience, 2017",
     citation: "salthouse",
   },

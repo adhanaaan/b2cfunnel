@@ -7,8 +7,14 @@
 }
 
 @layer base {
+  /* Root background matches the shell gradient's end, so scrolling/overscroll
+     on long pages (result, paywall) never reveals white below the content. */
+  html {
+    background-color: #fbe7de;
+  }
   body {
     -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
   }
 }
 
