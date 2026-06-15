@@ -100,7 +100,13 @@ export function PaywallScreen() {
               </p>
               <p className="font-bold leading-snug text-charcoal">{doc.name}</p>
               <p className="text-sm text-secondary">{doc.credentials}</p>
-              <p className="text-sm text-secondary">{doc.role}</p>
+              <p className="mt-0.5 text-sm text-secondary">
+                {doc.role} at{" "}
+                <span className="font-extrabold text-primary">{doc.org}</span>
+              </p>
+              <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary-container px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-primary-onContainer">
+                ⚕ {doc.org}
+              </span>
             </div>
           </div>
           <button

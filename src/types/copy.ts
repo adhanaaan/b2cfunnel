@@ -154,6 +154,7 @@ export interface PaywallDoctorCopy {
   name: string;
   credentials: string;
   role: string;
+  org: string; // affiliation, emphasised on the card (e.g. "Eternami")
   initials: string;
   bio: string;
 }
