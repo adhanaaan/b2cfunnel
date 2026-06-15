@@ -90,23 +90,21 @@ export function PaywallScreen() {
           </ul>
         </div>
 
-        {/* Teleconsult clinician */}
+        {/* Teleconsult clinic → Eternami → Dr Chris */}
         <div className="mt-5 rounded-2xl bg-surface-lowest p-5 shadow-card">
-          <div className="flex items-center gap-3">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-primary">
+            {doc.eyebrow}
+          </p>
+          <p className="mt-1 font-display text-2xl font-extrabold leading-none text-charcoal">
+            {doc.org}
+          </p>
+
+          <div className="mt-4 flex items-center gap-3 border-t border-outline-variant pt-4">
             <DoctorAvatar initials={doc.initials} className="h-12 w-12 text-sm" />
             <div className="min-w-0">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-primary">
-                {doc.eyebrow}
-              </p>
               <p className="font-bold leading-snug text-charcoal">{doc.name}</p>
               <p className="text-sm text-secondary">{doc.credentials}</p>
-              <p className="mt-0.5 text-sm text-secondary">
-                {doc.role} at{" "}
-                <span className="font-extrabold text-primary">{doc.org}</span>
-              </p>
-              <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary-container px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-primary-onContainer">
-                ⚕ {doc.org}
-              </span>
+              <p className="text-sm text-secondary">{doc.role}</p>
             </div>
           </div>
           <button

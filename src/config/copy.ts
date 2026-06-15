@@ -141,7 +141,7 @@ export const COPY: CopyConfig = {
         "Review & recommendations with a full in-depth report",
       ],
       doctor: {
-        eyebrow: "Your teleconsult clinician",
+        eyebrow: "Your teleconsult clinic",
         name: "Dr Christopher Tan Ee Chong",
         credentials: "MBBS (Singapore), MRCS, GDFM",
         role: "Medical Director & Resident Physician",
