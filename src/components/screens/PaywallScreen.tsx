@@ -130,7 +130,7 @@ export function PaywallScreen() {
 
           <div className="mt-4 flex items-center justify-between gap-4 border-b border-outline-variant pb-4">
             <span className="leading-snug text-charcoal">{c.lineItem}</span>
-            <span className="font-semibold text-charcoal">{c.price}</span>
+            <span className="font-semibold text-charcoal">{c.priceOriginal}</span>
           </div>
 
           <div className="mt-4 flex items-end justify-between">
