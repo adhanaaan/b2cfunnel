@@ -130,14 +130,29 @@ export function PaywallScreen() {
 
           <div className="mt-4 flex items-center justify-between gap-4 border-b border-outline-variant pb-4">
             <span className="leading-snug text-charcoal">{c.lineItem}</span>
-            <span className="font-semibold text-charcoal">{c.price}</span>
+            <span className="flex items-baseline gap-1.5">
+              <span className="text-sm font-medium text-outline line-through">
+                {c.priceOriginal}
+              </span>
+              <span className="font-semibold text-charcoal">{c.price}</span>
+            </span>
           </div>
 
           <div className="mt-4 flex items-end justify-between">
-            <span className="font-bold text-charcoal">Subtotal</span>
-            <span className="font-display text-3xl font-extrabold text-charcoal">
-              {c.price}
-            </span>
+            <div>
+              <span className="font-bold text-charcoal">Subtotal</span>
+              <span className="ml-2 inline-block rounded-full bg-primary-container px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wide text-primary-onContainer">
+                {c.priceTag}
+              </span>
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-lg font-medium text-outline line-through">
+                {c.priceOriginal}
+              </span>
+              <span className="font-display text-3xl font-extrabold text-charcoal">
+                {c.price}
+              </span>
+            </div>
           </div>
           <p className="mt-1 text-right text-sm text-outline">{c.priceNote}</p>
 

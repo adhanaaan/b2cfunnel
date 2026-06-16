@@ -8,6 +8,7 @@ interface GaugeProps {
   bandLabel: string;
   lowLabel: string;
   highLabel: string;
+  caption?: string;
 }
 
 // Geometry. Top semicircle: left end = low, right end = high.
@@ -41,6 +42,7 @@ export function Gauge({
   bandLabel,
   lowLabel,
   highLabel,
+  caption,
 }: GaugeProps) {
   const clamped = Math.max(0, Math.min(score, max));
   const progress = clamped / max;
@@ -115,6 +117,11 @@ export function Gauge({
         >
           {bandLabel}
         </p>
+        {caption && (
+          <p className="mx-auto mt-0.5 max-w-xs text-center text-xs text-outline">
+            {caption}
+          </p>
+        )}
       </figcaption>
     </figure>
   );

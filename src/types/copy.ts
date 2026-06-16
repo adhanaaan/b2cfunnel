@@ -85,6 +85,7 @@ export interface ResultBaseCopy {
   drivingHeading: string;
   gaugeLowLabel: string;
   gaugeHighLabel: string;
+  gaugeBandCaption: string;
   unlockCta: string;
   unlockTeasers: string[]; // locked items teased on the result preview
   paywallPreviewHeading: string; // template containing {factors}
@@ -170,6 +171,8 @@ export interface PaywallCopy {
   doctor: PaywallDoctorCopy; // teleconsult clinician card
   lineItem: string; // product name shown in the order summary
   price: string;
+  priceOriginal: string; // struck-through original (launch deal)
+  priceTag: string; // e.g. "Launch exclusive"
   priceNote: string;
   cta: string;
   whatsappNumber: string; // digits only, incl. country code, for the wa.me link

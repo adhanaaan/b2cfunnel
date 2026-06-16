@@ -25,7 +25,7 @@ export function StatCardScreen({ card, onNext }: StatCardScreenProps) {
         <button
           type="button"
           onClick={onNext}
-          className="mt-10 w-full rounded-lg bg-primary px-6 py-4 text-lg font-bold text-primary-on shadow-float transition hover:brightness-105"
+          className="mt-16 w-full rounded-lg bg-primary px-6 py-4 text-lg font-bold text-primary-on shadow-float transition hover:brightness-105"
         >
           Continue
         </button>

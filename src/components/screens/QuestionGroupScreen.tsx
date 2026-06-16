@@ -39,29 +39,63 @@ function OptionSlider({
   value?: AnswerValue;
   onChange: (id: string) => void;
 }) {
-  const opts = [...(question.options ?? [])].reverse(); // low → high severity
+  const opts = [...(question.options ?? [])].reverse(); // good (left) → bad (right)
   const max = opts.length - 1;
   const found = opts.findIndex((o) => o.id === value);
   const idx = found >= 0 ? found : 0;
+  const pct = max === 0 ? 0 : (idx / max) * 100;
 
   return (
-    <div className="mt-4">
-      <p className="text-center text-base font-bold text-primary">
+    <div className="mt-5">
+      {/* Selected value. */}
+      <p className="text-center text-lg font-extrabold text-primary">
         {opts[idx]?.label}
       </p>
-      <input
-        type="range"
-        min={0}
-        max={max}
-        step={1}
-        value={idx}
-        onChange={(e) => onChange(opts[Number(e.target.value)].id)}
-        aria-label={question.prompt}
-        className="mt-3 w-full cursor-pointer accent-[#f77528]"
-      />
-      <div className="mt-2 flex justify-between text-[11px] font-medium text-outline">
-        <span>{opts[0]?.label}</span>
-        <span>{opts[max]?.label}</span>
+
+      {/* Gradient track (green = no symptoms, red = frequent) + thumb. */}
+      <div className="relative mt-3 flex h-6 items-center">
+        <div
+          className="h-3 w-full rounded-full"
+          style={{
+            background:
+              "linear-gradient(to right, #22c55e, #eab308, #f97316, #ef4444)",
+          }}
+        />
+        {opts.map((_, i) => (
+          <span
+            key={i}
+            aria-hidden
+            className="absolute top-1/2 h-3 w-px -translate-x-1/2 -translate-y-1/2 bg-white/70"
+            style={{ left: `${(i / max) * 100}%` }}
+          />
+        ))}
+        <span
+          aria-hidden
+          className="absolute top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-primary bg-white shadow-md"
+          style={{ left: `${pct}%` }}
+        />
+        <input
+          type="range"
+          min={0}
+          max={max}
+          step={1}
+          value={idx}
+          onChange={(e) => onChange(opts[Number(e.target.value)].id)}
+          aria-label={question.prompt}
+          className="absolute inset-0 w-full cursor-pointer opacity-0"
+        />
+      </div>
+
+      {/* Tick labels. */}
+      <div className="mt-2 flex gap-1 text-center text-[10px] font-medium leading-tight text-outline">
+        {opts.map((o, i) => (
+          <span
+            key={o.id}
+            className={`flex-1 ${i === idx ? "font-bold text-charcoal" : ""}`}
+          >
+            {o.label}
+          </span>
+        ))}
       </div>
     </div>
   );

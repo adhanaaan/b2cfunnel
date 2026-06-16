@@ -70,6 +70,7 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
             bandLabel={bandLabel}
             lowLabel={base.gaugeLowLabel}
             highLabel={base.gaugeHighLabel}
+            caption={base.gaugeBandCaption}
           />
         </div>
 
