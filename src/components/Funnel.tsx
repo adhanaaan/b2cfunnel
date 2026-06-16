@@ -56,9 +56,14 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
   } = useFunnel(variant);
 
   // Anonymous drop-off tracking: a step view fires whenever the step changes.
+  // Also reset scroll to the top so a new screen never lands mid-page (e.g. on
+  // the paywall price after scrolling the result).
   const stepName = stepKey(step);
   useEffect(() => {
     track("step_view", { variant: state.variant, step: stepName });
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
   }, [stepName, state.variant]);
 
   // Post the complete lead (name + email captured earlier, plus the computed
