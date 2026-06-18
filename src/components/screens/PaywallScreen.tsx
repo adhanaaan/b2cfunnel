@@ -133,7 +133,23 @@ export function PaywallScreen() {
             <span className="font-semibold text-charcoal">{c.priceOriginal}</span>
           </div>
 
-          <div className="mt-4 flex items-end justify-between">
+          {/* Promo code. */}
+          <div className="mt-4 flex gap-2">
+            <input
+              type="text"
+              placeholder={c.promoPlaceholder}
+              aria-label={c.promoPlaceholder}
+              className="min-w-0 flex-1 rounded-lg border-2 border-outline-variant bg-surface-lowest px-4 py-2.5 text-sm text-charcoal outline-none transition focus:border-primary"
+            />
+            <button
+              type="button"
+              className="flex-shrink-0 rounded-lg bg-surface-container px-4 text-sm font-bold text-charcoal transition hover:brightness-95"
+            >
+              {c.promoCta}
+            </button>
+          </div>
+
+          <div className="mt-4 flex items-end justify-between border-t border-outline-variant pt-4">
             <div>
               <span className="font-bold text-charcoal">Subtotal</span>
               <span className="ml-2 inline-block rounded-full bg-primary-container px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wide text-primary-onContainer">
@@ -149,7 +165,6 @@ export function PaywallScreen() {
               </span>
             </div>
           </div>
-          <p className="mt-1 text-right text-sm text-outline">{c.priceNote}</p>
 
           <a
             href={bookHref}

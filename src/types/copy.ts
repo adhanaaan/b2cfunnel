@@ -174,6 +174,8 @@ export interface PaywallCopy {
   priceOriginal: string; // struck-through original (launch deal)
   priceTag: string; // e.g. "Launch exclusive"
   priceNote: string;
+  promoPlaceholder: string;
+  promoCta: string;
   cta: string;
   whatsappNumber: string; // digits only, incl. country code, for the wa.me link
   whatsappMessage: string; // prefilled message template the user fills in

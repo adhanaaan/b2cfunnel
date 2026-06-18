@@ -49,7 +49,6 @@ export function HookScreen({ onStart }: HookScreenProps) {
         >
           {c.cta}
         </button>
-        <p className="mt-3 text-xs text-outline">{c.durationNote}</p>
       </div>
     </ScreenShell>
   );

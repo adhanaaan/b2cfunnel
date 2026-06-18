@@ -33,7 +33,7 @@ export const COPY: CopyConfig = {
       eyebrow: "Gray Matter Solutions",
       heading: "Is your brain at its peak performance?",
       subheading:
-        "Take a medically backed 5-minute quiz, built on 14 modifiable risk factors, to find out how well your brain is performing.",
+        "Take a medically-backed quiz built on 14 modifiable risk factors to see how healthy your brain is.",
       credibility: {
         heading: "Built on science",
         points: [
@@ -102,7 +102,7 @@ export const COPY: CopyConfig = {
       ],
     },
     resultBase: {
-      reviewerStrap: "Grounded in the 2024 L.C. report & CAIDE Risk Model",
+      reviewerStrap: "Based on the 2024 L.C. report & CAIDE Risk Model",
       eventClosingHeading: "Want to understand what this means?",
       eventClosingBody:
         "Your Brain Health Score and recommendations are on their way to your inbox. Our team can walk you through your profile and the science behind it.",
@@ -131,10 +131,10 @@ export const COPY: CopyConfig = {
     paywall: {
       eyebrow: "The full picture",
       heading: "Get measured properly with ReCOGnAIze",
-      offerName: "ReCOGnAIze cognitive assessment",
+      offerName: "ReCOGnAIze brain health assessment",
       offerNote:
         "Developed at NTU's Dementia Research Centre · Registered with Singapore's HSA",
-      paperNote: "ReCOGnAIze, validated in peer-reviewed research",
+      paperNote: "Validated in peer-reviewed research",
       paperUrl: "https://pubmed.ncbi.nlm.nih.gov/41685533/",
       includes: [
         "Clinically-validated neuroscientific games to detect specific brain functions",
@@ -150,11 +150,13 @@ export const COPY: CopyConfig = {
         initials: "CT",
         bio: "Upon graduating from the Yong Loo Lin School of Medicine, National University of Singapore, Dr Tan practised in a variety of surgical and medical disciplines at various hospitals in Singapore before entering private practice. He was awarded the Membership of the Royal College of Surgeons (Ireland) and conferred the Graduate Diploma of Family Medicine by the College of Family Physicians Singapore. He has acquired over 12 years of clinical experience in internal medicine, anaesthesia and pain management, ENT, family medicine, health screening, and complementary medicine.",
       },
-      lineItem: "ReCOGnAIze Brain Health Consult",
+      lineItem: "Brain health assessment",
       price: "S$99",
       priceOriginal: "S$199",
       priceTag: "Launch exclusive",
       priceNote: "One-off. Includes a clinician teleconsult.",
+      promoPlaceholder: "Enter promo code",
+      promoCta: "Apply",
       cta: "Book now",
       whatsappNumber: "6587424150",
       whatsappMessage:
