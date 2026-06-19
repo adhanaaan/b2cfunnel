@@ -130,7 +130,7 @@ export const COPY: CopyConfig = {
     },
     paywall: {
       eyebrow: "The full picture",
-      heading: "Get measured properly with ReCOGnAIze",
+      heading: "Take the complete brain health assessment",
       offerName: "ReCOGnAIze brain health assessment",
       offerNote:
         "Developed at NTU's Dementia Research Centre · Registered with Singapore's HSA",
@@ -163,20 +163,20 @@ export const COPY: CopyConfig = {
         "Hi GrayMatterSolutions! I'd like to book the ReCOGnAIze Brain Health Consult (S$99). Here are my details:\n\nName:\nEmail:\nBrain Health Score:\nPreferred date/time:",
       faqs: [
         {
-          q: "Is this quiz a diagnosis?",
-          a: "No. This is an educational tool that estimates your profile of factors. ReCOGnAIze is the proper assessment, developed at NTU's Dementia Research Centre and reviewed in a clinician teleconsult.",
-        },
-        {
           q: "What is ReCOGnAIze?",
-          a: "A digital cognitive assessment developed at NTU's Dementia Research Centre and registered with Singapore's HSA, reviewed in a teleconsult.",
+          a: "A digital brain health assessment developed at NTU's Dementia Research Centre and registered with Singapore's HSA, reviewed in a clinician teleconsult.",
         },
         {
-          q: "How long does it take?",
-          a: "The assessment is about 10–15 minutes, followed by a teleconsult to talk through what it suggests for you.",
+          q: "How is the quiz different from ReCOGnAIze?",
+          a: "This quiz is a free, educational estimate based on your modifiable risk factors. ReCOGnAIze is the full assessment, validated in peer-reviewed research and reviewed by a medical professional, that shows how your brain is actually performing.",
+        },
+        {
+          q: "Is this assessment legit?",
+          a: "Yes. ReCOGnAIze was developed and validated at NTU's Lee Kong Chian School of Medicine, Dementia Research Centre, is registered with Singapore's HSA, and every result is reviewed by a medical professional.",
         },
         {
           q: "Who is it for?",
-          a: "Anyone who wants a clearer baseline, whether you're noticing changes, supporting a loved one, or simply staying ahead of things.",
+          a: "Anyone staying ahead of their brain health: whether you want to maintain peak cognitive performance, you're navigating hormonal changes, or you're supporting a loved one living with dementia.",
         },
       ],
     },

@@ -152,7 +152,7 @@ export function PaywallScreen() {
           <div className="mt-4 flex items-end justify-between border-t border-outline-variant pt-4">
             <div>
               <span className="font-bold text-charcoal">Subtotal</span>
-              <span className="ml-2 inline-block rounded-full bg-primary-container px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wide text-primary-onContainer">
+              <span className="ml-2 inline-block rounded-full bg-[#fde047] px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wide text-charcoal shadow-sm">
                 {c.priceTag}
               </span>
             </div>
