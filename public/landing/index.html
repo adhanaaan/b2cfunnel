@@ -36,23 +36,33 @@
     .btn-ghost { background:#fff; color:var(--ink); border-color:var(--line); }
     .btn-ghost:hover { background:var(--cream); }
 
-    /* NAV */
-    header.nav { position:sticky; top:0; z-index:50; background:rgba(255,248,246,.88); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+    /* NAV (transparent over hero, solid on scroll) */
+    header.nav { position:fixed; top:0; left:0; right:0; z-index:50; transition:background .25s, border-color .25s; border-bottom:1px solid transparent; }
+    header.nav.scrolled { background:rgba(255,248,246,.92); backdrop-filter:blur(12px); border-bottom-color:var(--line); }
     .nav-inner { display:flex; align-items:center; justify-content:space-between; height:66px; }
-    .logo { display:flex; align-items:center; gap:9px; font-weight:800; font-size:18px; }
+    .logo { display:flex; align-items:center; gap:9px; font-weight:800; font-size:18px; color:#fff; transition:color .25s; }
+    header.nav.scrolled .logo { color:var(--ink); }
     .logo img { height:28px; width:auto; }
     .nav-cta { display:flex; gap:10px; align-items:center; }
 
-    /* HERO */
-    .hero { background:radial-gradient(900px 460px at 80% -10%, var(--cream) 0%, rgba(255,248,246,0) 60%); }
-    .hero-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:48px; align-items:center; padding:64px 0 56px; }
-    .hero h1 { font-size:clamp(38px,6vw,62px); margin:16px 0 18px; }
-    .hero h1 .hl { color:var(--brand); }
-    .hero p.lead { font-size:19px; color:var(--ink-soft); max-width:520px; margin-bottom:26px; }
-    .hero-cta { display:flex; gap:12px; flex-wrap:wrap; }
-    .hero-visual { aspect-ratio:1/.92; border-radius:24px; background:radial-gradient(120% 120% at 30% 20%, #3a2417 0%, #160d07 75%); display:grid; place-items:center; box-shadow:var(--shadow); overflow:hidden; position:relative; }
-    .hero-visual img { width:62%; filter:drop-shadow(0 18px 40px rgba(247,117,40,.45)); }
-    .hero-visual::after { content:""; position:absolute; inset:0; background:radial-gradient(60% 60% at 50% 45%, rgba(247,117,40,.22), transparent 70%); }
+    /* HERO (full-bleed background image) */
+    .hero {
+      position:relative; min-height:92vh; display:grid; place-items:center; text-align:center; color:#fff;
+      background:
+        linear-gradient(180deg, rgba(20,12,6,.50), rgba(20,12,6,.70)),
+        url('/landing/hero.jpg') center/cover no-repeat,
+        #241710;
+    }
+    .hero .wrap { max-width:840px; padding-top:88px; padding-bottom:64px; }
+    .hero .pill { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#fff; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.30); padding:7px 16px; border-radius:999px; margin-bottom:22px; }
+    .hero h1 { font-size:clamp(42px,7vw,74px); margin:0 0 20px; color:#fff; }
+    .hero h1 .hl { color:var(--brand-2); }
+    .hero p.lead { font-size:19px; color:rgba(255,255,255,.9); max-width:600px; margin:0 auto 20px; }
+    .hero-trust { color:rgba(255,255,255,.85); font-size:14px; margin-bottom:28px; }
+    .hero-trust .stars { color:#ffc54d; letter-spacing:1px; }
+    .hero-cta { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+    .hero .btn-ghost { background:rgba(255,255,255,.12); color:#fff; border-color:rgba(255,255,255,.45); }
+    .hero .btn-ghost:hover { background:rgba(255,255,255,.22); }
 
     /* TRUST */
     .trust { border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:26px 0; }
@@ -142,18 +152,14 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <p class="eyebrow">Gray Matter Solutions</p>
-        <h1><span class="hl">45%</span> of dementia is preventable.</h1>
-        <p class="lead">Most of what shapes your brain health is in your hands. Take the free, medically-backed quiz built on 14 modifiable risk factors and see how healthy your brain is in 3 minutes.</p>
-        <div class="hero-cta">
-          <a href="/quiz" class="btn btn-primary">Start the free quiz →</a>
-          <a href="#clinic" class="btn btn-ghost">Book a consult</a>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <img src="/gms-logo.png" alt="Brain" />
+    <div class="wrap">
+      <span class="pill">🧠 Brain health, backed by NTU science</span>
+      <h1><span class="hl">45%</span> of dementia is preventable.</h1>
+      <p class="lead">Most of what shapes your brain health is in your hands. Take the free, medically-backed quiz built on 14 modifiable risk factors and see how healthy your brain is in 3 minutes.</p>
+      <p class="hero-trust"><span class="stars">★★★★★</span> &nbsp;Trusted by people staying ahead of their brain health</p>
+      <div class="hero-cta">
+        <a href="/quiz" class="btn btn-primary">Start the free quiz →</a>
+        <a href="#clinic" class="btn btn-ghost">Book a consult</a>
       </div>
     </div>
   </section>
@@ -276,5 +282,13 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    // Nav: transparent over the hero, solid once you scroll.
+    const nav = document.querySelector('header.nav');
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 60);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  </script>
 </body>
 </html>
