@@ -126,19 +126,44 @@
     .clinic-price small { opacity:.92; font-size:13px; margin:8px 0 20px; }
     .clinic-price .btn { background:#fff; color:var(--ink); }
 
+    /* SOCIAL PROOF (testimonials) */
+    .quotes { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .quote { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:28px 26px; box-shadow:var(--shadow); display:flex; flex-direction:column; }
+    .quote .mark { font-family:Georgia,'Times New Roman',serif; font-size:52px; line-height:.5; color:var(--brand-2); margin-bottom:10px; }
+    .quote p { font-size:15.5px; color:var(--ink); line-height:1.62; flex:1; margin:0; }
+    .quote .by { margin-top:20px; font-size:13.5px; font-weight:700; color:var(--ink); }
+    .quote .by span { display:block; font-weight:500; color:var(--ink-soft); font-size:12.5px; margin-top:3px; }
+
     /* FOOTER */
     footer { background:var(--deep); color:#d9cdba; padding:48px 0 30px; font-size:14px; }
-    .foot-grid { display:flex; justify-content:space-between; gap:28px; flex-wrap:wrap; margin-bottom:28px; }
+    .foot-grid { display:flex; justify-content:space-between; align-items:center; gap:28px; flex-wrap:wrap; margin-bottom:26px; }
     footer .logo { color:#fff; }
     .foot-links { display:flex; gap:36px; flex-wrap:wrap; }
     .foot-links a { color:#cdbfae; } .foot-links a:hover { color:#fff; }
-    .disclaimer { border-top:1px solid rgba(255,255,255,.12); padding-top:20px; font-size:11.5px; color:#a99a86; line-height:1.7; }
+    .foot-logos { display:flex; align-items:center; gap:32px; flex-wrap:wrap; padding:22px 0; border-top:1px solid rgba(255,255,255,.12); }
+    .foot-logos img { height:24px; width:auto; opacity:.55; filter:brightness(0) invert(1); }
+    .foot-cols { display:grid; grid-template-columns:repeat(4,1fr); gap:30px; border-top:1px solid rgba(255,255,255,.12); padding-top:26px; }
+    .foot-col h4 { color:#fff; font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; margin:0 0 10px; }
+    .foot-col p { font-size:12.5px; color:#a99a86; line-height:1.7; margin:0; }
+    .disclaimer { border-top:1px solid rgba(255,255,255,.12); margin-top:26px; padding-top:20px; font-size:11.5px; color:#a99a86; line-height:1.7; }
 
     @media (max-width:880px) {
-      .stats, .steps { grid-template-columns:1fr; }
+      .steps, .quotes { grid-template-columns:1fr; }
+      .foot-cols { grid-template-columns:1fr 1fr; }
       .clinic-card { grid-template-columns:1fr; }
       .section { padding:54px 0; }
+      /* Stats stay 3-across (landscape) but tighten to fit narrow screens. */
+      .stats { gap:10px; }
+      .stat { padding:18px 14px; border-radius:14px; }
+      .stat .n { font-size:clamp(24px,6.5vw,34px); }
+      .stat .l { font-size:clamp(11.5px,3vw,14px); margin-top:8px; line-height:1.3; }
+      .stat .src { font-size:clamp(9.5px,2.4vw,11.5px); margin-top:7px; line-height:1.3; }
     }
+    @media (max-width:480px) {
+      .stats { gap:7px; }
+      .stat { padding:13px 9px; }
+    }
+    @media (max-width:520px) { .foot-cols { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -245,6 +270,30 @@
     </div>
   </section>
 
+  <!-- SOCIAL PROOF -->
+  <section class="section" style="padding-top:0;">
+    <div class="wrap">
+      <div class="head"><p class="eyebrow">What people say</p><h2>Insightful, and actually useful</h2></div>
+      <div class="quotes">
+        <div class="quote">
+          <div class="mark">“</div>
+          <p>I'm glad I took this quiz. I track everything else, but I'd never looked at my brain. It flagged two things I can actually do something about.</p>
+          <p class="by">[Name]<span>[age, role]</span></p>
+        </div>
+        <div class="quote">
+          <div class="mark">“</div>
+          <p>I didn't know how much sleep and blood pressure were tied to brain health. It made me book a proper check for my dad too.</p>
+          <p class="by">[Name]<span>[role]</span></p>
+        </div>
+        <div class="quote">
+          <div class="mark">“</div>
+          <p>This was insightful. The brain fog finally felt like something real I could measure, not just me being tired.</p>
+          <p class="by">[Name]<span>[role]</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- VIRTUAL CLINIC -->
   <section class="section" id="clinic" style="padding-top:0;">
     <div class="wrap">
@@ -276,13 +325,39 @@
         <div class="foot-links">
           <a href="/quiz">Take the quiz</a>
           <a href="#clinic">Teleconsult</a>
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
         </div>
       </div>
+
+      <div class="foot-logos">
+        <img src="/gms-ntu-logo.png" alt="NTU Singapore" />
+        <img src="/LKCMedicine-Dementia-Research-Centre-2.png" alt="LKCMedicine Dementia Research Centre" />
+        <img src="/press-st.png" alt="The Straits Times" />
+        <img src="/press-cna.png" alt="CNA" />
+        <img src="/press-alzheimers.svg" alt="Alzheimer's Association" />
+        <img src="/pubmed-logo-blue.svg" alt="PubMed" />
+      </div>
+
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h4>Trust</h4>
+          <p>By Gray Matter Solutions, a spinoff from NTU Singapore.</p>
+        </div>
+        <div class="foot-col">
+          <h4>Research</h4>
+          <p>Livingston G, et al. (2024). Lancet Commission on dementia prevention, intervention and care. Kivipelto M, et al. CAIDE dementia risk score. Singh-Manoux A, et al. (2012). Whitehall II, BMJ.</p>
+        </div>
+        <div class="foot-col">
+          <h4>Privacy</h4>
+          <p>We only use your details to send your results and recommendations. You can unsubscribe any time. Your data is handled under Singapore's PDPA.</p>
+        </div>
+        <div class="foot-col">
+          <h4>Disclaimer</h4>
+          <p>This quiz estimates brain health risk based on lifestyle and health factors. It is not a diagnosis and not a substitute for medical advice. Always consult a qualified clinician about your health.</p>
+        </div>
+      </div>
+
       <div class="disclaimer">
         <p>© 2026 Gray Matter Solutions. A spin-off from Nanyang Technological University, Singapore.</p>
-        <p style="margin-top:8px;">This quiz is an educational, wellness tool and is not a medical diagnosis or a substitute for professional medical advice. If you have concerns about your brain health, please consult a qualified clinician.</p>
       </div>
     </div>
   </footer>
