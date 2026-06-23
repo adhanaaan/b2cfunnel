@@ -90,6 +90,28 @@
     .problem p { font-size:18px; color:#d9cbbd; margin-bottom:16px; }
     .problem .pop { color:var(--brand-2); font-weight:700; font-size:20px; }
 
+    /* THINK — interactive risk-factor thought bubbles */
+    .think { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:14px 16px; max-width:680px; margin:40px auto 34px; }
+    .bubble { position:relative; background:#fdfaf5; color:#2d2d2d; font-weight:700; line-height:1.2; padding:15px 24px; border-radius:40px; box-shadow:0 12px 30px rgba(0,0,0,.26); opacity:0; transform:scale(.4) translateY(14px); }
+    .bubble::before { content:""; position:absolute; left:22px; bottom:-9px; width:12px; height:12px; border-radius:50%; background:#fdfaf5; box-shadow:-11px 7px 0 -2px #fdfaf5; }
+    .bubble.b1 { font-size:18px; margin-top:-22px; }
+    .bubble.b2 { font-size:15px; }
+    .bubble.b3 { font-size:17px; margin-top:18px; }
+    .bubble.b4 { font-size:16px; margin-top:-14px; }
+    .bubble.b5 { font-size:15.5px; }
+    .think.in .bubble { animation: pop .6s cubic-bezier(.2,.85,.3,1.4) forwards, floaty 6s ease-in-out infinite; }
+    .think.in .b1 { animation-delay: .05s, .65s; }
+    .think.in .b2 { animation-delay: .20s, 1.0s; animation-duration:.6s, 6.6s; }
+    .think.in .b3 { animation-delay: .35s, 1.2s; animation-duration:.6s, 5.4s; }
+    .think.in .b4 { animation-delay: .50s, 1.4s; animation-duration:.6s, 6.2s; }
+    .think.in .b5 { animation-delay: .65s, 1.6s; animation-duration:.6s, 5.8s; }
+    @keyframes pop { 0% { opacity:0; transform:scale(.4) translateY(14px); } 70% { opacity:1; } 100% { opacity:1; transform:scale(1) translateY(0); } }
+    @keyframes floaty { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-9px); } }
+    @media (prefers-reduced-motion:reduce) {
+      .bubble { opacity:1; transform:none; }
+      .think.in .bubble { animation:none; }
+    }
+
     /* STATS (3 cited blocks) */
     .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
     .stat { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:28px 26px; box-shadow:var(--shadow); }
@@ -215,7 +237,7 @@
 
   <!-- HERO -->
   <section class="hero">
-    <video class="hero-media" autoplay muted loop playsinline poster="/landing/hero.jpg">
+    <video class="hero-media" autoplay muted loop playsinline preload="auto" poster="/landing/hero.jpg">
       <source src="/landing/website.mp4" type="video/mp4" />
     </video>
     <div class="hero-overlay"></div>
@@ -260,10 +282,17 @@
   </section>
 
   <!-- PROBLEM STATEMENT -->
-  <section class="section problem">
+  <section class="section problem" id="problem">
     <div class="wrap inner">
       <h2>Cognitive decline starts from 40.</h2>
       <p>By the time you start experiencing signs of forgetfulness or early dementia, the window to act has usually narrowed.</p>
+      <div class="think" aria-label="Risk factors that affect brain health">
+        <span class="bubble b1">High blood pressure</span>
+        <span class="bubble b2">Poor diet</span>
+        <span class="bubble b3">Lack of exercise</span>
+        <span class="bubble b4">Diabetes</span>
+        <span class="bubble b5">Family history of dementia</span>
+      </div>
       <p>Many changes detected early can be addressed through lifestyle adjustments, targeted cognitive training, and nutritional support.</p>
       <p class="pop">Knowing gives you options.</p>
     </div>
@@ -421,6 +450,17 @@
   </footer>
 
   <script>
+    // Hero video: force muted autoplay (some browsers ignore the HTML attribute).
+    (function () {
+      const v = document.querySelector('.hero-media');
+      if (!v) return;
+      v.muted = true; v.defaultMuted = true;
+      const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+      tryPlay();
+      v.addEventListener('canplay', tryPlay, { once: true });
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
+    })();
+
     const nav = document.querySelector('header.nav');
     const navScroll = () => nav.classList.toggle('scrolled', window.scrollY > 60);
     navScroll();
@@ -459,6 +499,17 @@
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll, { passive: true });
       update();
+    })();
+
+    // Problem section: pop the risk-factor thought bubbles in when scrolled into view.
+    (function () {
+      const think = document.querySelector('#problem .think');
+      if (!think) return;
+      if (!('IntersectionObserver' in window)) { think.classList.add('in'); return; }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { think.classList.add('in'); io.disconnect(); } });
+      }, { threshold: 0.35 });
+      io.observe(think);
     })();
   </script>
 </body>
