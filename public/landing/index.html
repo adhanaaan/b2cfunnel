@@ -36,8 +36,15 @@
     .btn-ghost { background:#fff; color:var(--ink); border-color:var(--line); }
     .btn-ghost:hover { background:var(--cream); }
 
+    /* ANNOUNCEMENT BAR + NAV (fixed stack at top) */
+    .topbar { position:fixed; top:0; left:0; right:0; z-index:60; }
+    .promo { background:linear-gradient(90deg,var(--brand),var(--brand-2)); color:#fff; }
+    .promo .wrap { display:flex; align-items:center; justify-content:center; gap:12px; min-height:40px; padding:7px 24px; text-align:center; font-size:14px; font-weight:600; flex-wrap:wrap; }
+    .promo .tag { flex-shrink:0; background:#fff; color:var(--brand); font-weight:800; font-size:12px; padding:3px 11px; border-radius:999px; }
+    .promo a { color:#fff; font-weight:800; text-decoration:underline; text-underline-offset:3px; white-space:nowrap; }
+
     /* NAV (transparent over hero, solid on scroll) */
-    header.nav { position:fixed; top:0; left:0; right:0; z-index:50; transition:background .25s, border-color .25s; border-bottom:1px solid transparent; }
+    header.nav { position:relative; z-index:50; transition:background .25s, border-color .25s; border-bottom:1px solid transparent; }
     header.nav.scrolled { background:rgba(255,248,246,.92); backdrop-filter:blur(12px); border-bottom-color:var(--line); }
     .nav-inner { display:flex; align-items:center; justify-content:space-between; height:66px; }
     .logo { display:flex; align-items:center; gap:9px; font-weight:800; font-size:18px; color:#fff; transition:color .25s; }
@@ -165,6 +172,8 @@
     }
     @media (max-width:520px) { .foot-cols { grid-template-columns:1fr; } }
     @media (max-width:600px) {
+      .promo .wrap { gap:9px; padding:6px 16px; font-size:12.5px; min-height:36px; }
+      .promo .ptxt { display:none; }
       .nav-inner { height:58px; gap:12px; }
       .logo { font-size:15px; white-space:nowrap; gap:7px; }
       .logo img { height:22px; }
@@ -175,13 +184,22 @@
 </head>
 <body>
 
-  <!-- NAV -->
-  <header class="nav">
-    <div class="wrap nav-inner">
-      <a href="/" class="logo"><img src="/gms-logo.png" alt="" /> Gray Matter Solutions</a>
-      <a href="/quiz" class="btn btn-primary">Start the quiz</a>
+  <!-- ANNOUNCEMENT BAR + NAV -->
+  <div class="topbar">
+    <div class="promo">
+      <div class="wrap">
+        <span class="tag">Free</span>
+        <span class="ptxt">Not sure where your brain stands? Get a personalized Brain Health Score.</span>
+        <a href="/quiz">Take the quiz →</a>
+      </div>
     </div>
-  </header>
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <a href="/" class="logo"><img src="/gms-logo.png" alt="" /> Gray Matter Solutions</a>
+        <a href="/quiz" class="btn btn-primary">Start the quiz</a>
+      </div>
+    </header>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
