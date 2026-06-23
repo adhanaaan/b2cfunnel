@@ -454,11 +454,15 @@
     (function () {
       const v = document.querySelector('.hero-media');
       if (!v) return;
-      v.muted = true; v.defaultMuted = true;
+      v.muted = true; v.defaultMuted = true; v.playsInline = true;
       const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
       tryPlay();
       v.addEventListener('canplay', tryPlay, { once: true });
+      v.addEventListener('loadeddata', tryPlay, { once: true });
       document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
+      // Fallback: kick playback on the first user interaction (covers strict autoplay blocks).
+      const kick = () => { tryPlay(); ['touchstart','click','scroll','keydown'].forEach((e) => window.removeEventListener(e, kick)); };
+      ['touchstart','click','scroll','keydown'].forEach((e) => window.addEventListener(e, kick, { once: true, passive: true }));
     })();
 
     const nav = document.querySelector('header.nav');
