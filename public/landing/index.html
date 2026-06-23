@@ -108,20 +108,20 @@
     .head h2 { font-size:clamp(28px,4vw,40px); }
     .head p { font-size:17px; color:var(--ink-soft); margin-top:14px; }
 
-    /* HOW IT WORKS — scroll-interactive connected stepper (Function Health style) */
-    .how-track { display:grid; grid-template-columns:repeat(3,1fr); position:relative; max-width:760px; margin:0 auto 30px; }
-    .how-track::before { content:""; position:absolute; top:50%; left:16.66%; right:16.66%; height:3px; transform:translateY(-50%); background:var(--line); border-radius:3px; }
-    .how-fill { position:absolute; top:50%; left:16.66%; height:3px; width:0; transform:translateY(-50%); background:linear-gradient(90deg,var(--brand),var(--brand-2)); border-radius:3px; z-index:0; transition:width .55s cubic-bezier(.4,0,.2,1); }
-    .dot { justify-self:center; position:relative; z-index:1; width:52px; height:52px; border-radius:50%; background:#ece0d6; color:#b29a87; font-weight:800; font-size:19px; display:grid; place-items:center; border:5px solid var(--bg); transition:background .4s, color .4s, transform .4s, box-shadow .4s; }
+    /* HOW IT WORKS — vertical scroll-interactive timeline */
+    .how-vert { position:relative; max-width:620px; margin:0 auto; }
+    .how-vert::before { content:""; position:absolute; left:26px; top:26px; bottom:26px; width:3px; transform:translateX(-50%); background:var(--line); border-radius:3px; }
+    .how-vfill { position:absolute; left:26px; top:26px; width:3px; height:0; transform:translateX(-50%); background:linear-gradient(180deg,var(--brand),var(--brand-2)); border-radius:3px; z-index:0; transition:height .55s cubic-bezier(.4,0,.2,1); }
+    .vstep { position:relative; display:grid; grid-template-columns:52px 1fr; gap:22px; align-items:start; padding-bottom:30px; }
+    .vstep:last-child { padding-bottom:0; }
+    .dot { position:relative; z-index:1; width:52px; height:52px; border-radius:50%; background:#ece0d6; color:#b29a87; font-weight:800; font-size:19px; display:grid; place-items:center; border:5px solid var(--bg); transition:background .4s, color .4s, transform .4s, box-shadow .4s; }
     .dot.done { background:var(--brand); color:#fff; box-shadow:0 6px 16px rgba(247,117,40,.3); }
-    .dot.active { transform:scale(1.16); box-shadow:0 8px 22px rgba(247,117,40,.45), 0 0 0 6px rgba(247,117,40,.14); }
-    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; align-items:start; }
-    .step { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:26px; text-align:center; opacity:.72; transform:scale(.97); transform-origin:center top; transition:opacity .4s, transform .4s, box-shadow .4s, border-color .4s; }
-    .step.active { opacity:1; transform:scale(1.03); border-color:var(--brand); box-shadow:0 18px 42px rgba(247,117,40,.16); }
-    .step .num { display:none; width:40px; height:40px; border-radius:50%; background:var(--brand); color:#fff; font-weight:800; place-items:center; margin:0 auto 16px; }
-    .step h3 { font-size:18px; margin-bottom:8px; }
-    .step p { font-size:14.5px; color:var(--ink-soft); }
-    @media (prefers-reduced-motion:reduce) { .step { opacity:1; transform:none; } }
+    .dot.active { transform:scale(1.14); box-shadow:0 8px 22px rgba(247,117,40,.45), 0 0 0 6px rgba(247,117,40,.14); }
+    .vstep-body { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; opacity:.7; transform:scale(.985); transform-origin:left center; transition:opacity .4s, transform .4s, box-shadow .4s, border-color .4s; }
+    .vstep.active .vstep-body { opacity:1; transform:scale(1.02); border-color:var(--brand); box-shadow:0 16px 38px rgba(247,117,40,.16); }
+    .vstep-body h3 { font-size:18px; margin-bottom:8px; }
+    .vstep-body p { font-size:14.5px; color:var(--ink-soft); }
+    @media (prefers-reduced-motion:reduce) { .vstep-body { opacity:1; transform:none; } }
 
     /* WHAT YOU GET */
     .get-card { max-width:640px; margin:0 auto; background:var(--card); border:1px solid var(--line); border-radius:24px; padding:40px; box-shadow:var(--shadow); text-align:center; }
@@ -167,9 +167,7 @@
     .disclaimer { border-top:1px solid rgba(255,255,255,.12); margin-top:26px; padding-top:20px; font-size:11.5px; color:#a99a86; line-height:1.7; }
 
     @media (max-width:880px) {
-      .steps, .quotes { grid-template-columns:1fr; }
-      .how-track { display:none; }
-      .step .num { display:grid; }
+      .quotes { grid-template-columns:1fr; }
       .foot-cols { grid-template-columns:1fr 1fr; }
       .clinic-card { grid-template-columns:1fr; }
       .section { padding:54px 0; }
@@ -295,14 +293,20 @@
   <section class="section" id="how">
     <div class="wrap">
       <div class="head"><h2>How it works</h2></div>
-      <div class="how-track" aria-hidden="true">
-        <span class="how-fill"></span>
-        <span class="dot">1</span><span class="dot">2</span><span class="dot">3</span>
-      </div>
-      <div class="steps">
-        <div class="step"><div class="num">1</div><h3>Take a 15-minute quiz</h3><p>Answer a set of questions about the 14 things that shape brain health, from blood pressure and sleep to family history.</p></div>
-        <div class="step"><div class="num">2</div><h3>Get your Brain Health Score</h3><p>See where you stand across the risk factors you can change, and which ones to focus on first.</p></div>
-        <div class="step"><div class="num">3</div><h3>Go deeper with the full assessment</h3><p>If needed, upgrade to a full ReCOGnAIze brain health assessment, complete with a teleconsult with a certified doctor.</p></div>
+      <div class="how-vert">
+        <span class="how-vfill"></span>
+        <div class="vstep">
+          <span class="dot">1</span>
+          <div class="vstep-body"><h3>Take a 15-minute quiz</h3><p>Answer a set of questions about the 14 things that shape brain health, from blood pressure and sleep to family history.</p></div>
+        </div>
+        <div class="vstep">
+          <span class="dot">2</span>
+          <div class="vstep-body"><h3>Get your Brain Health Score</h3><p>See where you stand across the risk factors you can change, and which ones to focus on first.</p></div>
+        </div>
+        <div class="vstep">
+          <span class="dot">3</span>
+          <div class="vstep-body"><h3>Go deeper with the full assessment</h3><p>If needed, upgrade to a full ReCOGnAIze brain health assessment, complete with a teleconsult with a certified doctor.</p></div>
+        </div>
       </div>
       <div class="center" style="margin-top:34px;"><a href="/quiz" class="btn btn-primary">Take the free quiz →</a></div>
     </div>
@@ -427,8 +431,8 @@
       const sec = document.getElementById('how');
       if (!sec) return;
       const dots = [...sec.querySelectorAll('.dot')];
-      const steps = [...sec.querySelectorAll('.step')];
-      const fill = sec.querySelector('.how-fill');
+      const steps = [...sec.querySelectorAll('.vstep')];
+      const fill = sec.querySelector('.how-vfill');
       const n = dots.length;
       let current = -1;
       const apply = (idx) => {
@@ -436,7 +440,11 @@
         current = idx;
         dots.forEach((d, i) => { d.classList.toggle('done', i <= idx); d.classList.toggle('active', i === idx); });
         steps.forEach((s, i) => s.classList.toggle('active', i === idx));
-        if (fill) fill.style.width = (idx / (n - 1) * 66.66) + '%';
+        if (fill && dots[idx]) {
+          const c0 = dots[0].offsetTop + dots[0].offsetHeight / 2;
+          const ci = dots[idx].offsetTop + dots[idx].offsetHeight / 2;
+          fill.style.height = (ci - c0) + 'px';
+        }
       };
       let ticking = false;
       const update = () => {
