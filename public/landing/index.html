@@ -489,11 +489,14 @@
       let ticking = false;
       const update = () => {
         ticking = false;
-        const r = sec.getBoundingClientRect();
-        const vh = window.innerHeight;
-        // Progress of the section across the viewport (0 entering → 1 leaving).
-        const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
-        apply(Math.min(n - 1, Math.floor(p * n)));
+        // Activate the last step whose dot has scrolled above a line ~60% down the viewport.
+        const line = window.innerHeight * 0.60;
+        let idx = 0;
+        dots.forEach((d, i) => {
+          const r = d.getBoundingClientRect();
+          if (r.top + r.height / 2 <= line) idx = i;
+        });
+        apply(idx);
       };
       const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
       window.addEventListener('scroll', onScroll, { passive: true });
