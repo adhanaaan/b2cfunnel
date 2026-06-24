@@ -98,7 +98,8 @@
     .cue { display:flex; align-items:center; gap:12px; opacity:0; transform:translateY(6px); transition:opacity .5s ease, transform .5s ease; }
     .side.left .cue { justify-content:flex-end; }
     .side.right .cue { justify-content:flex-start; }
-    .cue .lbl { font-weight:700; font-size:15px; color:#fff; white-space:nowrap; }
+    .cue .lbl { display:inline-flex; align-items:center; gap:8px; font-weight:700; font-size:15px; color:#fff; white-space:nowrap; }
+    .cue .lbl svg { width:18px; height:18px; flex-shrink:0; color:var(--brand-2); }
     .cue .line { height:2px; width:0; background:linear-gradient(90deg,var(--brand),var(--brand-2)); border-radius:2px; transition:width .55s ease; }
     .side.left .cue .line { background:linear-gradient(90deg,var(--brand-2),var(--brand)); }
     .cue .node { flex-shrink:0; width:10px; height:10px; border-radius:50%; background:var(--brand); box-shadow:0 0 0 4px rgba(247,117,40,.18); transform:scale(0); transition:transform .4s ease; }
@@ -106,8 +107,8 @@
     .cue.show { opacity:1; transform:none; }
     .cue.show .line { width:52px; }
     .cue.show .node { transform:scale(1); }
-    .face { width:300px; max-width:44vw; display:grid; place-items:center; }
-    .face img { width:100%; height:auto; display:block; transform:translateZ(0); backface-visibility:hidden; -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 58%,transparent 92%); mask-image:linear-gradient(180deg,#000 0%,#000 58%,transparent 92%); }
+    .face { width:240px; max-width:52vw; display:grid; place-items:center; }
+    .face svg { width:100%; height:auto; display:block; }
     @media (prefers-reduced-motion:reduce) {
       .cue { opacity:1; transform:none; }
       .cue .line { width:52px; } .cue .node { transform:scale(1); }
@@ -312,16 +313,27 @@
       <div class="diagram" aria-label="Risk factors that affect brain health">
         <div class="dgrid">
           <div class="side left">
-            <div class="cue"><span class="lbl">High blood pressure</span><span class="line"></span><span class="node"></span></div>
-            <div class="cue"><span class="lbl">Poor diet</span><span class="line"></span><span class="node"></span></div>
-            <div class="cue"><span class="lbl">Diabetes</span><span class="line"></span><span class="node"></span></div>
+            <div class="cue"><span class="lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21S4 14.5 4 9a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 5.5-8 12-8 12z"/></svg>Blood pressure</span><span class="line"></span><span class="node"></span></div>
+            <div class="cue"><span class="lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 8c-2.2 0-4 2.1-4 5.2C5 17 7.2 21 9.3 21c1 0 1.4-.5 2.7-.5s1.7.5 2.7.5c2.1 0 4.3-4 4.3-7.8C19 10.1 17.2 8 15 8c-1.5 0-2.3.8-3 .8S10.5 8 9 8z"/><path d="M12 8c0-2 1.2-3.2 3.2-3.2"/></svg>Diet</span><span class="line"></span><span class="node"></span></div>
+            <div class="cue"><span class="lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>Diabetes</span><span class="line"></span><span class="node"></span></div>
           </div>
           <div class="face">
-            <img src="/landing/face.png" alt="A man worried about his brain health" />
+            <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="120" cy="120" r="104" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.16)" stroke-width="2"/>
+              <path d="M150 44 C104 40 70 74 70 118 C70 134 60 142 56 154 C53 162 60 166 70 165 C72 184 80 196 104 198 L104 206 L168 206 L168 150 C190 132 198 96 182 70 C174 54 166 46 150 44 Z" fill="rgba(251,231,222,0.08)" stroke="#ffab57" stroke-width="4" stroke-linejoin="round"/>
+              <g stroke="#f77528" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+                <path d="M96 132 C84 130 80 116 90 110 C82 100 92 86 104 90 C104 76 122 70 132 80 C142 70 160 76 158 92 C170 92 174 108 164 116 C172 126 164 140 152 138"/>
+                <path d="M104 90 C112 98 110 110 102 116"/>
+                <path d="M132 80 C130 96 132 116 128 132"/>
+                <path d="M158 92 C150 100 150 112 158 118"/>
+                <path d="M120 100 C126 108 124 122 118 130"/>
+                <path d="M144 96 C140 110 142 124 146 134"/>
+              </g>
+            </svg>
           </div>
           <div class="side right">
-            <div class="cue"><span class="node"></span><span class="line"></span><span class="lbl">Lack of exercise</span></div>
-            <div class="cue"><span class="node"></span><span class="line"></span><span class="lbl">Family history of dementia</span></div>
+            <div class="cue"><span class="node"></span><span class="line"></span><span class="lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></svg>Exercise</span></div>
+            <div class="cue"><span class="node"></span><span class="line"></span><span class="lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3.5 20c0-3 2.5-5.2 5.5-5.2"/><circle cx="17" cy="9" r="2.3"/><path d="M14.5 20c0-3.4 2.6-5.6 6.5-5.2"/></svg>Family history</span></div>
           </div>
         </div>
       </div>
