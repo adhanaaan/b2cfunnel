@@ -102,20 +102,18 @@
     .side.left .cue .line { background:linear-gradient(90deg,var(--brand-2),var(--brand)); }
     .cue .node { flex-shrink:0; width:10px; height:10px; border-radius:50%; background:var(--brand); box-shadow:0 0 0 4px rgba(247,117,40,.18); transform:scale(0); transition:transform .4s ease; }
     .diagram.in .cue { opacity:1; transform:none; }
-    .diagram.in .cue .line { width:52px; }
-    .diagram.in .cue .node { transform:scale(1); }
-    .diagram.in .cue:nth-child(1), .diagram.in .cue:nth-child(1) .line, .diagram.in .cue:nth-child(1) .node { transition-delay:.10s; }
-    .diagram.in .cue:nth-child(2), .diagram.in .cue:nth-child(2) .line, .diagram.in .cue:nth-child(2) .node { transition-delay:.28s; }
-    .diagram.in .cue:nth-child(3), .diagram.in .cue:nth-child(3) .line, .diagram.in .cue:nth-child(3) .node { transition-delay:.46s; }
-    .face { width:172px; height:172px; border-radius:50%; border:3px solid rgba(255,255,255,.55); background:#fff; box-shadow:0 14px 40px rgba(0,0,0,.32); display:grid; place-items:center; overflow:hidden; }
-    .face img { width:100%; height:100%; object-fit:cover; object-position:50% 18%; transform:scale(1.3); transform-origin:50% 22%; border-radius:50%; }
+    .cue.show { opacity:1; transform:none; }
+    .cue.show .line { width:52px; }
+    .cue.show .node { transform:scale(1); }
+    .face { width:300px; max-width:44vw; display:grid; place-items:center; }
+    .face img { width:100%; height:auto; display:block; filter:drop-shadow(0 16px 30px rgba(0,0,0,.42)); }
     @media (prefers-reduced-motion:reduce) {
       .cue { opacity:1; transform:none; }
       .cue .line { width:52px; } .cue .node { transform:scale(1); }
     }
     @media (max-width:680px) {
       .dgrid { grid-template-columns:1fr; justify-items:center; gap:20px; }
-      .face { order:-1; width:132px; height:132px; }
+      .face { order:-1; width:230px; max-width:70vw; }
       .side { gap:16px; width:100%; align-items:center; }
       .side.left .cue, .side.right .cue { justify-content:center; }
       .cue .lbl { white-space:normal; text-align:center; }
@@ -364,7 +362,6 @@
     <div class="wrap">
       <div class="get-card">
         <h2>15 minutes today is a smart place to start.</h2>
-        <p class="sub">What's included in this quiz:</p>
         <ul class="get-list">
           <li>Your Brain Health Score based on your answers</li>
           <li>The factors driving it, so you can see what's helping and what isn't</li>
@@ -526,15 +523,29 @@
       update();
     })();
 
-    // Problem section: draw the risk-factor leader lines in when scrolled into view.
+    // Problem section: pop the risk-factor leader lines in one-by-one as you scroll.
     (function () {
       const diagram = document.querySelector('#problem .diagram');
       if (!diagram) return;
-      if (!('IntersectionObserver' in window)) { diagram.classList.add('in'); return; }
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => { if (e.isIntersecting) { diagram.classList.add('in'); io.disconnect(); } });
-      }, { threshold: 0.35 });
-      io.observe(diagram);
+      const cues = [...diagram.querySelectorAll('.cue')];
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        cues.forEach((c) => c.classList.add('show')); return;
+      }
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        const r = diagram.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const p = (vh - r.top) / (vh + r.height); // 0 entering → 1 leaving
+        const start = 0.18, end = 0.62;
+        const frac = Math.min(1, Math.max(0, (p - start) / (end - start)));
+        const reveal = Math.round(frac * cues.length);
+        cues.forEach((c, i) => c.classList.toggle('show', i < reveal));
+      };
+      const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      update();
     })();
   </script>
 </body>
