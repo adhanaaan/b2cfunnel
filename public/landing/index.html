@@ -118,13 +118,15 @@
       .cue .line { width:66px; } .cue .node { transform:scale(1); }
     }
     @media (max-width:680px) {
-      .dgrid { grid-template-columns:1fr; justify-items:center; gap:16px; }
-      .face { order:-1; width:230px; max-width:64vw; }
-      .side { gap:13px; width:100%; align-items:center; }
-      .side.left .cue, .side.right .cue { justify-content:center; gap:10px; }
-      .cue .lbl { white-space:normal; text-align:center; }
-      .cue .lbl b { font-size:14px; }
-      .cue.show .line { width:40px; }
+      /* Stack: person on top, risk factors as clean centered chips (no leader lines). */
+      .dgrid { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:9px; }
+      .face { order:-1; width:100%; margin-bottom:4px; }
+      .face .face-photo, .face svg { width:250px; max-width:68vw; }
+      .side { display:contents; }
+      .cue { background:rgba(255,255,255,.62); border:1px solid rgba(45,30,20,.1); border-radius:999px; padding:7px 15px; gap:0; }
+      .cue .line, .cue .node { display:none; }
+      .cue .lbl { text-align:center; }
+      .cue .lbl b { font-size:13px; white-space:nowrap; }
     }
 
     /* STATS (3 cited blocks) */
