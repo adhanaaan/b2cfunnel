@@ -33,3 +33,6 @@ yarn-error.log*
 
 # testing
 /coverage
+
+# local dev notes (personal, not for the repo)
+/LOCAL_DEV.md

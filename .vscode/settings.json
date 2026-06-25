@@ -1,0 +1,6 @@
+{
+  // Point VS Code's TypeScript at the project's local install.
+  "typescript.tsdk": "node_modules/typescript/lib",
+  // Simple Browser opens this by default; the dev server runs on 3000.
+  "simpleBrowser.focusLockIndicator.enabled": true
+}

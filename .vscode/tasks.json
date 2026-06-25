@@ -1,0 +1,34 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dev: Next.js (live preview)",
+      "type": "shell",
+      // Source nvm so the project-pinned Node (.nvmrc) is on PATH, then run the
+      // Next dev server. Hot-reload is built in: saving a file reloads the browser.
+      "command": "export NVM_DIR=\"$HOME/.nvm\" && [ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\" && nvm use >/dev/null && npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "next",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*(Starting|Compiling|compiling).*",
+          "endsPattern": ".*(Ready|Local:|started server|Compiled).*"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    }
+  ]
+}
