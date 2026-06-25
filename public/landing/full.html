@@ -109,20 +109,20 @@
       }
     }
 
-    /* ---------- HERO ---------- */
-    .hero { background: radial-gradient(1100px 500px at 75% -10%, var(--bg-soft) 0%, rgba(247,247,244,0) 62%); }
-    .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; padding: 80px 0 70px; }
-    .hero h1 { font-size: clamp(40px, 6vw, 68px); }
-    .hero p.lead { font-size: 20px; color: var(--ink-soft); margin: 22px 0 30px; max-width: 540px; }
-    .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
-    .hero-trust { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; font-size: 14px; color: var(--ink-soft); }
+    /* ---------- HERO (full-bleed video, matches flow 1) ---------- */
+    .hero { position: relative; min-height: 94vh; display: grid; place-items: center; text-align: center; color: #fff; background: var(--bg-deep); overflow: hidden; }
+    .hero-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .hero-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(15,10,5,.55), rgba(15,10,5,.74)); }
+    .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 96px; z-index: 2; background: linear-gradient(180deg, transparent, var(--bg)); pointer-events: none; }
+    .hero .wrap { position: relative; z-index: 3; max-width: 880px; padding-top: 96px; padding-bottom: 64px; }
+    .hero .pill { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 13px; font-weight: 600; color: #fff; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.32); padding: 7px 16px; border-radius: 999px; margin-bottom: 22px; }
+    .hero h1 { font-size: clamp(38px, 6.5vw, 68px); margin: 0 0 20px; color: #fff; }
+    .hero p.lead { font-size: 19px; color: rgba(255,255,255,.92); max-width: 640px; margin: 0 auto 18px; }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 26px 0 22px; }
+    .hero-trust { display: flex; flex-direction: column; align-items: center; gap: 7px; font-size: 13.5px; color: rgba(255,255,255,.82); }
+    .hero .btn-ghost { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.45); }
+    .hero .btn-ghost:hover { background: rgba(255,255,255,.22); }
     .stars { color: var(--gold); letter-spacing: 2px; }
-    .avatars { display: flex; }
-    .avatars span {
-      width: 34px; height: 34px; border-radius: 50%; border: 2px solid #fff; margin-left: -10px;
-      background: linear-gradient(135deg,var(--brand-2),var(--accent));
-    }
-    .avatars span:first-child { margin-left: 0; }
 
     /* hero visual: a "report card" mock */
     .report {
@@ -348,42 +348,23 @@
     </div>
   </header>
 
-  <!-- ===================== HERO ===================== -->
+  <!-- ===================== HERO (full-bleed video, matches flow 1) ===================== -->
   <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <p class="eyebrow">ReCOGnAIze Brain Health Assessment</p>
-        <h1>Is your brain operating at its peak performance?</h1>
-        <p class="lead">
-          Take the ReCOGnAIze brain health assessment to see where you stand across four
-          cognitive domains.
-        </p>
-        <div class="hero-cta">
-          <a href="/quiz" class="btn btn-primary">Start your assessment →</a>
-          <a href="#how" class="btn btn-ghost">See how it works</a>
-        </div>
-        <div class="hero-trust" style="flex-direction:column; align-items:flex-start; gap:7px;">
-          <div style="font-weight:700; color:var(--ink);">✦ Led by specialists in brain health</div>
-          <div>Published in Alzheimer's &amp; Dementia · HSA-listed medical device · NTU LKC Singapore spin-off</div>
-        </div>
+    <video class="hero-media" autoplay muted loop playsinline preload="auto" poster="/landing/hero.jpg">
+      <source src="/landing/website.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="wrap">
+      <span class="pill">✓ Clinically validated at NTU LKCMedicine</span>
+      <h1>Is your brain operating at its peak performance?</h1>
+      <p class="lead">Take the ReCOGnAIze brain health assessment to see where you stand across four cognitive domains.</p>
+      <div class="hero-cta">
+        <a href="/quiz" class="btn btn-primary">Start your assessment →</a>
+        <a href="#how" class="btn btn-ghost">See how it works</a>
       </div>
-
-      <!-- HERO VISUAL: brain health "report" mock -->
-      <div class="report reveal">
-        <div class="score-ring">
-          <svg width="130" height="130" viewBox="0 0 130 130">
-            <circle cx="65" cy="65" r="58" fill="none" stroke="#EAE6DD" stroke-width="12"/>
-            <circle cx="65" cy="65" r="58" fill="none" stroke="#F77528" stroke-width="12"
-                    stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="80"/>
-          </svg>
-          <div class="score-num">78</div>
-        </div>
-        <p class="center muted" style="font-size:13px;margin-bottom:8px;">Strong — up 11 points since last test</p>
-        <div class="biomarker"><span>Omega-3 Index</span><span class="pill good">Optimal</span></div>
-        <div class="biomarker"><span>ApoB</span><span class="pill watch">Monitor</span></div>
-        <div class="biomarker"><span>hs-CRP (inflammation)</span><span class="pill good">Optimal</span></div>
-        <div class="biomarker"><span>Vitamin D</span><span class="pill low">Low</span></div>
-        <div class="biomarker"><span>Homocysteine</span><span class="pill good">Optimal</span></div>
+      <div class="hero-trust">
+        <div style="font-weight:700; color:#fff;">✦ Led by specialists in brain health</div>
+        <div>Published in Alzheimer's &amp; Dementia · HSA-listed medical device · NTU LKC Singapore spin-off</div>
       </div>
     </div>
   </section>
@@ -684,6 +665,20 @@
 
   <!-- ===================== JS ===================== -->
   <script>
+    // Hero video: force muted autoplay (some browsers ignore the HTML attribute).
+    (function () {
+      const v = document.querySelector('.hero-media');
+      if (!v) return;
+      v.muted = true; v.defaultMuted = true; v.playsInline = true;
+      const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+      tryPlay();
+      v.addEventListener('canplay', tryPlay, { once: true });
+      v.addEventListener('loadeddata', tryPlay, { once: true });
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
+      const kick = () => { tryPlay(); ['touchstart','click','scroll','keydown'].forEach((e) => window.removeEventListener(e, kick)); };
+      ['touchstart','click','scroll','keydown'].forEach((e) => window.addEventListener(e, kick, { once: true, passive: true }));
+    })();
+
     // Mobile nav
     document.getElementById('navToggle').addEventListener('click', () => {
       document.getElementById('navLinks').classList.toggle('open');
