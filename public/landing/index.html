@@ -118,15 +118,42 @@
       .cue .line { width:66px; } .cue .node { transform:scale(1); }
     }
     @media (max-width:680px) {
-      /* Stack: person on top, risk factors as clean centered chips (no leader lines). */
-      .dgrid { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:9px; }
-      .face { order:-1; width:100%; margin-bottom:4px; }
-      .face .face-photo, .face svg { width:250px; max-width:68vw; }
+      /* Keep the leader-line look, but a symmetric left+right fan can't fit a
+         phone (the right labels run off-screen). So put ALL factors on the LEFT
+         as label → line → node, with the face on the right. Every label fits. */
+      .diagram { margin:30px auto 26px; }
+      /* Flex row: a single stacked list of all 5 leader lines on the left, face
+         on the right. The two .side groups are flattened into one column with
+         display:contents so every .cue is a direct flex child of .dgrid; the face
+         is pushed to the end (right) and the cues keep source order. */
+      /* Full-width row; the stacked label list fills the space left of the face,
+         which is pinned to the right edge. */
+      .dgrid { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-start; gap:16px 14px; position:relative; padding-right:148px; }
       .side { display:contents; }
-      .cue { background:rgba(255,255,255,.62); border:1px solid rgba(45,30,20,.1); border-radius:999px; padding:7px 15px; gap:0; }
-      .cue .line, .cue .node { display:none; }
-      .cue .lbl { text-align:center; }
+      /* Each cue takes the full row so all 5 stack vertically in one column.
+         Override the desktop .side.right rules (flex-start / left-aligned label)
+         so EVERY cue — left and right groups alike — points the same way. */
+      .side.left .cue, .side.right .cue { flex:0 0 100%; max-width:100%; justify-content:flex-end; gap:8px; }
+      .side.left .cue .lbl, .side.right .cue .lbl { order:0; align-items:flex-end; text-align:right; }
+      .side.left .cue .line, .side.right .cue .line { order:1; }
+      .side.left .cue .node, .side.right .cue .node { order:2; }
       .cue .lbl b { font-size:13px; white-space:nowrap; }
+      .cue .lbl em { font-size:11px; }
+      .cue .line { height:1.5px; }
+      .cue.show .line { width:26px; }
+      .cue .node { width:8px; height:8px; box-shadow:0 0 0 3px rgba(247,117,40,.15); }
+      /* Face pinned to the right of the stacked list, vertically centred. The
+         dgrid reserves space via padding-right so labels never sit under it. */
+      .face { width:130px; max-width:36vw; position:absolute; right:0; top:50%; transform:translateY(-50%); }
+      .face .face-photo, .face svg { width:100%; }
+    }
+    @media (max-width:380px) {
+      /* Smallest phones (iPhone SE etc.): shrink the face + reserved space and
+         the line so the long labels + node still fit within ~280px of content. */
+      .dgrid { padding-right:100px; gap:14px 10px; }
+      .cue .lbl b { font-size:12px; }
+      .cue.show .line { width:16px; }
+      .face { width:92px; max-width:30vw; }
     }
 
     /* STATS (3 cited blocks) */
@@ -439,7 +466,7 @@
   <!-- SOCIAL PROOF -->
   <section class="section" style="padding-top:0;">
     <div class="wrap">
-      <div class="head"><h2>Insightful, and actually useful</h2></div>
+      <div class="head"><h2>Trusted by people like you</h2></div>
     </div>
     <div class="reviews-mq">
       <div class="reviews-track">
@@ -483,8 +510,7 @@
         </div>
         <div class="clinic-price">
           <span class="tag">Launch exclusive</span>
-          <div class="amt"><s>S$199</s>S$99</div>
-          <small>One-off · includes a clinician teleconsult</small>
+          <div class="amt" style="margin-bottom:20px;"><s>S$199</s>S$99</div>
           <a href="https://wa.me/6587424150?text=Hi%20GrayMatterSolutions!%20I'd%20like%20to%20book%20the%20Brain%20Health%20Teleconsult." target="_blank" rel="noopener" class="btn">Book a consult</a>
         </div>
       </div>
