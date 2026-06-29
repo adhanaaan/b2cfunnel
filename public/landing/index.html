@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gray Matter Solutions — Is your brain at its peak?</title>
+  <title>Gray Matter Solutions - Is your brain at its peak?</title>
   <meta name="description" content="Cognitive decline can start from 40. Take the free, medically-backed brain health quiz built on 14 modifiable risk factors, validated at NTU LKCMedicine." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -75,7 +75,7 @@
     .hero .btn-ghost { background:rgba(255,255,255,.12); color:#fff; border-color:rgba(255,255,255,.45); }
     .hero .btn-ghost:hover { background:rgba(255,255,255,.22); }
 
-    /* MARQUEE (moving logo bar) — white band that pops; hero fades into it */
+    /* MARQUEE (moving logo bar) - white band that pops; hero fades into it */
     .marquee-sec { position:relative; padding:26px 0 28px; background:#fff; border-bottom:1px solid var(--line); }
     .marquee-sec p { text-align:center; font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:18px; font-weight:700; }
     .marquee { position:relative; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 11%,#000 89%,transparent); mask-image:linear-gradient(90deg,transparent,#000 11%,#000 89%,transparent); }
@@ -85,14 +85,14 @@
     .mq-track img:hover { opacity:1; }
     @keyframes mq { from { transform:translateX(0); } to { transform:translateX(-50%); } }
 
-    /* PROBLEM STATEMENT — light warm breaker band */
+    /* PROBLEM STATEMENT - light warm breaker band */
     .problem { background:linear-gradient(170deg,#fdeee7 0%,#f7d8c6 100%); color:var(--ink); }
     .problem .inner { max-width:760px; margin:0 auto; text-align:center; }
     .problem h2 { font-size:clamp(28px,4.4vw,44px); color:var(--ink); margin-bottom:20px; }
     .problem p { font-size:18px; color:var(--ink-soft); margin-bottom:16px; }
     .problem .pop { color:var(--brand); font-weight:700; font-size:20px; }
 
-    /* RISK DIAGRAM — Function-Health-style leader-line callouts around a face */
+    /* RISK DIAGRAM - Function-Health-style leader-line callouts around a face */
     .diagram { max-width:820px; margin:46px auto 36px; }
     .dgrid { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:34px; }
     .side { display:flex; flex-direction:column; gap:30px; }
@@ -133,7 +133,7 @@
       .side { display:contents; }
       /* Each cue takes the full row so all 5 stack vertically in one column.
          Override the desktop .side.right rules (flex-start / left-aligned label)
-         so EVERY cue — left and right groups alike — points the same way. */
+         so EVERY cue - left and right groups alike - points the same way. */
       .side.left .cue, .side.right .cue { flex:0 0 100%; max-width:100%; justify-content:flex-end; gap:8px; }
       .side.left .cue .lbl, .side.right .cue .lbl { order:0; align-items:flex-end; text-align:right; }
       .side.left .cue .line, .side.right .cue .line { order:1; }
@@ -164,7 +164,7 @@
     .stat .l { font-size:13.5px; color:var(--ink); margin-top:11px; font-weight:600; }
     .stat .src { font-size:12.5px; color:var(--ink-soft); margin-top:10px; }
 
-    /* BUILT ON SCIENCE — full-width orange band (background on the section). */
+    /* BUILT ON SCIENCE - full-width orange band (background on the section). */
     .science-band { background:linear-gradient(135deg,var(--brand),var(--brand-2)); padding:30px 0; }
     .science-strip { display:flex; flex-direction:column; align-items:center; gap:16px; padding:0 26px; }
     .science-strip .lab { font-size:12.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#fff; }
@@ -178,7 +178,7 @@
     .head h2 { font-size:clamp(28px,4vw,40px); }
     .head p { font-size:17px; color:var(--ink-soft); margin-top:14px; }
 
-    /* HOW IT WORKS — vertical scroll-interactive timeline */
+    /* HOW IT WORKS - vertical scroll-interactive timeline */
     .how-vert { position:relative; max-width:620px; margin:0 auto; }
     .how-vert::before { content:""; position:absolute; left:26px; top:26px; bottom:26px; width:3px; transform:translateX(-50%); background:var(--line); border-radius:3px; }
     .how-vfill { position:absolute; left:26px; top:26px; width:3px; height:0; transform:translateX(-50%); background:linear-gradient(180deg,var(--brand),var(--brand-2)); border-radius:3px; z-index:0; transition:height .55s cubic-bezier(.4,0,.2,1); }
@@ -221,7 +221,7 @@
     .clinic-doc .doc-cred { font-size:12px; color:var(--brand); font-weight:700; margin-top:2px; }
     .clinic-doc .doc-role { font-size:12px; color:var(--ink-soft); margin-top:2px; line-height:1.4; }
 
-    /* SOCIAL PROOF (testimonials) — moving marquee */
+    /* SOCIAL PROOF (testimonials) - moving marquee */
     .reviews-mq { overflow:hidden; padding:6px 0; -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent); mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent); }
     .reviews-track { display:flex; gap:20px; width:max-content; animation:reviewscroll 64s linear infinite; }
     .reviews-mq:hover .reviews-track { animation-play-state:paused; }
@@ -239,7 +239,7 @@
     .quote .avatar img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 25%; }
     /* Name + role overlaid on a gradient scrim at the bottom of the photo.
        Target the name block specifically (NOT .avatar, which is also a > div
-       child of .by) — otherwise the avatar gets position:absolute and collapses. */
+       child of .by) - otherwise the avatar gets position:absolute and collapses. */
     .quote .by > div:not(.avatar) { position:absolute; left:0; right:0; bottom:0; padding:32px 22px 14px; text-align:left;
       background:linear-gradient(180deg, transparent, rgba(20,12,6,.82)); }
     .quote .by-name { font-weight:800; font-size:18px; color:#fff; }
@@ -303,7 +303,7 @@
     <div class="promo">
       <div class="wrap">
         <span class="tag">$100 off</span>
-        <span class="ptxt">Launch offer — S$100 off the full brain health assessment.</span>
+        <span class="ptxt">Launch offer - S$100 off the full brain health assessment.</span>
         <a href="/quiz">Start the free quiz →</a>
       </div>
     </div>
@@ -485,17 +485,17 @@
     </div>
     <div class="reviews-mq">
       <div class="reviews-track">
-        <div class="quote"><div class="mark">“</div><p class="text">Honestly, I track everything else — sleep, steps, my weight — but I'd never once looked at my brain. The quiz flagged two things I can actually do something about.</p><div class="by"><div class="avatar"><!-- PLACEHOLDER photo — swap for a real customer portrait --><img src="/landing/person-serene.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>SL</span></div><div><p class="by-name">Serene Lim</p><p class="by-role">54, secondary school teacher</p></div></div></div>
+        <div class="quote"><div class="mark">“</div><p class="text">Honestly, I track everything else - sleep, steps, my weight - but I'd never once looked at my brain. The quiz flagged two things I can actually do something about.</p><div class="by"><div class="avatar"><!-- PLACEHOLDER photo - swap for a real customer portrait --><img src="/landing/person-serene.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>SL</span></div><div><p class="by-name">Serene Lim</p><p class="by-role">54, secondary school teacher</p></div></div></div>
         <div class="quote"><div class="mark">“</div><p class="text">I had no idea sleep and blood pressure were this tied to brain health. I ended up booking a proper check for my dad too.</p><div class="by"><div class="avatar"><!-- PLACEHOLDER photo --><img src="/landing/person-marcus.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>MT</span></div><div><p class="by-name">Marcus Tan</p><p class="by-role">47, sales manager</p></div></div></div>
         <div class="quote"><div class="mark">“</div><p class="text">This actually felt useful. The brain fog finally felt like something I could measure, not just me being tired.</p><div class="by"><div class="avatar"><!-- PLACEHOLDER photo --><img src="/landing/person-priya.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>PR</span></div><div><p class="by-name">Priya Raman</p><p class="by-role">39, marketing lead</p></div></div></div>
-        <div class="quote"><div class="mark">“</div><p class="text">I'd been blaming age for the forgetfulness. Turns out a few habits were the bigger driver — and those I can actually change.</p><div class="by"><div class="avatar"><!-- PLACEHOLDER photo --><img src="/landing/person-daniel.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>DK</span></div><div><p class="by-name">Daniel Koh</p><p class="by-role">61, retired engineer</p></div></div></div>
+        <div class="quote"><div class="mark">“</div><p class="text">I'd been blaming age for the forgetfulness. Turns out a few habits were the bigger driver - and those I can actually change.</p><div class="by"><div class="avatar"><!-- PLACEHOLDER photo --><img src="/landing/person-daniel.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>DK</span></div><div><p class="by-name">Daniel Koh</p><p class="by-role">61, retired engineer</p></div></div></div>
         <div class="quote"><div class="mark">“</div><p class="text">Quick, clear, and it didn't try to scare me. I ended up sharing my score with my GP.</p><div class="by"><div class="avatar"><!-- PLACEHOLDER photo --><img src="/landing/person-aisha.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>AR</span></div><div><p class="by-name">Aisha Rahman</p><p class="by-role">43, nurse</p></div></div></div>
         <div class="quote"><div class="mark">“</div><p class="text">I liked that it explained why each thing mattered. It felt like advice, not a sales pitch.</p><div class="by"><div class="avatar"><!-- PLACEHOLDER photo --><img src="/landing/person-weijie.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>WO</span></div><div><p class="by-name">Wei Jie Ong</p><p class="by-role">35, software engineer</p></div></div></div>
         <!-- duplicate set for a seamless loop -->
-        <div class="quote" aria-hidden="true"><div class="mark">“</div><p class="text">Honestly, I track everything else — sleep, steps, my weight — but I'd never once looked at my brain. The quiz flagged two things I can actually do something about.</p><div class="by"><div class="avatar"><img src="/landing/person-serene.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>SL</span></div><div><p class="by-name">Serene Lim</p><p class="by-role">54, secondary school teacher</p></div></div></div>
+        <div class="quote" aria-hidden="true"><div class="mark">“</div><p class="text">Honestly, I track everything else - sleep, steps, my weight - but I'd never once looked at my brain. The quiz flagged two things I can actually do something about.</p><div class="by"><div class="avatar"><img src="/landing/person-serene.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>SL</span></div><div><p class="by-name">Serene Lim</p><p class="by-role">54, secondary school teacher</p></div></div></div>
         <div class="quote" aria-hidden="true"><div class="mark">“</div><p class="text">I had no idea sleep and blood pressure were this tied to brain health. I ended up booking a proper check for my dad too.</p><div class="by"><div class="avatar"><img src="/landing/person-marcus.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>MT</span></div><div><p class="by-name">Marcus Tan</p><p class="by-role">47, sales manager</p></div></div></div>
         <div class="quote" aria-hidden="true"><div class="mark">“</div><p class="text">This actually felt useful. The brain fog finally felt like something I could measure, not just me being tired.</p><div class="by"><div class="avatar"><img src="/landing/person-priya.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>PR</span></div><div><p class="by-name">Priya Raman</p><p class="by-role">39, marketing lead</p></div></div></div>
-        <div class="quote" aria-hidden="true"><div class="mark">“</div><p class="text">I'd been blaming age for the forgetfulness. Turns out a few habits were the bigger driver — and those I can actually change.</p><div class="by"><div class="avatar"><img src="/landing/person-daniel.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>DK</span></div><div><p class="by-name">Daniel Koh</p><p class="by-role">61, retired engineer</p></div></div></div>
+        <div class="quote" aria-hidden="true"><div class="mark">“</div><p class="text">I'd been blaming age for the forgetfulness. Turns out a few habits were the bigger driver - and those I can actually change.</p><div class="by"><div class="avatar"><img src="/landing/person-daniel.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>DK</span></div><div><p class="by-name">Daniel Koh</p><p class="by-role">61, retired engineer</p></div></div></div>
         <div class="quote" aria-hidden="true"><div class="mark">“</div><p class="text">Quick, clear, and it didn't try to scare me. I ended up sharing my score with my GP.</p><div class="by"><div class="avatar"><img src="/landing/person-aisha.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>AR</span></div><div><p class="by-name">Aisha Rahman</p><p class="by-role">43, nurse</p></div></div></div>
         <div class="quote" aria-hidden="true"><div class="mark">“</div><p class="text">I liked that it explained why each thing mattered. It felt like advice, not a sales pitch.</p><div class="by"><div class="avatar"><img src="/landing/person-weijie.jpg" alt="" loading="lazy" onerror="this.remove()" /><span>WO</span></div><div><p class="by-name">Wei Jie Ong</p><p class="by-role">35, software engineer</p></div></div></div>
       </div>

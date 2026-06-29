@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Free Brain Health Check — Gray Matter</title>
+  <title>Free Brain Health Check - Gray Matter</title>
   <meta name="description" content="Take the free 3-minute Brain Health Check. Answer a few questions and get your personalized Brain Health Score, backed by science and reviewed by clinicians." />
 
   <!-- ============================================================
-       GRAY MATTER — BRAIN HEALTH CHECK (quiz funnel)
+       GRAY MATTER - BRAIN HEALTH CHECK (quiz funnel)
        Premium, orange-themed, personality.co-style flow:
        intro → one-question-per-screen → email capture → results.
        Single self-contained file. No build step.
@@ -184,7 +184,7 @@
     <section class="screen active intro center" id="screen-intro">
       <p class="eyebrow">Free Brain Health Check</p>
       <h1>How healthy is <em>your brain</em>, really?</h1>
-      <p class="lead">Answer 10 quick questions and get your personalized <strong>Brain Health Score</strong> — with the science-backed factors that matter most for staying sharp.</p>
+      <p class="lead">Answer 10 quick questions and get your personalized <strong>Brain Health Score</strong> - with the science-backed factors that matter most for staying sharp.</p>
       <div class="meta">
         <span>⏱️ Takes 3 minutes</span>
         <span>🔒 100% private</span>
@@ -205,7 +205,7 @@
     <section class="screen email" id="screen-email">
       <span class="ready-badge">✓ Your results are ready</span>
       <h2>Where should we send your Brain Health Score?</h2>
-      <p class="sub">Get your full results plus a personalized action plan — straight to your inbox.</p>
+      <p class="sub">Get your full results plus a personalized action plan - straight to your inbox.</p>
       <div class="field"><input type="text" id="firstName" placeholder="First name" autocomplete="given-name" /></div>
       <div class="field"><input type="email" id="email" placeholder="Email address" autocomplete="email" /></div>
       <button class="btn-primary full" id="seeResults">See my results →</button>
@@ -226,8 +226,8 @@
         </svg>
         <div class="val"><div><b id="scoreNum">0</b><small>out of 100</small></div></div>
       </div>
-      <div class="tier" id="tierTitle">—</div>
-      <p class="summary" id="tierSummary">—</p>
+      <div class="tier" id="tierTitle">-</div>
+      <p class="summary" id="tierSummary">-</p>
 
       <div class="pillars">
         <h3>Your brain health, by pillar</h3>
@@ -247,16 +247,16 @@
 
   <script>
     /* =====================================================================
-       QUIZ CONFIG  —  EDIT HERE to drop in your real brainhealthcheck.app
+       QUIZ CONFIG  -  EDIT HERE to drop in your real brainhealthcheck.app
        questions. Each question: { q, hint, pillar, options:[{label, score}] }
        score = 0 (worst) … 3 (best). Pillars group the results breakdown.
     ===================================================================== */
     const QUESTIONS = [
-      { q: "What's your age range?", pillar: "Risk", hint: "Risk naturally shifts with age — it helps us calibrate.",
+      { q: "What's your age range?", pillar: "Risk", hint: "Risk naturally shifts with age - it helps us calibrate.",
         options: [{label:"Under 30",score:3},{label:"30–44",score:3},{label:"45–59",score:2},{label:"60 or older",score:1}] },
 
       { q: "How are your memory and focus lately?", pillar: "Cognition",
-        options: [{label:"Sharp — no issues",score:3},{label:"Mostly fine",score:2},{label:"Occasional lapses",score:1},{label:"Noticeably slipping",score:0}] },
+        options: [{label:"Sharp - no issues",score:3},{label:"Mostly fine",score:2},{label:"Occasional lapses",score:1},{label:"Noticeably slipping",score:0}] },
 
       { q: "On a typical night, how much do you sleep?", pillar: "Sleep & Recovery",
         options: [{label:"7–9 hours",score:3},{label:"6–7 hours",score:2},{label:"5–6 hours",score:1},{label:"Under 5 hours",score:0}] },
@@ -274,7 +274,7 @@
         options: [{label:"Low and manageable",score:3},{label:"Moderate",score:2},{label:"High most days",score:1},{label:"Overwhelming",score:0}] },
 
       { q: "How mentally and socially engaged is your week?", pillar: "Cognition", hint: "Learning, hobbies, and connection build cognitive reserve.",
-        options: [{label:"Very — always learning",score:3},{label:"Somewhat",score:2},{label:"A little",score:1},{label:"Not much",score:0}] },
+        options: [{label:"Very - always learning",score:3},{label:"Somewhat",score:2},{label:"A little",score:1},{label:"Not much",score:0}] },
 
       { q: "Which best describes your lifestyle habits?", pillar: "Lifestyle",
         options: [{label:"Non-smoker, little/no alcohol",score:3},{label:"Occasional social drinker",score:2},{label:"Regular drinker",score:1},{label:"Smoker / heavy drinker",score:0}] },
@@ -284,9 +284,9 @@
     ];
 
     const TIERS = [
-      { min: 85, title: "Thriving",  summary: "Outstanding. Your habits are protecting your brain — the goal now is to maintain momentum and catch small shifts early." },
+      { min: 85, title: "Thriving",  summary: "Outstanding. Your habits are protecting your brain - the goal now is to maintain momentum and catch small shifts early." },
       { min: 70, title: "Strong",    summary: "You're doing a lot right, with a few clear opportunities to optimize. Small, targeted changes could push you into the top tier." },
-      { min: 50, title: "Moderate",  summary: "A solid foundation with meaningful room to grow. Several modifiable factors are worth attention now — while they're easiest to change." },
+      { min: 50, title: "Moderate",  summary: "A solid foundation with meaningful room to grow. Several modifiable factors are worth attention now - while they're easiest to change." },
       { min: 0,  title: "Needs Focus", summary: "Your results highlight a few important areas to address. The good news: these are highly modifiable, and acting early makes the biggest difference." },
     ];
 
