@@ -324,6 +324,7 @@
 
     /* ---------- COMPARE TABLE ---------- */
     .ctable-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
+    .swipe-hint { display: none; text-align: center; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-top: 12px; }
     .ctable { width: 100%; border-collapse: collapse; min-width: 640px; background: #fff; }
     .ctable th, .ctable td { padding: 15px 18px; text-align: left; font-size: 14.5px; border-bottom: 1px solid var(--line); }
     .ctable thead th { font-family: var(--font-serif); font-size: 16px; color: var(--ink); background: var(--bg-soft); }
@@ -424,6 +425,9 @@
       .stat .n { font-size: 38px; }
       .sci-left > p { max-width: none; }
       .tl-text, .tl-vis { padding: 0; }
+      .swipe-hint { display: block; }
+      .ctable { min-width: 560px; }
+      .ctable th, .ctable td { padding: 12px 13px; font-size: 13px; }
     }
 
     /* scroll reveal */
@@ -739,6 +743,7 @@
           </tbody>
         </table>
       </div>
+      <p class="swipe-hint">Swipe to compare &rarr;</p>
     </div>
   </section>
 
