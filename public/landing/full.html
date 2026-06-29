@@ -257,11 +257,12 @@
     .ps-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: center; }
     .ps-visual {
       position: relative; min-height: 460px; border-radius: 22px; overflow: hidden;
-      background: linear-gradient(150deg, var(--brand-2) 0%, #c8703f 55%, var(--bg-deep) 130%),
-                  url('/landing/face.png') center 18%/cover no-repeat;
-      background-blend-mode: multiply;
+      background: radial-gradient(120% 90% at 35% 20%, var(--brand-2) 0%, #c8703f 50%, #6e3c22 100%);
     }
-    .ps-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(36,23,16,.45)); }
+    /* dark stressed silhouette, anchored to the bottom of the panel */
+    .ps-figure { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 78%; height: 92%; z-index: 1; }
+    .ps-figure path { fill: rgba(28,16,10,.82); }
+    .ps-visual::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 45%, rgba(36,23,16,.4)); pointer-events: none; }
     .ps-pill {
       position: absolute; z-index: 2; transform: translate(-50%, -50%);
       background: rgba(36,23,16,.55); color: #fff; border: 1px solid rgba(255,255,255,.5);
@@ -558,6 +559,19 @@
 
         <!-- LEFT: visual panel with floating risk-factor pills -->
         <div class="ps-visual">
+          <!-- clean head-and-shoulders silhouette (single connected shape) -->
+          <svg class="ps-figure" viewBox="0 0 300 360" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+            <path d="M150 36
+              c30 0 54 24 54 54
+              c0 22 -13 41 -32 49
+              c26 5 49 19 64 41
+              c17 25 24 56 26 88
+              c0 1 -1 2 -2 2
+              l-220 0 c-1 0 -2 -1 -2 -2
+              c2 -32 9 -63 26 -88 c15 -22 38 -36 64 -41
+              c-19 -8 -32 -27 -32 -49
+              c0 -30 24 -54 54 -54 z" />
+          </svg>
           <span class="ps-pill" style="top:16%; left:46%;">Blood pressure</span>
           <span class="ps-pill" style="top:34%; left:14%;">Diet</span>
           <span class="ps-pill" style="top:52%; left:52%;">Diabetes</span>
