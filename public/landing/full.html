@@ -42,10 +42,12 @@
     /* ---------- RESET ---------- */
     *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    html, body { overflow-x: hidden; }
     body {
       font-family: var(--font-sans);
       color: var(--ink);
       background-color: var(--bg);
+      max-width: 100%;
       background-image: radial-gradient(var(--dot) 1px, transparent 1px);
       background-size: 22px 22px;
       line-height: 1.55;
@@ -111,11 +113,11 @@
     }
 
     /* ---------- HERO (full-bleed video, matches flow 1) ---------- */
-    .hero { position: relative; min-height: 94vh; display: grid; place-items: center; text-align: center; color: #fff; background: var(--bg-deep); overflow: hidden; }
+    .hero { position: relative; min-height: 94vh; display: grid; grid-template-columns: minmax(0,1fr); place-items: center; text-align: center; color: #fff; background: var(--bg-deep); overflow: hidden; }
     .hero-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
     .hero-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(15,10,5,.55), rgba(15,10,5,.74)); }
     .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 96px; z-index: 2; background: linear-gradient(180deg, transparent, var(--bg)); pointer-events: none; }
-    .hero .wrap { position: relative; z-index: 3; max-width: 880px; padding-top: 96px; padding-bottom: 64px; }
+    .hero .wrap { position: relative; z-index: 3; width: 100%; max-width: 880px; padding-top: 96px; padding-bottom: 64px; }
     .hero .pill { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 13px; font-weight: 600; color: #fff; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.32); padding: 7px 16px; border-radius: 999px; margin-bottom: 22px; }
     .hero .pill .pill-icon { height: 18px; width: auto; } /* keep the brain logo in its original orange */
     .hero h1 { font-size: clamp(38px, 6.5vw, 68px); margin: 0 0 20px; color: #fff; }
@@ -334,7 +336,7 @@
     .advisor-slider { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 4px 16px; -webkit-overflow-scrolling: touch; }
     .advisor-slider::-webkit-scrollbar { height: 6px; }
     .advisor-slider::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
-    .advisor-slider .advisor { flex: 0 0 340px; scroll-snap-align: start; }
+    .advisor-slider .advisor { flex: 0 0 min(340px, 84vw); scroll-snap-align: start; }
 
     /* ---------- ADVISORS ---------- */
     .advisor-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
@@ -403,14 +405,25 @@
       .hero-grid { grid-template-columns: 1fr; padding: 50px 0; }
       .stats { grid-template-columns: repeat(2,1fr); gap: 36px 24px; }
       .sol-grid { grid-template-columns: 1fr; gap: 36px; }
+      .sci-wrap { grid-template-columns: 1fr; gap: 34px; }
       .caps { grid-template-columns: repeat(2,1fr); }
       .steps, .advisor-grid { grid-template-columns: repeat(2,1fr); }
       .foot-grid { grid-template-columns: 1fr 1fr; }
       .section { padding: 64px 0; }
     }
     @media (max-width: 560px) {
-      .steps, .advisor-grid, .foot-grid, .caps { grid-template-columns: 1fr; }
+      .steps, .advisor-grid, .foot-grid, .sci-cards { grid-template-columns: 1fr; }
+      .caps { grid-template-columns: repeat(2,1fr); gap: 12px; } /* keep capabilities 2x2 on phone */
+      .caps .cap { padding: 22px 14px; } /* tighter padding so labels fit the narrow columns */
+      .caps .cap h3 { font-size: 16px; } /* slightly smaller so longer labels wrap cleanly */
       .domain-bar { grid-template-columns: 110px 1fr; }
+      .section { padding: 50px 0; }
+      .wrap { padding: 0 18px; }
+      .hero .wrap { padding-top: 88px; }
+      .hero .pill { font-size: 12px; padding: 6px 13px; white-space: normal; }
+      .stat .n { font-size: 38px; }
+      .sci-left > p { max-width: none; }
+      .tl-text, .tl-vis { padding: 0; }
     }
 
     /* scroll reveal */
@@ -631,7 +644,6 @@
         <div class="cap reveal"><div class="ic">🎯</div><h3>Attention &amp; Inhibition</h3><p>Staying focused and holding back the wrong response.</p></div>
         <div class="cap reveal"><div class="ic">🧠</div><h3>Working Memory</h3><p>Holding and juggling information in the moment.</p></div>
       </div>
-      <p class="muted center" style="margin-top:18px;font-size:13.5px;">Hover a capability to see what it measures.</p>
     </div>
   </section>
 
