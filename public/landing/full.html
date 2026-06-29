@@ -322,16 +322,37 @@
     .bigquote footer strong { font-size: 15px; color: var(--ink); }
     .bigquote footer span { font-size: 12.5px; color: var(--ink-soft); }
 
-    /* ---------- COMPARE TABLE ---------- */
-    .ctable-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
+    /* ---------- COMPARE TABLE (Mito-style: airy, dotted rows, featured column) ---------- */
+    .ctable-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-top: 8px; }
     .swipe-hint { display: none; text-align: center; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-top: 12px; }
-    .ctable { width: 100%; border-collapse: collapse; min-width: 640px; background: #fff; }
-    .ctable th, .ctable td { padding: 15px 18px; text-align: left; font-size: 14.5px; border-bottom: 1px solid var(--line); }
-    .ctable thead th { font-family: var(--font-serif); font-size: 16px; color: var(--ink); background: var(--bg-soft); }
-    .ctable td:first-child, .ctable th:first-child { color: var(--ink-soft); font-weight: 600; }
-    .ctable .hot { background: rgba(247,117,40,.07); color: var(--ink); font-weight: 700; }
-    .ctable thead .hot { color: var(--brand); }
-    .ctable tr:last-child td { border-bottom: 0; }
+    .ctable { width: 100%; border-collapse: collapse; min-width: 680px; position: relative; }
+    /* the featured (ReCOGnAIze) column gets a raised panel behind it */
+    .ctable .hotcol { position: relative; }
+    .ctable thead .hotcol::before {
+      content: ""; position: absolute; left: 6px; right: 6px; top: -8px; bottom: -10000px; z-index: 0;
+      background: rgba(247,117,40,.06); border: 1px solid rgba(247,117,40,.22);
+      border-bottom: none; border-radius: 16px 16px 0 0;
+    }
+    .ctable th, .ctable td { padding: 18px 18px; text-align: center; font-size: 14.5px; position: relative; z-index: 1;
+      border-bottom: 1px dotted var(--line); }
+    /* header */
+    .ctable thead th { padding-top: 22px; padding-bottom: 22px; border-bottom: 1px dotted var(--line); vertical-align: top; }
+    .ctable thead .colname { font-family: var(--font-serif); font-size: 17px; color: var(--ink); font-weight: 600; display: block; }
+    .ctable thead .hotcol .colname { color: var(--brand); }
+    .ctable thead .colsub { font-size: 12px; color: var(--ink-soft); font-weight: 500; display: block; margin-top: 4px; }
+    /* left feature labels */
+    .ctable td:first-child, .ctable th:first-child { text-align: left; color: var(--ink); font-weight: 600; font-size: 14.5px; width: 38%; }
+    .ctable td:first-child { color: var(--ink); font-weight: 600; }
+    /* value cells */
+    .ctable tbody td { color: var(--ink-soft); }
+    .ctable .hotcol { color: var(--ink); font-weight: 700; }
+    .ctable tbody tr:last-child td { border-bottom: none; }
+    /* yes / no icons */
+    .ck { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; }
+    .ck.yes { background: var(--brand); }
+    .ck.yes svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+    .ck.no svg { width: 15px; height: 15px; stroke: #c4b6a8; fill: none; stroke-width: 2.2; stroke-linecap: round; }
+    .ctable .hotcol .ck.yes { background: var(--brand); box-shadow: 0 4px 12px rgba(247,117,40,.32); }
 
     /* ---------- ADVISOR SLIDER ---------- */
     .advisor-slider { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 4px 16px; -webkit-overflow-scrolling: touch; }
@@ -730,16 +751,21 @@
       <div class="ctable-wrap reveal">
         <table class="ctable">
           <thead>
-            <tr><th></th><th class="hot">ReCOGnAIze</th><th>Pen &amp; paper test</th><th>MRI</th></tr>
+            <tr>
+              <th></th>
+              <th class="hotcol"><span class="colname">ReCOGnAIze</span><span class="colsub">15 min · at home</span></th>
+              <th><span class="colname">Pen &amp; paper</span><span class="colsub">in clinic</span></th>
+              <th><span class="colname">MRI</span><span class="colsub">in hospital</span></th>
+            </tr>
           </thead>
           <tbody>
-            <tr><td>Measures</td><td class="hot">Performance</td><td>Performance</td><td>Brain structure</td></tr>
-            <tr><td>Accuracy for MCI</td><td class="hot">~90%</td><td>~70%</td><td>Reference standard</td></tr>
-            <tr><td>Time</td><td class="hot">15 min, virtual</td><td>30 min, in-person</td><td>1h in-person + weeks of wait</td></tr>
-            <tr><td>Where</td><td class="hot">Home</td><td>Clinic</td><td>Hospital</td></tr>
-            <tr><td>Validated against MRI</td><td class="hot">Yes</td><td>n/a</td><td>Yes</td></tr>
-            <tr><td>Detects vascular MCI</td><td class="hot">Yes</td><td>No</td><td>Sometimes</td></tr>
-            <tr><td>Doctor consult included</td><td class="hot">Yes</td><td>Sometimes</td><td>Yes</td></tr>
+            <tr><td>Measures real performance</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td>Brain structure</td></tr>
+            <tr><td>Accuracy for MCI</td><td class="hotcol">~90%</td><td>~70%</td><td>Reference</td></tr>
+            <tr><td>Validated against MRI</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td><td><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td></tr>
+            <tr><td>Detects vascular MCI</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td><td>Sometimes</td></tr>
+            <tr><td>Doctor consult included</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td>Sometimes</td><td><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td></tr>
+            <tr><td>Done from home</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td></tr>
+            <tr><td>Results turnaround</td><td class="hotcol">Minutes</td><td>Days</td><td>Weeks</td></tr>
           </tbody>
         </table>
       </div>
