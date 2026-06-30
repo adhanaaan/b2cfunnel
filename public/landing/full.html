@@ -388,14 +388,16 @@
     .ctable .hotcol .ck.yes { background: var(--brand); box-shadow: 0 4px 12px rgba(247,117,40,.32); }
 
     /* ---------- ADVISOR SLIDER ---------- */
-    /* ---------- ADVISORS (Mito-style: heading + alternating text/photo units) ---------- */
-    .advisor-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; align-items: start; }
-    /* a vertical hairline divider between units */
-    .advisor-row .advisor + .advisor { border-left: 1px solid var(--line); }
-    .advisor { text-align: left; padding: 4px 28px; }
-    .advisor:first-child { padding-left: 0; }
-    .advisor:last-child { padding-right: 0; }
-    /* square rounded photo (only on photo-bearing advisors) */
+    /* ---------- ADVISORS (Mito-style, auto-rolling marquee) ---------- */
+    .advisor-marquee { position: relative; overflow: hidden;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+    .advisor-row { display: flex; width: max-content; align-items: stretch; animation: advscroll 48s linear infinite; }
+    .advisor-marquee:hover .advisor-row { animation-play-state: paused; } /* pause on hover to read */
+    @keyframes advscroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) { .advisor-row { animation: none; } }
+    /* each advisor is a fixed-width card; vertical divider between them */
+    .advisor { flex: 0 0 320px; text-align: left; padding: 4px 32px; border-left: 1px solid var(--line); }
     .advisor .photo {
       position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 16px; overflow: hidden; margin-bottom: 20px;
       background: linear-gradient(135deg,var(--bg-soft),#ffd9bc);
@@ -461,23 +463,13 @@
       .sci-wrap { grid-template-columns: 1fr; gap: 34px; }
       .caps { grid-template-columns: repeat(2,1fr); }
       .steps { grid-template-columns: repeat(2,1fr); }
-      /* advisors: 2 across on tablet, dividers reset per row */
-      .advisor-row { grid-template-columns: repeat(2,1fr); row-gap: 36px; }
-      .advisor-row .advisor { padding: 4px 24px; }
-      .advisor-row .advisor:nth-child(odd) { padding-left: 0; }
-      .advisor-row .advisor:nth-child(even) { padding-right: 0; }
-      .advisor-row .advisor + .advisor { border-left: none; }
-      .advisor-row .advisor:nth-child(even) { border-left: 1px solid var(--line); }
       .foot-grid { grid-template-columns: 1fr 1fr; }
       .section { padding: 64px 0; }
     }
     @media (max-width: 560px) {
       .steps, .foot-grid, .sci-cards { grid-template-columns: 1fr; }
-      /* advisors stack to 1 column, dividers become top borders */
-      .advisor-row { grid-template-columns: 1fr; row-gap: 30px; }
-      .advisor-row .advisor { padding: 0; border-left: none !important; }
-      .advisor-row .advisor + .advisor { border-top: 1px solid var(--line); padding-top: 30px; }
-      .advisor .photo { max-width: 200px; }
+      /* advisor marquee: slightly narrower cards on phone */
+      .advisor { flex-basis: 260px; padding: 4px 24px; }
       .caps { grid-template-columns: repeat(2,1fr); gap: 12px; } /* keep capabilities 2x2 on phone */
       .caps .cap { padding: 22px 14px; } /* tighter padding so labels fit the narrow columns */
       .caps .cap h3 { font-size: 16px; } /* slightly smaller so longer labels wrap cleanly */
@@ -848,43 +840,84 @@
         <p>Our protocols are shaped by neurologists, physicians, and clinician-scientists
            from leading institutions across Singapore, the UK and Hong Kong.</p>
       </div>
-      <div class="advisor-row">
-        <div class="advisor reveal">
-          <div class="photo"><span>NK</span><img src="/Kandiah.png" alt="A/Prof Nagaendran Kandiah" onerror="this.style.display='none'" /></div>
-          <h3>A/Prof Nagaendran Kandiah</h3>
-          <div class="degrees">MBBS, FAMS (Neurology), FRCP (Edin)</div>
-          <ul class="roles">
-            <li>Director, Dementia Research Centre (Singapore), LKCMedicine</li>
-            <li>Associate Professor of Neuroscience &amp; Mental Health, LKCMedicine</li>
-            <li>Senior Consultant Neurologist, National University Hospital, Singapore</li>
-          </ul>
-        </div>
-        <div class="advisor reveal">
-          <div class="photo"><span>ST</span><img src="/landing/Dr-Tong.png" alt="Dr. Stephen Tong Jia Jong" onerror="this.style.display='none'" /></div>
-          <h3>Dr. Stephen Tong Jia Jong</h3>
-          <div class="degrees">MBBS, MMed (Family Medicine), MCFP(S)</div>
-          <ul class="roles">
-            <li>Founder, Bethesda Medical</li>
-            <li>Family Physician, Singapore Medical Council</li>
-          </ul>
-        </div>
-        <div class="advisor reveal">
-          <div class="photo"><span>TF</span><img src="/landing/Dr%20Tsin%20Uin%20Foong.webp" alt="Dr. Tsin Uin Foong" onerror="this.style.display='none'" /></div>
-          <h3>Dr. Tsin Uin Foong</h3>
-          <div class="degrees">MBBS (London, UK), MRCGP (UK), Dip Pract Derm (UK)</div>
-          <ul class="roles">
-            <li>Co-founder, Osler Group</li>
-            <li>Chief Medical Officer, Osler Health International</li>
-          </ul>
-        </div>
-        <div class="advisor reveal">
-          <div class="photo"><span>LL</span><img src="/landing/Dr%20Laurena%20Law.png" alt="Dr. Laurena Law" onerror="this.style.display='none'" /></div>
-          <h3>Dr. Laurena Law</h3>
-          <div class="degrees">MBBS</div>
-          <ul class="roles">
-            <li>Medical Director, Choy Sum Health Clinic</li>
-            <li>Co-founder, The Hong Kong Menopause Society</li>
-          </ul>
+      <div class="advisor-marquee reveal">
+        <div class="advisor-row">
+          <!-- set 1 -->
+          <div class="advisor">
+            <div class="photo"><span>NK</span><img src="/Kandiah.png" alt="A/Prof Nagaendran Kandiah" onerror="this.style.display='none'" /></div>
+            <h3>A/Prof Nagaendran Kandiah</h3>
+            <div class="degrees">MBBS, FAMS (Neurology), FRCP (Edin)</div>
+            <ul class="roles">
+              <li>Director, Dementia Research Centre (Singapore), LKCMedicine</li>
+              <li>Associate Professor of Neuroscience &amp; Mental Health, LKCMedicine</li>
+              <li>Senior Consultant Neurologist, National University Hospital, Singapore</li>
+            </ul>
+          </div>
+          <div class="advisor">
+            <div class="photo"><span>ST</span><img src="/landing/dr-tong.png" alt="Dr. Stephen Tong Jia Jong" onerror="this.style.display='none'" /></div>
+            <h3>Dr. Stephen Tong Jia Jong</h3>
+            <div class="degrees">MBBS, MMed (Family Medicine), MCFP(S)</div>
+            <ul class="roles">
+              <li>Founder, Bethesda Medical</li>
+              <li>Family Physician, Singapore Medical Council</li>
+            </ul>
+          </div>
+          <div class="advisor">
+            <div class="photo"><span>TF</span><img src="/landing/dr-tsin-uin-foong.webp" alt="Dr. Tsin Uin Foong" onerror="this.style.display='none'" /></div>
+            <h3>Dr. Tsin Uin Foong</h3>
+            <div class="degrees">MBBS (London, UK), MRCGP (UK), Dip Pract Derm (UK)</div>
+            <ul class="roles">
+              <li>Co-founder, Osler Group</li>
+              <li>Chief Medical Officer, Osler Health International</li>
+            </ul>
+          </div>
+          <div class="advisor">
+            <div class="photo"><span>LL</span><img src="/landing/dr-laurena-law.png" alt="Dr. Laurena Law" onerror="this.style.display='none'" /></div>
+            <h3>Dr. Laurena Law</h3>
+            <div class="degrees">MBBS</div>
+            <ul class="roles">
+              <li>Medical Director, Choy Sum Health Clinic</li>
+              <li>Co-founder, The Hong Kong Menopause Society</li>
+            </ul>
+          </div>
+          <!-- set 2 (duplicate for seamless loop) -->
+          <div class="advisor" aria-hidden="true">
+            <div class="photo"><span>NK</span><img src="/Kandiah.png" alt="" onerror="this.style.display='none'" /></div>
+            <h3>A/Prof Nagaendran Kandiah</h3>
+            <div class="degrees">MBBS, FAMS (Neurology), FRCP (Edin)</div>
+            <ul class="roles">
+              <li>Director, Dementia Research Centre (Singapore), LKCMedicine</li>
+              <li>Associate Professor of Neuroscience &amp; Mental Health, LKCMedicine</li>
+              <li>Senior Consultant Neurologist, National University Hospital, Singapore</li>
+            </ul>
+          </div>
+          <div class="advisor" aria-hidden="true">
+            <div class="photo"><span>ST</span><img src="/landing/dr-tong.png" alt="" onerror="this.style.display='none'" /></div>
+            <h3>Dr. Stephen Tong Jia Jong</h3>
+            <div class="degrees">MBBS, MMed (Family Medicine), MCFP(S)</div>
+            <ul class="roles">
+              <li>Founder, Bethesda Medical</li>
+              <li>Family Physician, Singapore Medical Council</li>
+            </ul>
+          </div>
+          <div class="advisor" aria-hidden="true">
+            <div class="photo"><span>TF</span><img src="/landing/dr-tsin-uin-foong.webp" alt="" onerror="this.style.display='none'" /></div>
+            <h3>Dr. Tsin Uin Foong</h3>
+            <div class="degrees">MBBS (London, UK), MRCGP (UK), Dip Pract Derm (UK)</div>
+            <ul class="roles">
+              <li>Co-founder, Osler Group</li>
+              <li>Chief Medical Officer, Osler Health International</li>
+            </ul>
+          </div>
+          <div class="advisor" aria-hidden="true">
+            <div class="photo"><span>LL</span><img src="/landing/dr-laurena-law.png" alt="" onerror="this.style.display='none'" /></div>
+            <h3>Dr. Laurena Law</h3>
+            <div class="degrees">MBBS</div>
+            <ul class="roles">
+              <li>Medical Director, Choy Sum Health Clinic</li>
+              <li>Co-founder, The Hong Kong Menopause Society</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -950,7 +983,7 @@
     <div class="wrap">
       <div class="foot-grid">
         <div>
-          <div class="logo"><span class="dot"></span> Gray Matter Solutions</div>
+          <div class="logo"><img src="/gms-logo.png" alt="" /> Gray Matter Solutions</div>
           <p style="max-width:280px;">A digital brain health assessment - validated against MRI and reviewed by doctors.</p>
         </div>
         <div>

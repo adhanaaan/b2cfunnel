@@ -56,7 +56,7 @@
 
     /* brand header (persistent, minimal) */
     .brandbar { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 26px 0 18px; }
-    .brandbar .dot { width: 24px; height: 24px; border-radius: 7px; background: linear-gradient(135deg,var(--brand),var(--brand-2)); }
+    .brandbar img { height: 26px; width: auto; }
     .brandbar b { font-family: var(--font-serif); font-size: 21px; font-weight: 600; }
 
     /* progress bar (only on quiz steps) */
@@ -171,7 +171,7 @@
 <body>
   <div class="app">
     <!-- brand -->
-    <div class="brandbar"><span class="dot"></span><b>Gray Matter</b></div>
+    <div class="brandbar"><img src="/gms-logo.png" alt="" /><b>Gray Matter</b></div>
 
     <!-- quiz controls -->
     <button class="back" id="backBtn">← Back</button>
