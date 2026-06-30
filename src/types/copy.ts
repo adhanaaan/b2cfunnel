@@ -97,7 +97,7 @@ export interface ResultBaseCopy {
   gameInviteCta: string;
 }
 
-// The reaction game (event only) — kept separate from the brain-health score.
+// The reaction game (event only) - kept separate from the brain-health score.
 export interface GameCopy {
   eyebrow: string;
   heading: string;

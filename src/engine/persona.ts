@@ -2,12 +2,12 @@ import type { Answers } from "@/types/question";
 import type { Persona } from "@/types/engine";
 
 /**
- * Persona detection — pure. Combination of age, sex, and the Q15 "what do you
+ * Persona detection - pure. Combination of age, sex, and the Q15 "what do you
  * track" answer (build brief §7). Priority-ordered, first match wins, defaults
  * to 'neutral' when there's no clear signal.
  *
  * Thresholds (which ages count as "40+", tie-break order) are WORKING DEFAULTS,
- * encoded as constants so they're trivial to retune — see build brief §12.
+ * encoded as constants so they're trivial to retune - see build brief §12.
  */
 
 // Age bands that count as "40+" for the perimenopausal persona proxy.

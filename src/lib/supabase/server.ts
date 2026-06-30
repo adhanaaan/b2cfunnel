@@ -2,7 +2,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /**
  * Server-only Supabase client using the SERVICE ROLE key. This module must NEVER
- * be imported from a "use client" component — the service key would leak into the
+ * be imported from a "use client" component - the service key would leak into the
  * browser bundle. It is imported only by app/api/lead/route.ts (Node runtime).
  */
 export function getServerSupabase(): SupabaseClient {

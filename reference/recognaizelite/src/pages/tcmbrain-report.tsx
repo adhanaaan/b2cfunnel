@@ -310,7 +310,7 @@ export default function TcmBrainReportPage() {
             <img src="/aiwellness-logo.jpeg" alt="AI Wellness" className="h-[24px] rounded" />
           </div>
           <p className="text-[#9CA3AF] text-[9px] uppercase mt-3" style={{ letterSpacing: "0.2em" }}>
-            Mind-Body Cognitive Screening — Your Results
+            Mind-Body Cognitive Screening - Your Results
           </p>
         </div>
 
@@ -363,7 +363,7 @@ export default function TcmBrainReportPage() {
           )}
         </section>
 
-        {/* Form — shown when email not yet submitted */}
+        {/* Form - shown when email not yet submitted */}
         {!emailSubmitted && (
           <section className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: "#ffffff", border: "1px solid #B8D2C7" }}>
             <h3
@@ -394,7 +394,7 @@ export default function TcmBrainReportPage() {
                   onChange={(e) => { setWhatsappInput(e.target.value); setFormError(""); }}
                   className="w-full rounded-xl border border-[#B8D2C7] bg-[#F5F9F3] px-4 py-3.5 text-[15px] text-[#1F2937] placeholder-[#9CA3AF] outline-none focus:border-[#7AB5A7] transition-colors"
                 />
-                <p className="mt-1 text-[11px] text-[#9CA3AF]">Optional — for follow-up.</p>
+                <p className="mt-1 text-[11px] text-[#9CA3AF]">Optional - for follow-up.</p>
               </div>
 
               {/* Age */}
@@ -597,7 +597,7 @@ export default function TcmBrainReportPage() {
               </p>
               <button
                 onClick={async () => {
-                  const text = `I just took a 60-second cognitive screening as part of a mind-body health check — can you beat my score? Try it: ${SHARE_URL}`;
+                  const text = `I just took a 60-second cognitive screening as part of a mind-body health check - can you beat my score? Try it: ${SHARE_URL}`;
                   if (navigator.share) {
                     try {
                       await navigator.share({ title: "Brain Speed Challenge", text, url: SHARE_URL });

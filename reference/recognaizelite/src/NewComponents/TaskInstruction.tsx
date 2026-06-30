@@ -37,7 +37,7 @@ export function TaskInstruction() {
     activeTask && preloadImages(IMAGES[TASKS_TO_IMAGES[activeTask]], `/images/${TASKS_TO_IMAGES[activeTask]}/`);
   }, []);
 
-  // Skip the GIF instruction screen for Airplane Game — go straight to demo
+  // Skip the GIF instruction screen for Airplane Game - go straight to demo
   useEffect(() => {
     if (activeTask === "task4") {
       Router.replace("/airplane-game/demo");

@@ -13,12 +13,12 @@ export interface Band {
   totalMin: number; // inclusive lower bound on TOTAL score
   totalMax: number; // inclusive upper bound (Infinity for the top band)
   colour: string; // gauge colour
-  order: number; // 0..3 — used for "worse of two axes" comparison
+  order: number; // 0..3 - used for "worse of two axes" comparison
 }
 
 export interface DrivingFactor {
   id: string; // 'highBp'
-  label: string; // 'Blood pressure' — resolved from copy.factorLabels
+  label: string; // 'Blood pressure' - resolved from copy.factorLabels
   axis: "risk"; // driving factors are lifestyle/biomedical ONLY (never symptoms)
 }
 

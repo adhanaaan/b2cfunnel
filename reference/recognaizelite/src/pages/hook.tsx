@@ -49,7 +49,7 @@ export default function HookEntry() {
         </h1>
 
         <p className="text-base text-gray-600 sm:text-lg max-w-md mx-auto leading-relaxed">
-          Cognitive changes can be subtle — and start earlier than most people think.
+          Cognitive changes can be subtle - and start earlier than most people think.
           This <strong>1-minute game</strong> checks your processing speed and compares it to your age group.
         </p>
 
@@ -77,7 +77,7 @@ export default function HookEntry() {
             Provided by <strong className="text-[#002D7C]">{clinic}</strong>
           </p>
         )}
-        <Button onClick={handleStart}>Play Now — It's Free</Button>
+        <Button onClick={handleStart}>Play Now - It's Free</Button>
       </div>
     </Background>
   );

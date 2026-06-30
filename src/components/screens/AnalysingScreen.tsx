@@ -11,7 +11,7 @@ interface AnalysingScreenProps {
 
 const CRUMB_MS = 1300;
 
-/** Screen 5 — a few seconds of suspense, cycling credibility crumbs. */
+/** Screen 5 - a few seconds of suspense, cycling credibility crumbs. */
 export function AnalysingScreen({ name, onDone }: AnalysingScreenProps) {
   const { heading, headingFallback, crumbs } = COPY.screens.analysing;
   const [index, setIndex] = useState(0);

@@ -30,7 +30,7 @@ export type PersonaSignal =
   | "neutral";
 
 export interface Option {
-  id: string; // stable key, e.g. 'immediate' — this is what gets stored as the answer
+  id: string; // stable key, e.g. 'immediate' - this is what gets stored as the answer
   label: string; // British English display text
   score: number; // contribution to this question's axis (supports 0.5 increments)
   personaSignal?: PersonaSignal; // optional nudge toward a persona (Q15)

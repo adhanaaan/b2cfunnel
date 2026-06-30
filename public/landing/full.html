@@ -256,12 +256,12 @@
     /* ---------- PROBLEM SPLIT (image + floating factor pills | copy) ---------- */
     .ps-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: center; }
     .ps-visual {
-      position: relative; min-height: 460px; border-radius: 22px; overflow: hidden;
+      position: relative; aspect-ratio: 1 / 1; border-radius: 22px; overflow: hidden;
       background: radial-gradient(120% 90% at 35% 20%, var(--brand-2) 0%, #c8703f 50%, #6e3c22 100%);
     }
-    /* stressed-man photo silhouette: multiply blend drops the white background,
-       leaving just the dark figure over the gradient panel. */
-    .ps-figure { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 86%; height: 100%; z-index: 1;
+    /* stressed-man photo silhouette: scaled proportionally (contain) inside the
+       square panel; multiply blend drops the white background. */
+    .ps-figure { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;
       object-fit: contain; object-position: bottom center; mix-blend-mode: multiply; }
     .ps-visual::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 55%, rgba(36,23,16,.35)); pointer-events: none; }
     .ps-pill {

@@ -29,7 +29,7 @@ export function PaywallScreen() {
           {c.heading}
         </h1>
 
-        {/* Peer-reviewed reference (PubMed) — under the title. */}
+        {/* Peer-reviewed reference (PubMed) - under the title. */}
         <a
           href={c.paperUrl}
           target="_blank"

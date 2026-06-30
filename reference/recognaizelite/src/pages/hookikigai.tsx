@@ -30,12 +30,12 @@ export default function HookIkigaiEntry() {
         <meta name="theme-color" content="#0B0F1A" />
         <title>ReCOGnAIze Cognitive Screening</title>
         <meta property="og:title" content="ReCOGnAIze Cognitive Screening" />
-        <meta property="og:description" content="A quick brain health check — powered by Ikigai Medical Clinic. Take the 30-second test." />
+        <meta property="og:description" content="A quick brain health check - powered by Ikigai Medical Clinic. Take the 30-second test." />
         <meta property="og:image" content="https://recognaizelite.vercel.app/api/og-hookikigai" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="ReCOGnAIze Cognitive Screening" />
-        <meta name="twitter:description" content="A quick brain health check — powered by Ikigai Medical Clinic" />
+        <meta name="twitter:description" content="A quick brain health check - powered by Ikigai Medical Clinic" />
         <meta name="twitter:image" content="https://recognaizelite.vercel.app/api/og-hookikigai" />
       </Head>
       <div

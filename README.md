@@ -22,7 +22,7 @@ cp .env.example .env.local   # fill in Supabase keys (optional for local dev)
 npm run dev                  # http://localhost:3000
 ```
 
-The funnel is fully walkable **without** Supabase credentials — the lead API
+The funnel is fully walkable **without** Supabase credentials - the lead API
 no-ops gracefully when keys are absent.
 
 ### Scripts
@@ -43,12 +43,12 @@ app/                      Thin routing layer
   api/lead/route.ts       POST -> Supabase insert (service key, Node runtime)
 src/
   engine/                 Scoring engine (pure TS, the source of truth)
-    scoring.ts            computeScore() — two-axis logic + safety override
+    scoring.ts            computeScore() - two-axis logic + safety override
     bands.ts              Band thresholds + worse-of-two helpers
     persona.ts            Persona detection
     drivingFactors.ts     "What's driving this" pills (risk-axis only)
   config/                 Editable content (Audrey iterates here, not in code)
-    questions.ts          Question bank — ALSO the single source of scoring weights
+    questions.ts          Question bank - ALSO the single source of scoring weights
     funnelFlow.ts         Ordered flow + conditional pruning resolver
     statCards.ts          The 3 cited stat cards
     copy.ts               ALL user-facing copy + persona framing
@@ -59,14 +59,14 @@ tests/                    Vitest: engine, flow resolution, compliance
 ```
 
 The engine and config are **decoupled from React** so they're importable in tests
-without a DOM. Screens render from config — copy is never hard-coded.
+without a DOM. Screens render from config - copy is never hard-coded.
 
 ## Scoring (canonical: `src/engine/`)
 
 Max score **100** = Risk Factor Score (68) + Symptom Signal (32). Weights live in
 `src/config/questions.ts` (`option.score`) and natively sum to 100 (the build
 brief §5 weights scaled x4). Two-axis safety logic: the final band is the
-**worse** of the total, risk-axis, and symptom-axis bands — lifestyle can never
+**worse** of the total, risk-axis, and symptom-axis bands - lifestyle can never
 mask symptoms. **Safety override**: if the decline is persistent *and*
 someone else has noticed, the band is forced to a minimum of *Elevated*.
 
@@ -123,7 +123,7 @@ alter table public.game_scores enable row level security;
 The leaderboard shows **today's best time per email** (Singapore time), fastest
 first. Players may retry; only their best counts.
 
-And a `funnel_events` table for **anonymous drop-off analytics** (no PII — a
+And a `funnel_events` table for **anonymous drop-off analytics** (no PII - a
 random per-session id, the step name and the variant):
 
 ```sql
@@ -147,7 +147,7 @@ A `step_view` row is written each time a participant reaches a step, plus a
 funnel, count **distinct `session_id` per `step`** (ordered by where each step
 sits in the flow); the gap between consecutive steps is your drop-off.
 
-And a `quiz_responses` table for **anonymous audience insights** — a
+And a `quiz_responses` table for **anonymous audience insights** - a
 participant's demographics, brain-health profile and risk-factor answers,
 written when the score is computed. **No name or email** (keyed to the random
 session id only), so it's aggregate-only and can't identify a person:
@@ -203,19 +203,19 @@ tablet/TV left on `/party` shows the live leaderboard. A join QR on the board
 points guests at `/party`.
 
 Env vars (see `.env.example`): `NEXT_PUBLIC_SUPABASE_URL`,
-`SUPABASE_SERVICE_ROLE_KEY` (server only — never `NEXT_PUBLIC`), and
+`SUPABASE_SERVICE_ROLE_KEY` (server only - never `NEXT_PUBLIC`), and
 `STORE_ANSWERS` (PDPA-safe default: raw answers are **not** persisted unless this
 is `"true"`).
 
 ## Working defaults flagged for sign-off (build brief §12)
 
 The scoring *engine* (weights, bands, safety override) is settled. These surface
-choices use working defaults — encoded as named constants so they're a one-line
+choices use working defaults - encoded as named constants so they're a one-line
 change once Audrey / clinical sign off:
 
 - **Per-axis band thresholds** for the worse-of-two comparison (`src/engine/bands.ts`).
 - **Q15 "what do you track" options + persona cut-offs** (`src/config/questions.ts`, `src/engine/persona.ts`).
-- **Names / labels / copy** (`src/config/copy.ts`) — "Brain Health Score", band labels, bridge wording, price, etc.
+- **Names / labels / copy** (`src/config/copy.ts`) - "Brain Health Score", band labels, bridge wording, price, etc.
 
 ## Out of scope (this build)
 

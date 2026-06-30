@@ -13,7 +13,7 @@ const str = (v: unknown, max: number): string | null =>
 
 /**
  * Anonymous funnel event sink. Records step views / milestones for drop-off
- * analysis. No PII — just a random session id, the event/step and the variant.
+ * analysis. No PII - just a random session id, the event/step and the variant.
  */
 export async function POST(req: Request) {
   let body: Record<string, unknown>;

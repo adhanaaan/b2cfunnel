@@ -35,7 +35,7 @@ function formatLevers(result: ScoreResult): string {
   return joined.charAt(0).toUpperCase() + joined.slice(1);
 }
 
-/** Screen 6 — the score reveal. Brand-critical layout (build brief §6). */
+/** Screen 6 - the score reveal. Brand-critical layout (build brief §6). */
 export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
   const base = COPY.screens.resultBase;
   const event = useIsEvent();
@@ -83,7 +83,7 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
 
         <div className="mt-8">
           {event ? (
-            // Event: no sell — a soft prompt to speak to the team.
+            // Event: no sell - a soft prompt to speak to the team.
             <div className="rounded-2xl bg-surface-container px-6 py-7 text-center">
               <h2 className="font-display text-xl font-extrabold leading-snug text-charcoal">
                 {base.eventClosingHeading}

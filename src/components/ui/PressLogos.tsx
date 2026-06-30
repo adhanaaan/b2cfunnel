@@ -23,7 +23,7 @@ function PressLogo({ src, alt }: PressItem) {
 }
 
 /**
- * "As seen on" press logos. Each logo degrades gracefully — a not-yet-uploaded
+ * "As seen on" press logos. Each logo degrades gracefully - a not-yet-uploaded
  * asset simply renders nothing rather than a broken image, and appears once the
  * file exists in /public.
  */

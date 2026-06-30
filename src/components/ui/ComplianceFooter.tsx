@@ -1,7 +1,7 @@
 import { MANDATORY_DISCLAIMERS } from "@/config/compliance";
 
 /**
- * Mandatory wellness disclaimers. Renders the §8 lines unconditionally — must
+ * Mandatory wellness disclaimers. Renders the §8 lines unconditionally - must
  * appear on every result screen. Do not make this conditional.
  */
 export function ComplianceFooter() {

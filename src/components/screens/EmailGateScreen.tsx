@@ -7,7 +7,7 @@ import { useIsEvent } from "@/components/VariantContext";
 
 interface EmailGateScreenProps {
   onSubmit: (name: string, email: string) => Promise<void> | void;
-  /** If set, the name is already known (captured earlier) — ask email only. */
+  /** If set, the name is already known (captured earlier) - ask email only. */
   knownName?: string;
 }
 

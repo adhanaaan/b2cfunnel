@@ -157,7 +157,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async ({ params
     };
   }
 
-  // Touch last_accessed_at; fire-and-forget — we don't want a slow update
+  // Touch last_accessed_at; fire-and-forget - we don't want a slow update
   // to block rendering.
   void supabase
     .from("partner_share_links")
@@ -318,7 +318,7 @@ export default function PartnerSharePage({ status, clinic, label, leads, stats, 
     };
   }, []);
 
-  const topAge = useMemo(() => topKey(stats.byAgeRange) ?? "—", [stats.byAgeRange]);
+  const topAge = useMemo(() => topKey(stats.byAgeRange) ?? "-", [stats.byAgeRange]);
 
   if (status !== "active") {
     return <RevokedOrNotFound status={status} />;
@@ -387,7 +387,7 @@ export default function PartnerSharePage({ status, clinic, label, leads, stats, 
             <StatTile label="Today" value={stats.today} theme={theme} />
             <StatTile
               label="Avg score"
-              value={stats.avgScore !== null ? stats.avgScore : "—"}
+              value={stats.avgScore !== null ? stats.avgScore : "-"}
               theme={theme}
             />
             <StatTile label="Top age" value={topAge} theme={theme} />
@@ -481,44 +481,44 @@ export default function PartnerSharePage({ status, clinic, label, leads, stats, 
                             {lead.whatsapp}
                           </a>
                         ) : (
-                          "—"
+                          "-"
                         )}
                       </td>
                       {isHealthtechx ? (
                         <>
                           <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>
-                            {lead.role ? ROLE_LABELS[lead.role] ?? lead.role : "—"}
+                            {lead.role ? ROLE_LABELS[lead.role] ?? lead.role : "-"}
                           </td>
                           <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>
-                            {lead.organization ?? "—"}
+                            {lead.organization ?? "-"}
                           </td>
                           <td
                             className="px-3 py-2 text-[12.5px] max-w-[260px] truncate"
                             style={{ color: theme.textPrimary }}
                             title={lead.cognitive_interest ?? undefined}
                           >
-                            {lead.cognitive_interest ?? "—"}
+                            {lead.cognitive_interest ?? "-"}
                           </td>
                         </>
                       ) : (
                         <>
-                          <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>{lead.age_range ?? "—"}</td>
+                          <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>{lead.age_range ?? "-"}</td>
                           <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>
-                            {lead.gender ? GENDER_LABELS[lead.gender] ?? lead.gender : "—"}
+                            {lead.gender ? GENDER_LABELS[lead.gender] ?? lead.gender : "-"}
                           </td>
                         </>
                       )}
                       {isTcm && (
                         <>
-                          <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>{lead.dampness_index ?? "—"}</td>
-                          <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>{lead.blood_stasis_index ?? "—"}</td>
+                          <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>{lead.dampness_index ?? "-"}</td>
+                          <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>{lead.blood_stasis_index ?? "-"}</td>
                         </>
                       )}
-                      <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>{lead.score ?? "—"}</td>
-                      <td className="px-3 py-2 text-[12.5px] capitalize whitespace-nowrap" style={{ color: theme.textPrimary }}>{lead.severity ?? "—"}</td>
+                      <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>{lead.score ?? "-"}</td>
+                      <td className="px-3 py-2 text-[12.5px] capitalize whitespace-nowrap" style={{ color: theme.textPrimary }}>{lead.severity ?? "-"}</td>
                       {isB2C && !isTcm && (
                         <td className="px-3 py-2 text-[12.5px] whitespace-nowrap" style={{ color: theme.textPrimary }}>
-                          {lead.health_goal ? HEALTH_GOAL_LABELS[lead.health_goal] ?? lead.health_goal : "—"}
+                          {lead.health_goal ? HEALTH_GOAL_LABELS[lead.health_goal] ?? lead.health_goal : "-"}
                         </td>
                       )}
                       <td className="px-3 py-2 text-[12px] whitespace-nowrap" style={{ color: theme.textMuted }}>{formatDate(lead.created_at)}</td>
@@ -531,7 +531,7 @@ export default function PartnerSharePage({ status, clinic, label, leads, stats, 
 
           {/* Footer */}
           <p className="mt-6 text-center text-[11px]" style={{ color: theme.textMuted }}>
-            Generated {formatDate(loadedAt)} · ReCOGnAIze · Confidential — for partner use only.
+            Generated {formatDate(loadedAt)} · ReCOGnAIze · Confidential - for partner use only.
           </p>
         </div>
       </div>

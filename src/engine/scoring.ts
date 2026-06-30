@@ -25,7 +25,7 @@ function scoreAxis(answers: Answers, axis: Axis): number {
     const question = QUESTIONS_BY_ID[questionId];
     if (!question || question.axis !== axis || !question.options) continue;
 
-    // 'hotFlushes' only scores for women — it's pruned from the flow for others,
+    // 'hotFlushes' only scores for women - it's pruned from the flow for others,
     // but guard here too so the engine stays correct for any answers map.
     if (questionId === "hotFlushes" && answers.sex !== "female") continue;
 

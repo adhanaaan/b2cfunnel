@@ -73,7 +73,7 @@ const config: Config = {
         display: ["var(--font-jakarta)", "system-ui", "sans-serif"],
       },
       borderRadius: {
-        // "Round Eight" — 8px default roundness
+        // "Round Eight" - 8px default roundness
         DEFAULT: "8px",
         lg: "12px",
         xl: "16px",

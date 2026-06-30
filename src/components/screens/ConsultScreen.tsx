@@ -5,7 +5,7 @@ import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { ComplianceFooter } from "@/components/ui/ComplianceFooter";
 
-/** Event closing screen — no sell, just an invite to speak to the team. */
+/** Event closing screen - no sell, just an invite to speak to the team. */
 export function ConsultScreen() {
   const c = COPY.screens.consult;
   return (

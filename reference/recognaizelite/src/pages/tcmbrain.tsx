@@ -69,7 +69,7 @@ export default function TcmBrainEntry() {
             the mind follows.
           </h1>
           <p className="mt-4 text-[#4B5563] text-[15px] leading-relaxed">
-            Clear thinking flows from balanced qi and blood — TCM has held this for centuries.
+            Clear thinking flows from balanced qi and blood - TCM has held this for centuries.
             <br />
             <span className="font-semibold text-[#1F2937]">Take 60 seconds to measure where your cognition stands today.</span>
           </p>
@@ -95,7 +95,7 @@ export default function TcmBrainEntry() {
             boxShadow: "0 4px 24px rgba(213,112,77,0.35)",
           }}
         >
-          Begin Screening — 60 Seconds
+          Begin Screening - 60 Seconds
         </button>
 
         {/* Trust signals */}
@@ -123,7 +123,7 @@ export default function TcmBrainEntry() {
             <span className="text-[11px] font-medium text-[#9CA3AF]">ReCOGnAIze</span>
           </div>
           <p className="text-[9px] text-[#B0A296]">
-            In partnership with AI Wellness — Embracing Longevity
+            In partnership with AI Wellness - Embracing Longevity
           </p>
         </div>
       </div>

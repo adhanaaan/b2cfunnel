@@ -11,7 +11,7 @@ interface CredibilitySignalsProps {
 
 /**
  * Institutional / evidence credibility block. Leans on the partner institution
- * and the published science. The logo degrades gracefully — if the file isn't
+ * and the published science. The logo degrades gracefully - if the file isn't
  * present it simply renders nothing (so a not-yet-uploaded asset never shows a
  * broken image), and appears automatically once the file exists.
  */

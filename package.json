@@ -2,7 +2,7 @@
   "name": "b2cfunnel",
   "version": "0.1.0",
   "private": true,
-  "description": "Brain Health Quiz — consumer lead-magnet funnel for Gray Matter Solutions (GMS)",
+  "description": "Brain Health Quiz - consumer lead-magnet funnel for Gray Matter Solutions (GMS)",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

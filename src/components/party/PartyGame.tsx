@@ -212,7 +212,7 @@ export function PartyGame() {
           </p>
         </div>
 
-        {/* Join QR — guests scan to play on their own phones. */}
+        {/* Join QR - guests scan to play on their own phones. */}
         {joinUrl && (
           <div className="mt-7 flex items-center gap-5 rounded-3xl bg-white/[0.06] p-5 ring-1 ring-white/10">
             <div className="rounded-2xl bg-white p-3 shadow-lg">
@@ -221,7 +221,7 @@ export function PartyGame() {
             <div>
               <p className="text-lg font-extrabold">📱 Scan to join</p>
               <p className="mt-1 text-sm text-white/60">
-                Play on your phone — this board updates live.
+                Play on your phone - this board updates live.
               </p>
               <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-400/15 px-2.5 py-1 text-xs font-bold text-emerald-300">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
@@ -241,7 +241,7 @@ export function PartyGame() {
         {/* Two columns: sober ranking | after-drinks ranking. */}
         {players.length === 0 ? (
           <p className="mt-6 rounded-3xl bg-white/[0.06] px-4 py-8 text-center text-base font-semibold text-white/50 ring-1 ring-white/10">
-            No times yet — scan the QR or hit play to kick it off 👇
+            No times yet - scan the QR or hit play to kick it off 👇
           </p>
         ) : (
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -353,7 +353,7 @@ function Award({
       <p className="mt-1 text-[11px] font-bold uppercase tracking-wider text-white/50">
         {label}
       </p>
-      <p className="mt-0.5 truncate font-bold">{who ? who.name : "—"}</p>
+      <p className="mt-0.5 truncate font-bold">{who ? who.name : "-"}</p>
       {d != null && (
         <p className="text-xs text-white/60">
           {d > 0 ? "+" : ""}
@@ -369,7 +369,7 @@ function Shell({ children }: { children: React.ReactNode }) {
     <main
       className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-10 text-white"
       style={{
-        // Baked-in radial glows (no blur filter — cheap to render).
+        // Baked-in radial glows (no blur filter - cheap to render).
         background:
           "radial-gradient(55rem 38rem at 8% -10%, rgba(217,70,239,0.28), transparent 60%), radial-gradient(55rem 40rem at 108% 28%, rgba(139,92,246,0.26), transparent 60%), radial-gradient(50rem 40rem at 50% 120%, rgba(245,158,11,0.18), transparent 60%), #0c0718",
       }}

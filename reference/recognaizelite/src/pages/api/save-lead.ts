@@ -134,7 +134,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   };
 
   if (clinic === "healthtechx") {
-    // B2B funnel — role + organization required-shape (validated client-side too).
+    // B2B funnel - role + organization required-shape (validated client-side too).
     const role = str(body.role);
     if (role && !(ROLE_OPTIONS as readonly string[]).includes(role)) {
       return res.status(400).json({ error: "Invalid role" });
@@ -231,7 +231,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json({ success: true });
   }
 
-  // sjmc — legacy `leads` table still has the (clinic, email_lower) unique constraint
+  // sjmc - legacy `leads` table still has the (clinic, email_lower) unique constraint
   // and the takes_supplements column.
   const takesSupplementsRaw = str(body.takesSupplements);
   if (takesSupplementsRaw && !(SUPPLEMENT_OPTIONS as readonly string[]).includes(takesSupplementsRaw)) {

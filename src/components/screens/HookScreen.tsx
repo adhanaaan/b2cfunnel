@@ -9,7 +9,7 @@ interface HookScreenProps {
   onStart: () => void;
 }
 
-/** Screen 1 (full quiz) — the cold-open hook: brand, promise, credibility. */
+/** Screen 1 (full quiz) - the cold-open hook: brand, promise, credibility. */
 export function HookScreen({ onStart }: HookScreenProps) {
   const c = COPY.screens.hook;
   return (
@@ -34,7 +34,7 @@ export function HookScreen({ onStart }: HookScreenProps) {
           className="mt-8"
         />
 
-        {/* As seen on — press / endorsement logos. */}
+        {/* As seen on - press / endorsement logos. */}
         <div className="mt-6">
           <p className="text-[11px] font-bold uppercase tracking-widest text-outline">
             {c.asSeenOnLabel}

@@ -53,7 +53,7 @@ export function Gauge({
 
   // The score is a Brain Health Score (high = healthy), so the arc runs red
   // (low score / high risk) on the LEFT to green (high score / low risk) on the
-  // RIGHT — the risk bands reversed. The needle at score/max then lands in the
+  // RIGHT - the risk bands reversed. The needle at score/max then lands in the
   // colour that matches the band.
   const widths = BAND_ORDER.map((name, i) => {
     const prevMax = i === 0 ? 0 : BANDS[BAND_ORDER[i - 1]].totalMax;

@@ -10,7 +10,7 @@ import { resetTaskProgress } from "src/stores/useTaskProgress";
 // Mandarin variant of /sjmc-report. Fork of sjmc-report.tsx with all chrome
 // translated and leads tagged clinic "sjmcmandarin" (segments in public.leads
 // via the clinic column). The clinical report BODY (report.title / definition)
-// still comes back from /api/generate-report in English — Phase 2 will localize
+// still comes back from /api/generate-report in English - Phase 2 will localize
 // the server report_data. Disclaimer is hardcoded Mandarin here.
 const CJK_SERIF = "'Noto Sans SC', Georgia, 'Times New Roman', serif";
 
@@ -119,15 +119,15 @@ function BellCurve({ percentile, severity }: { percentile: number; severity: Sev
 const CTA_COPY: Record<Severity, { headline: string; body: string }> = {
   Low: {
     headline: "你只看到了全貌的 25%。",
-    body: "处理速度出现了值得关注的信号——但这只是四大认知支柱之一。记忆力、注意力和执行功能可能正在默默代偿，也可能正在悄然衰退。没有完整的筛查，一切都只是猜测。",
+    body: "处理速度出现了值得关注的信号--但这只是四大认知支柱之一。记忆力、注意力和执行功能可能正在默默代偿，也可能正在悄然衰退。没有完整的筛查，一切都只是猜测。",
   },
   Medium: {
     headline: "你只看到了全貌的 25%。",
-    body: "处理速度看起来不错——但这并不能说明你的记忆力在压力下表现如何、专注力能维持多久，或决策是否敏锐。单一支柱无法定义你的大脑。",
+    body: "处理速度看起来不错--但这并不能说明你的记忆力在压力下表现如何、专注力能维持多久，或决策是否敏锐。单一支柱无法定义你的大脑。",
   },
   High: {
     headline: "你只看到了全貌的 25%。",
-    body: "处理速度很强——但高效能人士都明白，没有记忆力、专注力和决策力的速度是不完整的。完整的筛查才能揭示真正驱动你表现的因素。",
+    body: "处理速度很强--但高效能人士都明白，没有记忆力、专注力和决策力的速度是不完整的。完整的筛查才能揭示真正驱动你表现的因素。",
   },
 };
 
@@ -339,7 +339,7 @@ export default function SjmcMandarinReportPage() {
           </p>
         </div>
 
-        {/* Result Card — teaser always visible */}
+        {/* Result Card - teaser always visible */}
         <section className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: "#ffffff", border: "1px solid #E5D5CA" }}>
           <p className="text-[12px] font-bold uppercase tracking-wider text-[#9CA3AF]">
             认知筛查
@@ -359,7 +359,7 @@ export default function SjmcMandarinReportPage() {
             </span>
           </div>
 
-          {/* Bell curve — blurred if email not submitted */}
+          {/* Bell curve - blurred if email not submitted */}
           <div className="mt-4 relative">
             <div style={!emailSubmitted ? { filter: "blur(12px)", pointerEvents: "none" } : undefined}>
               <BellCurve percentile={Math.round(report.percentile)} severity={severity} />
@@ -377,7 +377,7 @@ export default function SjmcMandarinReportPage() {
             )}
           </div>
 
-          {/* Definition — only shown after email */}
+          {/* Definition - only shown after email */}
           {emailSubmitted && (
             <div className="mt-4 rounded-xl p-4" style={{ backgroundColor: "#FFF7F2" }}>
               <p className="text-[13px] font-bold uppercase tracking-wider text-[#9CA3AF]">
@@ -390,7 +390,7 @@ export default function SjmcMandarinReportPage() {
           )}
         </section>
 
-        {/* Email capture form — shown when email not yet submitted */}
+        {/* Email capture form - shown when email not yet submitted */}
         {!emailSubmitted && (
           <section className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: "#ffffff", border: "1px solid #E5D5CA" }}>
             <h3
@@ -499,7 +499,7 @@ export default function SjmcMandarinReportPage() {
           </section>
         )}
 
-        {/* Full report — only shown after email */}
+        {/* Full report - only shown after email */}
         {emailSubmitted && (
           <>
             {/* The bigger picture */}
@@ -588,7 +588,7 @@ export default function SjmcMandarinReportPage() {
               </p>
               <button
                 onClick={async () => {
-                  const text = `我刚在 SJMC 世界健康日活动测试了我的脑速——你能超过我的分数吗？快来试试：${SHARE_URL}`;
+                  const text = `我刚在 SJMC 世界健康日活动测试了我的脑速--你能超过我的分数吗？快来试试：${SHARE_URL}`;
                   if (navigator.share) {
                     try {
                       await navigator.share({ title: "脑速挑战", text, url: SHARE_URL });

@@ -66,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json({ link: data as PartnerShareLinkRow });
       }
       if (error && error.code !== "23505") {
-        // Not a unique-violation — real failure.
+        // Not a unique-violation - real failure.
         console.error("Failed to create share link:", error);
         return res.status(500).json({ error: "Failed to create share link" });
       }

@@ -27,7 +27,7 @@ function colsClass(options: Option[]): string {
 /**
  * Discrete slider over an ordinal option set. Options are shown low→high
  * severity (the source array is worst-first, so we reverse it). An untouched
- * slider sits at the lowest-severity end and records nothing — which scores the
+ * slider sits at the lowest-severity end and records nothing - which scores the
  * same as that option (0), so leaving it is equivalent to "no change noticed".
  */
 function OptionSlider({

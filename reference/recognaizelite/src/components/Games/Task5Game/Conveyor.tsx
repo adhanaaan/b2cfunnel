@@ -75,7 +75,7 @@ export function Conveyor({ shoppingListGroup, onItemClick, onItemDrop, listOpen 
 
   // Tracks wall-clock time (in seconds from startRef) when the next item should appear.
   // If the belt runs dry, schedule() catches up to "now" so items flow in immediately.
-  // Refs are only accessed inside useEffect and event handlers — never during render.
+  // Refs are only accessed inside useEffect and event handlers - never during render.
   const startRef = useRef(0);
   const nextTimeRef = useRef(0);
 

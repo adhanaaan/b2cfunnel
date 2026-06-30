@@ -92,7 +92,7 @@ export function LeaderboardScreen({
         await navigator.clipboard?.writeText(text);
       }
     } catch {
-      /* cancelled/unsupported — the screenshot prompt still stands */
+      /* cancelled/unsupported - the screenshot prompt still stands */
     }
   };
 

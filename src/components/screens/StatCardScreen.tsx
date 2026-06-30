@@ -6,7 +6,7 @@ interface StatCardScreenProps {
   onNext: () => void;
 }
 
-/** Screen type 3 — a cited statistic interspersed between questions. */
+/** Screen type 3 - a cited statistic interspersed between questions. */
 export function StatCardScreen({ card, onNext }: StatCardScreenProps) {
   return (
     <ScreenShell>

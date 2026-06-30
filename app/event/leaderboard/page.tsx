@@ -148,7 +148,7 @@ export default function LeaderboardBoard() {
 
       {/* Body: Prize | Standings | QR */}
       <div className="flex min-h-0 flex-1 gap-[1.5vw] p-[2.5vh_3vw]">
-        {/* Prize — the hero: the main reason to scan. */}
+        {/* Prize - the hero: the main reason to scan. */}
         <section
           className="flex flex-[1.55] flex-col items-center justify-between rounded-lg p-[3.5vh_2.5vw] text-center"
           style={{
@@ -191,7 +191,7 @@ export default function LeaderboardBoard() {
             </p>
           </div>
 
-          {/* How to win — so the board explains itself, no host needed. */}
+          {/* How to win - so the board explains itself, no host needed. */}
           {!EVENT_PAUSED && (
           <div className="mt-[2.4vh] flex w-full items-stretch justify-center gap-[0.8vw]">
             {HOW_TO_WIN.map((t, i) => (
@@ -305,13 +305,13 @@ export default function LeaderboardBoard() {
                         className="flex-1 truncate font-medium text-[2.1vh]"
                         style={{ color: "#9AA0AC" }}
                       >
-                        Open spot — scan to claim it
+                        Open spot - scan to claim it
                       </span>
                       <span
                         className="font-bold tabular-nums text-[2.2vh]"
                         style={{ color: "#C2C6CF" }}
                       >
-                        —:—.—
+                        -:-.-
                       </span>
                     </>
                   )}
@@ -321,7 +321,7 @@ export default function LeaderboardBoard() {
           </ol>
         </section>
 
-        {/* QR interaction zone — the door, or a thank-you once the event ends. */}
+        {/* QR interaction zone - the door, or a thank-you once the event ends. */}
         <section
           className="flex flex-[0.8] flex-col items-center justify-center rounded-lg p-[3vh] text-center"
           style={{ background: C.primary, color: "#fff" }}

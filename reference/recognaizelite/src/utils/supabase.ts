@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 // Server-only Supabase client using the service-role key.
-// IMPORTANT: Never import this file from client-side code — the service-role
+// IMPORTANT: Never import this file from client-side code - the service-role
 // key grants full access and must never be shipped to the browser.
 
 let cached: SupabaseClient | null = null;

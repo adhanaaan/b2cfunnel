@@ -1,4 +1,4 @@
-# Gray Matter — Pages
+# Gray Matter - Pages
 
 | File | What it is |
 |------|-----------|
@@ -7,17 +7,17 @@
 
 ---
 
-## Brain Health Check (`quiz.html`) — quiz funnel
+## Brain Health Check (`quiz.html`) - quiz funnel
 
 A personality.co-style flow, **orange / premium** themed:
 
-1. **Intro** — bold hook, "3 min · private · science-backed", big CTA, social proof
-2. **10 questions** — one per screen, progress bar, large answer cards, **auto-advance**, Back button, selections are remembered
-3. **Email capture** — "Where should we send your score?" (name + email, validated)
-4. **Results** — animated Brain Health Score ring (0–100), tiered summary, **per-pillar breakdown bars**, then a dark CTA card up-selling the full Gray Matter assessment (links to `index.html`)
+1. **Intro** - bold hook, "3 min · private · science-backed", big CTA, social proof
+2. **10 questions** - one per screen, progress bar, large answer cards, **auto-advance**, Back button, selections are remembered
+3. **Email capture** - "Where should we send your score?" (name + email, validated)
+4. **Results** - animated Brain Health Score ring (0–100), tiered summary, **per-pillar breakdown bars**, then a dark CTA card up-selling the full Gray Matter assessment (links to `index.html`)
 
 ### Swap in your real quiz
-All questions live in one place — the `QUESTIONS` array near the bottom of `quiz.html`:
+All questions live in one place - the `QUESTIONS` array near the bottom of `quiz.html`:
 
 ```js
 { q: "Question text", pillar: "Sleep & Recovery", hint: "optional",
@@ -25,11 +25,11 @@ All questions live in one place — the `QUESTIONS` array near the bottom of `qu
 ```
 
 - `score` runs 0 (worst) → 3 (best); the engine scales everything to /100 automatically.
-- `pillar` groups answers into the results breakdown — reuse the same pillar name across questions to combine them.
+- `pillar` groups answers into the results breakdown - reuse the same pillar name across questions to combine them.
 - Edit `TIERS` to change the score bands and result copy.
 - **Wire up leads:** there's a `TODO` in `submitEmail()` to POST `{name, email, answers, score}` to your CRM (you have HubSpot connected).
 
-> ⚠️ Questions are evidence-based placeholders (I couldn't reach `brainhealthcheck.vercel.app` from this sandbox — egress is locked down). Paste your exact questions here, or send them to me and I'll drop them in verbatim.
+> ⚠️ Questions are evidence-based placeholders (I couldn't reach `brainhealthcheck.vercel.app` from this sandbox - egress is locked down). Paste your exact questions here, or send them to me and I'll drop them in verbatim.
 
 ---
 
@@ -54,7 +54,7 @@ xdg-open index.html    # Linux
 
 No build step, no dependencies. One self-contained file (fonts load from Google Fonts CDN).
 
-## What's in `index.html` (draft 1 — "Clinical Premium")
+## What's in `index.html` (draft 1 - "Clinical Premium")
 
 Section order, all chosen to **signal trust & credibility**:
 
@@ -66,8 +66,8 @@ Section order, all chosen to **signal trust & credibility**:
 6. **What's Included** – 6 biomarker/cognitive panel categories
 7. **How It Works** – 4 steps
 8. **The Science** (dark section) – peer-reviewed, CLIA labs, clinician oversight, privacy, independence, longitudinal
-9. **Advisory Board** ← *your "advisor section"* — 4 advisor cards
-10. **Patient Reviews** ← *your "patient review"* — 3 verified testimonial cards
+9. **Advisory Board** ← *your "advisor section"* - 4 advisor cards
+10. **Patient Reviews** ← *your "patient review"* - 3 verified testimonial cards
 11. **Pricing** – single membership card
 12. **FAQ** – accordion
 13. **Final CTA**
@@ -93,7 +93,7 @@ The page uses the **GMS brand system**:
 
 Change `--brand` and the whole page re-themes. A subtle **dot-grid texture** sits
 on the off-white background (tune via `--dot` + the `background-size` on `body`).
-Fonts: `Poppins` (headings) + `Inter` (body) — swap the Google Fonts `<link>` to change.
+Fonts: `Poppins` (headings) + `Inter` (body) - swap the Google Fonts `<link>` to change.
 
 ## Replace before launch
 - [ ] Real advisor names, credentials, institutions + **headshots** (swap the `.photo` divs for `<img>`)
@@ -108,11 +108,11 @@ Fonts: `Poppins` (headings) + `Inter` (body) — swap the Google Fonts `<link>` 
 
 I built **Draft 1 (Clinical Premium)**. If you want, I can spin up variants:
 
-- **Draft 2 — "Warm & human":** softer palette, lifestyle photography, story-led hero
+- **Draft 2 - "Warm & human":** softer palette, lifestyle photography, story-led hero
   ("Stay sharp for the people you love"), less clinical.
-- **Draft 3 — "Data-forward":** dark-mode default, big animated biomarker dashboard
+- **Draft 3 - "Data-forward":** dark-mode default, big animated biomarker dashboard
   as the hero, for a more tech/quantified-self audience.
-- **Draft 4 — "Conversion sprint":** shorter single-scroll page optimized for paid
+- **Draft 4 - "Conversion sprint":** shorter single-scroll page optimized for paid
   ads (one promise, one CTA repeated, condensed proof).
 
 Tell me which direction(s) and I'll build them out as separate files.

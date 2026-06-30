@@ -49,7 +49,7 @@ export default function PrologueEntry() {
             <em style={{ color: "#E8A0B0" }}>be hormonal?</em>
           </h1>
           <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "#C0A0AA" }}>
-            A quick cognitive check — right on your phone.
+            A quick cognitive check - right on your phone.
           </p>
         </div>
 

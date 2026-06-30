@@ -4,7 +4,7 @@ import { QUESTIONS } from "@/config/questions";
 import { FACTOR_LABELS } from "@/config/copy";
 
 /**
- * The "what's driving this" pills. Lifestyle + biomedical factors ONLY — never
+ * The "what's driving this" pills. Lifestyle + biomedical factors ONLY - never
  * symptoms (those stay blurred behind the paywall). A factor is "driving" the
  * score when the user's chosen option on a risk-axis question contributed > 0.
  * Ordered by impact (highest-scoring contributor first) so the section reads as

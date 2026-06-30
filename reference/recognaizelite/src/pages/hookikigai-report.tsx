@@ -346,7 +346,7 @@ export default function HookIkigaiReportPage() {
           </p>
         </div>
 
-        {/* Result Card — teaser always visible */}
+        {/* Result Card - teaser always visible */}
         <section className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: "#111827", border: "1px solid #1F2937" }}>
           <p className="text-[12px] font-bold uppercase tracking-wider text-gray-500">
             Cognitive Screening
@@ -366,7 +366,7 @@ export default function HookIkigaiReportPage() {
             </span>
           </div>
 
-          {/* Bell curve — blurred if email not submitted */}
+          {/* Bell curve - blurred if email not submitted */}
           <div className="mt-4 relative">
             <div style={!emailSubmitted ? { filter: "blur(12px)", pointerEvents: "none" } : undefined}>
               <BellCurve percentile={Math.round(report.percentile)} severity={severity} />
@@ -384,7 +384,7 @@ export default function HookIkigaiReportPage() {
             )}
           </div>
 
-          {/* Definition — only shown after email */}
+          {/* Definition - only shown after email */}
           {emailSubmitted && (
             <div className="mt-4 rounded-xl p-4" style={{ backgroundColor: "#1A2035" }}>
               <p className="text-[13px] font-bold uppercase tracking-wider text-gray-400">
@@ -397,7 +397,7 @@ export default function HookIkigaiReportPage() {
           )}
         </section>
 
-        {/* Email capture form — shown when email not yet submitted */}
+        {/* Email capture form - shown when email not yet submitted */}
         {!emailSubmitted && (
           <section className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: "#111827", border: "1px solid #1F2937" }}>
             <h3
@@ -429,7 +429,7 @@ export default function HookIkigaiReportPage() {
                   onChange={(e) => { setWhatsappInput(e.target.value); setFormError(""); }}
                   className="w-full rounded-xl border border-gray-700 bg-gray-800/50 px-4 py-3.5 text-[15px] text-white placeholder-gray-500 outline-none focus:border-[#5CE0D8] transition-colors"
                 />
-                <p className="mt-1 text-[11px] text-gray-500">Optional — for follow-up.</p>
+                <p className="mt-1 text-[11px] text-gray-500">Optional - for follow-up.</p>
               </div>
 
               <div>
@@ -514,7 +514,7 @@ export default function HookIkigaiReportPage() {
           </section>
         )}
 
-        {/* Full report — only shown after email */}
+        {/* Full report - only shown after email */}
         {emailSubmitted && (
           <>
             {/* CTA Section */}
@@ -592,7 +592,7 @@ export default function HookIkigaiReportPage() {
               {/* Referral prompt */}
               <div className="mt-6 rounded-2xl p-5 text-center" style={{ backgroundColor: "rgba(92,224,216,0.06)", border: "1px solid rgba(92,224,216,0.15)" }}>
                 <p className="text-[14px] font-semibold text-gray-300">Know someone who should check their score too?</p>
-                <p className="mt-1 text-[12px] text-gray-500">Share the test — it only takes 30 seconds.</p>
+                <p className="mt-1 text-[12px] text-gray-500">Share the test - it only takes 30 seconds.</p>
                 <div className="mt-3 flex items-center justify-center gap-3">
                   <button
                     onClick={() => {
@@ -607,7 +607,7 @@ export default function HookIkigaiReportPage() {
                     {linkCopied ? "Copied!" : "Copy link"}
                   </button>
                   <a
-                    href={`https://wa.me/?text=${encodeURIComponent("Try this quick brain health check — it only takes 30 seconds: " + (typeof window !== "undefined" ? window.location.origin : "") + "/hookikigai")}`}
+                    href={`https://wa.me/?text=${encodeURIComponent("Try this quick brain health check - it only takes 30 seconds: " + (typeof window !== "undefined" ? window.location.origin : "") + "/hookikigai")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="rounded-full px-5 py-2 text-[13px] font-semibold transition-colors"

@@ -2,7 +2,7 @@
 
 /**
  * Minimal, privacy-safe funnel analytics. Fires anonymous step events to
- * /api/event so we can measure drop-off (no PII — just a random per-session id,
+ * /api/event so we can measure drop-off (no PII - just a random per-session id,
  * the step name and the variant). No third-party processor.
  */
 
@@ -58,7 +58,7 @@ export function track(event: string, props: TrackProps = {}): void {
 
 /**
  * Anonymous audience profile, recorded when the score is computed. No name or
- * email — keyed to the random session id only, so it can never identify a
+ * email - keyed to the random session id only, so it can never identify a
  * person. Lets us understand who showed up in aggregate.
  */
 export interface ResponsePayload {

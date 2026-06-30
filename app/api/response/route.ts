@@ -16,7 +16,7 @@ const num = (v: unknown): number | null =>
 /**
  * Anonymous audience profile sink. Records a participant's demographics,
  * brain-health profile and risk-factor answers WITHOUT name or email (keyed to
- * the random session id only). Aggregate-only — for understanding who showed up.
+ * the random session id only). Aggregate-only - for understanding who showed up.
  */
 export async function POST(req: Request) {
   let body: Record<string, unknown>;

@@ -62,7 +62,7 @@ export default function SjmcMandarinEntry() {
           </div>
         </div>
 
-        {/* Headline — fitness angle */}
+        {/* Headline - fitness angle */}
         <div className="text-center max-w-[340px] mx-auto mb-5">
           <h1
             className="text-[#1F2937] text-[34px] sm:text-[42px] leading-[1.15] font-normal"
@@ -77,7 +77,7 @@ export default function SjmcMandarinEntry() {
           <p className="mt-4 text-[#4B5563] text-[15px] leading-relaxed">
             你已经检查了体重，血压和血糖。
             <br />
-            <span className="font-semibold text-[#1F2937]">现在，检查一下掌控身体一切的器官 — 大脑。</span>
+            <span className="font-semibold text-[#1F2937]">现在，检查一下掌控身体一切的器官 - 大脑。</span>
           </p>
         </div>
 
@@ -92,7 +92,7 @@ export default function SjmcMandarinEntry() {
           </p>
         </div>
 
-        {/* Language selector — central + prominent. Mandarin is the default;
+        {/* Language selector - central + prominent. Mandarin is the default;
             choosing English routes to the existing /sjmc funnel (which sets
             ENGLISH + the English report path). */}
         <div className="w-full max-w-[300px] mb-4">
@@ -131,7 +131,7 @@ export default function SjmcMandarinEntry() {
           className="w-full max-w-[300px] rounded-full px-8 py-4 text-[17px] font-bold text-white tracking-wide transition-all active:scale-[0.97]"
           style={{ backgroundColor: "#E8793B", boxShadow: "0 4px 24px rgba(232,121,59,0.35)" }}
         >
-          测试我的大脑 — 60 秒
+          测试我的大脑 - 60 秒
         </button>
 
         {/* Trust signals */}

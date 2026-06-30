@@ -33,7 +33,7 @@ export default function DemoEntry() {
         <meta name="theme-color" content="#FAEEE6" />
         <title>Brain Health Screening | HealthTechX Asia 2026</title>
         <meta property="og:title" content="Train your brain at HealthTechX Asia." />
-        <meta property="og:description" content="Free 60-second brain speed test at the ReCOGnAIze booth. No app needed — instant results." />
+        <meta property="og:description" content="Free 60-second brain speed test at the ReCOGnAIze booth. No app needed - instant results." />
         <meta property="og:image" content="https://recognaizelite.vercel.app/api/og-sjmc" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -92,7 +92,7 @@ export default function DemoEntry() {
           className="w-full max-w-[300px] rounded-full px-8 py-4 text-[17px] font-bold text-white tracking-wide transition-all active:scale-[0.97]"
           style={{ backgroundColor: "#E8793B", boxShadow: "0 4px 24px rgba(232,121,59,0.35)" }}
         >
-          Test My Brain — 60 Seconds
+          Test My Brain - 60 Seconds
         </button>
 
         {/* Trust signals */}

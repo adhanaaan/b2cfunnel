@@ -18,13 +18,13 @@ const SCORE_STATS = {
   task5: { mean: 11.942, stdDev: 6.147 },
 };
 
-// Short assessment (30s) stats — scaled from 60s norms.
+// Short assessment (30s) stats - scaled from 60s norms.
 // Used by /hookikigai and /sjmc.
 const SHORT_SCORE_STATS = {
   task2: { mean: 8.861, stdDev: 2.37 },
 };
 
-// 60s short assessment stats — used by /demo (HealthTechX) and /tcmbrain.
+// 60s short assessment stats - used by /demo (HealthTechX) and /tcmbrain.
 // Same dataset historically used by `buildFullReport` for task2:
 // the symbol matching game runs the full 60 seconds and is scored
 // against the time-matched population norms, not the 30s norms.

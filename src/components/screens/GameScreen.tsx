@@ -7,7 +7,7 @@ interface GameScreenProps {
 }
 
 /**
- * The Reaction Time Challenge — your real symbol-matching game (Task2Game),
+ * The Reaction Time Challenge - your real symbol-matching game (Task2Game),
  * wrapped with the race-to-20 timer. A game: its result never feeds the
  * brain-health score.
  */

@@ -136,7 +136,7 @@ export const Task4Game: React.FC<Props> = ({ onSuccess, onError, planes, gameLev
           })}
         </div>
 
-        {/* Directional arrow pad — overlaid on fly area */}
+        {/* Directional arrow pad - overlaid on fly area */}
         <div className={twJoin(
           "absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 sm:gap-1.5 z-30",
           isDemoPage() && "z-[999]"

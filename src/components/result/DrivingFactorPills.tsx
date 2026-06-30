@@ -6,7 +6,7 @@ interface DrivingFactorPillsProps {
   factors: DrivingFactor[];
 }
 
-/** "What's driving this" — lifestyle/biomedical factor chips, dynamic per user. */
+/** "What's driving this" - lifestyle/biomedical factor chips, dynamic per user. */
 export function DrivingFactorPills({ factors }: DrivingFactorPillsProps) {
   if (factors.length === 0) {
     return (

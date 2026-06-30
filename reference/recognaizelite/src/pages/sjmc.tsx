@@ -30,7 +30,7 @@ export default function SjmcEntry() {
         <meta name="theme-color" content="#FAEEE6" />
         <title>Brain Health Screening | SJMC @ Banting Community Day</title>
         <meta property="og:title" content="You train your body. Have you trained your brain?" />
-        <meta property="og:description" content="Free 60-second brain speed test at SJMC @ Banting Community Day. No app needed — instant results." />
+        <meta property="og:description" content="Free 60-second brain speed test at SJMC @ Banting Community Day. No app needed - instant results." />
         <meta property="og:image" content="https://recognaizelite.vercel.app/api/og-sjmc" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -54,7 +54,7 @@ export default function SjmcEntry() {
           </div>
         </div>
 
-        {/* Headline — fitness angle */}
+        {/* Headline - fitness angle */}
         <div className="text-center max-w-[340px] mx-auto mb-5">
           <h1
             className="text-[#1F2937] text-[36px] sm:text-[44px] leading-[1.08] font-normal"
@@ -89,7 +89,7 @@ export default function SjmcEntry() {
           className="w-full max-w-[300px] rounded-full px-8 py-4 text-[17px] font-bold text-white tracking-wide transition-all active:scale-[0.97]"
           style={{ backgroundColor: "#E8793B", boxShadow: "0 4px 24px rgba(232,121,59,0.35)" }}
         >
-          Test My Brain — 60 Seconds
+          Test My Brain - 60 Seconds
         </button>
 
         {/* Trust signals */}

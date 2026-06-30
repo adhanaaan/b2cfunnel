@@ -5,7 +5,7 @@ import { getSupabaseAdmin, LeadRow } from "src/utils/supabase";
  * rows to the unified LeadRow shape, and computes summary stats. Shared by
  * the admin reader (`/api/leads`) and the public partner share endpoint
  * (`/api/partner/share-leads`) so both render the same data. Never import
- * this from client code — it relies on the Supabase service-role key.
+ * this from client code - it relies on the Supabase service-role key.
  */
 
 export const KNOWN_CLINICS = ["sjmc", "hookikigai", "healthtechx", "tcmbrain"] as const;

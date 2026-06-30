@@ -41,7 +41,7 @@ const FULL_FLOW: FunnelStep[] = [
 
   { kind: "question", questionId: "tracks" },
 
-  // The three experiential symptom questions share a frequency scale — merged
+  // The three experiential symptom questions share a frequency scale - merged
   // onto one page as sliders.
   {
     kind: "questionGroup",
@@ -127,7 +127,7 @@ function questionIdsIn(variant: QuizVariant): string[] {
 const axisMaxCache = new Map<string, number>();
 
 /**
- * The maximum score achievable on an axis for a variant — the sum of each
+ * The maximum score achievable on an axis for a variant - the sum of each
  * in-flow question's highest option score on that axis (assuming all
  * conditional questions fire). Used to normalise the trimmed event quiz back
  * onto the /100 scale so its bands match the full quiz. Memoised.

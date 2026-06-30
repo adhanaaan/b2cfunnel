@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 };
 
 function formatDate(iso: string | null) {
-  if (!iso) return "—";
+  if (!iso) return "-";
   return new Date(iso).toLocaleString("en-GB", {
     day: "numeric",
     month: "short",
@@ -143,7 +143,7 @@ export default function AdminShareLinksPage() {
   return (
     <>
       <Head>
-        <title>Share links — Admin</title>
+        <title>Share links - Admin</title>
         <meta name="theme-color" content="#0B0F1A" />
         <meta name="robots" content="noindex,nofollow" />
       </Head>
@@ -192,7 +192,7 @@ export default function AdminShareLinksPage() {
             </select>
             <input
               type="text"
-              placeholder="Label (e.g. Shantal — Ikigai)"
+              placeholder="Label (e.g. Shantal - Ikigai)"
               value={newLabel}
               onChange={(e) => setNewLabel(e.target.value)}
               maxLength={120}
@@ -248,7 +248,7 @@ export default function AdminShareLinksPage() {
                         }}
                       >
                         <td className="px-4 py-3 text-[13px] text-gray-300 capitalize whitespace-nowrap">{link.clinic}</td>
-                        <td className="px-4 py-3 text-[13px] text-white">{link.label ?? "—"}</td>
+                        <td className="px-4 py-3 text-[13px] text-white">{link.label ?? "-"}</td>
                         <td className="px-4 py-3 text-[12px] text-gray-400 whitespace-nowrap">{formatDate(link.created_at)}</td>
                         <td className="px-4 py-3 text-[12px] text-gray-400 whitespace-nowrap">{formatDate(link.last_accessed_at)}</td>
                         <td className="px-4 py-3 text-[12px] whitespace-nowrap">
@@ -268,7 +268,7 @@ export default function AdminShareLinksPage() {
                               onClick={() => handleCopy(link)}
                               disabled={revoked}
                               className="rounded-full px-3 py-1 text-[11px] font-semibold text-gray-300 border border-gray-700 disabled:opacity-40"
-                              title={revoked ? "Revoked — reinstate to copy" : url}
+                              title={revoked ? "Revoked - reinstate to copy" : url}
                             >
                               {copiedId === link.id ? "Copied!" : "Copy URL"}
                             </button>

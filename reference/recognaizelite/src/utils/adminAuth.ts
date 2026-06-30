@@ -4,8 +4,8 @@ import type { IncomingMessage, ServerResponse } from "http";
 
 // Server-side admin auth using an HMAC-signed cookie.
 // Two env vars are required:
-//   ADMIN_PASSWORD       — the shared password for the admin UI
-//   ADMIN_COOKIE_SECRET  — a random 32+ byte secret used to sign the session cookie
+//   ADMIN_PASSWORD       - the shared password for the admin UI
+//   ADMIN_COOKIE_SECRET  - a random 32+ byte secret used to sign the session cookie
 
 const COOKIE_NAME = "admin_session";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days

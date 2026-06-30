@@ -19,7 +19,7 @@ function BookButton({ label, url }: { label: string; url: string }) {
   );
 }
 
-/** Final screen — the consultation booking page. */
+/** Final screen - the consultation booking page. */
 export function BookingScreen() {
   const c = COPY.screens.booking;
   const credibility = COPY.screens.hook.credibility;

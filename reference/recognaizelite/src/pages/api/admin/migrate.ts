@@ -3,7 +3,7 @@ import { verifyAdminCookie } from "src/utils/adminAuth";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!verifyAdminCookie(req)) {
-    return res.status(401).json({ error: "Unauthorized — log in at /admin/login first" });
+    return res.status(401).json({ error: "Unauthorized - log in at /admin/login first" });
   }
 
   const url = process.env.SUPABASE_URL;

@@ -16,7 +16,7 @@ interface Props {
 /**
  * Wraps the real Task2Game with the event mechanic: 3-2-1 countdown, then race
  * to GOAL correct as fast as possible. Reports the elapsed time.
- * NOTE: a game — its result never feeds the brain-health score.
+ * NOTE: a game - its result never feeds the brain-health score.
  */
 export function SymbolMatchGame({ onComplete }: Props) {
   const [phase, setPhase] = useState<"demo" | "countdown" | "play">(() => {

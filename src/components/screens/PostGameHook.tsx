@@ -35,7 +35,7 @@ function LockIcon({ className = "" }: { className?: string }) {
  * result against the day's best, then teases the locked cognitive domains and
  * invites them into the optional brain-health check.
  *
- * Adapted from the recognaizelite hook report's "brain areas unlock" grid —
+ * Adapted from the recognaizelite hook report's "brain areas unlock" grid -
  * honest framing: the game only tested processing speed; the other domains are
  * the full ReCOGnAIze assessment, and this quiz is the next step.
  */
@@ -90,7 +90,7 @@ export function PostGameHook({
               {c.youLabel}
             </p>
             <p className="font-display text-3xl font-extrabold tabular-nums">
-              {timeMs != null ? formatTime(timeMs) : "—"}
+              {timeMs != null ? formatTime(timeMs) : "-"}
             </p>
             <p className="mt-0.5 text-xs font-semibold">
               {rank ? `Ranked #${rank}` : "20 correct"}
@@ -101,7 +101,7 @@ export function PostGameHook({
               {c.topLabel}
             </p>
             <p className="font-display text-3xl font-extrabold tabular-nums text-charcoal">
-              {top ? formatTime(top.timeMs) : "—"}
+              {top ? formatTime(top.timeMs) : "-"}
             </p>
             <p className="mt-0.5 truncate text-xs font-semibold text-secondary">
               {top ? top.name : "Be the first"}

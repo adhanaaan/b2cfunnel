@@ -2,7 +2,7 @@ import type { CopyConfig } from "@/types/copy";
 
 /**
  * ALL user-facing copy lives here. British English. Working titles per build
- * brief §12 (Audrey owns final names/labels) — kept in one place so they're a
+ * brief §12 (Audrey owns final names/labels) - kept in one place so they're a
  * single edit. Language stays on the wellness/educational side of the HSA line
  * (see compliance.ts); avoid "diagnose", "detect dementia", "clinically
  * validated", etc. Prefer "estimate", "suggests", "associated with",

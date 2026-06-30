@@ -234,7 +234,7 @@ export default function AdminLeadsPage() {
   return (
     <>
       <Head>
-        <title>Leads — Admin</title>
+        <title>Leads - Admin</title>
         <meta name="theme-color" content="#0B0F1A" />
         <meta name="robots" content="noindex,nofollow" />
       </Head>
@@ -303,11 +303,11 @@ export default function AdminLeadsPage() {
               <StatCard label="Today" value={stats.today} />
               <StatCard
                 label="Avg score"
-                value={stats.avgScore !== null ? stats.avgScore : "—"}
+                value={stats.avgScore !== null ? stats.avgScore : "-"}
               />
               <StatCard
                 label="Top age"
-                value={topKey(stats.byAgeRange) ?? "—"}
+                value={topKey(stats.byAgeRange) ?? "-"}
               />
             </div>
           )}
@@ -444,42 +444,42 @@ export default function AdminLeadsPage() {
                             {lead.whatsapp}
                           </a>
                         ) : (
-                          "—"
+                          "-"
                         )}
                       </Td>
-                      {!clinic && <Td className="text-gray-300 capitalize">{lead.clinic ?? "—"}</Td>}
+                      {!clinic && <Td className="text-gray-300 capitalize">{lead.clinic ?? "-"}</Td>}
                       {clinic === "healthtechx" ? (
                         <>
-                          <Td className="text-gray-300">{lead.role ? ROLE_LABELS[lead.role] ?? lead.role : "—"}</Td>
-                          <Td className="text-gray-300">{lead.organization ?? "—"}</Td>
-                          <Td className="text-gray-300">{lead.organization_type ? ORG_TYPE_LABELS[lead.organization_type] ?? lead.organization_type : "—"}</Td>
+                          <Td className="text-gray-300">{lead.role ? ROLE_LABELS[lead.role] ?? lead.role : "-"}</Td>
+                          <Td className="text-gray-300">{lead.organization ?? "-"}</Td>
+                          <Td className="text-gray-300">{lead.organization_type ? ORG_TYPE_LABELS[lead.organization_type] ?? lead.organization_type : "-"}</Td>
                           <Td className="text-gray-300 max-w-[280px] truncate" title={lead.cognitive_interest ?? undefined}>
-                            {lead.cognitive_interest ?? "—"}
+                            {lead.cognitive_interest ?? "-"}
                           </Td>
                         </>
                       ) : (
                         <>
-                          <Td className="text-gray-300">{lead.age_range ?? "—"}</Td>
+                          <Td className="text-gray-300">{lead.age_range ?? "-"}</Td>
                           <Td className="text-gray-300">
-                            {lead.gender ? GENDER_LABELS[lead.gender] ?? lead.gender : "—"}
+                            {lead.gender ? GENDER_LABELS[lead.gender] ?? lead.gender : "-"}
                           </Td>
                         </>
                       )}
                       {clinic === "tcmbrain" && (
                         <>
-                          <Td className="text-gray-300">{lead.dampness_index ?? "—"}</Td>
-                          <Td className="text-gray-300">{lead.blood_stasis_index ?? "—"}</Td>
+                          <Td className="text-gray-300">{lead.dampness_index ?? "-"}</Td>
+                          <Td className="text-gray-300">{lead.blood_stasis_index ?? "-"}</Td>
                         </>
                       )}
-                      <Td className="text-gray-300">{lead.score ?? "—"}</Td>
-                      <Td className="text-gray-300 capitalize">{lead.severity ?? "—"}</Td>
+                      <Td className="text-gray-300">{lead.score ?? "-"}</Td>
+                      <Td className="text-gray-300 capitalize">{lead.severity ?? "-"}</Td>
                       {clinic !== "healthtechx" && clinic !== "tcmbrain" && (
                         <>
-                          <Td className="text-gray-300">{lead.health_goal ? HEALTH_GOAL_LABELS[lead.health_goal] ?? lead.health_goal : "—"}</Td>
-                          <Td className="text-gray-300">{lead.takes_supplements ? SUPPLEMENT_LABELS[lead.takes_supplements] ?? lead.takes_supplements : "—"}</Td>
+                          <Td className="text-gray-300">{lead.health_goal ? HEALTH_GOAL_LABELS[lead.health_goal] ?? lead.health_goal : "-"}</Td>
+                          <Td className="text-gray-300">{lead.takes_supplements ? SUPPLEMENT_LABELS[lead.takes_supplements] ?? lead.takes_supplements : "-"}</Td>
                         </>
                       )}
-                      <Td className="text-gray-400">{lead.utm_source ?? "—"}</Td>
+                      <Td className="text-gray-400">{lead.utm_source ?? "-"}</Td>
                       <Td className="text-gray-400">{formatDate(lead.created_at)}</Td>
                     </tr>
                   ))}

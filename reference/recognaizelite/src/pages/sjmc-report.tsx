@@ -331,7 +331,7 @@ export default function SjmcReportPage() {
           </p>
         </div>
 
-        {/* Result Card — teaser always visible */}
+        {/* Result Card - teaser always visible */}
         <section className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: "#ffffff", border: "1px solid #E5D5CA" }}>
           <p className="text-[12px] font-bold uppercase tracking-wider text-[#9CA3AF]">
             Cognitive Screening
@@ -351,7 +351,7 @@ export default function SjmcReportPage() {
             </span>
           </div>
 
-          {/* Bell curve — blurred if email not submitted */}
+          {/* Bell curve - blurred if email not submitted */}
           <div className="mt-4 relative">
             <div style={!emailSubmitted ? { filter: "blur(12px)", pointerEvents: "none" } : undefined}>
               <BellCurve percentile={Math.round(report.percentile)} severity={severity} />
@@ -369,7 +369,7 @@ export default function SjmcReportPage() {
             )}
           </div>
 
-          {/* Definition — only shown after email */}
+          {/* Definition - only shown after email */}
           {emailSubmitted && (
             <div className="mt-4 rounded-xl p-4" style={{ backgroundColor: "#FFF7F2" }}>
               <p className="text-[13px] font-bold uppercase tracking-wider text-[#9CA3AF]">
@@ -382,7 +382,7 @@ export default function SjmcReportPage() {
           )}
         </section>
 
-        {/* Email capture form — shown when email not yet submitted */}
+        {/* Email capture form - shown when email not yet submitted */}
         {!emailSubmitted && (
           <section className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: "#ffffff", border: "1px solid #E5D5CA" }}>
             <h3
@@ -413,7 +413,7 @@ export default function SjmcReportPage() {
                   onChange={(e) => { setWhatsappInput(e.target.value); setFormError(""); }}
                   className="w-full rounded-xl border border-[#D1C4B8] bg-[#FFF7F2] px-4 py-3.5 text-[15px] text-[#1F2937] placeholder-[#9CA3AF] outline-none focus:border-[#E8793B] transition-colors"
                 />
-                <p className="mt-1 text-[11px] text-[#9CA3AF]">Either email or WhatsApp will do — whichever is easier.</p>
+                <p className="mt-1 text-[11px] text-[#9CA3AF]">Either email or WhatsApp will do - whichever is easier.</p>
               </div>
 
               {/* Age range */}
@@ -491,7 +491,7 @@ export default function SjmcReportPage() {
           </section>
         )}
 
-        {/* Full report — only shown after email */}
+        {/* Full report - only shown after email */}
         {emailSubmitted && (
           <>
             {/* The bigger picture */}
@@ -580,7 +580,7 @@ export default function SjmcReportPage() {
               </p>
               <button
                 onClick={async () => {
-                  const text = `I just tested my brain speed at the SJMC World Health Day event — can you beat my score? Try it: ${SHARE_URL}`;
+                  const text = `I just tested my brain speed at the SJMC World Health Day event - can you beat my score? Try it: ${SHARE_URL}`;
                   if (navigator.share) {
                     try {
                       await navigator.share({ title: "Brain Speed Challenge", text, url: SHARE_URL });

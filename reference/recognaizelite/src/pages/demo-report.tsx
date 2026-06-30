@@ -111,15 +111,15 @@ function BellCurve({ percentile, severity }: { percentile: number; severity: Sev
 const CTA_COPY: Record<Severity, { headline: string; body: string }> = {
   Low: {
     headline: "You’ve only seen 25% of the picture.",
-    body: "Processing speed flagged a concern — but that’s just one of four cognitive pillars. Memory, attention, and executive function could be compensating or declining silently. Without the full screening, you’re guessing.",
+    body: "Processing speed flagged a concern - but that’s just one of four cognitive pillars. Memory, attention, and executive function could be compensating or declining silently. Without the full screening, you’re guessing.",
   },
   Medium: {
     headline: "You’ve only seen 25% of the picture.",
-    body: "Processing speed looks adequate — but that tells you nothing about how your memory holds under pressure, how long your focus lasts, or how sharp your decisions are. One pillar doesn’t define your brain.",
+    body: "Processing speed looks adequate - but that tells you nothing about how your memory holds under pressure, how long your focus lasts, or how sharp your decisions are. One pillar doesn’t define your brain.",
   },
   High: {
     headline: "You’ve only seen 25% of the picture.",
-    body: "Processing speed is strong — but high performers know that speed without memory, focus, and decision-making is incomplete. The full screening reveals what’s really driving your performance.",
+    body: "Processing speed is strong - but high performers know that speed without memory, focus, and decision-making is incomplete. The full screening reveals what’s really driving your performance.",
   },
 };
 
@@ -349,7 +349,7 @@ export default function DemoReportPage() {
         <div className="text-center pt-2 pb-4">
           <img src="/logo.png" alt="ReCOGnAIze" className="mx-auto w-[60px]" />
           <p className="text-[#9CA3AF] text-[9px] uppercase mt-3" style={{ letterSpacing: "0.2em" }}>
-            HealthTechX Asia 2026 — Your Results
+            HealthTechX Asia 2026 - Your Results
           </p>
         </div>
 
@@ -402,7 +402,7 @@ export default function DemoReportPage() {
           )}
         </section>
 
-        {/* B2B qualifier form — shown when email not yet submitted */}
+        {/* B2B qualifier form - shown when email not yet submitted */}
         {!emailSubmitted && (
           <section className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: "#ffffff", border: "1px solid #E5D5CA" }}>
             <h3
@@ -433,7 +433,7 @@ export default function DemoReportPage() {
                   onChange={(e) => { setWhatsappInput(e.target.value); setFormError(""); }}
                   className="w-full rounded-xl border border-[#D1C4B8] bg-[#FFF7F2] px-4 py-3.5 text-[15px] text-[#1F2937] placeholder-[#9CA3AF] outline-none focus:border-[#E8793B] transition-colors"
                 />
-                <p className="mt-1 text-[11px] text-[#9CA3AF]">Optional — for follow-up.</p>
+                <p className="mt-1 text-[11px] text-[#9CA3AF]">Optional - for follow-up.</p>
               </div>
 
               {/* Role */}
@@ -511,7 +511,7 @@ export default function DemoReportPage() {
           </section>
         )}
 
-        {/* Full report — only shown after email */}
+        {/* Full report - only shown after email */}
         {emailSubmitted && (
           <>
             <section className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: "#ffffff", border: "1px solid #E5D5CA" }}>
@@ -595,7 +595,7 @@ export default function DemoReportPage() {
               </p>
               <button
                 onClick={async () => {
-                  const text = `I just tested my brain speed at the ReCOGnAIze booth at HealthTechX Asia — can you beat my score? Try it: ${SHARE_URL}`;
+                  const text = `I just tested my brain speed at the ReCOGnAIze booth at HealthTechX Asia - can you beat my score? Try it: ${SHARE_URL}`;
                   if (navigator.share) {
                     try {
                       await navigator.share({ title: "Brain Speed Challenge", text, url: SHARE_URL });
