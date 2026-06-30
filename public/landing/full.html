@@ -306,21 +306,22 @@
     .dcard .cap b { color: var(--ink); font-weight: 800; }
     .dcard .fig { font-family: var(--font-serif); font-size: clamp(34px,4vw,52px); line-height: 1; color: var(--ink); }
     .dcard .fig .pct { color: var(--brand); }
-    /* mini line chart (accuracy) */
-    .mini-line { width: 100%; height: 96px; margin: 8px 0 14px; overflow: visible; }
-    .mini-line .grid { stroke: var(--line); stroke-width: 1; }
-    .mini-line .base { stroke: #c9bcae; stroke-width: 2; stroke-dasharray: 4 4; }
-    .mini-line .path { fill: none; stroke: var(--brand); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
-      stroke-dasharray: 320; stroke-dashoffset: 320; transition: stroke-dashoffset 1.4s ease .2s; }
-    .science.in .mini-line .path { stroke-dashoffset: 0; }
-    .mini-line .dot { fill: var(--brand); opacity: 0; transition: opacity .4s ease 1.2s; }
-    .science.in .mini-line .dot { opacity: 1; }
-    .mini-line .dot.base { fill: #b6a999; }
-    .mini-line text { font-family: var(--font); font-size: 9px; fill: var(--ink-soft); font-weight: 600; }
-    /* mini bar chart (cohort) */
-    .mini-bars { display: flex; align-items: flex-end; gap: 6px; height: 96px; margin: 8px 0 14px; }
-    .mini-bars i { flex: 1; background: linear-gradient(180deg, var(--brand-2), var(--brand)); border-radius: 4px 4px 0 0; height: 0; transition: height 1s cubic-bezier(.4,0,.2,1); }
-    .science.in .mini-bars i { height: var(--h); }
+    /* accuracy: head-to-head comparison bars (90% vs ~70%) */
+    .cmp { display: flex; flex-direction: column; gap: 14px; margin: 8px 0 16px; }
+    .cmp .row .lab { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+    .cmp .row .lab .name { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .cmp .row.alt .lab .name { color: var(--ink-soft); }
+    .cmp .row .lab .val { font-family: var(--font-serif); font-size: 17px; color: var(--brand); }
+    .cmp .row.alt .lab .val { color: var(--ink-soft); }
+    .cmp .row .track { height: 12px; border-radius: 999px; background: rgba(0,0,0,.05); overflow: hidden; }
+    .cmp .row .track i { display: block; height: 100%; width: 0; border-radius: 999px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+    .cmp .row .track i.fill { background: linear-gradient(90deg, var(--brand), var(--brand-2)); }
+    .cmp .row.alt .track i { background: #c2b5a6; }
+    .science.in .cmp .row .track i { width: var(--w); }
+    /* cohort: dot-grid pictogram (each dot = part of the 1,500 cohort) */
+    .dotgrid { display: grid; grid-template-columns: repeat(15, 1fr); gap: 6px; margin: 8px 0 16px; }
+    .dotgrid i { aspect-ratio: 1; border-radius: 50%; background: var(--brand); opacity: 0; transform: scale(.4); transition: opacity .4s ease, transform .4s ease; }
+    .science.in .dotgrid i { opacity: 1; transform: none; }
     .dcard:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(45,45,45,.12); transition: transform .2s, box-shadow .2s; }
 
     /* ---------- SOLUTION ---------- */
@@ -781,29 +782,26 @@
         <!-- RIGHT: data-viz cards -->
         <div class="sci-cards">
 
-          <!-- Card A: accuracy line chart -->
+          <!-- Card A: accuracy head-to-head comparison -->
           <div class="dcard">
-            <p class="cap"><b>90% accuracy</b> at detecting mild cognitive impairment</p>
-            <svg class="mini-line" viewBox="0 0 200 96" preserveAspectRatio="none">
-              <line class="grid" x1="0" y1="24" x2="200" y2="24"/>
-              <line class="grid" x1="0" y1="60" x2="200" y2="60"/>
-              <!-- baseline (~70% pen-and-paper) -->
-              <line class="base" x1="0" y1="60" x2="200" y2="60"/>
-              <!-- ReCOGnAIze accuracy climbing to 90% -->
-              <path class="path" d="M6 70 L60 54 L120 34 L194 16"/>
-              <circle class="dot base" cx="6" cy="70" r="4"/>
-              <circle class="dot" cx="194" cy="16" r="5"/>
-            </svg>
-            <div class="fig"><span class="pct" data-count="90" data-suffix="%">0%</span></div>
-            <p class="cap" style="margin:8px 0 0;min-height:0;font-size:12px;">vs ~70% for standard pen-and-paper tests</p>
+            <p class="cap">Accuracy at detecting <b>mild cognitive impairment</b></p>
+            <div class="cmp">
+              <div class="row" style="--w:90%">
+                <div class="lab"><span class="name">ReCOGnAIze</span><span class="val">90%</span></div>
+                <div class="track"><i class="fill"></i></div>
+              </div>
+              <div class="row alt" style="--w:70%">
+                <div class="lab"><span class="name">Standard pen-and-paper</span><span class="val">~70%</span></div>
+                <div class="track"><i></i></div>
+              </div>
+            </div>
+            <p class="cap" style="margin:0;min-height:0;font-size:12px;">A ~20-point accuracy gain over conventional screening.</p>
           </div>
 
-          <!-- Card B: cohort bar chart -->
+          <!-- Card B: cohort dot-grid pictogram -->
           <div class="dcard">
-            <p class="cap"><b>1,500 people</b> studied over 3–5 years</p>
-            <div class="mini-bars">
-              <i style="--h:26%"></i><i style="--h:38%"></i><i style="--h:47%"></i><i style="--h:61%"></i><i style="--h:72%"></i><i style="--h:84%"></i><i style="--h:100%"></i>
-            </div>
+            <p class="cap"><b>1,500 people</b> studied over 3-5 years</p>
+            <div class="dotgrid" id="dotgrid"></div>
             <div class="fig" data-count="1500" data-format="comma">0</div>
             <p class="cap" style="margin:8px 0 0;min-height:0;font-size:12px;">brain MRI · cognitive testing · blood biomarkers</p>
           </div>
@@ -1025,6 +1023,18 @@
       }
       requestAnimationFrame(tick);
     }
+
+    // Populate the cohort dot-grid pictogram (each dot = part of the 1,500 cohort).
+    (function () {
+      const grid = document.getElementById('dotgrid');
+      if (!grid) return;
+      const N = 60; // 15 cols x 4 rows
+      for (let i = 0; i < N; i++) {
+        const d = document.createElement('i');
+        d.style.transitionDelay = (i * 14) + 'ms'; // staggered fill-in
+        grid.appendChild(d);
+      }
+    })();
 
     // Scroll reveal (also triggers bar fills + count-ups inside the element)
     const io = new IntersectionObserver((entries) => {
