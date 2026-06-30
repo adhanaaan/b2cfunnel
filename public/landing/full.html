@@ -453,10 +453,20 @@
     .faq button .chev { transition: transform .3s ease; color: var(--brand); }
     .faq.open button .chev { transform: rotate(45deg); }
 
-    /* ---------- FINAL CTA ---------- */
-    .cta-final { background: linear-gradient(135deg, var(--brand), #d85d12); color: #fff; border-radius: 30px; padding: 70px 40px; text-align: center; }
+    /* ---------- FINAL CTA (blurred dark-warm gradient, matches homepage) ---------- */
+    .cta-final { position: relative; max-width: 880px; margin: 0 auto; border-radius: 30px; padding: 80px 40px; text-align: center; overflow: hidden;
+      background: #2a1a10; color: #fff; box-shadow: 0 30px 70px rgba(36,23,16,.3); }
+    .cta-final::before { content: ""; position: absolute; inset: -30%; z-index: 0; filter: blur(70px); opacity: .95;
+      background:
+        radial-gradient(40% 40% at 25% 30%, var(--brand) 0%, transparent 70%),
+        radial-gradient(45% 45% at 80% 25%, var(--brand-2) 0%, transparent 70%),
+        radial-gradient(50% 50% at 70% 85%, #8a4a26 0%, transparent 72%),
+        radial-gradient(45% 45% at 20% 80%, #3a2415 0%, transparent 70%); }
+    .cta-final > * { position: relative; z-index: 1; }
     .cta-final h2 { font-size: clamp(30px,4vw,46px); color: #fff; }
-    .cta-final p { color: #ffe6d2; font-size: 18px; margin: 16px auto 30px; max-width: 560px; }
+    .cta-final p { color: rgba(255,255,255,.85); font-size: 18px; margin: 16px auto 30px; max-width: 560px; }
+    .cta-final .btn-light { background: #fff; color: var(--ink); box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .cta-final .btn-light:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0,0,0,.32); }
 
     /* ---------- FOOTER ---------- */
     footer { background: var(--bg-deep); color: #d9cdba; padding: 64px 0 36px; font-size: 14px; }
