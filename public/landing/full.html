@@ -176,9 +176,37 @@
     .stat .n { font-family: var(--font-serif); font-size: 46px; color: var(--brand); }
     .stat .l { font-size: 14px; color: var(--ink-soft); margin-top: 4px; }
 
-    /* ---------- STAT BREAKER (dark band of big cited stats) ---------- */
-    .statbreak { background: var(--bg-deep); color: #f0e4d2; }
-    .statbreak .wrap { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; }
+    /* ---------- VIDEO / MEMBER REVIEWS (Mito-style tall cards) ---------- */
+    .vr-rating { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 14px 0 38px; font-size: 15px; color: var(--ink-soft); }
+    .vr-rating b { color: var(--ink); }
+    .vr-rating .stars { color: #00b67a; letter-spacing: 2px; font-size: 16px; }
+    .vr-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .vr-card { aspect-ratio: 9 / 16; border-radius: 20px; overflow: hidden; position: relative; background: #ece8e1; }
+    /* video placeholder: gradient + play button + handle */
+    .vr-card.video { background: linear-gradient(160deg, #cfd6d2, #9aa7a0 60%, #6c7a72); display: grid; place-items: center; }
+    .vr-card.video .play { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,.92); display: grid; place-items: center; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+    .vr-card.video .play::before { content: ""; border-style: solid; border-width: 9px 0 9px 15px; border-color: transparent transparent transparent var(--ink); margin-left: 3px; }
+    .vr-card.video .handle { position: absolute; left: 16px; bottom: 16px; color: #fff; font-size: 13px; font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,.4); }
+    .vr-card.video .badge { position: absolute; top: 14px; right: 14px; font-size: 10px; font-weight: 700; letter-spacing: .08em; color: rgba(255,255,255,.9); }
+    /* text testimonial card */
+    .vr-card.quote { background: var(--bg-soft); display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 30px 26px; }
+    .vr-card.quote .stars { color: #1a1a1a; letter-spacing: 2px; margin-bottom: 16px; }
+    .vr-card.quote h4 { font-size: 19px; color: var(--ink); margin-bottom: 12px; }
+    .vr-card.quote p { font-size: 15px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 22px; }
+    .vr-card.quote .by { display: flex; align-items: center; justify-content: center; gap: 9px; }
+    .vr-card.quote .by .av { width: 30px; height: 30px; border-radius: 50%; background: var(--bg); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--ink-soft); border: 1px solid var(--line); }
+    .vr-card.quote .by .nm { font-size: 14px; font-weight: 600; color: var(--ink); }
+    @media (max-width: 900px) { .vr-row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .vr-row { grid-template-columns: 1fr; } .vr-card { aspect-ratio: 4 / 5; } }
+
+    /* ---------- STAT BREAKER (dark stats that fade into the page at the sides) ---------- */
+    .statbreak { position: relative; color: #f0e4d2; background: transparent; }
+    /* the dark fill is a separate layer that fades out left/right + top/bottom,
+       so the band has no hard box edges and flows into the surrounding page. */
+    .statbreak::before { content: ""; position: absolute; inset: 0; z-index: 0; background: var(--bg-deep);
+      -webkit-mask-image: radial-gradient(120% 100% at 50% 50%, #000 55%, transparent 100%);
+      mask-image: radial-gradient(120% 100% at 50% 50%, #000 55%, transparent 100%); }
+    .statbreak .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; }
     .statbreak .sb { text-align: center; position: relative; padding: 0 22px; }
     .statbreak .sb + .sb::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 1px; background: rgba(255,255,255,.14); }
     .statbreak .sb .big { font-family: var(--font-serif); font-size: clamp(40px,5vw,60px); line-height: 1; color: #fff; }
@@ -893,8 +921,6 @@
       <div class="head reveal">
         <p class="eyebrow">Medical &amp; Scientific Advisory Board</p>
         <h2>Guided by leaders in brain health</h2>
-        <p>Our protocols are shaped by neurologists, physicians, and clinician-scientists
-           from leading institutions across Singapore, the UK and Hong Kong.</p>
       </div>
       <div class="advisor-marquee reveal">
         <div class="advisor-row">
@@ -910,21 +936,21 @@
             </ul>
           </div>
           <div class="advisor">
-            <div class="photo"><span>ST</span><img src="/landing/dr-stephen-tong.png" alt="Dr. Stephen Tong Jia Jong" onerror="this.style.display='none'" /></div>
-            <h3>Dr. Stephen Tong Jia Jong</h3>
-            <div class="degrees">MBBS, MMed (Family Medicine), MCFP(S)</div>
-            <ul class="roles">
-              <li>Founder, Bethesda Medical</li>
-              <li>Family Physician, Singapore Medical Council</li>
-            </ul>
-          </div>
-          <div class="advisor">
             <div class="photo"><span>TF</span><img src="/landing/dr-tsin-uin-foong.webp" alt="Dr. Tsin Uin Foong" onerror="this.style.display='none'" /></div>
             <h3>Dr. Tsin Uin Foong</h3>
             <div class="degrees">MBBS (London, UK), MRCGP (UK), Dip Pract Derm (UK)</div>
             <ul class="roles">
               <li>Co-founder, Osler Group</li>
               <li>Chief Medical Officer, Osler Health International</li>
+            </ul>
+          </div>
+          <div class="advisor">
+            <div class="photo"><span>ST</span><img src="/landing/dr-stephen-tong.png" alt="Dr. Stephen Tong Jia Jong" onerror="this.style.display='none'" /></div>
+            <h3>Dr. Stephen Tong Jia Jong</h3>
+            <div class="degrees">MBBS, MMed (Family Medicine), MCFP(S)</div>
+            <ul class="roles">
+              <li>Founder, Bethesda Medical</li>
+              <li>Family Physician, Singapore Medical Council</li>
             </ul>
           </div>
           <div class="advisor">
@@ -939,6 +965,45 @@
         </div>
       </div>
       <p class="advisor-hint">Drag or swipe to see all advisors &rarr;</p>
+    </div>
+  </section>
+
+  <!-- ===================== MEMBER / VIDEO REVIEWS ===================== -->
+  <section class="section" style="background:var(--bg);">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2>What members are saying</h2>
+        <p class="vr-rating"><span class="stars">★★★★★</span> <b>Excellent</b> 4.8 out of 5</p>
+      </div>
+      <div class="vr-row reveal">
+        <!-- PLACEHOLDER video review -->
+        <div class="vr-card video">
+          <span class="badge">▶ VIDEO</span>
+          <div class="play"></div>
+          <span class="handle">@member_review</span>
+        </div>
+        <!-- text testimonial -->
+        <div class="vr-card quote">
+          <div class="stars">★★★★★</div>
+          <h4>Clear and reassuring</h4>
+          <p>I finally understand my brain health instead of just worrying about it. The report made sense.</p>
+          <div class="by"><span class="av">SL</span><span class="nm">Serene L.</span></div>
+        </div>
+        <!-- PLACEHOLDER video review -->
+        <div class="vr-card video">
+          <span class="badge">▶ VIDEO</span>
+          <div class="play"></div>
+          <span class="handle">@member_review</span>
+        </div>
+        <!-- text testimonial -->
+        <div class="vr-card quote">
+          <div class="stars">★★★★★</div>
+          <h4>Worth every minute</h4>
+          <p>Fifteen minutes and a doctor walked me through exactly what to focus on. No upsells, just answers.</p>
+          <div class="by"><span class="av">MT</span><span class="nm">Marcus T.</span></div>
+        </div>
+      </div>
+      <p class="advisor-hint" style="margin-top:20px;">Placeholder - swap the video cards for real member clips.</p>
     </div>
   </section>
 
