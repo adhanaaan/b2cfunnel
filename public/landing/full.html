@@ -176,6 +176,16 @@
     .stat .n { font-family: var(--font-serif); font-size: 46px; color: var(--brand); }
     .stat .l { font-size: 14px; color: var(--ink-soft); margin-top: 4px; }
 
+    /* ---------- STAT BREAKER (dark band of big cited stats) ---------- */
+    .statbreak { background: var(--bg-deep); color: #f0e4d2; }
+    .statbreak .wrap { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; }
+    .statbreak .sb { text-align: center; position: relative; padding: 0 22px; }
+    .statbreak .sb + .sb::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 1px; background: rgba(255,255,255,.14); }
+    .statbreak .sb .big { font-family: var(--font-serif); font-size: clamp(40px,5vw,60px); line-height: 1; color: #fff; }
+    .statbreak .sb .big em { color: var(--brand-2); font-style: normal; }
+    .statbreak .sb p { font-size: 15px; color: #d9cdba; margin: 14px 0 8px; line-height: 1.45; }
+    .statbreak .sb cite { font-size: 12px; color: #9b8e7c; font-style: normal; }
+
     /* ---------- SECTION HEADERS ---------- */
     .head { max-width: 720px; margin: 0 auto 56px; text-align: center; }
     .head h2 { font-size: clamp(30px, 4vw, 46px); }
@@ -489,6 +499,11 @@
       .foot-grid { grid-template-columns: 1fr 1fr; }
       .section { padding: 64px 0; }
     }
+    @media (max-width: 700px) {
+      .statbreak .wrap { grid-template-columns: 1fr; gap: 36px; }
+      .statbreak .sb + .sb::before { display: none; }
+      .statbreak .sb + .sb { border-top: 1px solid rgba(255,255,255,.14); padding-top: 32px; }
+    }
     @media (max-width: 560px) {
       .steps, .foot-grid, .sci-cards { grid-template-columns: 1fr; }
       /* advisor marquee: slightly narrower cards on phone */
@@ -616,8 +631,7 @@
       <div class="reveal">
         <p class="eyebrow">The solution</p>
         <h2 style="font-size:clamp(30px,4vw,46px);line-height:1.1;">A digital brain assessment with <span style="color:var(--brand);">90% accuracy</span></h2>
-        <p class="muted" style="font-size:18px;margin-top:20px;">ReCOGnAIze tells you what's actually happening in your brain. It's an assessment validated against MRI scans, built on a five-year NTU study of 1,500 people and published in <em>Alzheimer's &amp; Dementia</em>.</p>
-        <p class="muted" style="font-size:18px;margin-top:14px;">Registered with Singapore's HSA as a medical device, it reads the same structural markers a specialist looks for - without the expensive brain scans, doctor's referral, or long hospital wait.</p>
+        <p class="muted" style="font-size:18px;margin-top:20px;">ReCOGnAIze shows what's actually happening in your brain - no expensive scans, doctor's referral, or long hospital wait.</p>
         <div class="sol-chips">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Validated vs MRI</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg>5-year NTU study</span>
@@ -733,6 +747,27 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== STAT BREAKER ===================== -->
+  <section class="section statbreak reveal">
+    <div class="wrap">
+      <div class="sb">
+        <div class="big"><em>45%</em></div>
+        <p>of dementia risk is tied to modifiable factors</p>
+        <cite>Lancet Commission, 2024</cite>
+      </div>
+      <div class="sb">
+        <div class="big"><em>1 in 11</em></div>
+        <p>Singaporeans aged 60 and over live with dementia</p>
+        <cite>IMH WiSE Study</cite>
+      </div>
+      <div class="sb">
+        <div class="big"><em>45</em></div>
+        <p>is the age processing speed can begin to slow</p>
+        <cite>Whitehall II, BMJ</cite>
       </div>
     </div>
   </section>
