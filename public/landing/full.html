@@ -416,10 +416,6 @@
       display: grid; place-items: center; color: var(--brand); font-family: var(--font-serif); font-size: 56px; font-weight: 600;
     }
     .advisor .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-    /* Tong's photo has a circular crop baked into the image; scale it up so the
-       circle fills the square frame (and tint the bg to match) instead of showing round. */
-    .advisor .photo--tong { background: #d8e3ea; }
-    .advisor .photo--tong img { object-position: center 18%; transform: scale(1.42); transform-origin: center 30%; }
     .advisor h3 { font-size: 19px; line-height: 1.2; margin-bottom: 4px; }
     .advisor .degrees { color: var(--ink-soft); font-size: 13px; font-weight: 500; margin: 0 0 14px; line-height: 1.4; }
     .advisor .roles { list-style: none; display: flex; flex-direction: column; gap: 7px; }
@@ -871,7 +867,7 @@
             </ul>
           </div>
           <div class="advisor">
-            <div class="photo photo--tong"><span>ST</span><img src="/landing/dr-tong.png" alt="Dr. Stephen Tong Jia Jong" onerror="this.style.display='none'" /></div>
+            <div class="photo"><span>ST</span><img src="/landing/dr-stephen-tong.png" alt="Dr. Stephen Tong Jia Jong" onerror="this.style.display='none'" /></div>
             <h3>Dr. Stephen Tong Jia Jong</h3>
             <div class="degrees">MBBS, MMed (Family Medicine), MCFP(S)</div>
             <ul class="roles">
