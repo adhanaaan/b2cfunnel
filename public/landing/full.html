@@ -171,10 +171,17 @@
     .logo-row { display: flex; justify-content: center; align-items: center; gap: 46px; flex-wrap: wrap; opacity: .6; font-family: var(--font-serif); font-size: 20px; }
 
     /* ---------- STATS ---------- */
-    .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
-    .stat { text-align: center; }
-    .stat .n { font-family: var(--font-serif); font-size: 46px; color: var(--brand); }
-    .stat .l { font-size: 14px; color: var(--ink-soft); margin-top: 4px; }
+    /* STATS — dark cited band with feathered (blurred) top & bottom edges */
+    .stats-sec { position: relative; background: var(--bg-deep); overflow: hidden; padding: 100px 0;
+      -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 17%, #000 83%, transparent 100%);
+      mask-image: linear-gradient(180deg, transparent 0%, #000 17%, #000 83%, transparent 100%); }
+    .stats-sec::before { content: ""; position: absolute; left: 50%; top: -15%; width: 78%; height: 80%; transform: translateX(-50%); z-index: 0; filter: blur(85px); opacity: .55;
+      background: radial-gradient(closest-side, rgba(247,117,40,.35), transparent 72%); }
+    .stats { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4,1fr); gap: 0; }
+    .stat { text-align: center; padding: 8px 22px; position: relative; }
+    .stat + .stat::before { content: ""; position: absolute; left: 0; top: 12%; height: 76%; width: 1px; background: rgba(255,255,255,.14); }
+    .stat .n { font-family: var(--font-serif); font-size: clamp(38px,4vw,54px); font-weight: 600; color: var(--brand-2); line-height: 1; }
+    .stat .l { font-size: 13.5px; color: rgba(255,255,255,.82); margin-top: 12px; }
 
     /* ---------- VIDEO / MEMBER REVIEWS (Mito-style tall cards) ---------- */
     .vr-rating { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 14px 0 38px; font-size: 15px; color: var(--ink-soft); }
@@ -525,7 +532,9 @@
     /* ---------- RESPONSIVE ---------- */
     @media (max-width: 900px) {
       .hero-grid { grid-template-columns: 1fr; padding: 50px 0; }
-      .stats { grid-template-columns: repeat(2,1fr); gap: 36px 24px; }
+      .stats-sec { padding: 66px 0; }
+      .stats { grid-template-columns: repeat(2,1fr); gap: 34px 0; }
+      .stat + .stat::before { display: none; }
       .sol-grid { grid-template-columns: 1fr; gap: 36px; }
       .sci-wrap { grid-template-columns: 1fr; gap: 34px; }
       .caps { grid-template-columns: repeat(2,1fr); }
@@ -691,7 +700,7 @@
   </section>
 
   <!-- ===================== STATS ===================== -->
-  <section class="section">
+  <section class="stats-sec">
     <div class="wrap stats">
       <div class="stat reveal"><div class="n">90%</div><div class="l">Agreement with MRI-based reads</div></div>
       <div class="stat reveal"><div class="n">1,500</div><div class="l">People in the 5-year NTU study</div></div>

@@ -157,18 +157,12 @@
       .face { width:92px; max-width:30vw; }
     }
 
-    /* STATS (dark cited band with feathered top/bottom edges) */
-    .stats-sec { position:relative; background:#241710; overflow:hidden; padding:96px 0;
-      -webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 17%, #000 83%, transparent 100%);
-      mask-image:linear-gradient(180deg, transparent 0%, #000 17%, #000 83%, transparent 100%); }
-    .stats-sec::before { content:""; position:absolute; left:50%; top:-15%; width:78%; height:80%; transform:translateX(-50%); z-index:0; filter:blur(85px); opacity:.55;
-      background:radial-gradient(closest-side, rgba(247,117,40,.35), transparent 72%); }
-    .stats { position:relative; z-index:1; display:grid; grid-template-columns:repeat(3,1fr); gap:0; }
-    .stat { text-align:center; padding:8px 26px; position:relative; }
-    .stat + .stat::before { content:""; position:absolute; left:0; top:12%; height:76%; width:1px; background:rgba(255,255,255,.14); }
-    .stat .n { font-family:var(--font-display); font-size:clamp(40px,5vw,60px); font-weight:600; color:var(--brand-2); line-height:1; }
-    .stat .l { font-size:14px; color:rgba(255,255,255,.82); margin-top:14px; font-weight:500; }
-    .stat .src { font-size:12.5px; color:rgba(255,255,255,.45); margin-top:12px; }
+    /* STATS (3 cited blocks) */
+    .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .stat { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:28px 26px; box-shadow:var(--shadow); }
+    .stat .n { font-size:42px; font-weight:800; color:var(--brand); line-height:1; }
+    .stat .l { font-size:13.5px; color:var(--ink); margin-top:11px; font-weight:600; }
+    .stat .src { font-size:12.5px; color:var(--ink-soft); margin-top:10px; }
 
     /* BUILT ON SCIENCE - full-width orange band (background on the section). */
     .science-band { background:linear-gradient(135deg,var(--brand),var(--brand-2)); padding:30px 0; }
@@ -287,9 +281,8 @@
       .clinic-card { grid-template-columns:1fr; }
       .section { padding:54px 0; }
       /* Stats stay 3-across (landscape) but tighten to fit narrow screens. */
-      .stats-sec { padding:64px 0; }
-      .stats { gap:0; }
-      .stat { padding:6px 10px; }
+      .stats { gap:10px; }
+      .stat { padding:18px 14px; border-radius:14px; }
       .stat .n { font-size:clamp(24px,6.5vw,34px); }
       .stat .l { font-size:clamp(11px,2.8vw,13px); margin-top:8px; line-height:1.3; }
       .stat .src { font-size:clamp(9.5px,2.4vw,11.5px); margin-top:7px; line-height:1.3; }
@@ -301,8 +294,8 @@
       .science-strip .pm { height:17px; }
     }
     @media (max-width:480px) {
-      .stats { gap:0; }
-      .stat { padding:6px 7px; }
+      .stats { gap:7px; }
+      .stat { padding:13px 9px; }
     }
     @media (max-width:520px) { .foot-cols { grid-template-columns:1fr; } }
     @media (max-width:600px) {
@@ -439,7 +432,7 @@
   </section>
 
   <!-- STATS -->
-  <section class="stats-sec">
+  <section class="section">
     <div class="wrap stats">
       <div class="stat"><div class="n">45%</div><div class="l">of dementia risk is tied to modifiable factors</div><div class="src">Lancet Commission, 2024</div></div>
       <div class="stat"><div class="n">1 in 11</div><div class="l">Singaporeans aged 60 and over live with dementia</div><div class="src">IMH WiSE Study</div></div>
