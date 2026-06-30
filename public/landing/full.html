@@ -180,8 +180,15 @@
     .vr-rating { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 14px 0 38px; font-size: 15px; color: var(--ink-soft); }
     .vr-rating b { color: var(--ink); }
     .vr-rating .stars { color: #00b67a; letter-spacing: 2px; font-size: 16px; }
-    .vr-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-    .vr-card { aspect-ratio: 9 / 16; border-radius: 20px; overflow: hidden; position: relative; background: #ece8e1; }
+    /* horizontal scroller (like the advisory board): drag/swipe through cards */
+    .vr-row { display: flex; gap: 20px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity; padding-bottom: 14px;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent); }
+    .vr-row::-webkit-scrollbar { height: 6px; }
+    .vr-row::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
+    .vr-row::-webkit-scrollbar-track { background: transparent; }
+    .vr-card { flex: 0 0 300px; aspect-ratio: 9 / 16; border-radius: 20px; overflow: hidden; position: relative; background: #ece8e1; scroll-snap-align: start; }
     /* video placeholder: gradient + play button + handle */
     .vr-card.video { background: linear-gradient(160deg, #cfd6d2, #9aa7a0 60%, #6c7a72); display: grid; place-items: center; }
     .vr-card.video .play { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,.92); display: grid; place-items: center; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
@@ -196,8 +203,7 @@
     .vr-card.quote .by { display: flex; align-items: center; justify-content: center; gap: 9px; }
     .vr-card.quote .by .av { width: 30px; height: 30px; border-radius: 50%; background: var(--bg); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--ink-soft); border: 1px solid var(--line); }
     .vr-card.quote .by .nm { font-size: 14px; font-weight: 600; color: var(--ink); }
-    @media (max-width: 900px) { .vr-row { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 520px) { .vr-row { grid-template-columns: 1fr; } .vr-card { aspect-ratio: 4 / 5; } }
+    @media (max-width: 520px) { .vr-card { flex-basis: 78vw; } }
 
     /* ---------- STAT BREAKER (dark stats that fade into the page at the sides) ---------- */
     .statbreak { position: relative; color: #f0e4d2; background: transparent; }
@@ -972,7 +978,7 @@
   <section class="section" style="background:var(--bg);">
     <div class="wrap">
       <div class="head reveal">
-        <h2>What members are saying</h2>
+        <h2>What people are saying</h2>
         <p class="vr-rating"><span class="stars">★★★★★</span> <b>Excellent</b> 4.8 out of 5</p>
       </div>
       <div class="vr-row reveal">
@@ -1002,8 +1008,21 @@
           <p>Fifteen minutes and a doctor walked me through exactly what to focus on. No upsells, just answers.</p>
           <div class="by"><span class="av">MT</span><span class="nm">Marcus T.</span></div>
         </div>
+        <!-- PLACEHOLDER video review -->
+        <div class="vr-card video">
+          <span class="badge">▶ VIDEO</span>
+          <div class="play"></div>
+          <span class="handle">@member_review</span>
+        </div>
+        <!-- text testimonial -->
+        <div class="vr-card quote">
+          <div class="stars">★★★★★</div>
+          <h4>No more guessing</h4>
+          <p>I'd been blaming age for the forgetfulness. Now I know which habits actually move the needle.</p>
+          <div class="by"><span class="av">PR</span><span class="nm">Priya R.</span></div>
+        </div>
       </div>
-      <p class="advisor-hint" style="margin-top:20px;">Placeholder - swap the video cards for real member clips.</p>
+      <p class="advisor-hint" style="margin-top:20px;">Drag or swipe to see more &rarr; (placeholder - swap video cards for real clips)</p>
     </div>
   </section>
 
