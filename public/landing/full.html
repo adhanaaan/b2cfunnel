@@ -393,17 +393,18 @@
     .ck.no svg { width: 15px; height: 15px; stroke: #c4b6a8; fill: none; stroke-width: 2.2; stroke-linecap: round; }
     .ctable .hotcol .ck.yes { background: var(--brand); box-shadow: 0 4px 12px rgba(247,117,40,.32); }
 
-    /* ---------- ADVISOR SLIDER ---------- */
-    /* ---------- ADVISORS (Mito-style, auto-rolling marquee) ---------- */
-    .advisor-marquee { position: relative; overflow: hidden;
-      -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
-      mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
-    .advisor-row { display: flex; width: max-content; align-items: stretch; animation: advscroll 48s linear infinite; }
-    .advisor-marquee:hover .advisor-row { animation-play-state: paused; } /* pause on hover to read */
-    @keyframes advscroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    @media (prefers-reduced-motion: reduce) { .advisor-row { animation: none; } }
+    /* ---------- ADVISORS (manual horizontal scroller) ---------- */
+    .advisor-marquee { position: relative; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity; padding-bottom: 14px;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent); }
+    .advisor-marquee::-webkit-scrollbar { height: 6px; }
+    .advisor-marquee::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
+    .advisor-marquee::-webkit-scrollbar-track { background: transparent; }
+    .advisor-row { display: flex; width: max-content; align-items: stretch; }
     /* each advisor is a fixed-width card; vertical divider between them */
-    .advisor { flex: 0 0 380px; text-align: left; padding: 4px 32px; border-left: 1px solid var(--line); }
+    .advisor { flex: 0 0 380px; text-align: left; padding: 4px 32px; border-left: 1px solid var(--line); scroll-snap-align: start; }
+    .advisor-hint { text-align: center; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-top: 16px; }
     .advisor .photo {
       position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; margin-bottom: 20px;
       background: linear-gradient(135deg,var(--bg-soft),#ffd9bc);
@@ -707,8 +708,8 @@
             <div class="mock">
               <div class="mock-head"><span class="dot"></span> Teleconsult</div>
               <div class="mt-doc">
-                <img class="av" src="/Kandiah.png" alt="" onerror="this.style.background='linear-gradient(135deg,#ffab57,#f77528)'" />
-                <div><b>Dr. Sarah Lim</b><span>Certified physician</span></div>
+                <img class="av" src="/landing/dr-tsin-uin-foong.webp" alt="" onerror="this.style.background='linear-gradient(135deg,#ffab57,#f77528)'" />
+                <div><b>Dr. Tsin Uin Foong</b><span>Certified physician</span></div>
               </div>
               <div class="mt-when"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Tue, 3:00 PM · Video call</div>
               <div class="mt-cta">Join consultation</div>
@@ -848,7 +849,7 @@
       </div>
       <div class="advisor-marquee reveal">
         <div class="advisor-row">
-          <!-- set 1 -->
+
           <div class="advisor">
             <div class="photo"><span>NK</span><img src="/Kandiah.png" alt="A/Prof Nagaendran Kandiah" onerror="this.style.display='none'" /></div>
             <h3>A/Prof Nagaendran Kandiah</h3>
@@ -886,46 +887,9 @@
               <li>Co-founder, The Hong Kong Menopause Society</li>
             </ul>
           </div>
-          <!-- set 2 (duplicate for seamless loop) -->
-          <div class="advisor" aria-hidden="true">
-            <div class="photo"><span>NK</span><img src="/Kandiah.png" alt="" onerror="this.style.display='none'" /></div>
-            <h3>A/Prof Nagaendran Kandiah</h3>
-            <div class="degrees">MBBS, FAMS (Neurology), FRCP (Edin)</div>
-            <ul class="roles">
-              <li>Director, Dementia Research Centre (Singapore), LKCMedicine</li>
-              <li>Associate Professor of Neuroscience &amp; Mental Health, LKCMedicine</li>
-              <li>Senior Consultant Neurologist, National University Hospital, Singapore</li>
-            </ul>
-          </div>
-          <div class="advisor" aria-hidden="true">
-            <div class="photo"><span>ST</span><img src="/landing/dr-tong.png" alt="" onerror="this.style.display='none'" /></div>
-            <h3>Dr. Stephen Tong Jia Jong</h3>
-            <div class="degrees">MBBS, MMed (Family Medicine), MCFP(S)</div>
-            <ul class="roles">
-              <li>Founder, Bethesda Medical</li>
-              <li>Family Physician, Singapore Medical Council</li>
-            </ul>
-          </div>
-          <div class="advisor" aria-hidden="true">
-            <div class="photo"><span>TF</span><img src="/landing/dr-tsin-uin-foong.webp" alt="" onerror="this.style.display='none'" /></div>
-            <h3>Dr. Tsin Uin Foong</h3>
-            <div class="degrees">MBBS (London, UK), MRCGP (UK), Dip Pract Derm (UK)</div>
-            <ul class="roles">
-              <li>Co-founder, Osler Group</li>
-              <li>Chief Medical Officer, Osler Health International</li>
-            </ul>
-          </div>
-          <div class="advisor" aria-hidden="true">
-            <div class="photo"><span>LL</span><img src="/landing/dr-laurena-law.png" alt="" onerror="this.style.display='none'" /></div>
-            <h3>Dr. Laurena Law</h3>
-            <div class="degrees">MBBS</div>
-            <ul class="roles">
-              <li>Medical Director, Choy Sum Health Clinic</li>
-              <li>Co-founder, The Hong Kong Menopause Society</li>
-            </ul>
-          </div>
         </div>
       </div>
+      <p class="advisor-hint">Drag or swipe to see all advisors &rarr;</p>
     </div>
   </section>
 
