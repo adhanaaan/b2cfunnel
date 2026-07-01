@@ -173,6 +173,7 @@
       background: radial-gradient(closest-side, rgba(255,255,255,.62), transparent 72%); filter: blur(22px); }
     .sol-bg .person { position: absolute; right: 4%; bottom: 0; height: 94%; width: auto; z-index: 2; }
     .solution-bg .wrap { position: relative; z-index: 3; }
+    .sol-inner { position: relative; max-width: 1180px; height: 100%; margin: 0 auto; padding: 0 22px; }
     .sol-copy { max-width: 440px; }
     .sol-copy h2 { font-size: clamp(30px,4vw,46px); line-height: 1.08; }
     .sol-copy p { font-size: 16.5px; color: var(--ink-soft); margin-top: 16px; line-height: 1.6; }
@@ -191,11 +192,11 @@
     .mbar .t { height: 5px; border-radius: 9px; background: #efe3d7; overflow: hidden; }
     .mbar .t i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(90deg, var(--brand-2), var(--brand)); }
     .gauge .gtxt { text-align: center; font-size: 10.5px; font-weight: 800; color: var(--brand); margin-top: 3px; letter-spacing: .02em; }
-    .fc-score   { left: 37%; top: 8%;  width: 254px; }
-    .fc-agree   { right: 3%; top: 9%;  width: 198px; }
-    .fc-domains { left: 36%; bottom: 10%; width: 224px; }
-    .fc-risk    { right: 2%; bottom: 11%; width: 252px; }
-    .fc-tag     { left: 61%; top: 40%; }
+    .fc-score   { left: 42%; top: 6%;  width: 250px; }
+    .fc-agree   { right: 0%; top: 7%;  width: 198px; }
+    .fc-domains { left: 41%; bottom: 9%; width: 222px; }
+    .fc-risk    { right: 0%; bottom: 9%; width: 250px; }
+    .fc-tag     { left: 63%; top: 40%; }
 
     /* ---------- LOGO STRIP ---------- */
     .logos { padding: 40px 0; border-bottom: 1px solid var(--line); }
@@ -719,6 +720,7 @@
   <!-- ===================== SOLUTION (full-bg composition) ===================== -->
   <section class="solution-bg" id="solution">
     <div class="sol-bg" aria-hidden="true">
+     <div class="sol-inner">
       <div class="glow"></div>
 
       <!-- Total Score (ring) -->
@@ -776,6 +778,7 @@
       <div class="fcard tag fc-tag">✓ Validated vs MRI</div>
 
       <img class="person" src="/landing/woman-cut.png" alt="A woman who took the ReCOGnAIze brain health assessment" />
+     </div>
     </div>
 
     <div class="wrap">
@@ -1003,9 +1006,9 @@
           <thead>
             <tr>
               <th></th>
-              <th class="hotcol"><span class="colname">ReCOGnAIze</span><span class="colsub">15 min · at home</span></th>
-              <th><span class="colname">Pen &amp; paper</span><span class="colsub">in clinic</span></th>
-              <th><span class="colname">MRI</span><span class="colsub">in hospital</span></th>
+              <th class="hotcol"><span class="colname">ReCOGnAIze</span><span class="colsub">Home</span></th>
+              <th><span class="colname">Pen &amp; paper</span><span class="colsub">Clinic</span></th>
+              <th><span class="colname">MRI</span><span class="colsub">Hospital</span></th>
             </tr>
           </thead>
           <tbody>
