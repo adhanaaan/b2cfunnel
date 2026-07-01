@@ -165,18 +165,21 @@
     .pill.watch { background: #fdf1dd; color: #b9781b; }
     .pill.low { background: #fde7e7; color: #c0392b; }
 
-    /* phone mockup framing the report card, held in a hand */
-    .phone-scene { position: relative; width: 330px; max-width: 100%; margin: 0 auto; padding-bottom: 60px; }
-    .phone { position: relative; width: 300px; margin: 0 auto; background: #111214; border-radius: 44px; padding: 10px; box-shadow: 0 40px 90px rgba(36,23,16,.4), inset 0 0 0 2px rgba(255,255,255,.06); z-index: 2; }
-    .phone::before { content: ""; position: absolute; top: 18px; left: 50%; transform: translateX(-50%); width: 84px; height: 22px; background: #050506; border-radius: 999px; z-index: 3; }
-    .phone .screen { position: relative; background: #fff; border-radius: 36px; overflow: hidden; padding: 42px 20px 26px; }
-    .phone .report { background: transparent; border: 0; border-radius: 0; box-shadow: none; padding: 0; }
-    .phone .report::before { top: 0; left: 0; }
-    .phone .score-ring { margin: 30px auto 8px; }
-    .phone .domain-bar { grid-template-columns: 96px 1fr; gap: 10px; }
-    .phone .domain-bar span { font-size: 12px; }
-    .mri-cap { text-align: center; font-size: 12px; color: var(--ink-soft); line-height: 1.4; margin: 4px 14px 18px; }
-    .hand-img { position: absolute; left: 50%; bottom: 0; transform: translateX(-52%); width: 132%; z-index: 3; pointer-events: none; filter: drop-shadow(0 20px 30px rgba(36,23,16,.28)); }
+    /* hand holding a phone; the report is overlaid onto the phone's blank screen */
+    .phone-scene { position: relative; width: 460px; max-width: 100%; margin: 0 auto; }
+    .hand-base { display: block; width: 100%; height: auto; filter: drop-shadow(0 26px 40px rgba(36,23,16,.22)); }
+    /* screen rect measured from hand-holding.png (350x350): left 36.6%, top 16.9%, 26.9% x 56% */
+    .pscreen { position: absolute; left: 36.6%; top: 16.9%; width: 26.9%; height: 56%; background: #fff; border-radius: 8px;
+      display: flex; flex-direction: column; align-items: center; padding: 6% 7% 5%; overflow: hidden; }
+    .pscreen .plabel { align-self: flex-start; font-size: 6px; letter-spacing: .1em; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; }
+    .pscreen .pring { position: relative; width: 46%; aspect-ratio: 1; margin: 9% 0 5%; }
+    .pscreen .pring svg { transform: rotate(-90deg); }
+    .pscreen .pring .pnum { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-serif); font-size: clamp(15px, 5vw, 22px); color: var(--ink); }
+    .pscreen .pcap { font-size: 6.5px; color: var(--ink-soft); text-align: center; line-height: 1.3; margin-bottom: 7%; }
+    .pscreen .pbar { width: 100%; display: grid; grid-template-columns: 38% 1fr; gap: 6px; align-items: center; margin-top: 5.5%; }
+    .pscreen .pbar span { font-size: 6.5px; color: var(--ink); font-weight: 600; line-height: 1.15; }
+    .pscreen .pbar .pt { height: 5px; border-radius: 9px; background: #efe4d9; overflow: hidden; }
+    .pscreen .pbar .pt i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(90deg, var(--brand-2), var(--brand)); }
 
     /* ---------- LOGO STRIP ---------- */
     .logos { padding: 40px 0; border-bottom: 1px solid var(--line); }
@@ -690,25 +693,19 @@
         </div>
       </div>
       <div class="phone-scene reveal">
-        <div class="phone">
-          <div class="screen">
-            <div class="report reveal">
-              <div class="score-ring">
-                <svg width="130" height="130" viewBox="0 0 130 130">
-                  <circle cx="65" cy="65" r="58" fill="none" stroke="#EAE6DD" stroke-width="12"/>
-                  <circle cx="65" cy="65" r="58" fill="none" stroke="#F77528" stroke-width="12" stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="36"/>
-                </svg>
-                <div class="score-num">90%</div>
-              </div>
-              <p class="mri-cap">Agreement with MRI-based specialist reads</p>
-              <div class="domain-bar"><span>Processing Speed</span><div class="track"><i style="--w:88%"></i></div></div>
-              <div class="domain-bar"><span>Executive Function</span><div class="track"><i style="--w:74%"></i></div></div>
-              <div class="domain-bar"><span>Attention</span><div class="track"><i style="--w:82%"></i></div></div>
-              <div class="domain-bar"><span>Working Memory</span><div class="track"><i style="--w:69%"></i></div></div>
-            </div>
+        <img class="hand-base" src="/landing/hand-holding.png" alt="A person holding a phone showing their brain health results" />
+        <div class="pscreen">
+          <span class="plabel">Brain Health Score</span>
+          <div class="pring">
+            <svg viewBox="0 0 130 130"><circle cx="65" cy="65" r="58" fill="none" stroke="#EAE6DD" stroke-width="12"/><circle cx="65" cy="65" r="58" fill="none" stroke="#F77528" stroke-width="12" stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="36"/></svg>
+            <div class="pnum">90%</div>
           </div>
+          <p class="pcap">Agreement with MRI-based reads</p>
+          <div class="pbar"><span>Processing Speed</span><div class="pt"><i style="width:88%"></i></div></div>
+          <div class="pbar"><span>Executive Function</span><div class="pt"><i style="width:74%"></i></div></div>
+          <div class="pbar"><span>Attention</span><div class="pt"><i style="width:82%"></i></div></div>
+          <div class="pbar"><span>Working Memory</span><div class="pt"><i style="width:69%"></i></div></div>
         </div>
-        <img class="hand-img" src="/landing/hand.png" alt="" onerror="this.remove()" />
       </div>
     </div>
   </section>
