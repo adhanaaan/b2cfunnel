@@ -572,16 +572,16 @@
       .stats-sec { padding: 66px 0; }
       .stats { grid-template-columns: repeat(2,1fr); gap: 34px 0; }
       .stat + .stat::before { display: none; }
-      /* SOLUTION composition stacks on mobile: copy on top, person + cards below */
+      /* SOLUTION: on mobile drop the floating layout, stack copy -> person -> cards */
       .solution-bg { min-height: auto; display: flex; flex-direction: column-reverse; }
-      .solution-bg .wrap { padding-top: 54px; padding-bottom: 8px; }
+      .solution-bg .wrap { padding-top: 48px; padding-bottom: 4px; }
       .sol-copy { max-width: 100%; }
-      .sol-bg { position: relative; inset: auto; height: 430px; margin: 6px 0 0; }
-      .sol-bg .person { right: 50%; transform: translateX(50%); height: 100%; }
-      .sol-bg .glow { right: 50%; transform: translateX(50%); width: 74%; }
-      .fcard { transform: scale(.82); }
-      .fc-score { left: -3%; top: 3%; } .fc-agree { right: -3%; top: 1%; }
-      .fc-domains { left: -4%; bottom: 5%; } .fc-risk { right: -4%; bottom: 3%; }
+      .sol-bg { position: static; }
+      .sol-inner { position: static; height: auto; max-width: 380px; margin: 26px auto 0; padding: 0 18px;
+        display: flex; flex-direction: column; align-items: center; gap: 14px; }
+      .sol-bg .glow { display: none; }
+      .sol-bg .person { position: static; order: -1; width: 240px; height: auto; margin: 0; right: auto; bottom: auto; transform: none; }
+      .sol-inner .fcard { position: static; transform: none; width: 100%; left: auto; right: auto; top: auto; bottom: auto; }
       .fc-tag { display: none; }
       .sci-wrap { grid-template-columns: 1fr; gap: 34px; }
       .caps { grid-template-columns: repeat(2,1fr); }
