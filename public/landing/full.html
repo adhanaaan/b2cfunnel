@@ -574,13 +574,20 @@
       .stats-sec { padding: 66px 0; }
       .stats { grid-template-columns: repeat(2,1fr); gap: 34px 0; }
       .stat + .stat::before { display: none; }
-      /* SOLUTION on mobile: keep the floating composition, just scale it down to fit */
+      /* SOLUTION on mobile: keep the floating composition, centered + scaled to fit */
       .solution-bg { min-height: auto; display: flex; flex-direction: column-reverse; padding-bottom: 8px; }
       .solution-bg .wrap { padding: 46px 22px 6px; }
       .sol-copy { max-width: 100%; }
-      .sol-bg { position: relative; inset: auto; height: 264px; overflow: hidden; display: flex; justify-content: center; }
-      .sol-inner { position: relative; flex: 0 0 940px; width: 940px; height: 660px; max-width: none; margin: 0; padding: 0;
-        transform: scale(0.4); transform-origin: top center; }
+      .sol-bg { position: relative; inset: auto; height: 320px; overflow: hidden; display: flex; justify-content: center; }
+      .sol-inner { position: relative; flex: 0 0 800px; width: 800px; height: 640px; max-width: none; margin: 0; padding: 0;
+        transform: scale(0.475); transform-origin: top center; }
+      /* centre the woman and flank the cards at the corners on mobile */
+      .sol-bg .person { left: 50%; right: auto; transform: translateX(-50%); height: 92%; }
+      .fc-score   { left: 0; top: 1%; }
+      .fc-agree   { left: auto; right: 0; top: 1%; }
+      .fc-domains { left: 0; bottom: 2%; }
+      .fc-risk    { left: auto; right: 0; bottom: 2%; }
+      .fc-tag, .fc-note { display: none; }
       .sci-wrap { grid-template-columns: 1fr; gap: 34px; }
       .caps { grid-template-columns: repeat(2,1fr); }
       .steps { grid-template-columns: repeat(2,1fr); }
@@ -725,9 +732,9 @@
       <div class="fcard fc-score">
         <p class="fh">Total Score</p>
         <div style="display:flex; align-items:center; gap:14px;">
-          <div class="mini-ring" style="width:74px;height:74px;">
-            <svg width="74" height="74" viewBox="0 0 130 130"><circle cx="65" cy="65" r="57" fill="none" stroke="#eee2d6" stroke-width="10"/><circle cx="65" cy="65" r="57" fill="none" stroke="#f77528" stroke-width="10" stroke-linecap="round" stroke-dasharray="358" stroke-dashoffset="66"/></svg>
-            <span class="rn" style="font-size:22px;">326<small>of 400</small></span>
+          <div class="mini-ring" style="width:80px;height:80px;">
+            <svg width="80" height="80" viewBox="0 0 130 130"><circle cx="65" cy="65" r="58" fill="none" stroke="#eee2d6" stroke-width="9"/><circle cx="65" cy="65" r="58" fill="none" stroke="#f77528" stroke-width="9" stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="67"/></svg>
+            <span class="rn" style="font-size:17px;">326<small style="font-size:7.5px;">of 400</small></span>
           </div>
           <div style="font-size:12px; color:var(--ink-soft); line-height:1.4;"><b style="color:var(--brand); font-family:var(--font-serif); font-size:20px; display:block;">Top 18%</b>Better than 82% of peers in your age range.</div>
         </div>
