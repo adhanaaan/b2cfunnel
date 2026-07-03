@@ -196,14 +196,13 @@
     /* WHAT YOU GET */
     /* Blurred dark-warm gradient CTA (inspo-style) */
     .get-card { position:relative; max-width:760px; margin:0 auto; border-radius:28px; padding:64px 40px; text-align:center; overflow:hidden;
-      background:#2a1a10; color:#fff; box-shadow:0 30px 70px rgba(36,23,16,.3); }
-    /* soft out-of-focus colour blobs behind the content */
-    .get-card::before { content:""; position:absolute; inset:-30%; z-index:0; filter:blur(70px); opacity:.95;
+      background:#161009; color:#fff; border:1px solid rgba(255,255,255,.06); box-shadow:0 40px 90px rgba(22,16,9,.42); }
+    /* premium deep-espresso base with a single soft warm glow */
+    .get-card::before { content:""; position:absolute; inset:0; z-index:0;
       background:
-        radial-gradient(40% 40% at 25% 30%, var(--brand) 0%, transparent 70%),
-        radial-gradient(45% 45% at 80% 25%, var(--brand-2) 0%, transparent 70%),
-        radial-gradient(50% 50% at 70% 85%, #8a4a26 0%, transparent 72%),
-        radial-gradient(45% 45% at 20% 80%, #3a2415 0%, transparent 70%); }
+        radial-gradient(90% 75% at 82% 0%, rgba(247,117,40,.26), transparent 58%),
+        radial-gradient(75% 65% at 12% 108%, rgba(255,171,87,.12), transparent 60%),
+        linear-gradient(158deg, #241710 0%, #180f09 56%, #110b06 100%); }
     .get-card > * { position:relative; z-index:1; }
     .get-card h2 { font-size:clamp(26px,3.8vw,38px); margin-bottom:10px; color:#fff; }
     .get-card .sub { color:rgba(255,255,255,.85); font-size:15px; margin-bottom:22px; }
