@@ -178,6 +178,45 @@
     .sol-copy h2 { font-size: clamp(30px,4vw,46px); line-height: 1.08; }
     .sol-copy p { font-size: 16.5px; color: var(--ink-soft); margin-top: 16px; line-height: 1.6; }
     .sol-copy .sol-chips { margin-top: 24px; }
+    /* ---------- SOLUTION: woman holding tablet, flat dashboard overlaid on the glass ---------- */
+    .tab-sec { position: relative; overflow: hidden; background: #f5e7db; min-height: 620px; display: flex; align-items: center; }
+    .tab-photo { position: absolute; right: -2%; bottom: 0; height: 106%; z-index: 0; }
+    .tab-photo > img { display: block; height: 100%; width: auto; }
+    .tab-sec .wrap { position: relative; z-index: 1; width: 100%; }
+    .tab-sec .sol-copy { max-width: 430px; }
+
+    /* Crisp flat dashboard sitting on the tablet screen (perspective-matched to the glass). */
+    .tab-screen { position: absolute; left: 32.95%; top: 42.83%; width: 20%; height: 24%;
+      transform-origin: 0 0; transform: matrix(0.996, -0.1047, 0.3458, 0.9696, 0, 0);
+      background: #fff; border-radius: 4px; overflow: hidden; box-shadow: 0 1px 5px rgba(60,40,20,.14);
+      font-family: var(--font-sans); color: #2a2018; display: flex; flex-direction: column; }
+    .ts-head { display: flex; align-items: center; gap: 6px; padding: 5.5% 6% 3.5%; border-bottom: 1px solid #efece7; }
+    .ts-brand { font-weight: 800; font-size: 8.5px; letter-spacing: .2px; }
+    .ts-brand i { color: var(--brand); font-style: normal; }
+    .ts-tabs { display: flex; gap: 5px; font-size: 6px; color: #bcb3a5; margin-left: auto; }
+    .ts-tabs b { color: #2a2018; font-weight: 700; }
+    .ts-ring { width: 13px; height: 13px; border-radius: 50%; display: grid; place-items: center; }
+    .ts-ring::after { content: ""; width: 100%; height: 100%; border-radius: 50%; border: 1.6px solid #3fa66a; border-right-color: #d7eede; }
+    .ts-body { display: flex; flex: 1; padding: 4.5% 6%; gap: 5%; align-items: center; }
+    .ts-brain { flex: 0 0 32%; display: grid; place-items: center; }
+    .ts-brain svg { width: 100%; height: auto; }
+    .ts-list { flex: 1; display: flex; flex-direction: column; }
+    .ts-title { font-family: var(--font-serif); font-size: 9.5px; font-weight: 600; margin-bottom: 3%; }
+    .ts-row { display: flex; align-items: center; gap: 5px; padding: 2.6% 0; border-top: 1px solid #f4f0ea; }
+    .ts-row:first-of-type { border-top: none; }
+    .ts-name { font-size: 5.6px; font-weight: 700; line-height: 1.15; flex: 1; }
+    .ts-name i { display: block; font-weight: 400; color: #bcb3a5; font-style: normal; font-size: 4.6px; }
+    .ts-tag { font-size: 5px; font-weight: 700; padding: 1px 4px; border-radius: 999px; white-space: nowrap; }
+    .ts-tag.g { color: #2f8f57; background: #e7f4ec; }
+    .ts-tag.a { color: #b7791f; background: #fbf0da; }
+    .ts-spark { width: 20%; height: 7px; color: #3fa66a; flex-shrink: 0; }
+
+    @media (max-width: 860px) {
+      .tab-sec { flex-direction: column; min-height: 0; padding-top: 44px; }
+      .tab-sec .wrap { order: -1; }
+      .tab-sec .sol-copy { max-width: 100%; }
+      .tab-photo { position: relative; right: auto; height: auto; width: 118%; max-width: 118%; margin: 20px 0 -2px -9%; }
+    }
     /* floating white cards */
     .fcard { position: absolute; z-index: 1; background: rgba(255,255,255,.94); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
       border: 1px solid rgba(45,30,20,.05); border-radius: 16px; padding: 15px 17px; box-shadow: 0 24px 50px rgba(120,60,30,.16); color: var(--ink); }
@@ -547,12 +586,12 @@
 
     /* ---------- FINAL CTA (blurred dark-warm gradient, matches homepage) ---------- */
     .cta-final { position: relative; max-width: 880px; margin: 0 auto; border-radius: 30px; padding: 80px 40px; text-align: center; overflow: hidden;
-      background: #161009; color: #fff; border: 1px solid rgba(255,255,255,.06); box-shadow: 0 40px 90px rgba(22,16,9,.42); }
+      background: #ef6316; color: #fff; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 40px 90px rgba(210,84,16,.40); }
     .cta-final::before { content: ""; position: absolute; inset: 0; z-index: 0;
       background:
-        radial-gradient(105% 90% at 82% -8%, rgba(247,117,40,.62), transparent 60%),
-        radial-gradient(85% 75% at 8% 112%, rgba(255,150,70,.30), transparent 62%),
-        linear-gradient(155deg, #5a3016 0%, #341d10 52%, #1d1108 100%); }
+        radial-gradient(85% 95% at 85% -12%, rgba(255,206,158,.55), transparent 58%),
+        radial-gradient(70% 82% at 6% 112%, rgba(255,150,78,.32), transparent 60%),
+        linear-gradient(150deg, #fb8236 0%, #f26a1c 48%, #db530c 100%); }
     .cta-final > * { position: relative; z-index: 1; }
     .cta-final h2 { font-size: clamp(30px,4vw,46px); color: #fff; }
     .cta-final p { color: rgba(255,255,255,.85); font-size: 18px; margin: 16px auto 30px; max-width: 560px; }
@@ -734,73 +773,27 @@
   </section>
 
   <!-- ===================== SOLUTION (full-bg composition) ===================== -->
-  <section class="solution-bg" id="solution">
-    <div class="sol-bg" aria-hidden="true">
-     <div class="sol-inner">
-      <div class="glow"></div>
-
-      <!-- Total Score (ring) -->
-      <div class="fcard fc-score">
-        <p class="fh">Total Score</p>
-        <div style="display:flex; align-items:center; gap:14px;">
-          <div class="mini-ring" style="width:80px;height:80px;">
-            <svg width="80" height="80" viewBox="0 0 130 130"><circle cx="65" cy="65" r="58" fill="none" stroke="#eee2d6" stroke-width="9"/><circle cx="65" cy="65" r="58" fill="none" stroke="#f77528" stroke-width="9" stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="67"/></svg>
-            <span class="rn" style="font-size:22px;">326<small style="font-size:9px;">of 400</small></span>
+  <section class="tab-sec" id="solution">
+    <div class="tab-photo">
+      <img src="/landing/woman-tablet-blank.png" alt="A woman viewing her ReCOGnAIze brain health results on a tablet" />
+      <div class="tab-screen" aria-hidden="true">
+        <div class="ts-head">
+          <span class="ts-brand">ReCOGn<i>AI</i>ze</span>
+          <span class="ts-tabs"><b>Results</b><span>Report</span><span>Domains</span></span>
+          <span class="ts-ring"></span>
+        </div>
+        <div class="ts-body">
+          <div class="ts-brain"><svg viewBox="0 0 64 56" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 6c-6 0-9 4-9 8-4 0-7 3-7 7 0 3 2 5 4 6-1 4 2 8 7 8 1 3 4 5 7 5V6z" fill="#e7a988"/><path d="M40 6c6 0 9 4 9 8 4 0 7 3 7 7 0 3-2 5-4 6 1 4-2 8-7 8-1 3-4 5-7 5V6z" fill="#eab492"/><path d="M32 4v46" stroke="#d3946f" stroke-width="1.4"/></svg></div>
+          <div class="ts-list">
+            <p class="ts-title">Brain Health</p>
+            <div class="ts-row"><span class="ts-name">Processing Speed<i>Percentile 88</i></span><span class="ts-tag g">Optimal</span><svg class="ts-spark" viewBox="0 0 40 12" fill="none" style="color:#3fa66a"><path d="M1 8 L7 6 L12 9 L18 4 L24 7 L30 3 L39 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="ts-row"><span class="ts-name">Executive Function<i>Percentile 74</i></span><span class="ts-tag g">Good</span><svg class="ts-spark" viewBox="0 0 40 12" fill="none" style="color:#3fa66a"><path d="M1 8 L7 6 L12 9 L18 4 L24 7 L30 3 L39 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="ts-row"><span class="ts-name">Attention<i>Percentile 82</i></span><span class="ts-tag g">Optimal</span><svg class="ts-spark" viewBox="0 0 40 12" fill="none" style="color:#3fa66a"><path d="M1 8 L7 6 L12 9 L18 4 L24 7 L30 3 L39 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="ts-row"><span class="ts-name">Working Memory<i>Percentile 69</i></span><span class="ts-tag a">Monitor</span><svg class="ts-spark" viewBox="0 0 40 12" fill="none" style="color:#d69a2e"><path d="M1 8 L7 6 L12 9 L18 4 L24 7 L30 3 L39 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="ts-row"><span class="ts-name">MCI risk<i>Lower risk</i></span><span class="ts-tag g">Low</span><svg class="ts-spark" viewBox="0 0 40 12" fill="none" style="color:#3fa66a"><path d="M1 8 L7 6 L12 9 L18 4 L24 7 L30 3 L39 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           </div>
-          <div style="font-size:12px; color:var(--ink-soft); line-height:1.4;"><b style="color:var(--brand); font-family:var(--font-serif); font-size:20px; display:block;">Top 18%</b>Better than 82% of peers in your age range.</div>
         </div>
       </div>
-
-      <!-- Brain Health Score / MRI agreement (ring) -->
-      <div class="fcard fc-agree">
-        <p class="fh">Brain Health Score</p>
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div class="mini-ring" style="width:52px;height:52px;">
-            <svg width="52" height="52" viewBox="0 0 130 130"><circle cx="65" cy="65" r="58" fill="none" stroke="#eee2d6" stroke-width="12"/><circle cx="65" cy="65" r="58" fill="none" stroke="#f77528" stroke-width="12" stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="36"/></svg>
-            <span class="rn" style="font-size:15px;">90%</span>
-          </div>
-          <span style="font-size:10.5px; color:var(--ink-soft); line-height:1.35;">Agreement with MRI-based reads</span>
-        </div>
-      </div>
-
-      <!-- Cognitive domains (bars) -->
-      <div class="fcard fc-domains">
-        <p class="fh">Cognitive domains</p>
-        <div class="mbar"><span>Processing Speed</span><div class="t"><i style="width:88%"></i></div></div>
-        <div class="mbar"><span>Executive Function</span><div class="t"><i style="width:74%"></i></div></div>
-        <div class="mbar"><span>Attention</span><div class="t"><i style="width:82%"></i></div></div>
-        <div class="mbar"><span>Working Memory</span><div class="t"><i style="width:69%"></i></div></div>
-      </div>
-
-      <!-- Possible risk of MCI (gauge) -->
-      <div class="fcard fc-risk">
-        <p class="fh">Possible risk of MCI</p>
-        <div style="display:flex; align-items:center; gap:14px;">
-          <div class="gauge">
-            <svg width="118" height="72" viewBox="0 0 120 72">
-              <path d="M14 60 A46 46 0 0 1 37 20.2" fill="none" stroke="#3fa66a" stroke-width="10" stroke-linecap="round"/>
-              <path d="M37 20.2 A46 46 0 0 1 83 20.2" fill="none" stroke="#e6a63b" stroke-width="10" stroke-linecap="round"/>
-              <path d="M83 20.2 A46 46 0 0 1 106 60" fill="none" stroke="#e0574a" stroke-width="10" stroke-linecap="round"/>
-              <line x1="60" y1="60" x2="63" y2="22" stroke="#241710" stroke-width="3" stroke-linecap="round"/>
-              <circle cx="60" cy="60" r="4.5" fill="#241710"/>
-            </svg>
-            <div class="gtxt">Moderate risk</div>
-          </div>
-          <span style="font-size:11px; color:var(--ink-soft); line-height:1.45; max-width:118px;">Cognitive performance is <b style="color:var(--brand)">adequate</b>, with a moderate risk of MCI.</span>
-        </div>
-      </div>
-
-      <!-- tag -->
-      <div class="fcard tag fc-tag">✓ Validated vs MRI</div>
-
-      <!-- Report note (peeks behind her) -->
-      <div class="fcard fc-note">
-        <p class="fh">Doctor-reviewed</p>
-        <span style="font-size:11.5px; color:var(--ink-soft); line-height:1.4;">Your results, explained 1-on-1 over a teleconsult.</span>
-      </div>
-
-      <img class="person" src="/landing/woman-cut.png" alt="A woman who took the ReCOGnAIze brain health assessment" />
-     </div>
     </div>
 
     <div class="wrap">
