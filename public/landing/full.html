@@ -259,12 +259,10 @@
     .vr-rating .stars { color: #00b67a; letter-spacing: 2px; font-size: 16px; }
     /* horizontal scroller (like the advisory board): drag/swipe through cards */
     .vr-row { display: flex; gap: 20px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
-      scroll-snap-type: x proximity; padding-bottom: 14px;
+      scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; padding-bottom: 4px;
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
       mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent); }
-    .vr-row::-webkit-scrollbar { height: 6px; }
-    .vr-row::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
-    .vr-row::-webkit-scrollbar-track { background: transparent; }
+    .vr-row::-webkit-scrollbar { display: none; }
     .vr-card { flex: 0 0 300px; aspect-ratio: 9 / 16; border-radius: 20px; overflow: hidden; position: relative; background: #ece8e1; scroll-snap-align: start; }
     /* video placeholder: gradient + play button + handle */
     .vr-card.video { background: linear-gradient(160deg, #cfd6d2, #9aa7a0 60%, #6c7a72); display: grid; place-items: center; }
@@ -529,19 +527,27 @@
     .ctable .hotcol .ck.yes { background: var(--brand); box-shadow: 0 4px 12px rgba(247,117,40,.32); }
 
     /* ---------- ADVISORS (manual horizontal scroller) ---------- */
-    .advisor-marquee { position: relative; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
-      scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; padding-bottom: 4px;
-      -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
-      mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent); }
-    .advisor-marquee::-webkit-scrollbar { display: none; }
+    /* Advisory board: continuous auto-rolling marquee (cards duplicated in JS). */
+    .advisor-marquee { position: relative; overflow: hidden; padding-bottom: 4px;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
     .advisor-row { display: flex; width: max-content; align-items: stretch; }
+    .advisor-marquee.rolling .advisor-row { animation: advisorRoll 38s linear infinite; }
+    .advisor-marquee.rolling:hover .advisor-row { animation-play-state: paused; }
+    @keyframes advisorRoll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) {
+      .advisor-marquee { overflow-x: auto; scrollbar-width: none; }
+      .advisor-marquee::-webkit-scrollbar { display: none; }
+      .advisor-marquee.rolling .advisor-row { animation: none; }
+    }
     /* each advisor is a fixed-width card; vertical divider between them */
-    .advisor { flex: 0 0 380px; text-align: left; padding: 4px 32px; border-left: 1px solid var(--line); scroll-snap-align: start; }
-    .advisor-dots { display: flex; justify-content: center; gap: 10px; margin-top: 24px; }
-    .advisor-dots button { width: 9px; height: 9px; padding: 0; border: none; border-radius: 999px; cursor: pointer;
+    .advisor { flex: 0 0 380px; text-align: left; padding: 4px 32px; border-left: 1px solid var(--line); }
+    /* dot-paginated carousel controls (shared: reviews) */
+    .vr-dots { display: flex; justify-content: center; gap: 10px; margin-top: 24px; }
+    .vr-dots button { width: 9px; height: 9px; padding: 0; border: none; border-radius: 999px; cursor: pointer;
       background: rgba(45,30,20,.2); transition: background .3s ease, transform .3s ease; }
-    .advisor-dots button:hover { background: rgba(45,30,20,.38); }
-    .advisor-dots button.on { background: var(--brand); transform: scale(1.3); }
+    .vr-dots button:hover { background: rgba(45,30,20,.38); }
+    .vr-dots button.on { background: var(--brand); transform: scale(1.3); }
     .advisor .photo {
       position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; margin-bottom: 20px;
       background: linear-gradient(135deg,var(--bg-soft),#ffd9bc);
@@ -1086,7 +1092,6 @@
           </div>
         </div>
       </div>
-      <div class="advisor-dots" role="tablist" aria-label="Advisor slides"></div>
     </div>
   </section>
 
@@ -1138,6 +1143,7 @@
           <div class="by"><span class="av">PR</span><span class="nm">Priya R.</span></div>
         </div>
       </div>
+      <div class="vr-dots" role="tablist" aria-label="Review slides"></div>
     </div>
   </section>
 
@@ -1292,37 +1298,41 @@
     }, { threshold: .12 });
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-    // Advisor carousel: auto-advancing dot indicators (replaces the drag/swipe bar).
-    // Dots represent viewport "pages" evenly mapped across the scroll range, so the
-    // active dot and the scroll position always agree (even when the last cards
-    // can't left-align).
+    // Advisory board: continuous auto-rolling marquee. Duplicate the cards so the
+    // CSS translateX(-50%) loop is seamless.
     (function () {
       const marquee = document.querySelector('.advisor-marquee');
       const row = marquee && marquee.querySelector('.advisor-row');
-      const dotsWrap = document.querySelector('.advisor-dots');
-      if (!marquee || !row || !dotsWrap) return;
+      if (!marquee || !row) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      Array.from(row.children).forEach((c) => {
+        const clone = c.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        row.appendChild(clone);
+      });
+      marquee.classList.add('rolling');
+    })();
 
+    // Reusable dot-paginated carousel: dots = viewport "pages" evenly mapped across
+    // the scroll range, so the active dot and scroll position always agree.
+    function dotCarousel(scroller, dotsWrap, label) {
+      if (!scroller || !dotsWrap) return;
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let dots = [], pageCount = 0, current = 0, timer = 0, raf = 0, rz = 0;
 
-      const maxScroll = () => Math.max(0, marquee.scrollWidth - marquee.clientWidth);
+      const maxScroll = () => Math.max(0, scroller.scrollWidth - scroller.clientWidth);
       const targetFor = (i) => (pageCount <= 1 ? 0 : (i / (pageCount - 1)) * maxScroll());
 
-      function setActive(i) {
-        current = i;
-        dots.forEach((d, j) => d.classList.toggle('on', j === i));
-      }
+      function setActive(i) { current = i; dots.forEach((d, j) => d.classList.toggle('on', j === i)); }
       function goTo(i, user) {
         if (pageCount < 1) return;
         i = (i + pageCount) % pageCount;
-        marquee.scrollTo({ left: targetFor(i), behavior: 'smooth' });
+        scroller.scrollTo({ left: targetFor(i), behavior: 'smooth' });
         setActive(i);
         if (user) restart();
       }
-
       function build() {
-        // One dot per viewport-page of cards.
-        const count = Math.max(1, Math.ceil(marquee.scrollWidth / marquee.clientWidth));
+        const count = Math.max(1, Math.ceil(scroller.scrollWidth / scroller.clientWidth));
         if (count === pageCount) return;
         pageCount = count;
         dotsWrap.innerHTML = '';
@@ -1331,7 +1341,7 @@
           const b = document.createElement('button');
           b.type = 'button';
           b.setAttribute('role', 'tab');
-          b.setAttribute('aria-label', 'Advisor page ' + (i + 1));
+          b.setAttribute('aria-label', label + ' ' + (i + 1));
           b.addEventListener('click', () => goTo(i, true));
           dotsWrap.appendChild(b);
           dots.push(b);
@@ -1339,31 +1349,32 @@
         setActive(Math.min(current, pageCount - 1));
       }
 
-      // Keep the active dot in sync when the user scrolls/swipes manually.
-      marquee.addEventListener('scroll', () => {
+      scroller.addEventListener('scroll', () => {
         if (raf) return;
         raf = requestAnimationFrame(() => {
           raf = 0;
           const ms = maxScroll();
-          setActive(ms <= 0 ? 0 : Math.round((marquee.scrollLeft / ms) * (pageCount - 1)));
+          setActive(ms <= 0 ? 0 : Math.round((scroller.scrollLeft / ms) * (pageCount - 1)));
         });
       }, { passive: true });
 
-      // Auto-advance, pausing on interaction / when the tab is hidden.
-      const start = () => { if (!reduce && !timer && pageCount > 1) timer = setInterval(() => goTo(current + 1, false), 3800); };
+      const start = () => { if (!reduce && !timer && pageCount > 1) timer = setInterval(() => goTo(current + 1, false), 4200); };
       const stop = () => { clearInterval(timer); timer = 0; };
       const restart = () => { stop(); start(); };
-      marquee.addEventListener('mouseenter', stop);
-      marquee.addEventListener('mouseleave', start);
-      marquee.addEventListener('touchstart', stop, { passive: true });
-      marquee.addEventListener('focusin', stop);
-      marquee.addEventListener('focusout', start);
+      scroller.addEventListener('mouseenter', stop);
+      scroller.addEventListener('mouseleave', start);
+      scroller.addEventListener('touchstart', stop, { passive: true });
+      scroller.addEventListener('focusin', stop);
+      scroller.addEventListener('focusout', start);
       document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
       window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(build, 200); });
 
       build();
       start();
-    })();
+    }
+
+    // "What people are saying" reviews now use the dot-paginated carousel.
+    dotCarousel(document.querySelector('.vr-row'), document.querySelector('.vr-dots'), 'Reviews page');
   </script>
 </body>
 </html>
