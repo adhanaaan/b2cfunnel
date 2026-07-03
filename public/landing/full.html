@@ -200,6 +200,27 @@
     .fc-age     { left: 52%; top: -1%; width: 156px; }
     .fc-note    { left: 80%; top: 33%; width: 170px; }
 
+    /* ---------- SOLUTION: woman holding tablet (dashboard) ---------- */
+    .tab-sec { position: relative; overflow: hidden; background: #f5e7db; min-height: 620px; display: flex; align-items: center; }
+    .tab-photo { position: absolute; right: -2%; bottom: 0; height: 106%; width: auto; z-index: 0; }
+    .tab-sec .wrap { position: relative; z-index: 1; width: 100%; }
+    .tab-copy { max-width: 440px; }
+    .tab-copy .eyebrow { color: var(--brand); }
+    .tab-copy h2 { font-size: clamp(30px,4vw,46px); line-height: 1.07; color: var(--ink); margin-top: 14px; }
+    .tab-copy .lead { font-size: 17px; color: var(--ink-soft); margin-top: 18px; line-height: 1.55; max-width: 360px; }
+    .tab-steps { list-style: none; margin-top: 34px; border-left: 2px solid rgba(45,30,20,.14); max-width: 300px; }
+    .tab-steps li { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 0 12px 20px; font-size: 17px; color: var(--ink-soft); border-left: 2px solid transparent; margin-left: -2px; }
+    .tab-steps li.on { color: var(--ink); font-weight: 700; border-left-color: var(--brand); }
+    .tab-steps li b { color: var(--ink-soft); font-weight: 600; }
+    @media (max-width: 860px) {
+      .tab-sec { flex-direction: column; min-height: 0; padding-top: 44px; }
+      .tab-sec .wrap { order: -1; }
+      .tab-copy { max-width: 100%; }
+      .tab-copy .lead { max-width: 100%; }
+      .tab-steps { max-width: 100%; }
+      .tab-photo { position: relative; right: auto; height: auto; width: 118%; max-width: 118%; margin: 20px 0 -2px -9%; }
+    }
+
     /* ---------- LOGO STRIP ---------- */
     .logos { padding: 40px 0; border-bottom: 1px solid var(--line); }
     .logos p { text-align: center; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 22px; }
@@ -721,86 +742,20 @@
     </div>
   </section>
 
-  <!-- ===================== SOLUTION (full-bg composition) ===================== -->
-  <section class="solution-bg" id="solution">
-    <div class="sol-bg" aria-hidden="true">
-     <div class="sol-inner">
-      <div class="glow"></div>
-
-      <!-- Total Score (ring) -->
-      <div class="fcard fc-score">
-        <p class="fh">Total Score</p>
-        <div style="display:flex; align-items:center; gap:14px;">
-          <div class="mini-ring" style="width:80px;height:80px;">
-            <svg width="80" height="80" viewBox="0 0 130 130"><circle cx="65" cy="65" r="58" fill="none" stroke="#eee2d6" stroke-width="9"/><circle cx="65" cy="65" r="58" fill="none" stroke="#f77528" stroke-width="9" stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="67"/></svg>
-            <span class="rn" style="font-size:22px;">326<small style="font-size:9px;">of 400</small></span>
-          </div>
-          <div style="font-size:12px; color:var(--ink-soft); line-height:1.4;"><b style="color:var(--brand); font-family:var(--font-serif); font-size:20px; display:block;">Top 18%</b>Better than 82% of peers in your age range.</div>
-        </div>
-      </div>
-
-      <!-- Brain Health Score / MRI agreement (ring) -->
-      <div class="fcard fc-agree">
-        <p class="fh">Brain Health Score</p>
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div class="mini-ring" style="width:52px;height:52px;">
-            <svg width="52" height="52" viewBox="0 0 130 130"><circle cx="65" cy="65" r="58" fill="none" stroke="#eee2d6" stroke-width="12"/><circle cx="65" cy="65" r="58" fill="none" stroke="#f77528" stroke-width="12" stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="36"/></svg>
-            <span class="rn" style="font-size:15px;">90%</span>
-          </div>
-          <span style="font-size:10.5px; color:var(--ink-soft); line-height:1.35;">Agreement with MRI-based reads</span>
-        </div>
-      </div>
-
-      <!-- Cognitive domains (bars) -->
-      <div class="fcard fc-domains">
-        <p class="fh">Cognitive domains</p>
-        <div class="mbar"><span>Processing Speed</span><div class="t"><i style="width:88%"></i></div></div>
-        <div class="mbar"><span>Executive Function</span><div class="t"><i style="width:74%"></i></div></div>
-        <div class="mbar"><span>Attention</span><div class="t"><i style="width:82%"></i></div></div>
-        <div class="mbar"><span>Working Memory</span><div class="t"><i style="width:69%"></i></div></div>
-      </div>
-
-      <!-- Possible risk of MCI (gauge) -->
-      <div class="fcard fc-risk">
-        <p class="fh">Possible risk of MCI</p>
-        <div style="display:flex; align-items:center; gap:14px;">
-          <div class="gauge">
-            <svg width="118" height="72" viewBox="0 0 120 72">
-              <path d="M14 60 A46 46 0 0 1 37 20.2" fill="none" stroke="#3fa66a" stroke-width="10" stroke-linecap="round"/>
-              <path d="M37 20.2 A46 46 0 0 1 83 20.2" fill="none" stroke="#e6a63b" stroke-width="10" stroke-linecap="round"/>
-              <path d="M83 20.2 A46 46 0 0 1 106 60" fill="none" stroke="#e0574a" stroke-width="10" stroke-linecap="round"/>
-              <line x1="60" y1="60" x2="63" y2="22" stroke="#241710" stroke-width="3" stroke-linecap="round"/>
-              <circle cx="60" cy="60" r="4.5" fill="#241710"/>
-            </svg>
-            <div class="gtxt">Moderate risk</div>
-          </div>
-          <span style="font-size:11px; color:var(--ink-soft); line-height:1.45; max-width:118px;">Cognitive performance is <b style="color:var(--brand)">adequate</b>, with a moderate risk of MCI.</span>
-        </div>
-      </div>
-
-      <!-- tag -->
-      <div class="fcard tag fc-tag">✓ Validated vs MRI</div>
-
-      <!-- Report note (peeks behind her) -->
-      <div class="fcard fc-note">
-        <p class="fh">Doctor-reviewed</p>
-        <span style="font-size:11.5px; color:var(--ink-soft); line-height:1.4;">Your results, explained 1-on-1 over a teleconsult.</span>
-      </div>
-
-      <img class="person" src="/landing/woman-cut.png" alt="A woman who took the ReCOGnAIze brain health assessment" />
-     </div>
-    </div>
-
+  <!-- ===================== SOLUTION (woman holding tablet) ===================== -->
+  <section class="tab-sec" id="solution">
+    <img class="tab-photo" src="/landing/woman-tablet.png" alt="A woman viewing her ReCOGnAIze brain health results on a tablet" />
     <div class="wrap">
-      <div class="sol-copy reveal">
-        <h2>A digital brain assessment with <span style="color:var(--brand);">90% accuracy</span></h2>
-        <p>ReCOGnAIze tells you what's actually happening in your brain. Validated against MRI scans, built on a five-year NTU study of 1,500 people and published in <em style="color:var(--brand); font-style:italic;">Alzheimer's &amp; Dementia</em>.</p>
-        <p>Registered with Singapore's HSA as a medical device, it reads the same structural markers a specialist looks for, without the scans, referral, or hospital wait.</p>
-        <div class="sol-chips">
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Validated vs MRI</span>
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg>5-year NTU study</span>
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/></svg>HSA-registered device</span>
-        </div>
+      <div class="tab-copy reveal">
+        <p class="eyebrow">The assessment</p>
+        <h2>See your brain the way a specialist does.</h2>
+        <p class="lead">ReCOGnAIze turns a 15-minute assessment, validated against MRI, into a clear, doctor-reviewed picture of your cognitive health.</p>
+        <ol class="tab-steps">
+          <li class="on"><span>Take the assessment</span><b>01</b></li>
+          <li><span>Get your full report</span><b>02</b></li>
+          <li><span>Talk to a doctor</span><b>03</b></li>
+          <li><span>Track it over time</span><b>04</b></li>
+        </ol>
       </div>
     </div>
   </section>
