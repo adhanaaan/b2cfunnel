@@ -33,7 +33,7 @@ describe("regulatory compliance (HSA wellness rails)", () => {
 
   it("contains no em dashes in user-facing copy", () => {
     for (const text of allCopy) {
-      expect(text.includes("-"), `Em dash found in copy: "${text}"`).toBe(
+      expect(text.includes("—"), `Em dash found in copy: "${text}"`).toBe(
         false,
       );
     }
