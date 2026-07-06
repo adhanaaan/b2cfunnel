@@ -352,11 +352,10 @@
       position: relative; aspect-ratio: 1 / 1; border-radius: 22px; overflow: hidden;
       background: radial-gradient(120% 90% at 35% 20%, var(--brand-2) 0%, #c8703f 50%, #6e3c22 100%);
     }
-    /* stressed-man photo silhouette: cover-fill so the figure rises to the top of
-       the panel (head near the top); multiply blend drops the white bg. */
+    /* stressed-man photo: full colour, cover-fill the card (no tint overlay). */
     .ps-figure { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;
-      object-fit: cover; object-position: center top; mix-blend-mode: multiply; }
-    .ps-visual::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 55%, rgba(36,23,16,.35)); pointer-events: none; }
+      object-fit: cover; object-position: 32% 28%; }
+    .ps-visual::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 62%, rgba(20,12,6,.30)); pointer-events: none; }
     .ps-pill {
       position: absolute; z-index: 2; transform: translate(-50%, -50%);
       background: rgba(36,23,16,.55); color: #fff; border: 1px solid rgba(255,255,255,.5);
@@ -716,8 +715,8 @@
 
         <!-- LEFT: visual panel with floating risk-factor pills -->
         <div class="ps-visual">
-          <!-- stressed-man silhouette photo (white bg dropped via mix-blend-mode) -->
-          <img class="ps-figure" src="/landing/stressed-man-new.png" alt="" />
+          <!-- stressed-man photo (full colour, no tint overlay) -->
+          <img class="ps-figure" src="/landing/stressed-man-newest.png" alt="A man rubbing his eyes at a laptop" />
           <span class="ps-pill" style="top:13%; left:26%;">Blood pressure</span>
           <span class="ps-pill" style="top:30%; left:78%;">Diet</span>
           <span class="ps-pill" style="top:50%; left:18%;">Diabetes</span>
