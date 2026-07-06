@@ -178,12 +178,9 @@
     .sol-copy h2 { font-size: clamp(30px,4vw,46px); line-height: 1.08; }
     .sol-copy p { font-size: 16.5px; color: var(--ink-soft); margin-top: 16px; line-height: 1.6; }
     .sol-copy .sol-chips { margin-top: 24px; }
-    /* ---------- SOLUTION: woman holding tablet (report baked into the image) ---------- */
-    .tab-sec { position: relative; overflow: hidden; background: #f5e7db; min-height: 620px; display: flex; align-items: center; }
-    .tab-photo { position: absolute; right: -7%; bottom: 0; height: 106%; z-index: 0; }
-    .tab-photo > img { display: block; height: 100%; width: auto; }
-    .tab-sec .wrap { position: relative; z-index: 1; width: 100%; }
-    .tab-sec .sol-copy { max-width: 430px; }
+    /* ---------- SOLUTION: full-bleed aspirational composition ---------- */
+    .tab-sec { position: relative; overflow: hidden; background: #100d0c; display: block; }
+    .tab-photo-full { display: block; width: 100%; height: auto; }
 
     @media (max-width: 860px) {
       .tab-sec { flex-direction: column; min-height: 0; padding-top: 44px; }
@@ -753,22 +750,7 @@
 
   <!-- ===================== SOLUTION (full-bg composition) ===================== -->
   <section class="tab-sec" id="solution">
-    <div class="tab-photo">
-      <img src="/landing/woman-tablet-new.png" alt="A woman viewing her ReCOGnAIze cognitive performance report on a tablet" />
-    </div>
-
-    <div class="wrap">
-      <div class="sol-copy reveal">
-        <h2>A digital brain assessment with <span style="color:var(--brand);">90% accuracy</span></h2>
-        <p>ReCOGnAIze tells you what's actually happening in your brain. Validated against MRI scans, built on a five-year NTU study of 1,500 people and published in <em style="color:var(--brand); font-style:italic;">Alzheimer's &amp; Dementia</em>.</p>
-        <p>Registered with Singapore's HSA as a medical device, it reads the same structural markers a specialist looks for, without the scans, referral, or hospital wait.</p>
-        <div class="sol-chips">
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Validated vs MRI</span>
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg>5-year NTU study</span>
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/></svg>HSA-registered device</span>
-        </div>
-      </div>
-    </div>
+    <img class="tab-photo-full reveal" src="/landing/woman-aspirational.png" alt="A woman with her ReCOGnAIze brain health results: cognitive score, domain summary, and personalized recommendations" />
   </section>
 
   <!-- ===================== HOW IT WORKS ===================== -->
