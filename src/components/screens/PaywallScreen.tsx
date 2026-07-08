@@ -14,11 +14,6 @@ export function PaywallScreen() {
   const [doctorOpen, setDoctorOpen] = useState(false);
   const doc = c.doctor;
 
-  // Book now opens WhatsApp to Adnan with a prefilled, fill-in message.
-  const bookHref = `https://wa.me/${c.whatsappNumber}?text=${encodeURIComponent(
-    c.whatsappMessage,
-  )}`;
-
   return (
     <ScreenShell>
       <div className="animate-fade-up">
@@ -100,7 +95,11 @@ export function PaywallScreen() {
           </p>
 
           <div className="mt-4 flex items-center gap-3 border-t border-outline-variant pt-4">
-            <DoctorAvatar initials={doc.initials} className="h-12 w-12 text-sm" />
+            <DoctorAvatar
+              image={doc.image}
+              initials={doc.initials}
+              className="h-12 w-12 text-sm"
+            />
             <div className="min-w-0">
               <p className="font-bold leading-snug text-charcoal">{doc.name}</p>
               <p className="text-sm text-secondary">{doc.credentials}</p>
@@ -167,9 +166,7 @@ export function PaywallScreen() {
           </div>
 
           <a
-            href={bookHref}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/invoice"
             className="mt-6 block w-full rounded-lg bg-primary px-6 py-4 text-center text-lg font-bold text-primary-on shadow-float transition hover:brightness-105"
           >
             {c.cta}

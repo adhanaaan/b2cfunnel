@@ -179,14 +179,10 @@
     .sol-copy p { font-size: 16.5px; color: var(--ink-soft); margin-top: 16px; line-height: 1.6; }
     .sol-copy .sol-chips { margin-top: 24px; }
     /* ---------- SOLUTION: copy band + full-bleed aspirational composition ---------- */
-    /* Match the site background and feather the image's top/bottom edges so the dark
-       composition dissolves into the page instead of sitting as a hard rectangle. */
     .tab-sec { position: relative; overflow: hidden; background: var(--bg); display: block; padding: 76px 0 0; }
     .tab-sec .wrap { position: relative; z-index: 1; width: 100%; }
     .tab-sec .sol-copy { max-width: 640px; }
-    .tab-photo-full { display: block; width: 100%; height: auto; margin-top: 24px;
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 11%, #000 86%, transparent 100%);
-      mask-image: linear-gradient(to bottom, transparent 0%, #000 11%, #000 86%, transparent 100%); }
+    .tab-photo-full { display: block; width: 100%; height: auto; margin-top: 24px; }
 
     @media (max-width: 860px) {
       .tab-sec { flex-direction: column; min-height: 0; padding-top: 44px; }
@@ -331,7 +327,9 @@
     .mr-bar .tk i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg,var(--brand-2),var(--brand)); }
     /* step 3 - teleconsult card */
     .mt-doc { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-    .mt-doc .av { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: var(--bg-soft); }
+    .mt-doc .av { position: relative; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: var(--bg-soft); color: var(--brand); font-size: 14px; font-weight: 800; }
+    .mt-doc .av > span { font-size: 14px; color: var(--brand); font-weight: 800; }
+    .mt-doc .av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .mt-doc b { display: block; font-size: 14px; color: var(--ink); }
     .mt-doc span { font-size: 12.5px; color: var(--ink-soft); }
     .mt-when { display: flex; align-items: center; gap: 9px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
@@ -843,8 +841,8 @@
             <div class="mock">
               <div class="mock-head"><span class="dot"></span> Teleconsult</div>
               <div class="mt-doc">
-                <img class="av" src="/landing/dr-tsin-uin-foong.webp" alt="" onerror="this.style.background='linear-gradient(135deg,#ffab57,#f77528)'" />
-                <div><b>Dr. Tsin Uin Foong</b><span>Certified physician</span></div>
+                <span class="av"><span>CT</span><img src="/landing/dr-chris.png.webp" alt="Dr Christopher Tan Ee Chong" onerror="this.style.display='none'" /></span>
+                <div><b>Dr Christopher Tan Ee Chong</b><span>MBBS (Singapore), MRCS, GDFM</span></div>
               </div>
               <div class="mt-when"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Tue, 3:00 PM · Video call</div>
               <div class="mt-cta">Join consultation</div>

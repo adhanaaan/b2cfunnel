@@ -58,7 +58,7 @@ export function QuestionScreen({
         <ProgressBar current={current} total={total} />
       </div>
 
-      <div key={question.id} className="animate-fade-up">
+      <div key={question.id}>
         <h1 className="font-display text-2xl font-bold leading-snug text-charcoal sm:text-3xl">
           {question.prompt}
         </h1>

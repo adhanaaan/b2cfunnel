@@ -148,6 +148,7 @@ export const COPY: CopyConfig = {
         role: "Medical Director & Resident Physician",
         org: "Eternami",
         initials: "CT",
+        image: "/landing/dr-chris.png.webp",
         bio: "Upon graduating from the Yong Loo Lin School of Medicine, National University of Singapore, Dr Tan practised in a variety of surgical and medical disciplines at various hospitals in Singapore before entering private practice. He was awarded the Membership of the Royal College of Surgeons (Ireland) and conferred the Graduate Diploma of Family Medicine by the College of Family Physicians Singapore. He has acquired over 12 years of clinical experience in internal medicine, anaesthesia and pain management, ENT, family medicine, health screening, and complementary medicine.",
       },
       lineItem: "Brain health assessment",
@@ -177,6 +178,10 @@ export const COPY: CopyConfig = {
         {
           q: "Who is it for?",
           a: "Anyone staying ahead of their brain health: whether you want to maintain peak cognitive performance, you're navigating hormonal changes, or you're supporting a loved one living with dementia.",
+        },
+        {
+          q: "What should I expect next?",
+          a: "After you submit your booking details, our team will get back to you to confirm your appointment and share the next steps, so you know exactly what to expect before the assessment.",
         },
       ],
     },
