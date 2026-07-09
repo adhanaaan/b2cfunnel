@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gray Matter - Precision Brain Health, Decoded</title>
+  <meta name="description" content="Gray Matter is a clinician-guided cognitive health membership. Test 80+ brain & body biomarkers, get a personalized plan, and protect your mind for decades to come." />
+
+  <!-- ============================================================
+       GRAY MATTER - LANDING PAGE DRAFT v1
+       Single-file, no build step. Open in any browser.
+       Inspired by functionhealth.com + mitohealth.com.
+       Everything in [BRACKETS] or marked TODO is placeholder copy.
+       Theme is controlled by the CSS variables in :root below.
+  ============================================================ -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ---------- GMS BRAND TOKENS (edit these to rebrand) ---------- */
+    :root {
+      --ink:        #2d2d2d;   /* charcoal text */
+      --ink-soft:   #6f6c63;   /* secondary text (warm gray) */
+      --bg:         #f6faf4;   /* soft forest off-white */
+      --bg-soft:    #e3efdd;   /* pale sage sections + cards */
+      --bg-deep:    #14251b;   /* deep forest */
+      --brand:      #245c3b;   /* forest green */
+      --brand-2:    #6fa866;   /* fresh leaf green */
+      --accent:     #9abf64;   /* moss for "optimal/good" signals */
+      --gold:       #d6a84b;   /* warm star ratings */
+      --line:       #d2dfcf;   /* sage hairlines */
+      --radius:     18px;
+      --maxw:       1180px;
+      --shadow:     0 18px 50px rgba(45,45,45,.08);
+      --dot:        transparent; /* clean (no texture, like flow 1) */
+      --font-sans:  'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif; /* headings */
+    }
+
+    /* ---------- RESET ---------- */
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    html, body { overflow-x: hidden; }
+    body {
+      font-family: var(--font-sans);
+      color: var(--ink);
+      background-color: var(--bg);
+      max-width: 100%;
+      background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+      background-size: 22px 22px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    h1,h2,h3 { font-family: var(--font-serif); font-weight: 600; line-height: 1.1; letter-spacing: -.01em; }
+
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    .eyebrow {
+      font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--brand); margin-bottom: 16px;
+    }
+    .section { padding: 96px 0; }
+    .center { text-align: center; }
+    .muted { color: var(--ink-soft); }
+
+    /* ---------- BUTTONS ---------- */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-weight: 600; font-size: 15px; padding: 14px 26px;
+      border-radius: 999px; border: 1px solid transparent; cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .btn-primary { background: var(--brand); color: #fff; box-shadow: 0 10px 24px rgba(36,92,59,.28); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(36,92,59,.38); }
+    .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+    .btn-ghost:hover { background: var(--bg-soft); }
+    .btn-light { background: #fff; color: var(--bg-deep); }
+    .btn-light:hover { transform: translateY(-2px); }
+
+    /* ---------- TOP BAR ---------- */
+    .topbar {
+      background: linear-gradient(90deg, var(--brand), var(--brand-2)); color: #fff;
+      font-size: 13px; text-align: center; padding: 9px 16px; letter-spacing: .01em; font-weight: 600;
+    }
+    .topbar strong { color: #fff; }
+
+    /* ---------- NAV ---------- */
+    header.nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(247,247,244,.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 70px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-serif); font-size: 22px; font-weight: 600; }
+    .logo .dot { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg,var(--brand),var(--brand-2)); display:inline-block; }
+    .logo img { height: 28px; width: auto; display: inline-block; }
+    .nav-links { display: flex; gap: 30px; font-size: 15px; font-weight: 500; color: var(--ink-soft); }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta { display: flex; align-items: center; gap: 14px; }
+    .nav-toggle { display: none; background: none; border: 0; font-size: 26px; cursor: pointer; }
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav-cta .btn-ghost { display: none; }
+      .nav-toggle { display: block; }
+      .nav-links.open {
+        display: flex; flex-direction: column; gap: 18px;
+        position: absolute; top: 70px; left: 0; right: 0;
+        background: #fff; padding: 24px; border-bottom: 1px solid var(--line);
+      }
+    }
+
+    /* ---------- HERO (full-bleed video, matches flow 1) ---------- */
+    .hero { position: relative; min-height: 94vh; display: grid; grid-template-columns: minmax(0,1fr); place-items: center; text-align: center; color: #fff; background: var(--bg-deep); overflow: hidden; }
+    .hero-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .hero-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(15,10,5,.55), rgba(15,10,5,.74)); }
+    .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 96px; z-index: 2; background: linear-gradient(180deg, transparent, var(--bg)); pointer-events: none; }
+    .hero .wrap { position: relative; z-index: 3; width: 100%; max-width: 880px; padding-top: 96px; padding-bottom: 64px; }
+    .hero .pill { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 13px; font-weight: 600; color: #fff; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.32); padding: 7px 16px; border-radius: 999px; margin-bottom: 22px; }
+    .hero .pill .pill-icon { height: 18px; width: auto; }
+    .hero h1 { font-size: clamp(38px, 6.5vw, 68px); margin: 0 0 20px; color: #fff; }
+    .hero p.lead { font-size: 16px; color: rgba(255,255,255,.9); max-width: 560px; margin: 0 auto 18px; }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 26px 0 22px; }
+    .hero-trust { display: flex; flex-direction: column; align-items: center; gap: 7px; font-size: 13.5px; color: rgba(255,255,255,.82); }
+    /* Hero "as featured in" moving logo bar (replaces the static trust text).
+       Wrapped in a frosted-glass panel so it pops off the busy video hero. */
+    .hero-marquee {
+      width: 100%; max-width: 720px; margin: 18px auto 0; padding: 16px 8px 18px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 16px;
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 12px 40px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .hero-marquee .label { text-align: center; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.85); font-weight: 800; margin-bottom: 14px; }
+    .hero-marquee .label::before, .hero-marquee .label::after { content: ""; display: inline-block; width: 22px; height: 1px; background: rgba(255,255,255,.4); vertical-align: middle; margin: 0 12px 2px; }
+    .marquee { position: relative; overflow: hidden; -webkit-mask-image: linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent); mask-image: linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent); }
+    .mq-track { display: flex; align-items: center; gap: 52px; width: max-content; animation: mq 30s linear infinite; }
+    .mq-track img { height: 28px; width: auto; flex-shrink: 0; opacity: 1; filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,.35)); transition: transform .2s; }
+    .marquee:hover .mq-track { animation-play-state: paused; }
+    .mq-track img:hover { transform: scale(1.06); }
+    @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) { .mq-track { animation: none; flex-wrap: wrap; justify-content: center; } }
+    .hero .btn-ghost { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.45); }
+    .hero .btn-ghost:hover { background: rgba(255,255,255,.22); }
+    .stars { color: var(--gold); letter-spacing: 2px; }
+
+    /* hero visual: a "report card" mock */
+    .report {
+      background: #fff; border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow);
+      padding: 26px; position: relative;
+    }
+    .report::before {
+      content: "BRAIN HEALTH SCORE"; position: absolute; top: 26px; left: 26px;
+      font-size: 11px; letter-spacing: .14em; color: var(--ink-soft); font-weight: 600;
+    }
+    .score-ring { width: 130px; height: 130px; margin: 40px auto 8px; position: relative; }
+    .score-ring svg { transform: rotate(-90deg); }
+    .score-num { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-serif); font-size: 40px; }
+    .biomarker { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-top: 1px solid var(--line); font-size: 14px; }
+    .pill { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
+    .pill.good { background: #e3f7f1; color: #0c8d6f; }
+    .pill.watch { background: #fdf1dd; color: #b9781b; }
+    .pill.low { background: #fde7e7; color: #c0392b; }
+
+    /* SOLUTION — full-width background composition: person + floating result cards */
+    .solution-bg { position: relative; overflow: hidden; min-height: 640px; display: flex; align-items: center;
+      background: linear-gradient(120deg, #f4f9ef 0%, #dcebd4 52%, #bdd6af 100%); }
+    .sol-bg { position: absolute; inset: 0; z-index: 0; }
+    .sol-bg .glow { position: absolute; right: 8%; bottom: 0; width: 42%; height: 92%; z-index: 1;
+      background: radial-gradient(closest-side, rgba(255,255,255,.62), transparent 72%); filter: blur(22px); }
+    .sol-bg .person { position: absolute; right: 15%; bottom: 0; height: 96%; width: auto; z-index: 2; }
+    .solution-bg .wrap { position: relative; z-index: 3; width: 100%; }
+    .sol-inner { position: relative; max-width: 1180px; height: 100%; margin: 0 auto; padding: 0 22px; }
+    .sol-copy { max-width: 440px; }
+    .sol-copy h2 { font-size: clamp(30px,4vw,46px); line-height: 1.08; }
+    .sol-copy p { font-size: 16.5px; color: var(--ink-soft); margin-top: 16px; line-height: 1.6; }
+    .sol-copy .sol-chips { margin-top: 24px; }
+    /* ---------- SOLUTION: copy band + full-bleed aspirational composition ---------- */
+    .tab-sec { position: relative; overflow: hidden; background: var(--bg); display: block; padding: 76px 0 0; }
+    .tab-sec .wrap { position: relative; z-index: 1; width: 100%; }
+    .tab-sec .sol-copy { max-width: 640px; }
+    .tab-photo-full { display: block; width: 100%; height: auto; margin-top: 24px; }
+
+    @media (max-width: 860px) {
+      .tab-sec { flex-direction: column; min-height: 0; padding-top: 44px; }
+      .tab-sec .wrap { order: -1; }
+      .tab-sec .sol-copy { max-width: 100%; }
+      .tab-photo { position: relative; right: auto; bottom: auto; height: auto; width: 132%; max-width: none; margin: 24px 0 0 -16%; }
+    }
+    /* floating white cards */
+    .fcard { position: absolute; z-index: 1; background: rgba(255,255,255,.94); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+      border: 1px solid rgba(20,37,27,.08); border-radius: 16px; padding: 15px 17px; box-shadow: 0 24px 50px rgba(36,92,59,.15); color: var(--ink); }
+    .fcard .fh { font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 10px; }
+    .fcard.tag { padding: 9px 15px; font-size: 12px; font-weight: 700; color: var(--brand); display: flex; align-items: center; gap: 6px; }
+    .mini-ring { position: relative; flex-shrink: 0; }
+    .mini-ring svg { transform: rotate(-90deg); display: block; }
+    .mini-ring .rn { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--font-serif); color: var(--ink); line-height: 1; }
+    .mini-ring .rn small { display: block; font-family: var(--font-sans); font-size: 8px; color: var(--ink-soft); font-weight: 600; margin-top: 1px; }
+    .mbar { display: grid; grid-template-columns: 76px 1fr; gap: 9px; align-items: center; margin-top: 7px; }
+    .mbar > span { font-size: 10px; color: var(--ink); font-weight: 600; line-height: 1.1; }
+    .mbar .t { height: 5px; border-radius: 9px; background: #efe3d7; overflow: hidden; }
+    .mbar .t i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(90deg, var(--brand-2), var(--brand)); }
+    .gauge .gtxt { text-align: center; font-size: 10.5px; font-weight: 800; color: var(--brand); margin-top: 3px; letter-spacing: .02em; }
+    .fc-score   { left: max(490px, 42%); top: 5%;  width: 250px; }
+    .fc-agree   { left: 86%; top: 7%;  width: 196px; }
+    .fc-domains { left: max(490px, 41%); bottom: 8%; width: 220px; }
+    .fc-risk    { left: 84%; bottom: 11%; width: 244px; }
+    .fc-tag     { left: max(505px, 44%); top: 45%; }
+    .fc-age     { left: 52%; top: -1%; width: 156px; }
+    .fc-note    { left: 80%; top: 33%; width: 170px; }
+
+    /* ---------- LOGO STRIP ---------- */
+    .logos { padding: 40px 0; border-bottom: 1px solid var(--line); }
+    .logos p { text-align: center; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 22px; }
+    .logo-row { display: flex; justify-content: center; align-items: center; gap: 46px; flex-wrap: wrap; opacity: .6; font-family: var(--font-serif); font-size: 20px; }
+
+    /* ---------- STATS ---------- */
+    /* STATS — light cited band */
+    .stats-sec { position: relative; background: var(--bg); padding: 90px 0; }
+    .stats { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4,1fr); gap: 40px 0; }
+    .stat { text-align: center; padding: 8px 22px; position: relative; }
+    .stat + .stat::before { content: ""; position: absolute; left: 0; top: 12%; height: 76%; width: 1px; background: rgba(45,30,20,.1); }
+    .stat .n { font-family: var(--font-serif); font-size: clamp(38px,4vw,54px); font-weight: 600; color: var(--brand); line-height: 1; }
+    .stat .l { font-size: 13.5px; color: var(--ink-soft); margin-top: 12px; }
+
+    /* ---------- VIDEO / MEMBER REVIEWS (Mito-style tall cards) ---------- */
+    .vr-rating { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 14px 0 38px; font-size: 15px; color: var(--ink-soft); }
+    .vr-rating b { color: var(--ink); }
+    .vr-rating .stars { color: #00b67a; letter-spacing: 2px; font-size: 16px; }
+    /* horizontal scroller (like the advisory board): drag/swipe through cards */
+    .vr-row { display: flex; gap: 20px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; padding-bottom: 4px;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent); }
+    .vr-row::-webkit-scrollbar { display: none; }
+    .vr-card { flex: 0 0 300px; aspect-ratio: 9 / 16; border-radius: 20px; overflow: hidden; position: relative; background: #ece8e1; scroll-snap-align: start; }
+    /* video placeholder: gradient + play button + handle */
+    .vr-card.video { background: linear-gradient(160deg, #cfd6d2, #9aa7a0 60%, #6c7a72); display: grid; place-items: center; }
+    .vr-card.video .play { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,.92); display: grid; place-items: center; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+    .vr-card.video .play::before { content: ""; border-style: solid; border-width: 9px 0 9px 15px; border-color: transparent transparent transparent var(--ink); margin-left: 3px; }
+    .vr-card.video .handle { position: absolute; left: 16px; bottom: 16px; color: #fff; font-size: 13px; font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,.4); }
+    .vr-card.video .badge { position: absolute; top: 14px; right: 14px; font-size: 10px; font-weight: 700; letter-spacing: .08em; color: rgba(255,255,255,.9); }
+    /* text testimonial card */
+    .vr-card.quote { background: var(--bg-soft); display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 30px 26px; }
+    .vr-card.quote .stars { color: #1a1a1a; letter-spacing: 2px; margin-bottom: 16px; }
+    .vr-card.quote h4 { font-size: 19px; color: var(--ink); margin-bottom: 12px; }
+    .vr-card.quote p { font-size: 15px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 22px; }
+    .vr-card.quote .by { display: flex; align-items: center; justify-content: center; gap: 9px; }
+    .vr-card.quote .by .av { width: 30px; height: 30px; border-radius: 50%; background: var(--bg); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--ink-soft); border: 1px solid var(--line); }
+    .vr-card.quote .by .nm { font-size: 14px; font-weight: 600; color: var(--ink); }
+    @media (max-width: 520px) { .vr-card { flex-basis: 78vw; } }
+
+    /* ---------- STAT BREAKER (dark stats that fade into the page at the sides) ---------- */
+    .statbreak { position: relative; color: #f0e4d2; background: transparent; }
+    /* the dark fill is a separate layer that fades out left/right + top/bottom,
+       so the band has no hard box edges and flows into the surrounding page. */
+    .statbreak::before { content: ""; position: absolute; inset: 0; z-index: 0; background: var(--bg-deep);
+      -webkit-mask-image: radial-gradient(120% 100% at 50% 50%, #000 55%, transparent 100%);
+      mask-image: radial-gradient(120% 100% at 50% 50%, #000 55%, transparent 100%); }
+    .statbreak .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; }
+    .statbreak .sb { text-align: center; position: relative; padding: 0 22px; }
+    .statbreak .sb + .sb::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 1px; background: rgba(255,255,255,.14); }
+    .statbreak .sb .big { font-family: var(--font-serif); font-size: clamp(40px,5vw,60px); line-height: 1; color: #fff; }
+    .statbreak .sb .big em { color: var(--brand-2); font-style: normal; }
+    .statbreak .sb p { font-size: 15px; color: #d9cdba; margin: 14px 0 8px; line-height: 1.45; }
+    .statbreak .sb cite { font-size: 12px; color: #9b8e7c; font-style: normal; }
+
+    /* ---------- SECTION HEADERS ---------- */
+    .head { max-width: 720px; margin: 0 auto 56px; text-align: center; }
+    .head h2 { font-size: clamp(30px, 4vw, 46px); }
+    .head p { font-size: 18px; color: var(--ink-soft); margin-top: 16px; }
+
+    /* ---------- PANEL GRID (what's included) ---------- */
+    .panel-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .panel-card { background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
+    .panel-card .ic { width: 46px; height: 46px; border-radius: 12px; background: #fff; display: grid; place-items: center; font-size: 22px; box-shadow: var(--shadow); margin-bottom: 16px; }
+    .panel-card h3 { font-size: 20px; margin-bottom: 8px; }
+    .panel-card p { font-size: 15px; color: var(--ink-soft); }
+
+    /* ---------- STEPS ---------- */
+    .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 26px; counter-reset: step; }
+    .step { position: relative; padding-top: 14px; }
+    .step .num { font-family: var(--font-serif); font-size: 18px; width: 40px; height: 40px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; margin-bottom: 16px; }
+    .step h3 { font-size: 19px; margin-bottom: 8px; }
+    .step p { font-size: 15px; color: var(--ink-soft); }
+
+    /* ---------- HOW-IT-WORKS VERTICAL TIMELINE (text + UI mockup per step) ---------- */
+    .timeline { position: relative; max-width: 1040px; margin: 36px auto 0; }
+    /* center vertical line */
+    .timeline::before { content: ""; position: absolute; left: 50%; top: 8px; bottom: 8px; width: 2px; transform: translateX(-50%); background: var(--line); }
+    .tl-row { display: grid; grid-template-columns: 1fr 64px 1fr; align-items: center; gap: 0; margin-bottom: 96px; }
+    .tl-row:last-child { margin-bottom: 0; }
+    .tl-node { grid-column: 2; justify-self: center; width: 40px; height: 40px; border-radius: 50%; background: var(--brand); color: #fff; font-family: var(--font-serif); font-size: 18px; display: grid; place-items: center; z-index: 2; box-shadow: 0 0 0 6px var(--bg); }
+    .tl-text { padding: 0 56px; }
+    .tl-text .eyebrow { font-size: 11.5px; letter-spacing: .16em; }
+    .tl-text h3 { font-family: var(--font-serif); font-size: clamp(24px,2.6vw,32px); margin: 10px 0 14px; line-height: 1.12; }
+    .tl-text p { font-size: 15.5px; color: var(--ink-soft); line-height: 1.65; }
+    .tl-vis { padding: 0 56px; }
+    /* alternate sides: row 1 = text left / vis right; row 2 = vis left / text right; etc. */
+    .tl-row:nth-child(even) .tl-text { grid-column: 1; }
+    .tl-row:nth-child(even) .tl-vis  { grid-column: 3; }
+    .tl-row:nth-child(odd)  .tl-vis  { grid-column: 1; }
+    .tl-row:nth-child(odd)  .tl-text { grid-column: 3; }
+
+    /* shared mockup card */
+    .mock { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 18px 50px rgba(45,45,45,.10); padding: 18px; }
+    .mock-head { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 14px; }
+    .mock-head .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--brand); }
+    /* step 1 - quiz / cognitive games */
+    .mq-q { font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 12px; }
+    .mq-games { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .mq-game { display: flex; align-items: center; gap: 9px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; font-size: 13px; font-weight: 600; color: var(--ink); }
+    .mq-game .gi { width: 30px; height: 30px; border-radius: 9px; background: rgba(36,92,59,.14); display: grid; place-items: center; flex-shrink: 0; }
+    .mq-game .gi svg { width: 16px; height: 16px; stroke: var(--brand); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    /* step 2 - report card with score + domain bars */
+    .mr-top { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .mr-ring { width: 76px; height: 76px; flex-shrink: 0; position: relative; }
+    .mr-ring .rn { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-serif); font-size: 24px; color: var(--brand); }
+    .mr-top .rl b { display: block; font-size: 15px; color: var(--ink); }
+    .mr-top .rl span { font-size: 12.5px; color: var(--ink-soft); }
+    .mr-bar { display: grid; grid-template-columns: 78px 1fr; align-items: center; gap: 10px; margin-top: 9px; }
+    .mr-bar span { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+    .mr-bar .tk { height: 7px; border-radius: 999px; background: var(--line); overflow: hidden; }
+    .mr-bar .tk i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg,var(--brand-2),var(--brand)); }
+    /* step 3 - teleconsult card */
+    .mt-doc { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .mt-doc .av { position: relative; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: var(--bg-soft); color: var(--brand); font-size: 14px; font-weight: 800; }
+    .mt-doc .av > span { font-size: 14px; color: var(--brand); font-weight: 800; }
+    .mt-doc .av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .mt-doc b { display: block; font-size: 14px; color: var(--ink); }
+    .mt-doc span { font-size: 12.5px; color: var(--ink-soft); }
+    .mt-when { display: flex; align-items: center; gap: 9px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+    .mt-when svg { width: 16px; height: 16px; stroke: var(--brand); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .mt-cta { text-align: center; background: var(--brand); color: #fff; font-weight: 700; font-size: 13.5px; padding: 11px; border-radius: 999px; }
+
+    @media (max-width: 760px) {
+      /* stack: node + text + visual in one column on mobile */
+      .timeline::before { left: 20px; }
+      .tl-row { grid-template-columns: 1fr; gap: 14px; margin-bottom: 40px; padding-left: 52px; }
+      .tl-row .tl-node { position: absolute; left: 0; grid-column: 1; }
+      .tl-row { position: relative; }
+      .tl-row:nth-child(even) .tl-text, .tl-row:nth-child(odd) .tl-text,
+      .tl-row:nth-child(even) .tl-vis,  .tl-row:nth-child(odd) .tl-vis { grid-column: 1; padding: 0; }
+      .tl-vis { order: 2; }
+    }
+
+    /* ---------- PROBLEM SPLIT (image + floating factor pills | copy) ---------- */
+    .ps-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: center; }
+    .ps-visual {
+      position: relative; aspect-ratio: 1 / 1; border-radius: 22px; overflow: hidden;
+      background: radial-gradient(120% 90% at 35% 20%, #d7ead0 0%, #7fae70 48%, #245c3b 100%);
+    }
+    /* stressed-woman photo: full colour, cover-fill the card (no tint overlay). */
+    .ps-figure { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;
+      object-fit: cover; object-position: 32% 28%; }
+    .ps-visual::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 62%, rgba(20,37,27,.26)); pointer-events: none; }
+    .ps-pill {
+      position: absolute; z-index: 2; transform: translate(-50%, -50%);
+      background: rgba(20,37,27,.62); color: #fff; border: 1px solid rgba(255,255,255,.5);
+      font-size: 15px; font-weight: 600; padding: 9px 18px; border-radius: 999px;
+      white-space: nowrap; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,.22); animation: psfloat 5s ease-in-out infinite;
+    }
+    .ps-pill:nth-child(2){ animation-delay: .6s } .ps-pill:nth-child(3){ animation-delay: 1.2s }
+    .ps-pill:nth-child(4){ animation-delay: 1.8s } .ps-pill:nth-child(5){ animation-delay: 2.4s }
+    @keyframes psfloat { 0%,100%{ transform: translate(-50%,-50%) } 50%{ transform: translate(-50%,calc(-50% - 6px)) } }
+    .ps-copy .ps-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--brand); }
+    .ps-copy h2 { font-family: var(--font-serif); font-size: clamp(30px,3.6vw,46px); line-height: 1.08; margin: 12px 0 18px; color: var(--ink); }
+    .ps-copy h2 em { font-style: italic; color: var(--brand); }
+    .ps-copy > p { font-size: 16.5px; color: var(--ink-soft); line-height: 1.6; margin: 0 0 16px; max-width: 520px; }
+    .ps-list { list-style: none; display: flex; flex-direction: column; gap: 14px; margin: 24px 0 0; }
+    .ps-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: var(--ink-soft); line-height: 1.5; }
+    .ps-list li b { color: var(--ink); font-weight: 700; display: inline-block; margin-bottom: 3px; }
+    .ps-list .ck.yes { flex-shrink: 0; margin-top: 1px; width: 24px; height: 24px; }
+    .ps-kicker { color: var(--brand); font-weight: 700; font-size: clamp(20px,2.4vw,26px); margin: 48px 0 0; text-align: center; font-family: var(--font-serif); line-height: 1.3; }
+    @media (prefers-reduced-motion: reduce) { .ps-pill { animation: none; } }
+    @media (max-width: 820px) {
+      .ps-grid { grid-template-columns: 1fr; gap: 30px; }
+      .ps-visual { min-height: 360px; order: -1; }
+    }
+
+    /* ---------- THE SCIENCE - light, data-viz (Quest-style) ---------- */
+    .science { background: var(--bg-soft); }
+    .sci-wrap { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 48px; align-items: center; }
+    .sci-left .eyebrow { color: var(--brand); }
+    .sci-left h2 { font-family: var(--font-serif); font-size: clamp(30px,3.4vw,44px); line-height: 1.08; margin: 12px 0 16px; color: var(--ink); }
+    .sci-left h2 em { color: var(--brand); font-style: italic; }
+    .sci-left > p { font-size: 16.5px; color: var(--ink-soft); line-height: 1.6; max-width: 420px; }
+    .sci-trust { display: flex; flex-direction: column; gap: 10px; margin-top: 26px; }
+    .sci-trust span { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--ink); }
+    .sci-trust svg { width: 18px; height: 18px; stroke: var(--brand); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    /* card grid on the right */
+    .sci-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .dcard { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 22px 20px; box-shadow: 0 14px 40px rgba(45,45,45,.07); }
+    .dcard .cap { font-size: 13px; font-weight: 600; color: var(--ink-soft); line-height: 1.4; margin: 0 0 16px; min-height: 36px; }
+    .dcard .cap b { color: var(--ink); font-weight: 800; }
+    .dcard .fig { font-family: var(--font-serif); font-size: clamp(34px,4vw,52px); line-height: 1; color: var(--ink); }
+    .dcard .fig .pct { color: var(--brand); }
+    /* accuracy: head-to-head comparison bars (90% vs ~70%) */
+    .cmp { display: flex; flex-direction: column; gap: 14px; margin: 8px 0 16px; }
+    .cmp .row .lab { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+    .cmp .row .lab .name { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .cmp .row.alt .lab .name { color: var(--ink-soft); }
+    .cmp .row .lab .val { font-family: var(--font-serif); font-size: 17px; color: var(--brand); }
+    .cmp .row.alt .lab .val { color: var(--ink-soft); }
+    .cmp .row .track { height: 12px; border-radius: 999px; background: rgba(0,0,0,.05); overflow: hidden; }
+    .cmp .row .track i { display: block; height: 100%; width: 0; border-radius: 999px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+    .cmp .row .track i.fill { background: linear-gradient(90deg, var(--brand), var(--brand-2)); }
+    .cmp .row.alt .track i { background: #c2b5a6; }
+    .science.in .cmp .row .track i { width: var(--w); }
+    /* cohort: dot-grid pictogram (each dot = part of the 1,500 cohort) */
+    .dotgrid { display: grid; grid-template-columns: repeat(15, 1fr); gap: 6px; margin: 8px 0 16px; }
+    .dotgrid i { aspect-ratio: 1; border-radius: 50%; background: var(--brand); opacity: 0; transform: scale(.4); transition: opacity .4s ease, transform .4s ease; }
+    .science.in .dotgrid i { opacity: 1; transform: none; }
+    .dcard:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(45,45,45,.12); transition: transform .2s, box-shadow .2s; }
+
+    /* ---------- SOLUTION ---------- */
+    .sol-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 50px; align-items: center; }
+    .sol-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+    .sol-chips span { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--ink); background: var(--bg-soft); border: 1px solid var(--line); padding: 8px 13px; border-radius: 999px; }
+    .sol-chips span svg { width: 15px; height: 15px; color: var(--brand); flex-shrink: 0; }
+    .domain-bar { display: grid; grid-template-columns: 130px 1fr; align-items: center; gap: 12px; margin-top: 12px; }
+    .domain-bar span { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .domain-bar .track { height: 9px; border-radius: 999px; background: var(--line); overflow: hidden; }
+    .domain-bar .track i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--brand-2), var(--brand)); width: 0; transition: width 1.1s cubic-bezier(.4,0,.2,1); }
+    .report.in .domain-bar .track i { width: var(--w); }
+
+    /* ---------- CAPABILITIES (hover to expand) ---------- */
+    .caps { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; align-items: start; max-width: 720px; margin: 0 auto; }
+    .cap { background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px 22px; text-align: center; transition: transform .32s ease, box-shadow .32s ease, background .32s ease; }
+    .cap .ic { width: 56px; height: 56px; border-radius: 15px; background: #fff; display: grid; place-items: center; font-size: 27px; box-shadow: var(--shadow); margin: 0 auto 15px; }
+    .cap h3 { font-size: 18px; margin-bottom: 0; }
+    .cap p { font-size: 14.5px; color: var(--ink-soft); max-height: 0; opacity: 0; overflow: hidden; margin-top: 0; transition: max-height .35s ease, opacity .3s ease, margin-top .35s ease; }
+    .cap:hover { transform: scale(1.06); background: #fff; box-shadow: 0 26px 54px rgba(45,45,45,.16); }
+    .cap:hover p { max-height: 160px; opacity: 1; margin-top: 12px; }
+    @media (hover: none) { .cap p { max-height: 160px; opacity: 1; margin-top: 12px; } .cap:hover { transform: none; } }
+    /* green highlight that pulses around each card as it scrolls into view */
+    .cap.in { animation: capGlow 1.3s ease-out; }
+    @keyframes capGlow {
+      0%   { border-color: var(--line); box-shadow: 0 0 0 0 rgba(36,92,59,0); }
+      45%  { border-color: var(--brand); box-shadow: 0 0 26px 3px rgba(36,92,59,.34), 0 0 0 2px rgba(36,92,59,.28) inset; }
+      100% { border-color: var(--line); box-shadow: 0 0 0 0 rgba(36,92,59,0); }
+    }
+    @media (prefers-reduced-motion: reduce) { .cap.in { animation: none; } }
+    .center { text-align: center; }
+
+    /* ---------- QUOTE ---------- */
+    /* editorial quote: left accent line + big mark, airy spacing, person below */
+    .bigquote { max-width: 920px; margin: 0 auto; text-align: left; position: relative; padding-left: 40px; }
+    /* vertical brand accent line */
+    .bigquote::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 4px; border-radius: 4px;
+      background: linear-gradient(180deg, var(--brand), var(--brand-2)); }
+    /* oversized decorative quote mark */
+    .bigquote .mark { font-family: var(--font-serif); font-size: 96px; line-height: 0; color: var(--brand-2); opacity: .55;
+      display: block; height: 40px; margin-bottom: 6px; }
+    .bigquote p { font-family: var(--font-serif); font-size: clamp(24px, 3vw, 36px); line-height: 1.34; color: var(--ink); margin: 0 0 40px; font-weight: 500; }
+    /* reset the inherited site-footer styling (dark bg) - this footer sits on a light section */
+    .bigquote footer { display: flex; align-items: center; gap: 16px; margin: 0; background: none; color: var(--ink); padding: 0; font-size: inherit; }
+    .bigquote footer .photo { position: relative; width: 64px; height: 64px; border-radius: 50%; overflow: hidden; background: linear-gradient(135deg,var(--bg-soft),#d6ead0); display: grid; place-items: center; flex-shrink: 0; }
+    .bigquote footer .photo span { font-weight: 700; color: var(--brand); font-size: 22px; }
+    .bigquote footer .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .bigquote footer > div { text-align: left; display: flex; flex-direction: column; }
+    .bigquote footer strong { font-size: 16px; color: var(--ink); margin-bottom: 3px; }
+    .bigquote footer span { font-size: 12.5px; color: var(--ink-soft); line-height: 1.45; }
+    @media (max-width: 760px) {
+      .bigquote { padding-left: 24px; }
+      .bigquote p { font-size: clamp(21px, 5.5vw, 26px); margin-bottom: 30px; }
+    }
+
+    /* ---------- COMPARE TABLE (Mito-style: airy, dotted rows, featured column) ---------- */
+    .ctable-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-top: 8px; }
+    .swipe-hint { display: none; text-align: center; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-top: 12px; }
+    .ctable { width: 100%; border-collapse: collapse; min-width: 680px; position: relative; }
+    /* featured (ReCOGnAIze) column: tint each cell + rounded top on the header,
+       so the highlight spans exactly the table height (no overflow hacks). */
+    .ctable .hotcol { background: rgba(36,92,59,.06); box-shadow: inset 1px 0 0 rgba(36,92,59,.22), inset -1px 0 0 rgba(36,92,59,.22); }
+    .ctable thead .hotcol { box-shadow: inset 1px 0 0 rgba(36,92,59,.22), inset -1px 0 0 rgba(36,92,59,.22), inset 0 1px 0 rgba(36,92,59,.22); border-radius: 14px 14px 0 0; }
+    .ctable tbody tr:last-child .hotcol { box-shadow: inset 1px 0 0 rgba(36,92,59,.22), inset -1px 0 0 rgba(36,92,59,.22), inset 0 -1px 0 rgba(36,92,59,.22); border-radius: 0 0 14px 14px; }
+    .ctable th, .ctable td { padding: 18px 18px; text-align: center; font-size: 14.5px; position: relative; z-index: 1;
+      border-bottom: 1px dotted var(--line); }
+    /* header */
+    .ctable thead th { padding-top: 22px; padding-bottom: 22px; border-bottom: 1px dotted var(--line); vertical-align: top; }
+    .ctable thead .colname { font-family: var(--font-serif); font-size: 17px; color: var(--ink); font-weight: 600; display: block; }
+    .ctable thead .hotcol .colname { color: var(--brand); }
+    .ctable thead .colsub { font-size: 12px; color: var(--ink-soft); font-weight: 500; display: block; margin-top: 4px; }
+    /* left feature labels */
+    .ctable td:first-child, .ctable th:first-child { text-align: left; color: var(--ink); font-weight: 600; font-size: 14.5px; width: 38%; }
+    .ctable td:first-child { color: var(--ink); font-weight: 600; }
+    /* value cells */
+    .ctable tbody td { color: var(--ink-soft); }
+    .ctable .hotcol { color: var(--ink); font-weight: 700; }
+    .ctable tbody tr:last-child td { border-bottom: none; }
+    /* yes / no icons */
+    .ck { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; }
+    .ck.yes { background: var(--brand); }
+    .ck.yes svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+    .ck.no svg { width: 15px; height: 15px; stroke: #c4b6a8; fill: none; stroke-width: 2.2; stroke-linecap: round; }
+    .ctable .hotcol .ck.yes { background: var(--brand); box-shadow: 0 4px 12px rgba(36,92,59,.28); }
+
+    /* ---------- ADVISORS (manual horizontal scroller) ---------- */
+    /* Advisory board: continuous auto-rolling marquee (cards duplicated in JS). */
+    .advisor-marquee { position: relative; overflow: hidden; padding-bottom: 4px;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+    .advisor-row { display: flex; width: max-content; align-items: stretch; }
+    .advisor-marquee.rolling .advisor-row { animation: advisorRoll 38s linear infinite; }
+    .advisor-marquee.rolling:hover .advisor-row { animation-play-state: paused; }
+    @keyframes advisorRoll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) {
+      .advisor-marquee { overflow-x: auto; scrollbar-width: none; }
+      .advisor-marquee::-webkit-scrollbar { display: none; }
+      .advisor-marquee.rolling .advisor-row { animation: none; }
+    }
+    /* each advisor is a fixed-width card; vertical divider between them */
+    .advisor { flex: 0 0 380px; text-align: left; padding: 4px 32px; border-left: 1px solid var(--line); }
+    /* dot-paginated carousel controls (shared: reviews) */
+    .vr-dots { display: flex; justify-content: center; gap: 10px; margin-top: 24px; }
+    .vr-dots button { width: 9px; height: 9px; padding: 0; border: none; border-radius: 999px; cursor: pointer;
+      background: rgba(45,30,20,.2); transition: background .3s ease, transform .3s ease; }
+    .vr-dots button:hover { background: rgba(45,30,20,.38); }
+    .vr-dots button.on { background: var(--brand); transform: scale(1.3); }
+    .advisor .photo {
+      position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; margin-bottom: 20px;
+      background: linear-gradient(135deg,var(--bg-soft),#d6ead0);
+      display: grid; place-items: center; color: var(--brand); font-family: var(--font-serif); font-size: 56px; font-weight: 600;
+    }
+    .advisor .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+    .advisor h3 { font-size: 19px; line-height: 1.2; margin-bottom: 4px; }
+    .advisor .degrees { color: var(--ink-soft); font-size: 13px; font-weight: 500; margin: 0 0 14px; line-height: 1.4; }
+    .advisor .roles { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .advisor .roles li { font-size: 14px; color: var(--ink-soft); line-height: 1.5; }
+
+    /* ---------- REVIEWS ---------- */
+    .reviews { background: var(--bg-soft); }
+    .review-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+    .review { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; }
+    .review .stars { font-size: 15px; margin-bottom: 14px; }
+    .review p.q { font-size: 16px; margin-bottom: 22px; }
+    .review .who { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+    .review .who .a { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg,var(--brand-2),var(--accent)); }
+    .review .who b { font-size: 15px; }
+    .review .who span { font-size: 13px; color: var(--ink-soft); display: block; }
+    .verified { font-size: 12px; color: var(--accent); font-weight: 600; }
+
+    /* ---------- PRICING ---------- */
+    .price-wrap { max-width: 540px; margin: 0 auto; }
+    .price-card { background: #fff; border: 2px solid var(--brand); border-radius: 26px; padding: 40px; box-shadow: var(--shadow); position: relative; }
+    .price-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--brand); color: #fff; font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 999px; letter-spacing: .06em; }
+    .price-num { font-family: var(--font-serif); font-size: 60px; }
+    .price-num small { font-size: 18px; color: var(--ink-soft); font-family: var(--font-sans); }
+    .price-list { list-style: none; margin: 26px 0; text-align: left; }
+    .price-list li { padding: 10px 0; border-top: 1px solid var(--line); display: flex; gap: 10px; font-size: 15px; }
+    .price-list li::before { content: "✓"; color: var(--accent); font-weight: 700; }
+
+    /* ---------- FAQ ---------- */
+    .faq-wrap { max-width: 780px; margin: 0 auto; }
+    .faq { border-bottom: 1px solid var(--line); }
+    .faq button { width: 100%; text-align: left; background: none; border: 0; padding: 22px 0; font-size: 18px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; gap: 16px; font-family: var(--font-sans); color: var(--ink); }
+    .faq .ans { max-height: 0; overflow: hidden; transition: max-height .3s ease; color: var(--ink-soft); font-size: 16px; }
+    .faq.open .ans { max-height: 320px; padding-bottom: 22px; }
+    .faq button .chev { transition: transform .3s ease; color: var(--brand); }
+    .faq.open button .chev { transform: rotate(45deg); }
+
+    /* ---------- FINAL CTA (blurred forest gradient, matches this page) ---------- */
+    .cta-final { position: relative; max-width: 880px; margin: 0 auto; border-radius: 30px; padding: 80px 40px; text-align: center; overflow: hidden;
+      background: var(--brand); color: #fff; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 40px 90px rgba(36,92,59,.36); }
+    .cta-final::before { content: ""; position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(85% 95% at 85% -12%, rgba(182,216,151,.55), transparent 58%),
+        radial-gradient(70% 82% at 6% 112%, rgba(111,168,102,.34), transparent 60%),
+        linear-gradient(150deg, #6fa866 0%, #245c3b 48%, #14251b 100%); }
+    .cta-final > * { position: relative; z-index: 1; }
+    .cta-final h2 { font-size: clamp(30px,4vw,46px); color: #fff; }
+    .cta-final p { color: rgba(255,255,255,.85); font-size: 18px; margin: 16px auto 30px; max-width: 560px; }
+    .cta-final .btn-light { background: #fff; color: var(--ink); box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .cta-final .btn-light:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0,0,0,.32); }
+
+    /* ---------- FOOTER ---------- */
+    footer { background: var(--bg-deep); color: #d9cdba; padding: 64px 0 36px; font-size: 14px; }
+    .foot-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 40px; }
+    footer .logo { color: #fff; margin-bottom: 14px; }
+    footer h4 { color: #fff; font-family: var(--font-sans); font-size: 14px; margin-bottom: 14px; letter-spacing: .04em; }
+    footer ul { list-style: none; }
+    footer li { margin-bottom: 10px; }
+    footer a:hover { color: #fff; }
+    .disclaimer { border-top: 1px solid rgba(255,255,255,.12); padding-top: 26px; font-size: 12px; color: #b3a890; line-height: 1.7; }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; padding: 50px 0; }
+      .stats-sec { padding: 66px 0; }
+      .stats { grid-template-columns: repeat(2,1fr); gap: 34px 0; }
+      .stat + .stat::before { display: none; }
+      /* SOLUTION on mobile: keep the floating composition, centered + scaled to fit */
+      .solution-bg { min-height: auto; display: flex; flex-direction: column-reverse; padding-bottom: 8px; }
+      .solution-bg .wrap { padding: 46px 22px 6px; }
+      .sol-copy { max-width: 100%; }
+      .sol-bg { position: relative; inset: auto; height: 356px; overflow: hidden; display: flex; justify-content: center; }
+      .sol-inner { position: relative; flex: 0 0 760px; width: 760px; height: 660px; max-width: none; margin: 0; padding: 0;
+        transform: scale(0.5); transform-origin: top center; }
+      /* centre the woman and flank the cards at the corners on mobile (fully in-frame) */
+      .sol-bg .person { left: 50%; right: auto; transform: translateX(-50%); height: 82%; }
+      .fc-score   { left: 0; top: 1%; width: 232px; }
+      .fc-agree   { left: auto; right: 0; top: 1%; width: 190px; }
+      .fc-domains { left: 0; bottom: 2%; width: 210px; }
+      .fc-risk    { left: auto; right: 0; bottom: 2%; width: 226px; }
+      .fc-tag, .fc-note { display: none; }
+      .sci-wrap { grid-template-columns: 1fr; gap: 34px; }
+      .caps { grid-template-columns: repeat(2,1fr); }
+      .steps { grid-template-columns: repeat(2,1fr); }
+      .foot-grid { grid-template-columns: 1fr 1fr; }
+      .section { padding: 64px 0; }
+    }
+    @media (max-width: 700px) {
+      .statbreak .wrap { grid-template-columns: 1fr; gap: 36px; }
+      .statbreak .sb + .sb::before { display: none; }
+      .statbreak .sb + .sb { border-top: 1px solid rgba(255,255,255,.14); padding-top: 32px; }
+    }
+    @media (max-width: 560px) {
+      .steps, .foot-grid, .sci-cards { grid-template-columns: 1fr; }
+      /* SOLUTION stage: shrink floating cards so they don't crowd on phones */
+      .sol-stage { min-height: 440px; }
+      .fcard { transform: scale(.82); transform-origin: top left; }
+      .fcard[style*="right"] { transform-origin: top right; }
+      /* advisor marquee: slightly narrower cards on phone */
+      .advisor { flex-basis: 260px; padding: 4px 24px; }
+      .caps { grid-template-columns: repeat(2,1fr); gap: 12px; } /* keep capabilities 2x2 on phone */
+      .caps .cap { padding: 22px 14px; } /* tighter padding so labels fit the narrow columns */
+      .caps .cap h3 { font-size: 16px; } /* slightly smaller so longer labels wrap cleanly */
+      .domain-bar { grid-template-columns: 110px 1fr; }
+      .section { padding: 50px 0; }
+      .wrap { padding: 0 18px; }
+      .hero .wrap { padding-top: 88px; }
+      .hero .pill { font-size: 12px; padding: 6px 13px; white-space: normal; }
+      .stat .n { font-size: 38px; }
+      .sci-left > p { max-width: none; }
+      .tl-text, .tl-vis { padding: 0; }
+      .swipe-hint { display: block; }
+      .ctable { min-width: 560px; }
+      .ctable th, .ctable td { padding: 12px 13px; font-size: 13px; }
+    }
+
+    /* scroll reveal */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===================== TOP ANNOUNCEMENT BAR ===================== -->
+  <div class="topbar">
+    🧠 Validated against MRI · published in <strong>Alzheimer's &amp; Dementia</strong> · HSA-registered medical device
+  </div>
+
+  <!-- ===================== NAV ===================== -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="#" class="logo"><img src="/gms-logo.png" alt="" /> Gray Matter Solutions</a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#solution">The Assessment</a>
+        <a href="#how">How It Works</a>
+        <a href="#science">The Science</a>
+        <a href="#compare">Compare</a>
+        <a href="#advisors">Our Advisors</a>
+      </nav>
+      <div class="nav-cta">
+        <a href="#" class="btn btn-ghost">Log in</a>
+        <a href="/quiz" class="btn btn-primary">Get Started</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== HERO (full-bleed video, matches flow 1) ===================== -->
+  <section class="hero">
+    <video class="hero-media" autoplay muted loop playsinline preload="auto" poster="/landing/hero.jpg">
+      <source src="/landing/website-hero.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="wrap">
+      <span class="pill"><img class="pill-icon" src="/gms-logo.png" alt="" /> Clinically validated at NTU LKCMedicine</span>
+      <h1>Is your brain operating at its peak performance?</h1>
+      <p class="lead">Take the ReCOGnAIze brain health assessment to see where you stand across four cognitive domains.</p>
+      <div class="hero-cta">
+        <a href="/quiz" class="btn btn-primary">Start your assessment →</a>
+      </div>
+      <div class="hero-marquee">
+        <p class="label">As featured in</p>
+        <div class="marquee">
+          <div class="mq-track">
+            <img src="/press-cna.png" alt="CNA" />
+            <img src="/press-st.png" alt="The Straits Times" />
+            <img src="/press-alzheimers.svg" alt="Alzheimer's &amp; Dementia" />
+            <img src="/gms-ntu-logo.png" alt="NTU LKCMedicine" />
+            <img src="/pubmed-logo-blue.svg" alt="PubMed" />
+            <!-- duplicate set for a seamless loop -->
+            <img src="/press-cna.png" alt="CNA" aria-hidden="true" />
+            <img src="/press-st.png" alt="The Straits Times" aria-hidden="true" />
+            <img src="/press-alzheimers.svg" alt="Alzheimer's &amp; Dementia" aria-hidden="true" />
+            <img src="/gms-ntu-logo.png" alt="NTU LKCMedicine" aria-hidden="true" />
+            <img src="/pubmed-logo-blue.svg" alt="PubMed" aria-hidden="true" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROBLEM (split: factors image + copy) ===================== -->
+  <section class="section problem-split" style="background:var(--bg-soft);">
+    <div class="wrap">
+      <div class="ps-grid">
+
+        <!-- LEFT: visual panel with floating risk-factor pills -->
+        <div class="ps-visual">
+          <!-- stressed-woman photo (full colour, no tint overlay) -->
+          <img class="ps-figure" src="/landing/stressed-woman-newest.png" alt="A woman rubbing her eyes at a laptop" />
+          <span class="ps-pill" style="top:13%; left:26%;">Blood pressure</span>
+          <span class="ps-pill" style="top:30%; left:78%;">Diet</span>
+          <span class="ps-pill" style="top:50%; left:18%;">Diabetes</span>
+          <span class="ps-pill" style="top:62%; left:80%;">Exercise</span>
+          <span class="ps-pill" style="top:82%; left:34%;">Family history</span>
+        </div>
+
+        <!-- RIGHT: heading + copy + checklist -->
+        <div class="ps-copy">
+          <span class="ps-eyebrow">Why it matters</span>
+          <h2>Cognitive decline starts from <em>40</em>.</h2>
+          <p>By the time forgetfulness or early dementia shows up, the window to act has usually narrowed.</p>
+          <p>Your brain health is shaped by everyday factors. <b style="color:var(--brand);">Knowing gives you options.</b></p>
+          <ul class="ps-list">
+            <li><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span> <span><b>Blood pressure &amp; diabetes</b><br>Vascular drivers of decline.</span></li>
+            <li><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span> <span><b>Diet &amp; exercise</b><br>Lifestyle levers you can act on today.</span></li>
+            <li><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span> <span><b>Family history</b><br>Know your baseline risk early.</span></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== STATS ===================== -->
+  <section class="stats-sec">
+    <div class="wrap stats">
+      <div class="stat reveal"><div class="n">90%</div><div class="l">Agreement with MRI-based reads</div></div>
+      <div class="stat reveal"><div class="n">1,500</div><div class="l">People in the 5-year NTU study</div></div>
+      <div class="stat reveal"><div class="n">4</div><div class="l">Cognitive domains measured</div></div>
+      <div class="stat reveal"><div class="n">HSA</div><div class="l">Registered as a medical device</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== SOLUTION (full-bg composition) ===================== -->
+  <section class="tab-sec" id="solution">
+    <div class="wrap">
+      <div class="sol-copy reveal">
+        <h2>A digital brain assessment with <span style="color:var(--brand);">90% accuracy</span></h2>
+        <p>ReCOGnAIze tells you what's actually happening in your brain. Validated against MRI scans, built on a five-year NTU study of 1,500 people and published in <em style="color:var(--brand); font-style:italic;">Alzheimer's &amp; Dementia</em>.</p>
+        <p>Registered with Singapore's HSA as a medical device, it reads the same structural markers a specialist looks for, without the scans, referral, or hospital wait.</p>
+        <div class="sol-chips">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Validated vs MRI</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg>5-year NTU study</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/></svg>HSA-registered device</span>
+        </div>
+      </div>
+    </div>
+    <img class="tab-photo-full reveal" src="/landing/woman-aspirational-green.png" alt="A woman with her ReCOGnAIze brain health results: cognitive score, domain summary, and personalized recommendations" />
+  </section>
+
+  <!-- ===================== HOW IT WORKS ===================== -->
+  <section class="section" id="how" style="background:var(--bg);border-top:1px solid var(--line);padding:104px 0;">
+    <div class="wrap">
+      <div class="head reveal" style="margin-bottom:24px;">
+        <p class="eyebrow">How it works</p>
+        <h2>From test to teleconsult in three steps</h2>
+      </div>
+      <div class="timeline">
+
+        <!-- STEP 1 - take the online test -->
+        <div class="tl-row reveal">
+          <div class="tl-text">
+            <p class="eyebrow">Step 1</p>
+            <h3>Take an online test</h3>
+            <p>An online assessment with specialised games that measure how your brain handles four aspects - speed, focus, planning, and memory.</p>
+          </div>
+          <div class="tl-node">1</div>
+          <div class="tl-vis">
+            <div class="mock">
+              <div class="mock-head"><span class="dot"></span> ReCOGnAIze assessment</div>
+              <p class="mq-q">Which shape comes next in the sequence?</p>
+              <div class="mq-games">
+                <div class="mq-game"><span class="gi"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></span> Speed</div>
+                <div class="mq-game"><span class="gi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/></svg></span> Focus</div>
+                <div class="mq-game"><span class="gi"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h12"/></svg></span> Planning</div>
+                <div class="mq-game"><span class="gi"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span> Memory</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 - get your report -->
+        <div class="tl-row reveal">
+          <div class="tl-text">
+            <p class="eyebrow">Step 2</p>
+            <h3>Get your full report</h3>
+            <p>Your overall risk level for mild cognitive impairment, a breakdown across the four domains, and - where relevant - the most likely underlying cause.</p>
+          </div>
+          <div class="tl-node">2</div>
+          <div class="tl-vis">
+            <div class="mock">
+              <div class="mock-head"><span class="dot"></span> Your brain health report</div>
+              <div class="mr-top">
+                <div class="mr-ring">
+                  <svg width="76" height="76" viewBox="0 0 76 76" style="transform:rotate(-90deg)">
+                    <circle cx="38" cy="38" r="33" fill="none" stroke="#ecddd3" stroke-width="7"/>
+                    <circle cx="38" cy="38" r="33" fill="none" stroke="#245c3b" stroke-width="7" stroke-linecap="round" stroke-dasharray="207" stroke-dashoffset="31"/>
+                  </svg>
+                  <span class="rn">85</span>
+                </div>
+                <div class="rl"><b>Low risk</b><span>Brain health score</span></div>
+              </div>
+              <div class="mr-bar"><span>Speed</span><div class="tk"><i style="width:88%"></i></div></div>
+              <div class="mr-bar"><span>Focus</span><div class="tk"><i style="width:74%"></i></div></div>
+              <div class="mr-bar"><span>Planning</span><div class="tk"><i style="width:81%"></i></div></div>
+              <div class="mr-bar"><span>Memory</span><div class="tk"><i style="width:69%"></i></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 - teleconsult -->
+        <div class="tl-row reveal">
+          <div class="tl-text">
+            <p class="eyebrow">Step 3</p>
+            <h3>Hop on a teleconsult</h3>
+            <p>A certified doctor analyses your report with you over a telehealth consultation and explains it in detail with clear next steps.</p>
+          </div>
+          <div class="tl-node">3</div>
+          <div class="tl-vis">
+            <div class="mock">
+              <div class="mock-head"><span class="dot"></span> Teleconsult</div>
+              <div class="mt-doc">
+                <span class="av"><span>CT</span><img src="/landing/dr-chris.png.webp" alt="Dr Christopher Tan Ee Chong" onerror="this.style.display='none'" /></span>
+                <div><b>Dr Christopher Tan Ee Chong</b><span>MBBS (Singapore), MRCS, GDFM</span></div>
+              </div>
+              <div class="mt-when"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Tue, 3:00 PM · Video call</div>
+              <div class="mt-cta">Join consultation</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="how-cta reveal" style="text-align:center; margin-top:52px;">
+        <a href="/quiz" class="btn btn-primary">Take the assessment →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== STAT BREAKER ===================== -->
+  <section class="section statbreak reveal">
+    <div class="wrap">
+      <div class="sb">
+        <div class="big"><em>45%</em></div>
+        <p>of dementia risk is tied to modifiable factors</p>
+        <cite>Lancet Commission, 2024</cite>
+      </div>
+      <div class="sb">
+        <div class="big"><em>1 in 11</em></div>
+        <p>Singaporeans aged 60 and over live with dementia</p>
+        <cite>IMH WiSE Study</cite>
+      </div>
+      <div class="sb">
+        <div class="big"><em>45</em></div>
+        <p>is the age processing speed can begin to slow</p>
+        <cite>Whitehall II, BMJ</cite>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOUR BRAIN CAPABILITIES ===================== -->
+  <section class="section" id="capabilities" style="background:var(--bg-soft);">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">What we measure</p>
+        <h2>Four brain capabilities, measured</h2>
+        <p>With ReCOGnAIze, each game maps to a cognitive task used in clinical neuropsychology.</p>
+      </div>
+      <div class="caps">
+        <div class="cap reveal"><div class="ic">⚡</div><h3>Processing Speed</h3><p>How quickly your brain takes in and reacts to what it sees.</p></div>
+        <div class="cap reveal"><div class="ic">🧩</div><h3>Executive Function</h3><p>Planning, sequencing, and switching between tasks.</p></div>
+        <div class="cap reveal"><div class="ic">🎯</div><h3>Attention &amp; Inhibition</h3><p>Staying focused and holding back the wrong response.</p></div>
+        <div class="cap reveal"><div class="ic">🧠</div><h3>Working Memory</h3><p>Holding and juggling information in the moment.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== QUOTE ===================== -->
+  <section class="section" style="padding:104px 0;">
+    <div class="wrap">
+      <blockquote class="bigquote reveal">
+        <span class="mark">“</span>
+        <p>Each of these games measures a specific brain function the same way I would assess it in clinic. We are not testing whether you can play, we are testing how well each part of your brain is doing the work it does for you every day.</p>
+        <footer>
+          <div class="photo"><span>NK</span><img src="/Kandiah.png" alt="A/Prof Nagaendran Kandiah" onerror="this.style.display='none'" /></div>
+          <div>
+            <strong>A/Prof Nagaendran Kandiah</strong>
+            <span>Co-founder, Gray Matter Solutions</span>
+            <span>MBBS, FAMS (Neurology), FRCP (Edin)</span>
+          </div>
+        </footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ===================== THE SCIENCE (light, data-viz) ===================== -->
+  <section class="section science reveal" id="science">
+    <div class="wrap">
+      <div class="sci-wrap">
+
+        <!-- LEFT: heading + proof points -->
+        <div class="sci-left">
+          <p class="eyebrow">The science</p>
+          <h2>Built on medical research. <em>Validated</em> against real brain scans.</h2>
+          <p>Developed at NTU LKCMedicine and proven against real MRI reads.</p>
+          <div class="sci-trust">
+            <span><svg viewBox="0 0 24 24"><path d="M4 19V5a1 1 0 0 1 1-1h11l4 4v11a1 1 0 0 1-1 1z"/><path d="M9 13l2 2 4-4"/></svg> 235-person validation study</span>
+            <span><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Published in <em>Alzheimer's &amp; Dementia</em></span>
+            <span><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> NTU LKCMedicine spin-off</span>
+          </div>
+        </div>
+
+        <!-- RIGHT: data-viz cards -->
+        <div class="sci-cards">
+
+          <!-- Card A: accuracy head-to-head comparison -->
+          <div class="dcard">
+            <p class="cap">Accuracy at detecting <b>mild cognitive impairment</b></p>
+            <div class="cmp">
+              <div class="row" style="--w:90%">
+                <div class="lab"><span class="name">ReCOGnAIze</span><span class="val">90%</span></div>
+                <div class="track"><i class="fill"></i></div>
+              </div>
+              <div class="row alt" style="--w:70%">
+                <div class="lab"><span class="name">Standard pen-and-paper</span><span class="val">~70%</span></div>
+                <div class="track"><i></i></div>
+              </div>
+            </div>
+            <p class="cap" style="margin:0;min-height:0;font-size:12px;">A ~20-point accuracy gain over conventional screening.</p>
+          </div>
+
+          <!-- Card B: cohort dot-grid pictogram -->
+          <div class="dcard">
+            <p class="cap"><b>1,500 people</b> studied over 3-5 years</p>
+            <div class="dotgrid" id="dotgrid"></div>
+            <div class="fig" data-count="1500" data-format="comma">0</div>
+            <p class="cap" style="margin:8px 0 0;min-height:0;font-size:12px;">brain MRI · cognitive testing · blood biomarkers</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== COMPARE TABLE ===================== -->
+  <section class="section" id="compare">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2>How ReCOGnAIze compares</h2>
+      </div>
+      <div class="ctable-wrap reveal">
+        <table class="ctable">
+          <thead>
+            <tr>
+              <th></th>
+              <th class="hotcol"><span class="colname">ReCOGnAIze</span><span class="colsub">Home</span></th>
+              <th><span class="colname">Pen &amp; paper</span><span class="colsub">Clinic</span></th>
+              <th><span class="colname">MRI</span><span class="colsub">Hospital</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Measures real performance</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td>Brain structure</td></tr>
+            <tr><td>Accuracy for MCI</td><td class="hotcol">~90%</td><td>~70%</td><td>Reference</td></tr>
+            <tr><td>Validated against MRI</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td><td><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td></tr>
+            <tr><td>Detects vascular MCI</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td><td>Sometimes</td></tr>
+            <tr><td>Doctor consult included</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td>Sometimes</td><td><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td></tr>
+            <tr><td>Done from home</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td></tr>
+            <tr><td>Results turnaround</td><td class="hotcol">Minutes</td><td>Days</td><td>Weeks</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="swipe-hint">Swipe to compare &rarr;</p>
+      <div class="how-cta reveal" style="text-align:center; margin-top:44px;">
+        <a href="/quiz" class="btn btn-primary">Take the assessment →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ADVISORY BOARD ===================== -->
+  <section class="section" id="advisors">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow" style="font-size:11px;letter-spacing:.1em;">Medical &amp; Scientific Advisory Board</p>
+        <h2>Guided by leaders in brain health</h2>
+      </div>
+      <div class="advisor-marquee reveal">
+        <div class="advisor-row">
+
+          <div class="advisor">
+            <div class="photo"><span>NK</span><img src="/Kandiah.png" alt="A/Prof Nagaendran Kandiah" onerror="this.style.display='none'" /></div>
+            <h3>A/Prof Nagaendran Kandiah</h3>
+            <div class="degrees">MBBS, FAMS (Neurology), FRCP (Edin)</div>
+            <ul class="roles">
+              <li>Director, Dementia Research Centre (Singapore), LKCMedicine</li>
+              <li>Associate Professor of Neuroscience &amp; Mental Health, LKCMedicine</li>
+              <li>Senior Consultant Neurologist, National University Hospital, Singapore</li>
+            </ul>
+          </div>
+          <div class="advisor">
+            <div class="photo"><span>TF</span><img src="/landing/dr-tsin-uin-foong.webp" alt="Dr. Tsin Uin Foong" onerror="this.style.display='none'" /></div>
+            <h3>Dr. Tsin Uin Foong</h3>
+            <div class="degrees">MBBS (London, UK), MRCGP (UK), Dip Pract Derm (UK)</div>
+            <ul class="roles">
+              <li>Co-founder, Osler Group</li>
+              <li>Chief Medical Officer, Osler Health International</li>
+            </ul>
+          </div>
+          <div class="advisor">
+            <div class="photo"><span>ST</span><img src="/landing/dr-stephen-tong.png" alt="Dr. Stephen Tong Jia Jong" onerror="this.style.display='none'" /></div>
+            <h3>Dr. Stephen Tong Jia Jong</h3>
+            <div class="degrees">MBBS, MMed (Family Medicine), MCFP(S)</div>
+            <ul class="roles">
+              <li>Founder, Bethesda Medical</li>
+              <li>Family Physician, Singapore Medical Council</li>
+            </ul>
+          </div>
+          <div class="advisor">
+            <div class="photo"><span>LL</span><img src="/landing/dr-laurena-law.png" alt="Dr. Laurena Law" onerror="this.style.display='none'" /></div>
+            <h3>Dr. Laurena Law</h3>
+            <div class="degrees">MBBS</div>
+            <ul class="roles">
+              <li>Medical Director, Choy Sum Health Clinic</li>
+              <li>Co-founder, The Hong Kong Menopause Society</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MEMBER / VIDEO REVIEWS ===================== -->
+  <section class="section" style="background:var(--bg);">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2>What people are saying</h2>
+        <p class="vr-rating"><span class="stars">★★★★★</span> <b>Excellent</b> 4.8 out of 5</p>
+      </div>
+      <div class="vr-row reveal">
+        <!-- PLACEHOLDER video review -->
+        <div class="vr-card video">
+          <span class="badge">▶ VIDEO</span>
+          <div class="play"></div>
+          <span class="handle">@member_review</span>
+        </div>
+        <!-- text testimonial -->
+        <div class="vr-card quote">
+          <div class="stars">★★★★★</div>
+          <h4>Clear and reassuring</h4>
+          <p>I finally understand my brain health instead of just worrying about it. The report made sense.</p>
+          <div class="by"><span class="av">SL</span><span class="nm">Serene L.</span></div>
+        </div>
+        <!-- PLACEHOLDER video review -->
+        <div class="vr-card video">
+          <span class="badge">▶ VIDEO</span>
+          <div class="play"></div>
+          <span class="handle">@member_review</span>
+        </div>
+        <!-- text testimonial -->
+        <div class="vr-card quote">
+          <div class="stars">★★★★★</div>
+          <h4>Worth every minute</h4>
+          <p>Fifteen minutes and a doctor walked me through exactly what to focus on. No upsells, just answers.</p>
+          <div class="by"><span class="av">MT</span><span class="nm">Marcus T.</span></div>
+        </div>
+        <!-- PLACEHOLDER video review -->
+        <div class="vr-card video">
+          <span class="badge">▶ VIDEO</span>
+          <div class="play"></div>
+          <span class="handle">@member_review</span>
+        </div>
+        <!-- text testimonial -->
+        <div class="vr-card quote">
+          <div class="stars">★★★★★</div>
+          <h4>No more guessing</h4>
+          <p>I'd been blaming age for the forgetfulness. Now I know which habits actually move the needle.</p>
+          <div class="by"><span class="av">PR</span><span class="nm">Priya R.</span></div>
+        </div>
+      </div>
+      <div class="vr-dots" role="tablist" aria-label="Review slides"></div>
+    </div>
+  </section>
+
+  <!-- ===================== FINAL CTA ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="cta-final reveal">
+        <h2>Know where your brain stands today.</h2>
+        <p>A short assessment, validated against MRI, plus a doctor-reviewed report - so you leave with answers and a clear next step.</p>
+        <a href="/quiz" class="btn btn-light">Take the assessment →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FAQ ===================== -->
+  <section class="section" style="background:var(--bg-soft);">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">Questions</p>
+        <h2>Frequently asked</h2>
+      </div>
+      <div class="faq-wrap">
+        <div class="faq">
+          <button>What do I get with this assessment? <span class="chev">+</span></button>
+          <div class="ans"><p>You get the full 360 Brain Health Review. It starts with the ReCOGnAIze assessment, which measures your performance across four cognitive domains. From there you receive an in-depth report that translates your results into plain language, followed by a one-to-one teleconsultation where a doctor reviews your results with you and helps you decide what to do next.</p></div>
+        </div>
+        <div class="faq">
+          <button>How long does it take? <span class="chev">+</span></button>
+          <div class="ans"><p>The digital assessment itself takes about 15 minutes and you can complete it from home. Your report and teleconsultation follow soon after, so the whole process is built to fit around a normal week instead of a hospital schedule.</p></div>
+        </div>
+        <div class="faq">
+          <button>How do I know this is legitimate? <span class="chev">+</span></button>
+          <div class="ans"><p>ReCOGnAIze was built at Nanyang Technological University and validated against MRI brain scans. The underlying research was published in Alzheimer's &amp; Dementia, one of the leading peer-reviewed journals in the field, and the assessment is registered with Singapore's Health Sciences Authority as a medical device.</p></div>
+        </div>
+        <div class="faq">
+          <button>Don't I need a brain scan to get answers like this? <span class="chev">+</span></button>
+          <div class="ans"><p>You don't. Because ReCOGnAIze was validated against MRI, it reads the same kind of structural change a scan looks for. You get a clinically grounded result without the cost or the wait of a hospital appointment.</p></div>
+        </div>
+        <div class="faq">
+          <button>How accurate is it? <span class="chev">+</span></button>
+          <div class="ans"><p>In the published study, ReCOGnAIze detected mild cognitive impairment with 90% accuracy. Commonly used in-clinic screening tools sit closer to 70% on the same measure.</p></div>
+        </div>
+        <div class="faq">
+          <button>How is this different from a regular quiz? <span class="chev">+</span></button>
+          <div class="ans"><p>A standard quiz measures your risk factors - the lifestyle and health inputs that raise or lower your odds over time. ReCOGnAIze measures your actual cognitive performance across four domains, and a doctor reviews the results with you so you know what to do next.</p></div>
+        </div>
+        <div class="faq">
+          <button>How is this different from an MRI scan? <span class="chev">+</span></button>
+          <div class="ans"><p>An MRI looks at your brain's structure. ReCOGnAIze measures how it's performing, which is the step that comes first. Think of it as a thermometer for your brain: it tells you whether something is worth investigating and whether a scan is even needed - without the cost or the wait of starting with one.</p></div>
+        </div>
+        <div class="faq">
+          <button>Is this just a way to sell me supplements? <span class="chev">+</span></button>
+          <div class="ans"><p>No. The assessment stands entirely on its own. If any recommendation is made, it comes from the reviewing doctor after your results are in, and it is kept clearly separate from the assessment itself.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <div class="logo"><img src="/gms-logo.png" alt="" /> Gray Matter Solutions</div>
+          <p style="max-width:280px;">A digital brain health assessment - validated against MRI and reviewed by doctors.</p>
+        </div>
+        <div>
+          <h4>Research</h4>
+          <p style="font-size:13px;line-height:1.7;max-width:360px;">Mohammed AA, et al. (2026). <em>Alzheimer's &amp; Dementia: Journal of the Alzheimer's Association.</em> doi:10.1002/alz.70992. Biomarkers and Cognition Study, Singapore (BIOCIS). Ngandu T, et al. (2015). FINGER trial, <em>The Lancet.</em> Livingston G, et al. (2024). Lancet Commission on dementia.</p>
+        </div>
+        <div>
+          <h4>Trust</h4>
+          <p style="font-size:13px;line-height:1.9;">NTU Singapore spin-off · HSA-listed medical device · ISO 13485 certified</p>
+        </div>
+      </div>
+      <div class="disclaimer">
+        <p><strong>Disclaimer:</strong> ReCOGnAIze identifies risk of mild cognitive impairment. It does not diagnose dementia or any disease and is not a substitute for medical advice. Always consult a qualified clinician about your health.</p>
+        <p style="margin-top:10px;">© 2026 Gray Matter Solutions. A spin-off from Nanyang Technological University, Singapore.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== JS ===================== -->
+  <script>
+    // Hero video: force muted autoplay (some browsers ignore the HTML attribute).
+    (function () {
+      const v = document.querySelector('.hero-media');
+      if (!v) return;
+      v.muted = true; v.defaultMuted = true; v.playsInline = true;
+      const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+      tryPlay();
+      v.addEventListener('canplay', tryPlay, { once: true });
+      v.addEventListener('loadeddata', tryPlay, { once: true });
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
+      const kick = () => { tryPlay(); ['touchstart','click','scroll','keydown'].forEach((e) => window.removeEventListener(e, kick)); };
+      ['touchstart','click','scroll','keydown'].forEach((e) => window.addEventListener(e, kick, { once: true, passive: true }));
+    })();
+
+    // Mobile nav
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+    document.querySelectorAll('#navLinks a').forEach(a =>
+      a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'))
+    );
+
+    // FAQ accordion
+    document.querySelectorAll('.faq button').forEach(btn => {
+      btn.addEventListener('click', () => btn.parentElement.classList.toggle('open'));
+    });
+
+    // Count-up animation for stat numbers (e.g. the accuracy chart).
+    function countUp(el) {
+      const target = parseFloat(el.dataset.count);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const dur = 1300; let start = null;
+      const comma = el.dataset.format === 'comma';
+      function tick(t) {
+        if (!start) start = t;
+        const p = Math.min((t - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+        let n = Math.round(target * eased);
+        const shown = comma ? n.toLocaleString('en-US') : n;
+        el.textContent = prefix + shown + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // Populate the cohort dot-grid pictogram (each dot = part of the 1,500 cohort).
+    (function () {
+      const grid = document.getElementById('dotgrid');
+      if (!grid) return;
+      const N = 60; // 15 cols x 4 rows
+      for (let i = 0; i < N; i++) {
+        const d = document.createElement('i');
+        d.style.transitionDelay = (i * 14) + 'ms'; // staggered fill-in
+        grid.appendChild(d);
+      }
+    })();
+
+    // Scroll reveal (also triggers bar fills + count-ups inside the element)
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          e.target.querySelectorAll('[data-count]').forEach(countUp);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Advisory board: continuous auto-rolling marquee. Duplicate the cards so the
+    // CSS translateX(-50%) loop is seamless.
+    (function () {
+      const marquee = document.querySelector('.advisor-marquee');
+      const row = marquee && marquee.querySelector('.advisor-row');
+      if (!marquee || !row) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      Array.from(row.children).forEach((c) => {
+        const clone = c.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        row.appendChild(clone);
+      });
+      marquee.classList.add('rolling');
+    })();
+
+    // Reusable dot-paginated carousel: dots = viewport "pages" evenly mapped across
+    // the scroll range, so the active dot and scroll position always agree.
+    function dotCarousel(scroller, dotsWrap, label) {
+      if (!scroller || !dotsWrap) return;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let dots = [], pageCount = 0, current = 0, timer = 0, raf = 0, rz = 0;
+
+      const maxScroll = () => Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+      const targetFor = (i) => (pageCount <= 1 ? 0 : (i / (pageCount - 1)) * maxScroll());
+
+      function setActive(i) { current = i; dots.forEach((d, j) => d.classList.toggle('on', j === i)); }
+      function goTo(i, user) {
+        if (pageCount < 1) return;
+        i = (i + pageCount) % pageCount;
+        scroller.scrollTo({ left: targetFor(i), behavior: 'smooth' });
+        setActive(i);
+        if (user) restart();
+      }
+      function build() {
+        const count = Math.max(1, Math.ceil(scroller.scrollWidth / scroller.clientWidth));
+        if (count === pageCount) return;
+        pageCount = count;
+        dotsWrap.innerHTML = '';
+        dots = [];
+        for (let i = 0; i < pageCount; i++) {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('role', 'tab');
+          b.setAttribute('aria-label', label + ' ' + (i + 1));
+          b.addEventListener('click', () => goTo(i, true));
+          dotsWrap.appendChild(b);
+          dots.push(b);
+        }
+        setActive(Math.min(current, pageCount - 1));
+      }
+
+      scroller.addEventListener('scroll', () => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          const ms = maxScroll();
+          setActive(ms <= 0 ? 0 : Math.round((scroller.scrollLeft / ms) * (pageCount - 1)));
+        });
+      }, { passive: true });
+
+      const start = () => { if (!reduce && !timer && pageCount > 1) timer = setInterval(() => goTo(current + 1, false), 4200); };
+      const stop = () => { clearInterval(timer); timer = 0; };
+      const restart = () => { stop(); start(); };
+      scroller.addEventListener('mouseenter', stop);
+      scroller.addEventListener('mouseleave', start);
+      scroller.addEventListener('touchstart', stop, { passive: true });
+      scroller.addEventListener('focusin', stop);
+      scroller.addEventListener('focusout', start);
+      document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+      window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(build, 200); });
+
+      build();
+      start();
+    }
+
+    // "What people are saying" reviews now use the dot-paginated carousel.
+    dotCarousel(document.querySelector('.vr-row'), document.querySelector('.vr-dots'), 'Reviews page');
+  </script>
+</body>
+</html>
