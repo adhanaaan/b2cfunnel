@@ -16,27 +16,28 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
     /* ---------- GMS BRAND TOKENS (edit these to rebrand) ---------- */
     :root {
-      --ink:        #2d2d2d;   /* charcoal text */
-      --ink-soft:   #6f6c63;   /* secondary text (warm gray) */
-      --bg:         #f6faf4;   /* soft forest off-white */
-      --bg-soft:    #e3efdd;   /* pale sage sections + cards */
-      --bg-deep:    #14251b;   /* deep forest */
-      --brand:      #245c3b;   /* forest green */
-      --brand-2:    #6fa866;   /* fresh leaf green */
-      --accent:     #9abf64;   /* moss for "optimal/good" signals */
-      --gold:       #d6a84b;   /* warm star ratings */
-      --line:       #d2dfcf;   /* sage hairlines */
-      --radius:     18px;
+      --ink:        #212121;   /* Prologue charcoal */
+      --ink-soft:   #6c886d;   /* primary jade */
+      --bg:         #f3f8f1;   /* pale jade */
+      --bg-soft:    #e5efe1;   /* jade wash */
+      --bg-deep:    #475b47;   /* secondary deep jade */
+      --card:       #fbfff7;
+      --brand:      #6c886d;   /* primary jade */
+      --brand-2:    #475b47;   /* secondary jade */
+      --accent:     #9fb59c;   /* light jade tint */
+      --gold:       #c4b59b;   /* muted stone-gold */
+      --line:       #cddfc5;   /* soft jade hairlines */
+      --radius:     14px;
       --maxw:       1180px;
-      --shadow:     0 18px 50px rgba(45,45,45,.08);
-      --dot:        transparent; /* clean (no texture, like flow 1) */
-      --font-sans:  'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif; /* headings */
+      --shadow:     0 20px 60px rgba(71,91,71,.10);
+      --dot:        transparent;
+      --font-sans:  'Figtree', 'SF Pro Display', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      --font-serif: 'Louize', 'Cormorant Garamond', Georgia, 'Times New Roman', serif; /* Louize-inspired fallback */
     }
 
     /* ---------- RESET ---------- */
@@ -48,18 +49,21 @@
       color: var(--ink);
       background-color: var(--bg);
       max-width: 100%;
-      background-image: radial-gradient(var(--dot) 1px, transparent 1px);
-      background-size: 22px 22px;
+      background-image:
+        radial-gradient(70% 42% at 12% 0%, rgba(108,136,109,.14), transparent 62%),
+        radial-gradient(62% 46% at 100% 12%, rgba(71,91,71,.10), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,.76), rgba(229,239,225,.84));
+      background-size: auto;
       line-height: 1.55;
       -webkit-font-smoothing: antialiased;
     }
     img { max-width: 100%; display: block; }
     a { color: inherit; text-decoration: none; }
-    h1,h2,h3 { font-family: var(--font-serif); font-weight: 600; line-height: 1.1; letter-spacing: -.01em; }
+    h1,h2,h3 { font-family: var(--font-serif); font-weight: 500; line-height: 1.06; letter-spacing: -.005em; }
 
     .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
     .eyebrow {
-      font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+      font-size: 12px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase;
       color: var(--brand); margin-bottom: 16px;
     }
     .section { padding: 96px 0; }
@@ -69,35 +73,35 @@
     /* ---------- BUTTONS ---------- */
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
-      font-weight: 600; font-size: 15px; padding: 14px 26px;
+      font-weight: 700; font-size: 14px; padding: 14px 28px;
       border-radius: 999px; border: 1px solid transparent; cursor: pointer;
       transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
     }
-    .btn-primary { background: var(--brand); color: #fff; box-shadow: 0 10px 24px rgba(36,92,59,.28); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(36,92,59,.38); }
-    .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
-    .btn-ghost:hover { background: var(--bg-soft); }
+    .btn-primary { background: var(--brand-2); color: #fff; box-shadow: 0 14px 34px rgba(71,91,71,.26); }
+    .btn-primary:hover { transform: translateY(-2px); background: #3e503e; box-shadow: 0 18px 38px rgba(71,91,71,.34); }
+    .btn-ghost { background: rgba(255,255,255,.28); color: var(--ink); border-color: rgba(108,136,109,.32); }
+    .btn-ghost:hover { background: rgba(226,241,216,.7); }
     .btn-light { background: #fff; color: var(--bg-deep); }
     .btn-light:hover { transform: translateY(-2px); }
 
     /* ---------- TOP BAR ---------- */
     .topbar {
-      background: linear-gradient(90deg, var(--brand), var(--brand-2)); color: #fff;
-      font-size: 13px; text-align: center; padding: 9px 16px; letter-spacing: .01em; font-weight: 600;
+      background: #dce8d8; color: var(--bg-deep);
+      font-size: 12px; text-align: center; padding: 10px 16px; letter-spacing: .08em; font-weight: 700; text-transform: uppercase;
     }
-    .topbar strong { color: #fff; }
+    .topbar strong { color: var(--bg-deep); }
 
     /* ---------- NAV ---------- */
     header.nav {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(247,247,244,.85); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--line);
+      background: rgba(244,250,238,.78); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(108,136,109,.22);
     }
     .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 70px; }
-    .logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-serif); font-size: 22px; font-weight: 600; }
+    .logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-serif); font-size: 25px; font-weight: 500; color: var(--bg-deep); }
     .logo .dot { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg,var(--brand),var(--brand-2)); display:inline-block; }
     .logo img { height: 28px; width: auto; display: inline-block; }
-    .nav-links { display: flex; gap: 30px; font-size: 15px; font-weight: 500; color: var(--ink-soft); }
+    .nav-links { display: flex; gap: 30px; font-size: 12px; font-weight: 700; color: var(--ink-soft); letter-spacing: .12em; text-transform: uppercase; }
     .nav-links a:hover { color: var(--ink); }
     .nav-cta { display: flex; align-items: center; gap: 14px; }
     .nav-toggle { display: none; background: none; border: 0; font-size: 26px; cursor: pointer; }
@@ -113,38 +117,52 @@
     }
 
     /* ---------- HERO (full-bleed video, matches flow 1) ---------- */
-    .hero { position: relative; min-height: 94vh; display: grid; grid-template-columns: minmax(0,1fr); place-items: center; text-align: center; color: #fff; background: var(--bg-deep); overflow: hidden; }
+    .hero { position: relative; min-height: 94vh; display: grid; grid-template-columns: minmax(0,1fr); place-items: center; text-align: center; color: var(--bg-deep); background: var(--bg-soft); overflow: hidden; }
     .hero-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-    .hero-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(15,10,5,.55), rgba(15,10,5,.74)); }
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background:
+        radial-gradient(62% 48% at 18% 20%, rgba(255,255,255,.76), transparent 58%),
+        radial-gradient(70% 62% at 82% 18%, rgba(108,136,109,.16), transparent 64%),
+        linear-gradient(180deg, rgba(235,244,231,.90), rgba(220,232,216,.93));
+    }
+    .hero-overlay::after {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(120deg, transparent 0 18%, rgba(255,255,255,.22) 24%, transparent 38%),
+        linear-gradient(35deg, transparent 0 42%, rgba(108,136,109,.16) 48%, transparent 55%),
+        radial-gradient(110% 78% at 50% 20%, rgba(255,255,255,.28), transparent 65%);
+      mix-blend-mode: soft-light;
+    }
     .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 96px; z-index: 2; background: linear-gradient(180deg, transparent, var(--bg)); pointer-events: none; }
     .hero .wrap { position: relative; z-index: 3; width: 100%; max-width: 880px; padding-top: 96px; padding-bottom: 64px; }
-    .hero .pill { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 13px; font-weight: 600; color: #fff; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.32); padding: 7px 16px; border-radius: 999px; margin-bottom: 22px; }
+    .hero .pill { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--bg-deep); background: rgba(255,255,255,.42); border: 1px solid rgba(108,136,109,.28); padding: 8px 18px; border-radius: 999px; margin-bottom: 24px; }
     .hero .pill .pill-icon { height: 18px; width: auto; }
-    .hero h1 { font-size: clamp(38px, 6.5vw, 68px); margin: 0 0 20px; color: #fff; }
-    .hero p.lead { font-size: 16px; color: rgba(255,255,255,.9); max-width: 560px; margin: 0 auto 18px; }
+    .hero h1 { font-size: clamp(52px, 8vw, 108px); margin: 0 0 22px; color: var(--bg-deep); text-wrap: balance; }
+    .hero p.lead { font-size: clamp(17px,1.55vw,22px); color: #475b47; max-width: 680px; margin: 0 auto 18px; font-weight: 400; }
     .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 26px 0 22px; }
     .hero-trust { display: flex; flex-direction: column; align-items: center; gap: 7px; font-size: 13.5px; color: rgba(255,255,255,.82); }
     /* Hero "as featured in" moving logo bar (replaces the static trust text).
        Wrapped in a frosted-glass panel so it pops off the busy video hero. */
     .hero-marquee {
       width: 100%; max-width: 720px; margin: 18px auto 0; padding: 16px 8px 18px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.34);
+      border: 1px solid rgba(108,136,109,.24);
       border-radius: 16px;
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 12px 40px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
+      box-shadow: 0 18px 48px rgba(71,91,71,.12), inset 0 1px 0 rgba(255,255,255,.42);
     }
-    .hero-marquee .label { text-align: center; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.85); font-weight: 800; margin-bottom: 14px; }
-    .hero-marquee .label::before, .hero-marquee .label::after { content: ""; display: inline-block; width: 22px; height: 1px; background: rgba(255,255,255,.4); vertical-align: middle; margin: 0 12px 2px; }
+    .hero-marquee .label { text-align: center; font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--brand); font-weight: 800; margin-bottom: 14px; }
+    .hero-marquee .label::before, .hero-marquee .label::after { content: ""; display: inline-block; width: 22px; height: 1px; background: rgba(108,136,109,.42); vertical-align: middle; margin: 0 12px 2px; }
     .marquee { position: relative; overflow: hidden; -webkit-mask-image: linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent); mask-image: linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent); }
     .mq-track { display: flex; align-items: center; gap: 52px; width: max-content; animation: mq 30s linear infinite; }
-    .mq-track img { height: 28px; width: auto; flex-shrink: 0; opacity: 1; filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,.35)); transition: transform .2s; }
+    .mq-track img { height: 28px; width: auto; flex-shrink: 0; opacity: .82; filter: grayscale(1) sepia(.25) hue-rotate(58deg) saturate(.65) brightness(.62); transition: transform .2s, opacity .2s; }
     .marquee:hover .mq-track { animation-play-state: paused; }
     .mq-track img:hover { transform: scale(1.06); }
     @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
     @media (prefers-reduced-motion: reduce) { .mq-track { animation: none; flex-wrap: wrap; justify-content: center; } }
-    .hero .btn-ghost { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.45); }
-    .hero .btn-ghost:hover { background: rgba(255,255,255,.22); }
+    .hero .btn-ghost { background: rgba(255,255,255,.36); color: var(--bg-deep); border-color: rgba(108,136,109,.36); }
+    .hero .btn-ghost:hover { background: rgba(255,255,255,.58); }
     .stars { color: var(--gold); letter-spacing: 2px; }
 
     /* hero visual: a "report card" mock */
@@ -161,9 +179,9 @@
     .score-num { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-serif); font-size: 40px; }
     .biomarker { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-top: 1px solid var(--line); font-size: 14px; }
     .pill { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
-    .pill.good { background: #e3f7f1; color: #0c8d6f; }
-    .pill.watch { background: #fdf1dd; color: #b9781b; }
-    .pill.low { background: #fde7e7; color: #c0392b; }
+    .pill.good { background: #e6f3df; color: var(--brand-2); }
+    .pill.watch { background: #f3ead9; color: #7b6f54; }
+    .pill.low { background: #f0dfdc; color: #8f5d55; }
 
     /* SOLUTION — full-width background composition: person + floating result cards */
     .solution-bg { position: relative; overflow: hidden; min-height: 640px; display: flex; align-items: center;
@@ -191,8 +209,8 @@
       .tab-photo { position: relative; right: auto; bottom: auto; height: auto; width: 132%; max-width: none; margin: 24px 0 0 -16%; }
     }
     /* floating white cards */
-    .fcard { position: absolute; z-index: 1; background: rgba(255,255,255,.94); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-      border: 1px solid rgba(20,37,27,.08); border-radius: 16px; padding: 15px 17px; box-shadow: 0 24px 50px rgba(36,92,59,.15); color: var(--ink); }
+    .fcard { position: absolute; z-index: 1; background: rgba(251,255,247,.92); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+      border: 1px solid rgba(108,136,109,.18); border-radius: 14px; padding: 15px 17px; box-shadow: 0 24px 50px rgba(71,91,71,.13); color: var(--ink); }
     .fcard .fh { font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 10px; }
     .fcard.tag { padding: 9px 15px; font-size: 12px; font-weight: 700; color: var(--brand); display: flex; align-items: center; gap: 6px; }
     .mini-ring { position: relative; flex-shrink: 0; }
@@ -201,7 +219,7 @@
     .mini-ring .rn small { display: block; font-family: var(--font-sans); font-size: 8px; color: var(--ink-soft); font-weight: 600; margin-top: 1px; }
     .mbar { display: grid; grid-template-columns: 76px 1fr; gap: 9px; align-items: center; margin-top: 7px; }
     .mbar > span { font-size: 10px; color: var(--ink); font-weight: 600; line-height: 1.1; }
-    .mbar .t { height: 5px; border-radius: 9px; background: #efe3d7; overflow: hidden; }
+    .mbar .t { height: 5px; border-radius: 9px; background: #dce8d4; overflow: hidden; }
     .mbar .t i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(90deg, var(--brand-2), var(--brand)); }
     .gauge .gtxt { text-align: center; font-size: 10.5px; font-weight: 800; color: var(--brand); margin-top: 3px; letter-spacing: .02em; }
     .fc-score   { left: max(490px, 42%); top: 5%;  width: 250px; }
@@ -222,21 +240,21 @@
     .stats-sec { position: relative; background: var(--bg); padding: 90px 0; }
     .stats { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4,1fr); gap: 40px 0; }
     .stat { text-align: center; padding: 8px 22px; position: relative; }
-    .stat + .stat::before { content: ""; position: absolute; left: 0; top: 12%; height: 76%; width: 1px; background: rgba(45,30,20,.1); }
+    .stat + .stat::before { content: ""; position: absolute; left: 0; top: 12%; height: 76%; width: 1px; background: rgba(108,136,109,.18); }
     .stat .n { font-family: var(--font-serif); font-size: clamp(38px,4vw,54px); font-weight: 600; color: var(--brand); line-height: 1; }
     .stat .l { font-size: 13.5px; color: var(--ink-soft); margin-top: 12px; }
 
     /* ---------- VIDEO / MEMBER REVIEWS (Mito-style tall cards) ---------- */
     .vr-rating { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 14px 0 38px; font-size: 15px; color: var(--ink-soft); }
     .vr-rating b { color: var(--ink); }
-    .vr-rating .stars { color: #00b67a; letter-spacing: 2px; font-size: 16px; }
+    .vr-rating .stars { color: var(--brand); letter-spacing: 2px; font-size: 16px; }
     /* horizontal scroller (like the advisory board): drag/swipe through cards */
     .vr-row { display: flex; gap: 20px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
       scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; padding-bottom: 4px;
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
       mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent); }
     .vr-row::-webkit-scrollbar { display: none; }
-    .vr-card { flex: 0 0 300px; aspect-ratio: 9 / 16; border-radius: 20px; overflow: hidden; position: relative; background: #ece8e1; scroll-snap-align: start; }
+    .vr-card { flex: 0 0 300px; aspect-ratio: 9 / 16; border-radius: 14px; overflow: hidden; position: relative; background: #e2eadc; scroll-snap-align: start; }
     /* video placeholder: gradient + play button + handle */
     .vr-card.video { background: linear-gradient(160deg, #cfd6d2, #9aa7a0 60%, #6c7a72); display: grid; place-items: center; }
     .vr-card.video .play { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,.92); display: grid; place-items: center; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
@@ -254,7 +272,7 @@
     @media (max-width: 520px) { .vr-card { flex-basis: 78vw; } }
 
     /* ---------- STAT BREAKER (dark stats that fade into the page at the sides) ---------- */
-    .statbreak { position: relative; color: #f0e4d2; background: transparent; }
+    .statbreak { position: relative; color: var(--bg); background: transparent; }
     /* the dark fill is a separate layer that fades out left/right + top/bottom,
        so the band has no hard box edges and flows into the surrounding page. */
     .statbreak::before { content: ""; position: absolute; inset: 0; z-index: 0; background: var(--bg-deep);
@@ -264,9 +282,9 @@
     .statbreak .sb { text-align: center; position: relative; padding: 0 22px; }
     .statbreak .sb + .sb::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 1px; background: rgba(255,255,255,.14); }
     .statbreak .sb .big { font-family: var(--font-serif); font-size: clamp(40px,5vw,60px); line-height: 1; color: #fff; }
-    .statbreak .sb .big em { color: var(--brand-2); font-style: normal; }
-    .statbreak .sb p { font-size: 15px; color: #d9cdba; margin: 14px 0 8px; line-height: 1.45; }
-    .statbreak .sb cite { font-size: 12px; color: #9b8e7c; font-style: normal; }
+    .statbreak .sb .big em { color: #dce8d8; font-style: normal; }
+    .statbreak .sb p { font-size: 15px; color: #dfeadb; margin: 14px 0 8px; line-height: 1.45; }
+    .statbreak .sb cite { font-size: 12px; color: #b9c9b2; font-style: normal; }
 
     /* ---------- SECTION HEADERS ---------- */
     .head { max-width: 720px; margin: 0 auto 56px; text-align: center; }
@@ -279,6 +297,56 @@
     .panel-card .ic { width: 46px; height: 46px; border-radius: 12px; background: #fff; display: grid; place-items: center; font-size: 22px; box-shadow: var(--shadow); margin-bottom: 16px; }
     .panel-card h3 { font-size: 20px; margin-bottom: 8px; }
     .panel-card p { font-size: 15px; color: var(--ink-soft); }
+
+    /* ---------- WOMAN / MENOPAUSE FLOW ---------- */
+    .cred-strip { padding: 42px 0; background: var(--bg); border-bottom: 1px solid var(--line); }
+    .cred-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+    .cred-item {
+      min-height: 190px; background: rgba(251,255,247,.88); border: 1px solid rgba(108,136,109,.18);
+      border-radius: 18px; padding: 30px 34px; box-shadow: 0 18px 42px rgba(71,91,71,.07);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .cred-mark { display: flex; align-items: center; min-height: 64px; margin-bottom: 18px; color: var(--brand-2); }
+    .cred-mark b { display: block; font-family: var(--font-serif); font-size: clamp(44px,4vw,62px); line-height: .9; color: var(--brand-2); font-weight: 600; }
+    .cred-mark img { max-height: 58px; width: auto; opacity: .9; filter: grayscale(1) sepia(.25) hue-rotate(58deg) saturate(.55) brightness(.62); }
+    .cred-icon {
+      width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center;
+      background: rgba(108,136,109,.12); color: var(--brand-2); margin-right: 14px;
+    }
+    .cred-icon svg { width: 32px; height: 32px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .cred-item span { display: block; font-size: clamp(18px,1.55vw,24px); color: var(--ink-soft); line-height: 1.35; }
+    .symptom-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 34px; }
+    .symptom-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; min-height: 150px; box-shadow: 0 16px 38px rgba(71,91,71,.07); }
+    .symptom-card .ic { font-size: 24px; margin-bottom: 12px; }
+    .symptom-card h3 { font-size: 21px; margin-bottom: 8px; }
+    .symptom-card p { font-size: 15px; color: var(--ink-soft); line-height: 1.55; }
+    .why-band { background: var(--bg-soft); }
+    .why-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 48px; align-items: start; }
+    .why-list { display: grid; gap: 14px; list-style: none; }
+    .why-list li { background: rgba(251,255,247,.78); border: 1px solid rgba(108,136,109,.18); border-radius: var(--radius); padding: 18px 20px; color: var(--ink-soft); line-height: 1.55; }
+    .why-list b { color: var(--ink); }
+    .domains-mini { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; margin-top: 34px; }
+    .domain-mini {
+      background: var(--bg-soft); border: 1px solid var(--line); border-radius: 18px; padding: 30px 20px;
+      text-align: center; min-height: 210px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .domain-mini .di {
+      width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center;
+      background: rgba(108,136,109,.12); color: var(--brand-2); margin-bottom: 18px;
+    }
+    .domain-mini .di svg { width: 38px; height: 38px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .domain-mini b { display: block; font-family: var(--font-serif); font-size: 28px; color: var(--brand-2); margin-bottom: 8px; line-height: 1.05; }
+    .domain-mini span { font-size: 15px; color: var(--ink-soft); line-height: 1.35; display: block; max-width: 150px; }
+    @media (max-width: 900px) {
+      .cred-row, .symptom-grid, .why-grid { grid-template-columns: 1fr; }
+      .domains-mini { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .domain-mini { min-height: 166px; padding: 22px 12px; border-radius: 14px; }
+      .domain-mini .di { width: 58px; height: 58px; margin-bottom: 13px; }
+      .domain-mini .di svg { width: 30px; height: 30px; }
+      .domain-mini b { font-size: 23px; margin-bottom: 5px; }
+      .domain-mini span { font-size: 12.5px; max-width: 118px; }
+      .cred-strip { padding: 24px 0; }
+    }
 
     /* ---------- STEPS ---------- */
     .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 26px; counter-reset: step; }
@@ -306,14 +374,14 @@
     .tl-row:nth-child(odd)  .tl-text { grid-column: 3; }
 
     /* shared mockup card */
-    .mock { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 18px 50px rgba(45,45,45,.10); padding: 18px; }
+    .mock { background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 18px 50px rgba(71,91,71,.10); padding: 18px; }
     .mock-head { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 14px; }
     .mock-head .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--brand); }
     /* step 1 - quiz / cognitive games */
     .mq-q { font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 12px; }
     .mq-games { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .mq-game { display: flex; align-items: center; gap: 9px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; font-size: 13px; font-weight: 600; color: var(--ink); }
-    .mq-game .gi { width: 30px; height: 30px; border-radius: 9px; background: rgba(36,92,59,.14); display: grid; place-items: center; flex-shrink: 0; }
+    .mq-game .gi { width: 30px; height: 30px; border-radius: 9px; background: rgba(108,136,109,.16); display: grid; place-items: center; flex-shrink: 0; }
     .mq-game .gi svg { width: 16px; height: 16px; stroke: var(--brand); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     /* step 2 - report card with score + domain bars */
     .mr-top { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
@@ -351,15 +419,15 @@
     .ps-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: center; }
     .ps-visual {
       position: relative; aspect-ratio: 1 / 1; border-radius: 22px; overflow: hidden;
-      background: radial-gradient(120% 90% at 35% 20%, #d7ead0 0%, #7fae70 48%, #245c3b 100%);
+      background: radial-gradient(120% 90% at 35% 20%, #f3f8f1 0%, #c6d8c0 48%, #6c886d 100%);
     }
     /* stressed-woman photo: full colour, cover-fill the card (no tint overlay). */
     .ps-figure { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;
       object-fit: cover; object-position: 32% 28%; }
-    .ps-visual::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 62%, rgba(20,37,27,.26)); pointer-events: none; }
+    .ps-visual::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 62%, rgba(71,91,71,.22)); pointer-events: none; }
     .ps-pill {
       position: absolute; z-index: 2; transform: translate(-50%, -50%);
-      background: rgba(20,37,27,.62); color: #fff; border: 1px solid rgba(255,255,255,.5);
+      background: rgba(71,91,71,.68); color: #fff; border: 1px solid rgba(255,255,255,.5);
       font-size: 15px; font-weight: 600; padding: 9px 18px; border-radius: 999px;
       white-space: nowrap; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
       box-shadow: 0 6px 18px rgba(0,0,0,.22); animation: psfloat 5s ease-in-out infinite;
@@ -394,7 +462,7 @@
     .sci-trust svg { width: 18px; height: 18px; stroke: var(--brand); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
     /* card grid on the right */
     .sci-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    .dcard { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 22px 20px; box-shadow: 0 14px 40px rgba(45,45,45,.07); }
+    .dcard { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 22px 20px; box-shadow: 0 14px 40px rgba(71,91,71,.08); }
     .dcard .cap { font-size: 13px; font-weight: 600; color: var(--ink-soft); line-height: 1.4; margin: 0 0 16px; min-height: 36px; }
     .dcard .cap b { color: var(--ink); font-weight: 800; }
     .dcard .fig { font-family: var(--font-serif); font-size: clamp(34px,4vw,52px); line-height: 1; color: var(--ink); }
@@ -409,7 +477,7 @@
     .cmp .row .track { height: 12px; border-radius: 999px; background: rgba(0,0,0,.05); overflow: hidden; }
     .cmp .row .track i { display: block; height: 100%; width: 0; border-radius: 999px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
     .cmp .row .track i.fill { background: linear-gradient(90deg, var(--brand), var(--brand-2)); }
-    .cmp .row.alt .track i { background: #c2b5a6; }
+    .cmp .row.alt .track i { background: #c4b59b; }
     .science.in .cmp .row .track i { width: var(--w); }
     /* cohort: dot-grid pictogram (each dot = part of the 1,500 cohort) */
     .dotgrid { display: grid; grid-template-columns: repeat(15, 1fr); gap: 6px; margin: 8px 0 16px; }
@@ -440,9 +508,9 @@
     /* green highlight that pulses around each card as it scrolls into view */
     .cap.in { animation: capGlow 1.3s ease-out; }
     @keyframes capGlow {
-      0%   { border-color: var(--line); box-shadow: 0 0 0 0 rgba(36,92,59,0); }
-      45%  { border-color: var(--brand); box-shadow: 0 0 26px 3px rgba(36,92,59,.34), 0 0 0 2px rgba(36,92,59,.28) inset; }
-      100% { border-color: var(--line); box-shadow: 0 0 0 0 rgba(36,92,59,0); }
+      0%   { border-color: var(--line); box-shadow: 0 0 0 0 rgba(108,136,109,0); }
+      45%  { border-color: var(--brand); box-shadow: 0 0 26px 3px rgba(108,136,109,.28), 0 0 0 2px rgba(108,136,109,.24) inset; }
+      100% { border-color: var(--line); box-shadow: 0 0 0 0 rgba(108,136,109,0); }
     }
     @media (prefers-reduced-motion: reduce) { .cap.in { animation: none; } }
     .center { text-align: center; }
@@ -459,7 +527,7 @@
     .bigquote p { font-family: var(--font-serif); font-size: clamp(24px, 3vw, 36px); line-height: 1.34; color: var(--ink); margin: 0 0 40px; font-weight: 500; }
     /* reset the inherited site-footer styling (dark bg) - this footer sits on a light section */
     .bigquote footer { display: flex; align-items: center; gap: 16px; margin: 0; background: none; color: var(--ink); padding: 0; font-size: inherit; }
-    .bigquote footer .photo { position: relative; width: 64px; height: 64px; border-radius: 50%; overflow: hidden; background: linear-gradient(135deg,var(--bg-soft),#d6ead0); display: grid; place-items: center; flex-shrink: 0; }
+    .bigquote footer .photo { position: relative; width: 64px; height: 64px; border-radius: 50%; overflow: hidden; background: linear-gradient(135deg,var(--bg-soft),var(--bg)); display: grid; place-items: center; flex-shrink: 0; }
     .bigquote footer .photo span { font-weight: 700; color: var(--brand); font-size: 22px; }
     .bigquote footer .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .bigquote footer > div { text-align: left; display: flex; flex-direction: column; }
@@ -476,9 +544,9 @@
     .ctable { width: 100%; border-collapse: collapse; min-width: 680px; position: relative; }
     /* featured (ReCOGnAIze) column: tint each cell + rounded top on the header,
        so the highlight spans exactly the table height (no overflow hacks). */
-    .ctable .hotcol { background: rgba(36,92,59,.06); box-shadow: inset 1px 0 0 rgba(36,92,59,.22), inset -1px 0 0 rgba(36,92,59,.22); }
-    .ctable thead .hotcol { box-shadow: inset 1px 0 0 rgba(36,92,59,.22), inset -1px 0 0 rgba(36,92,59,.22), inset 0 1px 0 rgba(36,92,59,.22); border-radius: 14px 14px 0 0; }
-    .ctable tbody tr:last-child .hotcol { box-shadow: inset 1px 0 0 rgba(36,92,59,.22), inset -1px 0 0 rgba(36,92,59,.22), inset 0 -1px 0 rgba(36,92,59,.22); border-radius: 0 0 14px 14px; }
+    .ctable .hotcol { background: rgba(108,136,109,.08); box-shadow: inset 1px 0 0 rgba(108,136,109,.24), inset -1px 0 0 rgba(108,136,109,.24); }
+    .ctable thead .hotcol { box-shadow: inset 1px 0 0 rgba(108,136,109,.24), inset -1px 0 0 rgba(108,136,109,.24), inset 0 1px 0 rgba(108,136,109,.24); border-radius: 14px 14px 0 0; }
+    .ctable tbody tr:last-child .hotcol { box-shadow: inset 1px 0 0 rgba(108,136,109,.24), inset -1px 0 0 rgba(108,136,109,.24), inset 0 -1px 0 rgba(108,136,109,.24); border-radius: 0 0 14px 14px; }
     .ctable th, .ctable td { padding: 18px 18px; text-align: center; font-size: 14.5px; position: relative; z-index: 1;
       border-bottom: 1px dotted var(--line); }
     /* header */
@@ -497,8 +565,8 @@
     .ck { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; }
     .ck.yes { background: var(--brand); }
     .ck.yes svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
-    .ck.no svg { width: 15px; height: 15px; stroke: #c4b6a8; fill: none; stroke-width: 2.2; stroke-linecap: round; }
-    .ctable .hotcol .ck.yes { background: var(--brand); box-shadow: 0 4px 12px rgba(36,92,59,.28); }
+    .ck.no svg { width: 15px; height: 15px; stroke: #c4b59b; fill: none; stroke-width: 2.2; stroke-linecap: round; }
+    .ctable .hotcol .ck.yes { background: var(--brand); box-shadow: 0 4px 12px rgba(108,136,109,.28); }
 
     /* ---------- ADVISORS (manual horizontal scroller) ---------- */
     /* Advisory board: continuous auto-rolling marquee (cards duplicated in JS). */
@@ -519,12 +587,12 @@
     /* dot-paginated carousel controls (shared: reviews) */
     .vr-dots { display: flex; justify-content: center; gap: 10px; margin-top: 24px; }
     .vr-dots button { width: 9px; height: 9px; padding: 0; border: none; border-radius: 999px; cursor: pointer;
-      background: rgba(45,30,20,.2); transition: background .3s ease, transform .3s ease; }
-    .vr-dots button:hover { background: rgba(45,30,20,.38); }
+      background: rgba(108,136,109,.26); transition: background .3s ease, transform .3s ease; }
+    .vr-dots button:hover { background: rgba(108,136,109,.46); }
     .vr-dots button.on { background: var(--brand); transform: scale(1.3); }
     .advisor .photo {
       position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; margin-bottom: 20px;
-      background: linear-gradient(135deg,var(--bg-soft),#d6ead0);
+      background: linear-gradient(135deg,var(--bg-soft),var(--bg));
       display: grid; place-items: center; color: var(--brand); font-family: var(--font-serif); font-size: 56px; font-weight: 600;
     }
     .advisor .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
@@ -564,14 +632,15 @@
     .faq button .chev { transition: transform .3s ease; color: var(--brand); }
     .faq.open button .chev { transform: rotate(45deg); }
 
-    /* ---------- FINAL CTA (blurred forest gradient, matches this page) ---------- */
+    /* ---------- FINAL CTA ---------- */
     .cta-final { position: relative; max-width: 880px; margin: 0 auto; border-radius: 30px; padding: 80px 40px; text-align: center; overflow: hidden;
-      background: var(--brand); color: #fff; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 40px 90px rgba(36,92,59,.36); }
+      background: var(--brand-2); color: #fff; border: 1px solid rgba(255,255,255,.16); box-shadow: 0 40px 90px rgba(71,91,71,.28); }
     .cta-final::before { content: ""; position: absolute; inset: 0; z-index: 0;
       background:
-        radial-gradient(85% 95% at 85% -12%, rgba(182,216,151,.55), transparent 58%),
-        radial-gradient(70% 82% at 6% 112%, rgba(111,168,102,.34), transparent 60%),
-        linear-gradient(150deg, #6fa866 0%, #245c3b 48%, #14251b 100%); }
+        linear-gradient(120deg, transparent 0 16%, rgba(255,255,255,.15) 24%, transparent 42%),
+        radial-gradient(85% 95% at 85% -12%, rgba(226,241,216,.5), transparent 58%),
+        radial-gradient(70% 82% at 6% 112%, rgba(108,136,109,.18), transparent 60%),
+        linear-gradient(150deg, #6c886d 0%, #475b47 58%, #212121 100%); }
     .cta-final > * { position: relative; z-index: 1; }
     .cta-final h2 { font-size: clamp(30px,4vw,46px); color: #fff; }
     .cta-final p { color: rgba(255,255,255,.85); font-size: 18px; margin: 16px auto 30px; max-width: 560px; }
@@ -579,14 +648,14 @@
     .cta-final .btn-light:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0,0,0,.32); }
 
     /* ---------- FOOTER ---------- */
-    footer { background: var(--bg-deep); color: #d9cdba; padding: 64px 0 36px; font-size: 14px; }
+    footer { background: var(--bg-deep); color: #dfeadb; padding: 64px 0 36px; font-size: 14px; }
     .foot-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 40px; }
     footer .logo { color: #fff; margin-bottom: 14px; }
     footer h4 { color: #fff; font-family: var(--font-sans); font-size: 14px; margin-bottom: 14px; letter-spacing: .04em; }
     footer ul { list-style: none; }
     footer li { margin-bottom: 10px; }
     footer a:hover { color: #fff; }
-    .disclaimer { border-top: 1px solid rgba(255,255,255,.12); padding-top: 26px; font-size: 12px; color: #b3a890; line-height: 1.7; }
+    .disclaimer { border-top: 1px solid rgba(255,255,255,.12); padding-top: 26px; font-size: 12px; color: #b9c9b2; line-height: 1.7; }
 
     /* ---------- RESPONSIVE ---------- */
     @media (max-width: 900px) {
@@ -653,7 +722,7 @@
 
   <!-- ===================== TOP ANNOUNCEMENT BAR ===================== -->
   <div class="topbar">
-    🧠 Validated against MRI · published in <strong>Alzheimer's &amp; Dementia</strong> · HSA-registered medical device
+    Clinically validated against MRI · developed from NTU research · doctor-reviewed results
   </div>
 
   <!-- ===================== NAV ===================== -->
@@ -661,11 +730,10 @@
     <div class="wrap nav-inner">
       <a href="#" class="logo"><img src="/gms-logo.png" alt="" /> Gray Matter Solutions</a>
       <nav class="nav-links" id="navLinks">
-        <a href="#solution">The Assessment</a>
+        <a href="#symptoms">Brain Fog</a>
+        <a href="#checks">What It Checks</a>
         <a href="#how">How It Works</a>
-        <a href="#science">The Science</a>
-        <a href="#compare">Compare</a>
-        <a href="#advisors">Our Advisors</a>
+        <a href="#advisors">Doctors</a>
       </nav>
       <div class="nav-cta">
         <a href="#" class="btn btn-ghost">Log in</a>
@@ -684,89 +752,96 @@
     <div class="wrap">
       <span class="pill"><img class="pill-icon" src="/gms-logo.png" alt="" /> Clinically validated at NTU LKCMedicine</span>
       <h1>Lost a sentence midway? It could be brain fog.</h1>
-      <p class="lead">Take the ReCOGnAIze brain health assessment to see where you stand across four cognitive domains.</p>
+      <p class="lead">Perimenopause and menopause can affect memory, focus, sleep, and mood. Take the ReCOGnAIze brain health assessment to see where you stand.</p>
       <div class="hero-cta">
         <a href="/quiz" class="btn btn-primary">Start your assessment →</a>
       </div>
-      <div class="hero-marquee">
-        <p class="label">As featured in</p>
-        <div class="marquee">
-          <div class="mq-track">
-            <img src="/press-cna.png" alt="CNA" />
-            <img src="/press-st.png" alt="The Straits Times" />
-            <img src="/press-alzheimers.svg" alt="Alzheimer's &amp; Dementia" />
-            <img src="/gms-ntu-logo.png" alt="NTU LKCMedicine" />
-            <img src="/pubmed-logo-blue.svg" alt="PubMed" />
-            <!-- duplicate set for a seamless loop -->
-            <img src="/press-cna.png" alt="CNA" aria-hidden="true" />
-            <img src="/press-st.png" alt="The Straits Times" aria-hidden="true" />
-            <img src="/press-alzheimers.svg" alt="Alzheimer's &amp; Dementia" aria-hidden="true" />
-            <img src="/gms-ntu-logo.png" alt="NTU LKCMedicine" aria-hidden="true" />
-            <img src="/pubmed-logo-blue.svg" alt="PubMed" aria-hidden="true" />
+    </div>
+  </section>
+
+  <!-- ===================== CREDIBILITY STRIP ===================== -->
+  <section class="cred-strip" id="science">
+    <div class="wrap">
+      <div class="cred-row">
+        <div class="cred-item reveal">
+          <div class="cred-mark"><b>90%</b></div>
+          <span>MRI agreement</span>
+        </div>
+        <div class="cred-item reveal">
+          <div class="cred-mark"><img src="/gms-ntu-logo.png" alt="NTU LKCMedicine" /></div>
+          <span>NTU research</span>
+        </div>
+        <div class="cred-item reveal">
+          <div class="cred-mark">
+            <span class="cred-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 21s-7-3.8-7-10V5l7-3 7 3v6c0 6.2-7 10-7 10z"/><path d="M9 12l2 2 4-5"/></svg>
+            </span>
+            <img src="/gms-logo.png" alt="Gray Matter Solutions" />
           </div>
+          <span>Doctor-reviewed</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== PROBLEM (split: factors image + copy) ===================== -->
-  <section class="section problem-split" style="background:var(--bg-soft);">
+  <!-- ===================== SYMPTOM EMPATHY ===================== -->
+  <section class="section" id="symptoms" style="background:var(--bg-soft);">
     <div class="wrap">
-      <div class="ps-grid">
-
-        <!-- LEFT: visual panel with floating risk-factor pills -->
-        <div class="ps-visual">
-          <!-- stressed-woman photo (full colour, no tint overlay) -->
-          <img class="ps-figure" src="/landing/stressed-woman-newest.png" alt="A woman rubbing her eyes at a laptop" />
-          <span class="ps-pill" style="top:13%; left:26%;">Blood pressure</span>
-          <span class="ps-pill" style="top:30%; left:78%;">Diet</span>
-          <span class="ps-pill" style="top:50%; left:18%;">Diabetes</span>
-          <span class="ps-pill" style="top:62%; left:80%;">Exercise</span>
-          <span class="ps-pill" style="top:82%; left:34%;">Family history</span>
-        </div>
-
-        <!-- RIGHT: heading + copy + checklist -->
-        <div class="ps-copy">
-          <span class="ps-eyebrow">Why it matters</span>
-          <h2>Cognitive decline starts from <em>40</em>.</h2>
-          <p>By the time forgetfulness or early dementia shows up, the window to act has usually narrowed.</p>
-          <p>Your brain health is shaped by everyday factors. <b style="color:var(--brand);">Knowing gives you options.</b></p>
-          <ul class="ps-list">
-            <li><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span> <span><b>Blood pressure &amp; diabetes</b><br>Vascular drivers of decline.</span></li>
-            <li><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span> <span><b>Diet &amp; exercise</b><br>Lifestyle levers you can act on today.</span></li>
-            <li><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span> <span><b>Family history</b><br>Know your baseline risk early.</span></li>
-          </ul>
-        </div>
-
+      <div class="head reveal">
+        <p class="eyebrow">You are not imagining it</p>
+        <h2>Brain fog can show up in everyday moments.</h2>
+        <p>Word-finding slips, fuzzy focus, poor sleep, and feeling easily overwhelmed can happen around perimenopause and menopause. The question is whether it is affecting your cognitive baseline.</p>
+      </div>
+      <div class="symptom-grid">
+        <div class="symptom-card reveal"><div class="ic">“…”</div><h3>Words vanish</h3><p>You know what you mean, but the sentence disappears halfway through.</p></div>
+        <div class="symptom-card reveal"><div class="ic">⌁</div><h3>Focus feels thinner</h3><p>Tasks take longer, switching gears is harder, and distractions pull harder.</p></div>
+        <div class="symptom-card reveal"><div class="ic">☾</div><h3>Sleep changes everything</h3><p>Hot nights, stress, and poor recovery can make your brain feel less sharp.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== STATS ===================== -->
-  <section class="stats-sec">
-    <div class="wrap stats">
-      <div class="stat reveal"><div class="n">90%</div><div class="l">Agreement with MRI-based reads</div></div>
-      <div class="stat reveal"><div class="n">1,500</div><div class="l">People in the 5-year NTU study</div></div>
-      <div class="stat reveal"><div class="n">4</div><div class="l">Cognitive domains measured</div></div>
-      <div class="stat reveal"><div class="n">HSA</div><div class="l">Registered as a medical device</div></div>
+  <!-- ===================== WHY IT HAPPENS ===================== -->
+  <section class="section why-band">
+    <div class="wrap why-grid">
+      <div class="reveal">
+        <p class="eyebrow">Why it happens</p>
+        <h2>Hormones are part of the story. They are not the whole story.</h2>
+      </div>
+      <ul class="why-list">
+        <li class="reveal"><b>Hormonal shifts</b> can affect sleep, attention, mood, and how easily you retrieve words.</li>
+        <li class="reveal"><b>Stress and poor recovery</b> can make short-term memory and focus feel unreliable.</li>
+        <li class="reveal"><b>Metabolic and vascular health</b> also matter, especially around midlife.</li>
+      </ul>
     </div>
   </section>
 
-  <!-- ===================== SOLUTION (full-bg composition) ===================== -->
-  <section class="tab-sec" id="solution">
+  <!-- ===================== WHAT IT CHECKS ===================== -->
+  <section class="section" id="checks" style="background:var(--bg);">
     <div class="wrap">
-      <div class="sol-copy reveal">
-        <h2>A digital brain assessment with <span style="color:var(--brand);">90% accuracy</span></h2>
-        <p>ReCOGnAIze tells you what's actually happening in your brain. Validated against MRI scans, built on a five-year NTU study of 1,500 people and published in <em style="color:var(--brand); font-style:italic;">Alzheimer's &amp; Dementia</em>.</p>
-        <p>Registered with Singapore's HSA as a medical device, it reads the same structural markers a specialist looks for, without the scans, referral, or hospital wait.</p>
-        <div class="sol-chips">
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Validated vs MRI</span>
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg>5-year NTU study</span>
-          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/></svg>HSA-registered device</span>
+      <div class="head reveal">
+        <p class="eyebrow">What ReCOGnAIze checks</p>
+        <h2>A clearer view of how your brain is performing.</h2>
+        <p>Four cognitive signals. One doctor-reviewed report.</p>
+      </div>
+      <div class="domains-mini">
+        <div class="domain-mini reveal">
+          <span class="di" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-12h-7z"/></svg></span>
+          <b>Speed</b><span>Processing pace</span>
+        </div>
+        <div class="domain-mini reveal">
+          <span class="di" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span>
+          <b>Focus</b><span>Attention control</span>
+        </div>
+        <div class="domain-mini reveal">
+          <span class="di" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h7v7H4zM13 11h7v7h-7z"/><path d="M11 9l2 2M13 13l-2 2"/></svg></span>
+          <b>Planning</b><span>Switching &amp; sequencing</span>
+        </div>
+        <div class="domain-mini reveal">
+          <span class="di" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4h8a4 4 0 0 1 0 8H9a4 4 0 0 0 0 8h7"/><path d="M8 4v16M16 4v16"/></svg></span>
+          <b>Memory</b><span>Working recall</span>
         </div>
       </div>
     </div>
-    <img class="tab-photo-full reveal" src="/landing/woman-aspirational-green.png" alt="A woman with her ReCOGnAIze brain health results: cognitive score, domain summary, and personalized recommendations" />
   </section>
 
   <!-- ===================== HOW IT WORKS ===================== -->
@@ -774,7 +849,7 @@
     <div class="wrap">
       <div class="head reveal" style="margin-bottom:24px;">
         <p class="eyebrow">How it works</p>
-        <h2>From test to teleconsult in three steps</h2>
+        <h2>From assessment to answers in three steps</h2>
       </div>
       <div class="timeline">
 
@@ -782,8 +857,8 @@
         <div class="tl-row reveal">
           <div class="tl-text">
             <p class="eyebrow">Step 1</p>
-            <h3>Take an online test</h3>
-            <p>An online assessment with specialised games that measure how your brain handles four aspects - speed, focus, planning, and memory.</p>
+            <h3>Take the assessment</h3>
+            <p>Complete a short set of clinically grounded cognitive tasks from home.</p>
           </div>
           <div class="tl-node">1</div>
           <div class="tl-vis">
@@ -804,8 +879,8 @@
         <div class="tl-row reveal">
           <div class="tl-text">
             <p class="eyebrow">Step 2</p>
-            <h3>Get your full report</h3>
-            <p>Your overall risk level for mild cognitive impairment, a breakdown across the four domains, and - where relevant - the most likely underlying cause.</p>
+            <h3>Get your report</h3>
+            <p>See your cognitive profile across speed, focus, planning, and memory.</p>
           </div>
           <div class="tl-node">2</div>
           <div class="tl-vis">
@@ -814,8 +889,8 @@
               <div class="mr-top">
                 <div class="mr-ring">
                   <svg width="76" height="76" viewBox="0 0 76 76" style="transform:rotate(-90deg)">
-                    <circle cx="38" cy="38" r="33" fill="none" stroke="#ecddd3" stroke-width="7"/>
-                    <circle cx="38" cy="38" r="33" fill="none" stroke="#245c3b" stroke-width="7" stroke-linecap="round" stroke-dasharray="207" stroke-dashoffset="31"/>
+                    <circle cx="38" cy="38" r="33" fill="none" stroke="#dce8d4" stroke-width="7"/>
+                    <circle cx="38" cy="38" r="33" fill="none" stroke="#6c886d" stroke-width="7" stroke-linecap="round" stroke-dasharray="207" stroke-dashoffset="31"/>
                   </svg>
                   <span class="rn">85</span>
                 </div>
@@ -833,8 +908,8 @@
         <div class="tl-row reveal">
           <div class="tl-text">
             <p class="eyebrow">Step 3</p>
-            <h3>Hop on a teleconsult</h3>
-            <p>A certified doctor analyses your report with you over a telehealth consultation and explains it in detail with clear next steps.</p>
+            <h3>Review it with a doctor</h3>
+            <p>A certified doctor walks you through what the results mean and what to consider next.</p>
           </div>
           <div class="tl-node">3</div>
           <div class="tl-vis">
@@ -857,151 +932,13 @@
     </div>
   </section>
 
-  <!-- ===================== STAT BREAKER ===================== -->
-  <section class="section statbreak reveal">
-    <div class="wrap">
-      <div class="sb">
-        <div class="big"><em>45%</em></div>
-        <p>of dementia risk is tied to modifiable factors</p>
-        <cite>Lancet Commission, 2024</cite>
-      </div>
-      <div class="sb">
-        <div class="big"><em>1 in 11</em></div>
-        <p>Singaporeans aged 60 and over live with dementia</p>
-        <cite>IMH WiSE Study</cite>
-      </div>
-      <div class="sb">
-        <div class="big"><em>45</em></div>
-        <p>is the age processing speed can begin to slow</p>
-        <cite>Whitehall II, BMJ</cite>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== FOUR BRAIN CAPABILITIES ===================== -->
-  <section class="section" id="capabilities" style="background:var(--bg-soft);">
-    <div class="wrap">
-      <div class="head reveal">
-        <p class="eyebrow">What we measure</p>
-        <h2>Four brain capabilities, measured</h2>
-        <p>With ReCOGnAIze, each game maps to a cognitive task used in clinical neuropsychology.</p>
-      </div>
-      <div class="caps">
-        <div class="cap reveal"><div class="ic">⚡</div><h3>Processing Speed</h3><p>How quickly your brain takes in and reacts to what it sees.</p></div>
-        <div class="cap reveal"><div class="ic">🧩</div><h3>Executive Function</h3><p>Planning, sequencing, and switching between tasks.</p></div>
-        <div class="cap reveal"><div class="ic">🎯</div><h3>Attention &amp; Inhibition</h3><p>Staying focused and holding back the wrong response.</p></div>
-        <div class="cap reveal"><div class="ic">🧠</div><h3>Working Memory</h3><p>Holding and juggling information in the moment.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== QUOTE ===================== -->
-  <section class="section" style="padding:104px 0;">
-    <div class="wrap">
-      <blockquote class="bigquote reveal">
-        <span class="mark">“</span>
-        <p>Each of these games measures a specific brain function the same way I would assess it in clinic. We are not testing whether you can play, we are testing how well each part of your brain is doing the work it does for you every day.</p>
-        <footer>
-          <div class="photo"><span>NK</span><img src="/Kandiah.png" alt="A/Prof Nagaendran Kandiah" onerror="this.style.display='none'" /></div>
-          <div>
-            <strong>A/Prof Nagaendran Kandiah</strong>
-            <span>Co-founder, Gray Matter Solutions</span>
-            <span>MBBS, FAMS (Neurology), FRCP (Edin)</span>
-          </div>
-        </footer>
-      </blockquote>
-    </div>
-  </section>
-
-  <!-- ===================== THE SCIENCE (light, data-viz) ===================== -->
-  <section class="section science reveal" id="science">
-    <div class="wrap">
-      <div class="sci-wrap">
-
-        <!-- LEFT: heading + proof points -->
-        <div class="sci-left">
-          <p class="eyebrow">The science</p>
-          <h2>Built on medical research. <em>Validated</em> against real brain scans.</h2>
-          <p>Developed at NTU LKCMedicine and proven against real MRI reads.</p>
-          <div class="sci-trust">
-            <span><svg viewBox="0 0 24 24"><path d="M4 19V5a1 1 0 0 1 1-1h11l4 4v11a1 1 0 0 1-1 1z"/><path d="M9 13l2 2 4-4"/></svg> 235-person validation study</span>
-            <span><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Published in <em>Alzheimer's &amp; Dementia</em></span>
-            <span><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> NTU LKCMedicine spin-off</span>
-          </div>
-        </div>
-
-        <!-- RIGHT: data-viz cards -->
-        <div class="sci-cards">
-
-          <!-- Card A: accuracy head-to-head comparison -->
-          <div class="dcard">
-            <p class="cap">Accuracy at detecting <b>mild cognitive impairment</b></p>
-            <div class="cmp">
-              <div class="row" style="--w:90%">
-                <div class="lab"><span class="name">ReCOGnAIze</span><span class="val">90%</span></div>
-                <div class="track"><i class="fill"></i></div>
-              </div>
-              <div class="row alt" style="--w:70%">
-                <div class="lab"><span class="name">Standard pen-and-paper</span><span class="val">~70%</span></div>
-                <div class="track"><i></i></div>
-              </div>
-            </div>
-            <p class="cap" style="margin:0;min-height:0;font-size:12px;">A ~20-point accuracy gain over conventional screening.</p>
-          </div>
-
-          <!-- Card B: cohort dot-grid pictogram -->
-          <div class="dcard">
-            <p class="cap"><b>1,500 people</b> studied over 3-5 years</p>
-            <div class="dotgrid" id="dotgrid"></div>
-            <div class="fig" data-count="1500" data-format="comma">0</div>
-            <p class="cap" style="margin:8px 0 0;min-height:0;font-size:12px;">brain MRI · cognitive testing · blood biomarkers</p>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== COMPARE TABLE ===================== -->
-  <section class="section" id="compare">
-    <div class="wrap">
-      <div class="head reveal">
-        <h2>How ReCOGnAIze compares</h2>
-      </div>
-      <div class="ctable-wrap reveal">
-        <table class="ctable">
-          <thead>
-            <tr>
-              <th></th>
-              <th class="hotcol"><span class="colname">ReCOGnAIze</span><span class="colsub">Home</span></th>
-              <th><span class="colname">Pen &amp; paper</span><span class="colsub">Clinic</span></th>
-              <th><span class="colname">MRI</span><span class="colsub">Hospital</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Measures real performance</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td>Brain structure</td></tr>
-            <tr><td>Accuracy for MCI</td><td class="hotcol">~90%</td><td>~70%</td><td>Reference</td></tr>
-            <tr><td>Validated against MRI</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td><td><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td></tr>
-            <tr><td>Detects vascular MCI</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td><td>Sometimes</td></tr>
-            <tr><td>Doctor consult included</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td>Sometimes</td><td><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td></tr>
-            <tr><td>Done from home</td><td class="hotcol"><span class="ck yes"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td><td><span class="ck no"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span></td></tr>
-            <tr><td>Results turnaround</td><td class="hotcol">Minutes</td><td>Days</td><td>Weeks</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="swipe-hint">Swipe to compare &rarr;</p>
-      <div class="how-cta reveal" style="text-align:center; margin-top:44px;">
-        <a href="/quiz" class="btn btn-primary">Take the assessment →</a>
-      </div>
-    </div>
-  </section>
-
   <!-- ===================== ADVISORY BOARD ===================== -->
   <section class="section" id="advisors">
     <div class="wrap">
       <div class="head reveal">
-        <p class="eyebrow" style="font-size:11px;letter-spacing:.1em;">Medical &amp; Scientific Advisory Board</p>
-        <h2>Guided by leaders in brain health</h2>
+        <p class="eyebrow" style="font-size:11px;letter-spacing:.1em;">Doctor-led review</p>
+        <h2>Reviewed with clinicians who understand brain health.</h2>
+        <p>Your assessment is not treated like a generic quiz. It is grounded in medical research and explained by doctors, with context for what may matter next.</p>
       </div>
       <div class="advisor-marquee reveal">
         <div class="advisor-row">
@@ -1048,64 +985,12 @@
     </div>
   </section>
 
-  <!-- ===================== MEMBER / VIDEO REVIEWS ===================== -->
-  <section class="section" style="background:var(--bg);">
-    <div class="wrap">
-      <div class="head reveal">
-        <h2>What people are saying</h2>
-        <p class="vr-rating"><span class="stars">★★★★★</span> <b>Excellent</b> 4.8 out of 5</p>
-      </div>
-      <div class="vr-row reveal">
-        <!-- PLACEHOLDER video review -->
-        <div class="vr-card video">
-          <span class="badge">▶ VIDEO</span>
-          <div class="play"></div>
-          <span class="handle">@member_review</span>
-        </div>
-        <!-- text testimonial -->
-        <div class="vr-card quote">
-          <div class="stars">★★★★★</div>
-          <h4>Clear and reassuring</h4>
-          <p>I finally understand my brain health instead of just worrying about it. The report made sense.</p>
-          <div class="by"><span class="av">SL</span><span class="nm">Serene L.</span></div>
-        </div>
-        <!-- PLACEHOLDER video review -->
-        <div class="vr-card video">
-          <span class="badge">▶ VIDEO</span>
-          <div class="play"></div>
-          <span class="handle">@member_review</span>
-        </div>
-        <!-- text testimonial -->
-        <div class="vr-card quote">
-          <div class="stars">★★★★★</div>
-          <h4>Worth every minute</h4>
-          <p>Fifteen minutes and a doctor walked me through exactly what to focus on. No upsells, just answers.</p>
-          <div class="by"><span class="av">MT</span><span class="nm">Marcus T.</span></div>
-        </div>
-        <!-- PLACEHOLDER video review -->
-        <div class="vr-card video">
-          <span class="badge">▶ VIDEO</span>
-          <div class="play"></div>
-          <span class="handle">@member_review</span>
-        </div>
-        <!-- text testimonial -->
-        <div class="vr-card quote">
-          <div class="stars">★★★★★</div>
-          <h4>No more guessing</h4>
-          <p>I'd been blaming age for the forgetfulness. Now I know which habits actually move the needle.</p>
-          <div class="by"><span class="av">PR</span><span class="nm">Priya R.</span></div>
-        </div>
-      </div>
-      <div class="vr-dots" role="tablist" aria-label="Review slides"></div>
-    </div>
-  </section>
-
   <!-- ===================== FINAL CTA ===================== -->
   <section class="section">
     <div class="wrap">
       <div class="cta-final reveal">
-        <h2>Know where your brain stands today.</h2>
-        <p>A short assessment, validated against MRI, plus a doctor-reviewed report - so you leave with answers and a clear next step.</p>
+        <h2>Find out where your brain stands.</h2>
+        <p>If brain fog has started to feel like part of daily life, get a clearer baseline and review it with a doctor.</p>
         <a href="/quiz" class="btn btn-light">Take the assessment →</a>
       </div>
     </div>
@@ -1120,36 +1005,20 @@
       </div>
       <div class="faq-wrap">
         <div class="faq">
-          <button>What do I get with this assessment? <span class="chev">+</span></button>
-          <div class="ans"><p>You get the full 360 Brain Health Review. It starts with the ReCOGnAIze assessment, which measures your performance across four cognitive domains. From there you receive an in-depth report that translates your results into plain language, followed by a one-to-one teleconsultation where a doctor reviews your results with you and helps you decide what to do next.</p></div>
+          <button>Is brain fog common during perimenopause and menopause? <span class="chev">+</span></button>
+          <div class="ans"><p>Many women notice changes in word recall, focus, sleep, and mental sharpness around this stage. ReCOGnAIze does not assume the cause; it helps measure how your brain is performing so you can discuss the results clearly with a doctor.</p></div>
         </div>
         <div class="faq">
-          <button>How long does it take? <span class="chev">+</span></button>
-          <div class="ans"><p>The digital assessment itself takes about 15 minutes and you can complete it from home. Your report and teleconsultation follow soon after, so the whole process is built to fit around a normal week instead of a hospital schedule.</p></div>
+          <button>What does the assessment measure? <span class="chev">+</span></button>
+          <div class="ans"><p>It measures cognitive performance across speed, focus, planning, and memory using digital tasks mapped to clinical neuropsychology.</p></div>
         </div>
         <div class="faq">
-          <button>How do I know this is legitimate? <span class="chev">+</span></button>
-          <div class="ans"><p>ReCOGnAIze was built at Nanyang Technological University and validated against MRI brain scans. The underlying research was published in Alzheimer's &amp; Dementia, one of the leading peer-reviewed journals in the field, and the assessment is registered with Singapore's Health Sciences Authority as a medical device.</p></div>
+          <button>Is this a diagnosis? <span class="chev">+</span></button>
+          <div class="ans"><p>No. ReCOGnAIze identifies risk of mild cognitive impairment and gives you a structured report. It does not diagnose dementia, menopause-related symptoms, or any medical condition.</p></div>
         </div>
         <div class="faq">
-          <button>Don't I need a brain scan to get answers like this? <span class="chev">+</span></button>
-          <div class="ans"><p>You don't. Because ReCOGnAIze was validated against MRI, it reads the same kind of structural change a scan looks for. You get a clinically grounded result without the cost or the wait of a hospital appointment.</p></div>
-        </div>
-        <div class="faq">
-          <button>How accurate is it? <span class="chev">+</span></button>
-          <div class="ans"><p>In the published study, ReCOGnAIze detected mild cognitive impairment with 90% accuracy. Commonly used in-clinic screening tools sit closer to 70% on the same measure.</p></div>
-        </div>
-        <div class="faq">
-          <button>How is this different from a regular quiz? <span class="chev">+</span></button>
-          <div class="ans"><p>A standard quiz measures your risk factors - the lifestyle and health inputs that raise or lower your odds over time. ReCOGnAIze measures your actual cognitive performance across four domains, and a doctor reviews the results with you so you know what to do next.</p></div>
-        </div>
-        <div class="faq">
-          <button>How is this different from an MRI scan? <span class="chev">+</span></button>
-          <div class="ans"><p>An MRI looks at your brain's structure. ReCOGnAIze measures how it's performing, which is the step that comes first. Think of it as a thermometer for your brain: it tells you whether something is worth investigating and whether a scan is even needed - without the cost or the wait of starting with one.</p></div>
-        </div>
-        <div class="faq">
-          <button>Is this just a way to sell me supplements? <span class="chev">+</span></button>
-          <div class="ans"><p>No. The assessment stands entirely on its own. If any recommendation is made, it comes from the reviewing doctor after your results are in, and it is kept clearly separate from the assessment itself.</p></div>
+          <button>What happens after I get my results? <span class="chev">+</span></button>
+          <div class="ans"><p>You receive a report and review it with a certified doctor, who explains what the scores mean and what next steps may be worth considering.</p></div>
         </div>
       </div>
     </div>
@@ -1326,8 +1195,6 @@
       start();
     }
 
-    // "What people are saying" reviews now use the dot-paginated carousel.
-    dotCarousel(document.querySelector('.vr-row'), document.querySelector('.vr-dots'), 'Reviews page');
   </script>
 </body>
 </html>
