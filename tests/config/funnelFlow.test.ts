@@ -71,6 +71,25 @@ describe("full flow", () => {
   });
 });
 
+describe("woman flow", () => {
+  it("uses the women-specific menopause question without asking sex", () => {
+    const present = idsIn(
+      resolveFlow({ forgetfulness: "almostDaily" }, "woman"),
+    );
+    expect(present).toContain("menopauseSymptoms");
+    expect(present).not.toContain("sex");
+    expect(present).not.toContain("hotFlushes");
+  });
+
+  it("keeps the flow shorter and focused", () => {
+    const cards = resolveFlow({}, "woman").filter((s) => s.kind === "statCard");
+    expect(cards).toHaveLength(0);
+    expect(totalQuestions({ forgetfulness: "notNotice" }, "woman")).toBeLessThan(
+      totalQuestions({ sex: "female", forgetfulness: "notNotice" }, "full"),
+    );
+  });
+});
+
 describe("progress denominator", () => {
   it("counts grouped pages as one and respects pruning", () => {
     const base = totalQuestions({ forgetfulness: "notNotice" }, "event");

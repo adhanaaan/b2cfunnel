@@ -2,7 +2,7 @@ import type { Answers, AnswerValue } from "@/types/question";
 import type { ScoreResult } from "@/types/engine";
 
 /** Which quiz variant is being served. */
-export type QuizVariant = "full" | "event";
+export type QuizVariant = "full" | "event" | "woman";
 
 /** A single step in the funnel flow. */
 export type FunnelStep =

@@ -9,7 +9,7 @@ import { BigScore } from "@/components/result/BigScore";
 import { Gauge } from "@/components/result/Gauge";
 import { DrivingFactorPills } from "@/components/result/DrivingFactorPills";
 import { BlurredPaywallPreview } from "@/components/result/BlurredPaywallPreview";
-import { useIsEvent } from "@/components/VariantContext";
+import { useIsEvent, useVariant } from "@/components/VariantContext";
 
 interface ResultScreenProps {
   result: ScoreResult;
@@ -39,6 +39,7 @@ function formatLevers(result: ScoreResult): string {
 export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
   const base = COPY.screens.resultBase;
   const event = useIsEvent();
+  const woman = useVariant() === "woman";
   const bandLabel = COPY.bandLabels[result.band];
   // Band-specific blurb, calibrated with the user's reported factors.
   const blurb = COPY.resultBlurbs[result.band].replace(
@@ -48,7 +49,13 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
 
   return (
     <ScreenShell>
-      <div className="animate-fade-up rounded-3xl bg-gradient-to-b from-white to-[#fff6f0] p-6 shadow-[0_30px_80px_-30px_rgba(247,117,40,0.45)] ring-1 ring-black/5 sm:p-8">
+      <div
+        className={
+          woman
+            ? "animate-fade-up rounded-[20px] bg-[#fbfff7] p-6 shadow-[0_30px_80px_-30px_rgba(71,91,71,0.24)] ring-1 ring-[#cddfc5] sm:p-8"
+            : "animate-fade-up rounded-3xl bg-gradient-to-b from-white to-[#fff6f0] p-6 shadow-[0_30px_80px_-30px_rgba(247,117,40,0.45)] ring-1 ring-black/5 sm:p-8"
+        }
+      >
         <ScoreHeader />
 
         <p className="mt-6 text-center text-sm font-bold uppercase tracking-widest text-primary">

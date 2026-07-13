@@ -14,6 +14,7 @@ import type { CopyConfig } from "@/types/copy";
 export const FACTOR_LABELS: Record<string, string> = {
   age: "Age",
   hotFlushes: "Hormonal changes",
+  menopauseSymptoms: "Hormonal changes",
   familyHistory: "Family history",
   highBp: "Blood pressure",
   highCholesterol: "Cholesterol",
@@ -146,7 +147,7 @@ export const COPY: CopyConfig = {
         name: "Dr Christopher Tan Ee Chong",
         credentials: "MBBS (Singapore), MRCS, GDFM",
         role: "Medical Director & Resident Physician",
-        org: "Eternami",
+        org: "Prologue",
         initials: "CT",
         image: "/landing/dr-chris.png.webp",
         bio: "Upon graduating from the Yong Loo Lin School of Medicine, National University of Singapore, Dr Tan practised in a variety of surgical and medical disciplines at various hospitals in Singapore before entering private practice. He was awarded the Membership of the Royal College of Surgeons (Ireland) and conferred the Graduate Diploma of Family Medicine by the College of Family Physicians Singapore. He has acquired over 12 years of clinical experience in internal medicine, anaesthesia and pain management, ENT, family medicine, health screening, and complementary medicine.",

@@ -109,9 +109,45 @@ const EVENT_FLOW: FunnelStep[] = [
   { kind: "consult" },
 ];
 
+const WOMAN_FLOW: FunnelStep[] = [
+  { kind: "hook" },
+
+  { kind: "question", questionId: "age" },
+  { kind: "question", questionId: "menopauseSymptoms" },
+  { kind: "question", questionId: "familyHistory" },
+
+  {
+    kind: "questionGroup",
+    title: "Your health baseline",
+    questionIds: ["highBp", "highCholesterol", "diabetes"],
+  },
+
+  {
+    kind: "questionGroup",
+    title: "Sleep, movement, and nutrition",
+    questionIds: ["sleep", "exercise", "diet", "alcohol"],
+  },
+
+  { kind: "question", questionId: "tracks" },
+
+  {
+    kind: "questionGroup",
+    title: "Brain fog signals",
+    questionIds: ["concentrating", "judgement", "forgetfulness"],
+  },
+  { kind: "question", questionId: "persistence" },
+  { kind: "question", questionId: "someoneElseNoticed" },
+
+  { kind: "emailGate" },
+  { kind: "analysing" },
+  { kind: "result" },
+  { kind: "paywall" },
+];
+
 const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   full: FULL_FLOW,
   event: EVENT_FLOW,
+  woman: WOMAN_FLOW,
 };
 
 /** All question ids in a variant's flow (single questions + grouped pages). */

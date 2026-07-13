@@ -1,6 +1,7 @@
 "use client";
 
 import { COPY } from "@/config/copy";
+import { useVariant } from "@/components/VariantContext";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { CredibilitySignals } from "@/components/result/CredibilitySignals";
 import { PressLogos } from "@/components/ui/PressLogos";
@@ -11,7 +12,21 @@ interface HookScreenProps {
 
 /** Screen 1 (full quiz) - the cold-open hook: brand, promise, credibility. */
 export function HookScreen({ onStart }: HookScreenProps) {
-  const c = COPY.screens.hook;
+  const variant = useVariant();
+  const womanDisclaimer =
+    "This is educational and not a medical diagnosis.";
+  const c =
+    variant === "woman"
+      ? {
+          ...COPY.screens.hook,
+          eyebrow: "Brain health quiz",
+          heading: "Lost a sentence midway? It could be brain fog.",
+          subheading:
+            "Answer a few questions about sleep, stress, lifestyle, and brain-fog moments.",
+          asSeenOnLabel: "Research and press",
+          cta: "Take the quiz",
+        }
+      : COPY.screens.hook;
   return (
     <ScreenShell>
       <div className="flex min-h-[80vh] flex-col justify-center text-center animate-fade-up">
@@ -49,6 +64,12 @@ export function HookScreen({ onStart }: HookScreenProps) {
         >
           {c.cta}
         </button>
+
+        {variant === "woman" && (
+          <p className="mt-4 text-xs leading-relaxed text-outline">
+            {womanDisclaimer}
+          </p>
+        )}
       </div>
     </ScreenShell>
   );

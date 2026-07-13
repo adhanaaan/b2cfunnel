@@ -49,6 +49,19 @@ export const QUESTIONS: Question[] = [
     ],
   },
   {
+    id: "menopauseSymptoms",
+    type: "single-select",
+    axis: "risk",
+    prompt: "Are hormonal changes affecting your sleep, mood, or brain fog?",
+    citation: "straw10",
+    options: [
+      { id: "often", label: "Often", score: 4 },
+      { id: "sometimes", label: "Sometimes", score: 2 },
+      { id: "notReally", label: "Not really", score: 0 },
+      { id: "notSure", label: "Not sure", score: 0 },
+    ],
+  },
+  {
     id: "familyHistory",
     type: "single-select",
     axis: "risk",

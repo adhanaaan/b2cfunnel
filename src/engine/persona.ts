@@ -26,13 +26,17 @@ export function detectPersona(answers: Answers): Persona {
   const age = typeof answers.age === "string" ? answers.age : undefined;
   const tracks = asArray(answers.tracks);
   const hotFlushes = answers.hotFlushes;
+  const menopauseSymptoms = answers.menopauseSymptoms;
 
   // 1. Perimenopausal woman (40+): female, 40+ proxy, with a hormonal signal.
   if (
-    sex === "female" &&
     age !== undefined &&
     PERIMENOPAUSAL_AGE_BANDS.includes(age) &&
-    (hotFlushes === "yes" || tracks.includes("hormones"))
+    (sex === "female" || menopauseSymptoms !== undefined) &&
+    (hotFlushes === "yes" ||
+      menopauseSymptoms === "often" ||
+      menopauseSymptoms === "sometimes" ||
+      tracks.includes("hormones"))
   ) {
     return "perimenopausal";
   }
