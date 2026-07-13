@@ -3,6 +3,7 @@
 import type { Answers, AnswerValue, Option, Question } from "@/types/question";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { ProgressBar } from "@/components/ui/ProgressBar";
+import { useVariant } from "@/components/VariantContext";
 
 interface QuestionGroupScreenProps {
   title: string;
@@ -39,6 +40,7 @@ function OptionSlider({
   value?: AnswerValue;
   onChange: (id: string) => void;
 }) {
+  const woman = useVariant() === "woman";
   const opts = [...(question.options ?? [])].reverse(); // good (left) → bad (right)
   const max = opts.length - 1;
   const found = opts.findIndex((o) => o.id === value);
@@ -52,13 +54,14 @@ function OptionSlider({
         {opts[idx]?.label}
       </p>
 
-      {/* Gradient track (green = no symptoms, red = frequent) + thumb. */}
+      {/* Gradient track (low severity → high severity) + thumb. */}
       <div className="relative mt-3 flex h-6 items-center">
         <div
           className="h-3 w-full rounded-full"
           style={{
-            background:
-              "linear-gradient(to right, #22c55e, #eab308, #f97316, #ef4444)",
+            background: woman
+              ? "linear-gradient(to right, #6c886d, #a9ad84, #c2a46f, #b9847b)"
+              : "linear-gradient(to right, #22c55e, #eab308, #f97316, #ef4444)",
           }}
         />
         {opts.map((_, i) => (

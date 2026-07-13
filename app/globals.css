@@ -95,6 +95,18 @@
     color: #ffffff !important;
   }
 
+  .variant-woman .text-error {
+    color: #9f6f68 !important;
+  }
+
+  .variant-woman .bg-pill-bg {
+    background-color: #e8ded0 !important;
+  }
+
+  .variant-woman .text-pill-text {
+    color: #475b47 !important;
+  }
+
   .variant-woman .shadow-card {
     box-shadow: 0 14px 34px rgba(71, 91, 71, 0.08) !important;
   }

@@ -5,6 +5,7 @@ import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { ComplianceFooter } from "@/components/ui/ComplianceFooter";
 import { DoctorAvatar } from "@/components/result/DoctorAvatar";
+import { useVariant } from "@/components/VariantContext";
 
 /** Final convert screen: the ReCOGnAIze offer, what's included, order summary. */
 export function PaywallScreen() {
@@ -13,6 +14,7 @@ export function PaywallScreen() {
   const [pubmedOk, setPubmedOk] = useState(true);
   const [doctorOpen, setDoctorOpen] = useState(false);
   const doc = c.doctor;
+  const woman = useVariant() === "woman";
 
   return (
     <ScreenShell>
@@ -151,7 +153,14 @@ export function PaywallScreen() {
           <div className="mt-4 flex items-end justify-between border-t border-outline-variant pt-4">
             <div>
               <span className="font-bold text-charcoal">Subtotal</span>
-              <span className="ml-2 inline-block rounded-full bg-[#fde047] px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wide text-charcoal shadow-sm">
+              <span
+                className={[
+                  "ml-2 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wide shadow-sm",
+                  woman
+                    ? "bg-[#e8ded0] text-[#475b47]"
+                    : "bg-[#fde047] text-charcoal",
+                ].join(" ")}
+              >
                 {c.priceTag}
               </span>
             </div>

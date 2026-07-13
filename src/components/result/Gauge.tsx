@@ -1,5 +1,6 @@
 import type { BandName } from "@/types/engine";
 import { BANDS, BAND_ORDER } from "@/engine/bands";
+import { useVariant } from "@/components/VariantContext";
 
 interface GaugeProps {
   score: number;
@@ -16,6 +17,12 @@ const CX = 100;
 const CY = 100;
 const R = 80;
 const STROKE = 18;
+const WOMAN_BAND_COLOURS: Record<BandName, string> = {
+  low: "#6c886d",
+  moderate: "#a9ad84",
+  elevated: "#c2a46f",
+  high: "#b9847b",
+};
 
 const deg2rad = (d: number) => (d * Math.PI) / 180;
 
@@ -34,7 +41,7 @@ function arcPath(pStart: number, pEnd: number) {
   return `M ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${R} ${R} 0 0 1 ${end.x.toFixed(2)} ${end.y.toFixed(2)}`;
 }
 
-/** 4-band semicircular gauge (green→yellow→orange→red) with a score needle. */
+/** 4-band semicircular gauge with a score needle. */
 export function Gauge({
   score,
   max = 100,
@@ -44,12 +51,13 @@ export function Gauge({
   highLabel,
   caption,
 }: GaugeProps) {
+  const woman = useVariant() === "woman";
   const clamped = Math.max(0, Math.min(score, max));
   const progress = clamped / max;
   const needleAngle = angleFor(progress);
   const needleTip = polar(needleAngle, R - STROKE / 2 - 4);
 
-  const bandColour = BANDS[band].colour;
+  const bandColour = woman ? WOMAN_BAND_COLOURS[band] : BANDS[band].colour;
 
   // The score is a Brain Health Score (high = healthy), so the arc runs red
   // (low score / high risk) on the LEFT to green (high score / low risk) on the
@@ -58,7 +66,11 @@ export function Gauge({
   const widths = BAND_ORDER.map((name, i) => {
     const prevMax = i === 0 ? 0 : BANDS[BAND_ORDER[i - 1]].totalMax;
     const thisMax = BANDS[name].totalMax === Infinity ? max : BANDS[name].totalMax;
-    return { name, colour: BANDS[name].colour, width: thisMax - prevMax };
+    return {
+      name,
+      colour: woman ? WOMAN_BAND_COLOURS[name] : BANDS[name].colour,
+      width: thisMax - prevMax,
+    };
   });
   let acc = 0;
   const segments = [...widths].reverse().map((w) => {
@@ -94,7 +106,7 @@ export function Gauge({
           y1={CY}
           x2={needleTip.x.toFixed(2)}
           y2={needleTip.y.toFixed(2)}
-          stroke="#2d2d2d"
+          stroke={woman ? "#475b47" : "#2d2d2d"}
           strokeWidth={3}
           strokeLinecap="round"
           style={{
@@ -102,7 +114,7 @@ export function Gauge({
             transition: "transform 900ms cubic-bezier(0.22, 1, 0.36, 1)",
           }}
         />
-        <circle cx={CX} cy={CY} r={7} fill="#2d2d2d" />
+        <circle cx={CX} cy={CY} r={7} fill={woman ? "#475b47" : "#2d2d2d"} />
         <circle cx={CX} cy={CY} r={3} fill={bandColour} />
       </svg>
 
