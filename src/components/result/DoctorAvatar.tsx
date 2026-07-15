@@ -34,7 +34,7 @@ export function DoctorAvatar({
           src={image}
           alt=""
           onError={() => setFailed(true)}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
         />
       )}
     </span>

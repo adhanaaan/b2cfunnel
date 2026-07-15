@@ -87,7 +87,7 @@ export function PaywallScreen() {
           </ul>
         </div>
 
-        {/* Teleconsult clinic → Prologue → Dr Chris */}
+        {/* Teleconsult clinic → Prologue → Dr Odelia */}
         <div className="mt-5 rounded-2xl bg-surface-lowest p-5 shadow-card">
           <p className="text-[11px] font-bold uppercase tracking-wider text-primary">
             {doc.eyebrow}

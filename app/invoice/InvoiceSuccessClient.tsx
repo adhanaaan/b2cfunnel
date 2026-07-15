@@ -3,21 +3,28 @@
 import { useEffect, useMemo, useState } from "react";
 import { COPY } from "@/config/copy";
 import { ScreenShell } from "@/components/ui/ScreenShell";
+import { DoctorAvatar } from "@/components/result/DoctorAvatar";
+import { VariantProvider } from "@/components/VariantContext";
 
 const CONTACT_EMAIL = "mohdadnan.azam@ntu.edu.sg";
 const CONTACT_PHONE_DISPLAY = "+65 8742 4150";
+const GMS_WHATSAPP_NUMBER = "6587424150";
+const GMS_WHATSAPP_MESSAGE =
+  "Hi GrayMatterSolutions! I'd like to confirm my ReCOGnAIze Brain Health Consult booking. Here are my details:\n\nName:\nEmail:\nBrain Health Score:\nPreferred date/time:";
 const REDIRECT_SECONDS = 10;
+const CLINIC_ADDRESS = "391 Orchard Road, #05-25A, Ngee Ann City Podium Block, Singapore 238872";
 
 export function InvoiceSuccessClient() {
   const c = COPY.screens.paywall;
+  const doc = c.doctor;
   const [secondsLeft, setSecondsLeft] = useState(REDIRECT_SECONDS);
 
   const whatsappHref = useMemo(
     () =>
-      `https://wa.me/${c.whatsappNumber}?text=${encodeURIComponent(
-        c.whatsappMessage,
+      `https://wa.me/${GMS_WHATSAPP_NUMBER}?text=${encodeURIComponent(
+        GMS_WHATSAPP_MESSAGE,
       )}`,
-    [c.whatsappMessage, c.whatsappNumber],
+    [],
   );
 
   useEffect(() => {
@@ -35,9 +42,10 @@ export function InvoiceSuccessClient() {
   }, [whatsappHref]);
 
   return (
-    <ScreenShell>
+    <VariantProvider value="woman">
+      <ScreenShell>
       <div className="animate-fade-up">
-        <div className="rounded-3xl bg-gradient-to-b from-white to-[#fff6f0] p-6 shadow-[0_30px_80px_-30px_rgba(247,117,40,0.45)] ring-1 ring-black/5 sm:p-8">
+        <div className="rounded-3xl bg-gradient-to-b from-white to-[#fbfff7] p-6 shadow-[0_30px_80px_-30px_rgba(71,91,71,0.32)] ring-1 ring-[#6c886d]/20 sm:p-8">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-container text-primary">
             <svg
               viewBox="0 0 24 24"
@@ -61,11 +69,28 @@ export function InvoiceSuccessClient() {
           </h1>
 
           <div className="mt-6 rounded-2xl bg-surface-low p-5 ring-1 ring-outline-variant">
+            <p className="text-sm font-bold uppercase tracking-widest text-outline">Clinic</p>
+            <p className="mt-2 text-lg font-bold leading-snug text-charcoal">
+              Prologue The Lifestyle Medical Clinic
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-secondary">{CLINIC_ADDRESS}</p>
+
+            <div className="mt-5 flex items-center gap-4 border-t border-outline-variant pt-5">
+              <DoctorAvatar image={doc.image} initials={doc.initials} className="h-16 w-16" />
+              <div className="min-w-0">
+                <p className="font-bold text-charcoal">{doc.name}</p>
+                <p className="text-sm text-secondary">{doc.role}</p>
+                <p className="mt-1 text-xs leading-relaxed text-secondary">{doc.credentials}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-2xl bg-surface-low p-5 ring-1 ring-outline-variant">
             <p className="text-sm font-bold uppercase tracking-widest text-outline">
               Next step
             </p>
             <p className="mt-2 text-lg font-semibold leading-snug text-charcoal">
-              Confirm your teleconsult details with our team on WhatsApp.
+              Confirm your teleconsult details with the GMS team on WhatsApp.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-secondary">
               Redirecting in{" "}
@@ -99,7 +124,7 @@ export function InvoiceSuccessClient() {
               <p>
                 Call or WhatsApp{" "}
                 <a
-                  href={`tel:${c.whatsappNumber}`}
+                  href={`tel:${GMS_WHATSAPP_NUMBER}`}
                   className="font-semibold text-primary underline underline-offset-4"
                 >
                   {CONTACT_PHONE_DISPLAY}
@@ -109,6 +134,7 @@ export function InvoiceSuccessClient() {
           </div>
         </div>
       </div>
-    </ScreenShell>
+      </ScreenShell>
+    </VariantProvider>
   );
 }

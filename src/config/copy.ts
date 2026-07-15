@@ -144,13 +144,13 @@ export const COPY: CopyConfig = {
       ],
       doctor: {
         eyebrow: "Your teleconsult clinic",
-        name: "Dr Christopher Tan Ee Chong",
-        credentials: "MBBS (Singapore), MRCS, GDFM",
-        role: "Medical Director & Resident Physician",
+        name: "Dr Odelia Koh",
+        credentials: "MBBS (SG), MMED (Internal Medicine), MRCP (UK), GDFM (SG)",
+        role: "Medical Director",
         org: "Prologue",
-        initials: "CT",
-        image: "/landing/dr-chris.png.webp",
-        bio: "Upon graduating from the Yong Loo Lin School of Medicine, National University of Singapore, Dr Tan practised in a variety of surgical and medical disciplines at various hospitals in Singapore before entering private practice. He was awarded the Membership of the Royal College of Surgeons (Ireland) and conferred the Graduate Diploma of Family Medicine by the College of Family Physicians Singapore. He has acquired over 12 years of clinical experience in internal medicine, anaesthesia and pain management, ENT, family medicine, health screening, and complementary medicine.",
+        initials: "OK",
+        image: "/landing/dr-odelia-koh.jpg",
+        bio: "Dr Odelia Koh is an accredited Family Physician who earned her MBBS from NUS in 2014 and a Master's in Internal Medicine in 2017. Her experience spans hospitals, A&E, the National Skin Centre, and polyclinics. She advocates early detection, disease prevention, and personalised care through Lifestyle Medicine and health screening.",
       },
       lineItem: "Brain health assessment",
       price: "S$99",
@@ -160,9 +160,9 @@ export const COPY: CopyConfig = {
       promoPlaceholder: "Enter promo code",
       promoCta: "Apply",
       cta: "Book now",
-      whatsappNumber: "6587424150",
+      whatsappNumber: "6596747608",
       whatsappMessage:
-        "Hi GrayMatterSolutions! I'd like to book the ReCOGnAIze Brain Health Consult (S$99). Here are my details:\n\nName:\nEmail:\nBrain Health Score:\nPreferred date/time:",
+        "Hi Prologue! I'd like to book a teleconsult with Dr Odelia Koh for the ReCOGnAIze Brain Health Consult. Here are my details:\n\nName:\nEmail:\nBrain Health Score:\nPreferred date/time:",
       faqs: [
         {
           q: "What is ReCOGnAIze?",

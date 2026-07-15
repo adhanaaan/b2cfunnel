@@ -9,12 +9,18 @@ const nextConfig: NextConfig = {
         { source: "/", destination: "/landing/index.html" },
         // The long landing (full assessment page) available at /full.
         { source: "/full", destination: "/landing/full.html" },
-        // Women iteration starts from the long landing, with its own styling.
-        { source: "/woman", destination: "/landing/woman.html" },
+        // Prologue landing page; its quiz lives at /prologue/quiz.
+        { source: "/prologue", destination: "/landing/woman.html" },
       ],
       afterFiles: [],
       fallback: [],
     };
+  },
+  async redirects() {
+    return [
+      { source: "/woman", destination: "/prologue", permanent: true },
+      { source: "/woman/quiz", destination: "/prologue/quiz", permanent: true },
+    ];
   },
 };
 

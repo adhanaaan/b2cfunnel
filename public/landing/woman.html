@@ -366,7 +366,7 @@
     .science-mini h2 { font-size: clamp(30px,3.8vw,48px); }
     .science-mini p.lead { color: var(--ink-soft); font-size: 16px; line-height: 1.55; margin-top: 14px; max-width: 520px; }
     .proof-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
-    .proof-card { background: rgba(251,255,247,.86); border: 1px solid rgba(108,136,109,.18); border-radius: var(--radius); padding: 22px 18px; text-align: center; box-shadow: 0 14px 34px rgba(71,91,71,.06); }
+    .proof-card { display: flex; flex-direction: column; justify-content: center; background: rgba(251,255,247,.86); border: 1px solid rgba(108,136,109,.18); border-radius: var(--radius); padding: 22px 18px; text-align: center; box-shadow: 0 14px 34px rgba(71,91,71,.06); }
     .proof-card b { display: block; font-family: var(--font-serif); font-size: 30px; line-height: 1; color: var(--brand-2); margin-bottom: 8px; }
     .proof-card span { display: block; color: var(--ink-soft); font-size: 13.5px; line-height: 1.35; }
     .proof-card .journal-lockup { color: var(--brand-2); margin-bottom: 10px; }
@@ -438,7 +438,7 @@
     .mt-doc { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
     .mt-doc .av { position: relative; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: var(--bg-soft); color: var(--brand); font-size: 14px; font-weight: 800; }
     .mt-doc .av > span { font-size: 14px; color: var(--brand); font-weight: 800; }
-    .mt-doc .av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .mt-doc .av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
     .mt-doc b { display: block; font-size: 14px; color: var(--ink); }
     .mt-doc span { font-size: 12.5px; color: var(--ink-soft); }
     .mt-when { display: flex; align-items: center; gap: 9px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
@@ -779,7 +779,7 @@
       </nav>
       <div class="nav-cta">
         <a href="#" class="btn btn-ghost">Log in</a>
-        <a href="/woman/quiz" class="btn btn-primary">Get Started</a>
+        <a href="/prologue/quiz" class="btn btn-primary">Get Started</a>
         <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
       </div>
     </div>
@@ -796,7 +796,7 @@
       <h1>Lost a sentence midway? It could be brain fog.</h1>
       <p class="lead">Perimenopause and menopause can affect memory, focus, sleep, and mood. Take the ReCOGnAIze brain health assessment to see where you stand.</p>
       <div class="hero-cta">
-        <a href="/woman/quiz" class="btn btn-primary">Start your assessment →</a>
+        <a href="/prologue/quiz" class="btn btn-primary">Start your assessment →</a>
       </div>
     </div>
   </section>
@@ -976,8 +976,8 @@
             <div class="mock">
               <div class="mock-head"><span class="dot"></span> Teleconsult</div>
               <div class="mt-doc">
-                <span class="av"><span>CT</span><img src="/landing/dr-chris.png.webp" alt="Dr Christopher Tan Ee Chong" onerror="this.style.display='none'" /></span>
-                <div><b>Dr Christopher Tan Ee Chong</b><span>MBBS (Singapore), MRCS, GDFM</span></div>
+                <span class="av"><span>OK</span><img src="/landing/dr-odelia-koh.jpg" alt="Dr Odelia Koh" onerror="this.style.display='none'" /></span>
+                <div><b>Dr Odelia Koh</b><span>MBBS (SG), MMED (Internal Medicine), MRCP (UK), GDFM (SG)</span></div>
               </div>
               <div class="mt-when"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Tue, 3:00 PM · Video call</div>
               <div class="mt-cta">Join consultation</div>
@@ -987,7 +987,7 @@
 
       </div>
       <div class="how-cta reveal" style="text-align:center; margin-top:52px;">
-        <a href="/woman/quiz" class="btn btn-primary">Take the assessment →</a>
+        <a href="/prologue/quiz" class="btn btn-primary">Take the assessment →</a>
       </div>
     </div>
   </section>
@@ -998,7 +998,7 @@
       <div class="cta-final reveal">
         <h2>Find out where your brain stands.</h2>
         <p>If brain fog has started to feel like part of daily life, get a clearer baseline and review it with a doctor.</p>
-        <a href="/woman/quiz" class="btn btn-light">Take the assessment →</a>
+        <a href="/prologue/quiz" class="btn btn-light">Take the assessment →</a>
       </div>
     </div>
   </section>

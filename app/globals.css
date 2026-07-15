@@ -86,6 +86,12 @@
     border-color: #6c886d !important;
   }
 
+  /* Prologue brand guide primary green; Tailwind's side-specific spinner
+     border needs its own override rather than the all-sides border utility. */
+  .variant-woman .border-t-primary {
+    border-top-color: #6c886d !important;
+  }
+
   .variant-woman .border-outline,
   .variant-woman .border-outline-variant {
     border-color: #cddfc5 !important;
