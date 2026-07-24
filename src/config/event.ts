@@ -4,4 +4,4 @@
  * rejected while this is `true`. Only affects the /event experience - the main
  * quiz at / is unaffected.
  */
-export const EVENT_PAUSED = true;
+export const EVENT_PAUSED = false;

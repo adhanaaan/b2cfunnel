@@ -11,8 +11,8 @@ interface Entry {
 }
 
 const TOP_N = 10;
-const PRIZE = "Fitbit Air";
-const PRIZE_VALUE = "Worth S$189";
+const PRIZE = "$50 Grab Voucher";
+const PRIZE_VALUE = "Worth S$50";
 const HOW_TO_WIN = [
   "Scan the code",
   "Match 20 symbols, fast",
@@ -42,8 +42,8 @@ function initials(name: string) {
   );
 }
 
-/** Prize image at /public/fitbit.{webp,png,jpg} if present, else a trophy. */
-const PRIZE_SRCS = ["/fitbit.webp", "/fitbit.png", "/fitbit.jpg"];
+/** Prize image at /public/prize.{webp,png,jpg} if present, else a trophy. */
+const PRIZE_SRCS = ["/prize.webp", "/prize.png", "/prize.jpg"];
 function PrizeImage() {
   const [src, setSrc] = useState<string | null>(null);
   useEffect(() => {

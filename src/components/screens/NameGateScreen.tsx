@@ -58,7 +58,7 @@ export function NameGateScreen({ onSubmit }: NameGateScreenProps) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={c.emailPlaceholder}
-            aria-label="Accenture email"
+            aria-label="Email"
             className="w-full rounded-lg border-2 border-outline-variant bg-surface-lowest px-5 py-4 text-base text-charcoal outline-none transition focus:border-primary"
           />
           {error && <p className="text-sm font-medium text-error">{error}</p>}
