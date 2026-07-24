@@ -12,7 +12,7 @@ interface Entry {
 
 const TOP_N = 10;
 const PRIZE = "$50 Grab Voucher";
-const PRIZE_VALUE = "Worth S$50";
+const PRIZE_VALUE = "Awarded live tonight";
 const HOW_TO_WIN = [
   "Scan the code",
   "Match 20 symbols, fast",
@@ -67,7 +67,7 @@ function PrizeImage() {
       cancelled = true;
     };
   }, []);
-  if (!src) return <span className="text-[26vh] leading-none">🏆</span>;
+  if (!src) return <span className="text-[26vh] leading-none">🧠</span>;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -161,7 +161,7 @@ export default function LeaderboardBoard() {
             className="rounded-full px-[1.4vw] py-[0.8vh] font-extrabold uppercase tracking-[0.25em] text-[1.8vh] text-white"
             style={{ background: C.primary }}
           >
-            The Prize
+            Top Score Reward
           </p>
 
           <div className="flex flex-1 items-center justify-center py-[1vh]">
@@ -171,7 +171,7 @@ export default function LeaderboardBoard() {
           <div>
             <h2 className="font-extrabold uppercase leading-[0.95] tracking-tight">
               <span className="block text-[3vh]" style={{ color: C.textVar }}>
-                Win a
+                Fastest processing speed claims
               </span>
               <span className="block text-[7.5vh]" style={{ color: C.text }}>
                 {PRIZE}
@@ -187,7 +187,7 @@ export default function LeaderboardBoard() {
               className="mt-[1.8vh] font-semibold text-[2.4vh]"
               style={{ color: C.textVar }}
             >
-              The single fastest time of the event takes it home.
+              The single fastest processing speed of the night takes it.
             </p>
           </div>
 
@@ -346,10 +346,10 @@ export default function LeaderboardBoard() {
           ) : (
             <>
               <p className="font-bold uppercase tracking-[0.3em] text-[1.7vh] text-white/85">
-                ⚡ Play now
+                ⚡ Live now
               </p>
               <p className="mt-[1vh] font-extrabold leading-tight text-[3.6vh]">
-                Scan to take the challenge
+                Scan to benchmark your speed
               </p>
               <div className="mt-[3vh] rounded-lg bg-white p-[1.6vh]">
                 {playUrl && (
@@ -358,8 +358,8 @@ export default function LeaderboardBoard() {
               </div>
               <p className="mt-[2.4vh] font-semibold text-[2.1vh] text-white/90">
                 {total > 0
-                  ? `${total} ${total === 1 ? "player" : "players"} so far · be #1`
-                  : "Be the first to play!"}
+                  ? `${total} ${total === 1 ? "player" : "players"} so far · top the board`
+                  : "Be the first to benchmark!"}
               </p>
             </>
           )}

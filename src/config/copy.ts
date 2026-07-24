@@ -68,7 +68,7 @@ export const COPY: CopyConfig = {
       body: "A quick symbol-matching challenge, inspired by the tasks researchers use to study processing speed. See how you do, then explore your full brain health profile, built with NTU's Dementia Research Centre.",
       placeholder: "Your name",
       emailPlaceholder: "Your email",
-      emailNote: "Your email goes on the leaderboard and into the $50 Grab voucher draw.",
+      emailNote: "Your email logs your result on the live leaderboard. Fastest processing speed of the night claims a $50 Grab voucher.",
       cta: "Start the challenge →",
     },
     emailGate: {
@@ -126,8 +126,8 @@ export const COPY: CopyConfig = {
       unlockOverlay: "Get your in-depth brain health analysis.",
       gameInviteHeading: "Reaction Time Challenge",
       gameInviteBody:
-        "You've baselined your brain. Now test your reflexes: the fastest score of the day wins a $50 Grab voucher.",
-      gameInviteCta: "Play now →",
+        "You've baselined your brain. Now benchmark your processing speed: the fastest score of the day claims a $50 Grab voucher.",
+      gameInviteCta: "Benchmark your speed →",
     },
     paywall: {
       eyebrow: "The full picture",
@@ -219,7 +219,7 @@ export const COPY: CopyConfig = {
     game: {
       eyebrow: "Reaction Time Challenge",
       heading: "Symbol Match",
-      body: "Match the symbols against the clock. The fastest score of the day wins a $50 Grab voucher.",
+      body: "Match the symbols against the clock. Fastest processing speed of the day claims a $50 Grab voucher.",
       placeholder:
         "Game placeholder: your symbol-matching game will drop in here.",
       cta: "Continue to the leaderboard",
@@ -228,7 +228,7 @@ export const COPY: CopyConfig = {
     leaderboard: {
       eyebrow: "Event leaderboard",
       heading: "Fastest minds",
-      prize: "🏆 The fastest of the event wins a $50 Grab voucher.",
+      prize: "Fastest processing speed of the event claims a $50 Grab voucher.",
       youNote: "Live standings across the whole event.",
       shareHeading: "📸 Screenshot your rank",
       shareBody: "Share it and dare a colleague to beat your time.",
