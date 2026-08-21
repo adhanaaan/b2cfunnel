@@ -66,7 +66,7 @@ export function ArenaShell({ children, ambient = true }: ArenaShellProps) {
                 key={`ghost-${i}`}
                 src={s.src}
                 alt=""
-                className="animate-symbol-drift absolute select-none opacity-[0.07] invert"
+                className="animate-symbol-drift absolute select-none opacity-[0.06] brightness-0 invert"
                 style={{
                   left: s.left,
                   top: s.top,
