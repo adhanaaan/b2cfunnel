@@ -213,9 +213,122 @@
     animation: fade-up 0.4s ease-out both;
   }
 
+  /* ---- Ember Night (event2 arena + TV board) ---- */
+
+  /* Shared background recipe: ember horizon over warm brown-black ink. */
+  .ember-night {
+    background:
+      radial-gradient(
+        120% 90% at 50% 110%,
+        rgba(247, 117, 40, 0.32),
+        transparent 60%
+      ),
+      radial-gradient(
+        60% 40% at 80% -10%,
+        rgba(255, 154, 77, 0.1),
+        transparent 70%
+      ),
+      linear-gradient(180deg, #120c0a 0%, #1a1210 55%, #2a1006 100%);
+  }
+
+  /* Ember dots drifting upwards. Transform/opacity only; pure CSS loops so
+     the TV board can run for hours without JS timers. */
+  @keyframes ember-float {
+    0% {
+      transform: translate3d(0, 12vh, 0) scale(0.8);
+      opacity: 0;
+    }
+    12% {
+      opacity: var(--ember-opacity, 0.55);
+    }
+    88% {
+      opacity: var(--ember-opacity, 0.55);
+    }
+    100% {
+      transform: translate3d(var(--ember-drift, 12px), -92vh, 0) scale(1.05);
+      opacity: 0;
+    }
+  }
+  .animate-ember-float {
+    animation: ember-float var(--ember-duration, 14s) linear infinite;
+    animation-delay: var(--ember-delay, 0s);
+  }
+
+  /* Ghosted game symbols slowly bobbing in the backdrop. */
+  @keyframes symbol-drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(var(--drift-tilt, -6deg));
+    }
+    50% {
+      transform: translate3d(var(--drift-x, 8px), var(--drift-y, -14px), 0)
+        rotate(var(--drift-tilt-to, 4deg));
+    }
+  }
+  .animate-symbol-drift {
+    animation: symbol-drift var(--drift-duration, 12s) ease-in-out infinite;
+    animation-delay: var(--drift-delay, 0s);
+  }
+
+  /* Breathing glow (splash lantern, TV QR halo): opacity only, the blur is a
+     static pre-blurred layer so we never animate filters. */
+  @keyframes glow-pulse {
+    0%,
+    100% {
+      opacity: var(--glow-min, 0.35);
+      transform: scale(1);
+    }
+    50% {
+      opacity: var(--glow-max, 0.55);
+      transform: scale(1.04);
+    }
+  }
+  .animate-glow-pulse {
+    animation: glow-pulse var(--glow-duration, 2.8s) ease-in-out infinite;
+  }
+
+  /* One-shot ember burst behind a celebrated result. */
+  @keyframes ember-burst {
+    0% {
+      transform: translate3d(0, 0, 0) scale(0.4);
+      opacity: 0;
+    }
+    15% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate3d(var(--burst-x, 0px), var(--burst-y, -70px), 0)
+        scale(1);
+      opacity: 0;
+    }
+  }
+  .animate-ember-burst {
+    animation: ember-burst var(--burst-duration, 0.7s) ease-out both;
+    animation-delay: var(--burst-delay, 0s);
+  }
+
+  /* Live-chip pulse on the TV masthead. */
+  @keyframes live-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+  .animate-live-pulse {
+    animation: live-pulse 2s ease-in-out infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .animate-crumb,
-    .animate-fade-up {
+    .animate-fade-up,
+    .animate-ember-float,
+    .animate-symbol-drift,
+    .animate-glow-pulse,
+    .animate-ember-burst,
+    .animate-live-pulse {
       animation: none;
     }
     .gauge-needle {
