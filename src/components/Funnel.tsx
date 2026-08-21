@@ -25,6 +25,8 @@ import { GameScreen } from "@/components/screens/GameScreen";
 import { LeaderboardScreen } from "@/components/screens/LeaderboardScreen";
 import { Event2Splash } from "@/components/screens/event2/Event2Splash";
 import { Event2Instructions } from "@/components/screens/event2/Event2Instructions";
+import { Event2GameResult } from "@/components/screens/event2/Event2GameResult";
+import { Event2Closing } from "@/components/screens/event2/Event2Closing";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
 import { BookingScreen } from "@/components/screens/BookingScreen";
 import { ConsultScreen } from "@/components/screens/ConsultScreen";
@@ -55,6 +57,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     submitPersonalEmail,
     analysisDone,
     gameDone,
+    skipToKind,
   } = useFunnel(variant);
 
   // Anonymous drop-off tracking: a step view fires whenever the step changes.
@@ -249,6 +252,23 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "consult":
       return <ConsultScreen />;
+
+    case "gameResult":
+      return (
+        <Event2GameResult
+          name={state.name}
+          email={state.email}
+          timeMs={state.gameTimeMs}
+          onContinue={next}
+          onDecline={() => {
+            track("hook_declined", { variant: state.variant });
+            skipToKind("closing");
+          }}
+        />
+      );
+
+    case "closing":
+      return <Event2Closing />;
 
     default:
       return null;

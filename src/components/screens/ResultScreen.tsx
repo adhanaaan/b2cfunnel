@@ -9,7 +9,7 @@ import { BigScore } from "@/components/result/BigScore";
 import { Gauge } from "@/components/result/Gauge";
 import { DrivingFactorPills } from "@/components/result/DrivingFactorPills";
 import { BlurredPaywallPreview } from "@/components/result/BlurredPaywallPreview";
-import { useIsEvent, useVariant } from "@/components/VariantContext";
+import { useIsEventFamily, useVariant } from "@/components/VariantContext";
 
 interface ResultScreenProps {
   result: ScoreResult;
@@ -38,7 +38,7 @@ function formatLevers(result: ScoreResult): string {
 /** Screen 6 - the score reveal. Brand-critical layout (build brief §6). */
 export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
   const base = COPY.screens.resultBase;
-  const event = useIsEvent();
+  const event = useIsEventFamily();
   const woman = useVariant() === "woman";
   const bandLabel = COPY.bandLabels[result.band];
   // Band-specific blurb, calibrated with the user's reported factors.
