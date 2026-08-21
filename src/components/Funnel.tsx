@@ -227,7 +227,13 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "result":
       return state.result ? (
-        <ResultScreen result={state.result} onUnlock={next} />
+        <ResultScreen
+          result={state.result}
+          onUnlock={next}
+          name={state.name}
+          email={state.email}
+          gameTimeMs={state.gameTimeMs}
+        />
       ) : null;
 
     case "game":

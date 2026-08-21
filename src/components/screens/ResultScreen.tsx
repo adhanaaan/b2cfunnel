@@ -9,11 +9,24 @@ import { BigScore } from "@/components/result/BigScore";
 import { Gauge } from "@/components/result/Gauge";
 import { DrivingFactorPills } from "@/components/result/DrivingFactorPills";
 import { BlurredPaywallPreview } from "@/components/result/BlurredPaywallPreview";
-import { useIsEventFamily, useVariant } from "@/components/VariantContext";
+import { TrajectoryChart } from "@/components/result/TrajectoryChart";
+import { PreventionStat } from "@/components/result/PreventionStat";
+import { ActionablesCard } from "@/components/result/ActionablesCard";
+import { NextStepsCard } from "@/components/result/NextStepsCard";
+import { pickActions } from "@/config/actions";
+import {
+  useIsEvent2,
+  useIsEventFamily,
+  useVariant,
+} from "@/components/VariantContext";
 
 interface ResultScreenProps {
   result: ScoreResult;
   onUnlock: () => void;
+  /** Event2 report extras. Absent elsewhere, so other variants are unchanged. */
+  name?: string;
+  email?: string;
+  gameTimeMs?: number;
 }
 
 // Factors that aren't "movable levers" (can't be acted on), excluded from the
@@ -36,9 +49,16 @@ function formatLevers(result: ScoreResult): string {
 }
 
 /** Screen 6 - the score reveal. Brand-critical layout (build brief §6). */
-export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
+export function ResultScreen({
+  result,
+  onUnlock,
+  name,
+  email,
+  gameTimeMs,
+}: ResultScreenProps) {
   const base = COPY.screens.resultBase;
   const event = useIsEventFamily();
+  const event2 = useIsEvent2();
   const woman = useVariant() === "woman";
   const bandLabel = COPY.bandLabels[result.band];
   // Band-specific blurb, calibrated with the user's reported factors.
@@ -78,6 +98,7 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
             lowLabel={base.gaugeLowLabel}
             highLabel={base.gaugeHighLabel}
             caption={base.gaugeBandCaption}
+            animate={event2}
           />
         </div>
 
@@ -88,6 +109,22 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
         {/* Hard divider into the closing section. */}
         <div className="-mx-5 mt-8 border-t border-outline-variant sm:-mx-7" />
 
+        {event2 ? (
+          // The report carries the whole story, so it ends here rather than
+          // handing off to another screen.
+          <div className="mt-8 space-y-8">
+            <TrajectoryChart />
+            <PreventionStat />
+            <ActionablesCard
+              actions={pickActions({
+                drivingFactors: result.drivingFactors,
+                band: result.band,
+                gameTimeMs,
+              })}
+            />
+            <NextStepsCard name={name} email={email} />
+          </div>
+        ) : (
         <div className="mt-8">
           {event ? (
             // Event: no sell - a soft prompt to speak to the team.
@@ -110,6 +147,7 @@ export function ResultScreen({ result, onUnlock }: ResultScreenProps) {
             <BlurredPaywallPreview onUnlock={onUnlock} />
           )}
         </div>
+        )}
 
         <ComplianceFooter />
       </div>

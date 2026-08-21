@@ -134,16 +134,18 @@ export function SymbolMatchGame({
     return () => clearInterval(id);
   }, [phase]);
 
-  const onSuccess = () => {
-    setCorrect((c) => {
-      const nc = c + 1;
-      if (nc >= GOAL) {
-        if (music) finishSound();
-        onComplete(performance.now() - startRef.current);
-      }
-      return nc;
-    });
-  };
+  const onSuccess = () => setCorrect((c) => c + 1);
+
+  // Report the finish from an effect, not from inside the state updater: React
+  // runs updaters during render, and calling the parent's setState there warns
+  // and can drop the update.
+  const doneRef = useRef(false);
+  useEffect(() => {
+    if (correct < GOAL || doneRef.current) return;
+    doneRef.current = true;
+    if (music) finishSound();
+    onComplete(performance.now() - startRef.current);
+  }, [correct, music, onComplete]);
 
   const toggleSound = () => {
     const next = !soundOff;

@@ -343,6 +343,25 @@ export const COPY: CopyConfig = {
       share: {
         text: "I clocked {time} on the Brain Health Check reaction challenge. Fast reflexes. But how do you score on your overall brain health?",
       },
+      report: {
+        chart: {
+          heading: "Managing your risk factors changes the curve",
+          managedLabel: "Risk factors managed",
+          unmanagedLabel: "Risk factors unmanaged",
+          fasterLabel: "Faster",
+          slowerLabel: "Slower",
+          ageLabel: "Age",
+          footnote:
+            "Illustrative trend, shaped by Jaarsma et al. 2024 and Yaffe et al. 2020 (CARDIA). Not a clinical prediction.",
+          ariaLabel:
+            "Two illustrative curves of thinking speed between age 30 and age 75. Both slope downwards. The curve for unmanaged risk factors falls sooner and further than the curve for managed risk factors.",
+        },
+        actionablesHeading: "Here are 3 actionables you can do right now",
+        nextStepsHeading: "What happens next",
+        optInLabel:
+          "Send me brain health tips, and early access when we launch.",
+        optInConfirmed: "You are on the list. Look out for our first note.",
+      },
     },
   },
 

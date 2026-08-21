@@ -3,6 +3,11 @@ import { COPY } from "@/config/copy";
 import { STAT_CARDS } from "@/config/statCards";
 import { QUESTIONS } from "@/config/questions";
 import { TIPS, BRAIN_FACTS } from "@/config/tips";
+import {
+  ACTIONS_BY_FACTOR,
+  DEFAULT_ACTIONS,
+  SPEED_ACTIONS,
+} from "@/config/actions";
 import { BANNED_PATTERNS, MANDATORY_DISCLAIMERS } from "@/config/compliance";
 
 /** Recursively collect every string in an object. */
@@ -21,6 +26,9 @@ describe("regulatory compliance (HSA wellness rails)", () => {
     ...collectStrings(QUESTIONS),
     ...collectStrings(TIPS),
     ...collectStrings(BRAIN_FACTS),
+    ...collectStrings(ACTIONS_BY_FACTOR),
+    ...collectStrings(DEFAULT_ACTIONS),
+    ...collectStrings(SPEED_ACTIONS),
   ];
 
   it("contains no off-limits language", () => {
