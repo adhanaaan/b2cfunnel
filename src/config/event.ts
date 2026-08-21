@@ -5,3 +5,10 @@
  * quiz at / is unaffected.
  */
 export const EVENT_PAUSED = false;
+
+/**
+ * Independent pause switch for the v2 event (/event-v2 and its TV board).
+ * Kept separate from EVENT_PAUSED so either event can be opened or closed
+ * without touching the other.
+ */
+export const EVENT2_PAUSED = false;

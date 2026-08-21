@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { COPY } from "@/config/copy";
 import { STAT_CARDS } from "@/config/statCards";
 import { QUESTIONS } from "@/config/questions";
+import { TIPS, BRAIN_FACTS } from "@/config/tips";
 import { BANNED_PATTERNS, MANDATORY_DISCLAIMERS } from "@/config/compliance";
 
 /** Recursively collect every string in an object. */
@@ -18,6 +19,8 @@ describe("regulatory compliance (HSA wellness rails)", () => {
     ...collectStrings(COPY),
     ...collectStrings(STAT_CARDS),
     ...collectStrings(QUESTIONS),
+    ...collectStrings(TIPS),
+    ...collectStrings(BRAIN_FACTS),
   ];
 
   it("contains no off-limits language", () => {

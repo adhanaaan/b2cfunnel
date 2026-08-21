@@ -145,6 +145,63 @@ export interface EventHookCopy {
   disclaimer: string;
 }
 
+// Event v2 ("Ember Arena", /event-v2). One block per screen in the arena arc;
+// the quiz arc reuses the shared screens and their copy.
+export interface Event2Copy {
+  splash: {
+    eyebrow: string;
+    heading: string;
+    body: string;
+    namePlaceholder: string;
+    emailPlaceholder: string;
+    emailNote: string;
+    cta: string;
+  };
+  instructions: {
+    eyebrow: string;
+    heading: string;
+    steps: string[]; // one line per rule, rendered full page
+    durationNote: string;
+    demoCta: string; // runs the guided tour
+    skipCta: string; // straight to the countdown
+  };
+  gameResult: {
+    eyebrow: string;
+    heading: string;
+    youLabel: string;
+    fastestLabel: string;
+    rankLabel: string;
+    playersLabel: string;
+    topPercent: string; // template containing {pct}
+    explainer: string;
+    shareCta: string;
+    screenshotPrompt: string;
+    tipHeading: string; // the pick-a-card prompt
+    tipPickAnother: string;
+    tipSaveCta: string;
+    bridgeHeading: string;
+    bridgeBody: string;
+    cta: string;
+    ctaNote: string;
+    decline: string;
+    disclaimer: string;
+  };
+  closing: {
+    eyebrow: string;
+    heading: string;
+    body: string;
+    reassurance: string; // caring line, matters most to low scorers
+    offerName: string;
+    offerPoints: string[];
+    cta: string;
+    shareReminder: string;
+    credibility: string;
+  };
+  share: {
+    text: string; // share-sheet caption, template containing {time}
+  };
+}
+
 export interface FaqItem {
   q: string;
   a: string;
@@ -215,6 +272,7 @@ export interface ScreenCopy {
   leaderboard: LeaderboardCopy;
   eventHook: EventHookCopy;
   consult: ConsultCopy;
+  event2: Event2Copy;
 }
 
 // What changes per persona on the result screen: the score blurb (per band) and
