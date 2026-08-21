@@ -117,7 +117,12 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     void fetch("/api/score", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: state.name, email: state.email, timeMs }),
+      body: JSON.stringify({
+        name: state.name,
+        email: state.email,
+        timeMs,
+        source: state.variant === "event2" ? "event2" : "event",
+      }),
     }).catch(() => {});
     gameDone(timeMs);
   };
