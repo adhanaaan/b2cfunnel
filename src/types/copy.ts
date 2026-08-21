@@ -201,6 +201,24 @@ export interface Event2Copy {
   share: {
     text: string; // share-sheet caption, template containing {time}
   };
+  // The long-scrolling report: the score card is shared with the other
+  // variants, these are the sections below it.
+  report: {
+    chart: {
+      heading: string;
+      managedLabel: string;
+      unmanagedLabel: string;
+      fasterLabel: string;
+      slowerLabel: string;
+      ageLabel: string; // prefixes the first age tick, e.g. "Age 30"
+      footnote: string; // illustrative framing plus the citation
+      ariaLabel: string; // the trend stated in words, for screen readers
+    };
+    actionablesHeading: string;
+    nextStepsHeading: string;
+    optInLabel: string;
+    optInConfirmed: string;
+  };
 }
 
 export interface FaqItem {

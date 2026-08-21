@@ -1,4 +1,7 @@
+"use client";
+
 import type { BandName } from "@/types/engine";
+import { useEffect, useState } from "react";
 import { BANDS, BAND_ORDER } from "@/engine/bands";
 import { useVariant } from "@/components/VariantContext";
 
@@ -10,6 +13,8 @@ interface GaugeProps {
   lowLabel: string;
   highLabel: string;
   caption?: string;
+  /** Sweep the needle up from the low end on mount (event2 report). */
+  animate?: boolean;
 }
 
 // Geometry. Top semicircle: left end = low, right end = high.
@@ -50,12 +55,23 @@ export function Gauge({
   lowLabel,
   highLabel,
   caption,
+  animate = false,
 }: GaugeProps) {
   const woman = useVariant() === "woman";
   const clamped = Math.max(0, Math.min(score, max));
   const progress = clamped / max;
   const needleAngle = angleFor(progress);
-  const needleTip = polar(needleAngle, R - STROKE / 2 - 4);
+  // The needle is drawn at the low end and rotated into place: the old version
+  // baked the angle into x2/y2, so its transform transition never had anything
+  // to animate.
+  const needleRest = polar(180, R - STROKE / 2 - 4);
+  const [swept, setSwept] = useState(!animate);
+  useEffect(() => {
+    if (!animate) return;
+    const id = setTimeout(() => setSwept(true), 60);
+    return () => clearTimeout(id);
+  }, [animate]);
+  const needleDeg = (swept ? progress : 0) * 180;
 
   const bandColour = woman ? WOMAN_BAND_COLOURS[band] : BANDS[band].colour;
 
@@ -104,14 +120,17 @@ export function Gauge({
           className="gauge-needle"
           x1={CX}
           y1={CY}
-          x2={needleTip.x.toFixed(2)}
-          y2={needleTip.y.toFixed(2)}
+          x2={needleRest.x.toFixed(2)}
+          y2={needleRest.y.toFixed(2)}
           stroke={woman ? "#475b47" : "#2d2d2d"}
           strokeWidth={3}
           strokeLinecap="round"
           style={{
             transformOrigin: `${CX}px ${CY}px`,
-            transition: "transform 900ms cubic-bezier(0.22, 1, 0.36, 1)",
+            transform: `rotate(${needleDeg.toFixed(2)}deg)`,
+            transition: animate
+              ? "transform 900ms cubic-bezier(0.22, 1, 0.36, 1)"
+              : undefined,
           }}
         />
         <circle cx={CX} cy={CY} r={7} fill={woman ? "#475b47" : "#2d2d2d"} />
