@@ -22,6 +22,15 @@ const nextConfig: NextConfig = {
       { source: "/woman/quiz", destination: "/prologue/quiz", permanent: true },
     ];
   },
+  async headers() {
+    return [
+      {
+        // Booth wifi: the game's sounds should be fetched once per device.
+        source: "/sounds/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=3600" }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

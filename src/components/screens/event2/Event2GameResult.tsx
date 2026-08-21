@@ -211,6 +211,12 @@ export function Event2GameResult({
 
   return (
     <ArenaShell>
+      {/* The game hands back from its light stage; ease the return to night. */}
+      <div
+        aria-hidden
+        className="animate-wash-out pointer-events-none fixed inset-0 z-[55] bg-night-ink"
+      />
+
       {/* Hidden QR used by the canvas share card. */}
       <div ref={qrHostRef} className="hidden" aria-hidden>
         <QRCodeCanvas value={playUrl} size={190} marginSize={0} />

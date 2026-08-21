@@ -231,6 +231,28 @@
       linear-gradient(180deg, #120c0a 0%, #1a1210 55%, #2a1006 100%);
   }
 
+  /* The game board (ported from recognaizelite) is built for a light backdrop:
+     white glass panels, purple keys, a white halo behind the main icon. It gets
+     the brand gradient, matching the quiz screens and the document background. */
+  .game-warm {
+    background: linear-gradient(180deg, #fff4ee 0%, #fff8f6 45%, #fbe7de 100%);
+  }
+
+  /* A full-screen wash that clears on mount. Cream when the game's stage lights
+     come up, ink when the night screens take over, so the theme change on
+     either side of the game reads as deliberate. */
+  @keyframes wash-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  .animate-wash-out {
+    animation: wash-out 0.26s ease-out both;
+  }
+
   /* Ember dots drifting upwards. Transform/opacity only; pure CSS loops so
      the TV board can run for hours without JS timers. */
   @keyframes ember-float {
@@ -324,6 +346,7 @@
   @media (prefers-reduced-motion: reduce) {
     .animate-crumb,
     .animate-fade-up,
+    .animate-wash-out,
     .animate-ember-float,
     .animate-symbol-drift,
     .animate-glow-pulse,

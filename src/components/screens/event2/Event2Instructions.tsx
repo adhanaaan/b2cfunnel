@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { COPY } from "@/config/copy";
 import { ArenaShell } from "@/components/ui/ArenaShell";
 import { springs, stagger } from "@/lib/motion";
+import { unlockAudio } from "@/lib/gameAudio";
 
 interface Event2InstructionsProps {
   /** Continue into the guided demo round. */
@@ -25,6 +26,13 @@ const row = {
 export function Event2Instructions({ onDemo, onSkip }: Event2InstructionsProps) {
   const c = COPY.screens.event2.instructions;
   const reduced = useReducedMotion();
+
+  // iOS only opens an audio context inside a real tap, and this screen holds
+  // the last one before the game starts.
+  const start = (go: () => void) => () => {
+    unlockAudio();
+    go();
+  };
 
   return (
     <ArenaShell>
@@ -74,7 +82,7 @@ export function Event2Instructions({ onDemo, onSkip }: Event2InstructionsProps) 
         <motion.div variants={row} className="mt-6 space-y-3">
           <motion.button
             type="button"
-            onClick={onDemo}
+            onClick={start(onDemo)}
             whileTap={reduced ? undefined : { scale: 0.97 }}
             transition={springs.pop}
             className="w-full rounded-xl bg-gradient-to-r from-ember-core to-ember-bright px-6 py-4 text-lg font-extrabold text-[#2a1006] shadow-[0_12px_40px_-8px_rgba(247,117,40,0.55)] transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-hot"
@@ -83,7 +91,7 @@ export function Event2Instructions({ onDemo, onSkip }: Event2InstructionsProps) 
           </motion.button>
           <button
             type="button"
-            onClick={onSkip}
+            onClick={start(onSkip)}
             className="w-full rounded-xl px-6 py-3 text-base font-semibold text-cream-dim underline-offset-4 transition hover:text-cream hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-hot"
           >
             {c.skipCta}
