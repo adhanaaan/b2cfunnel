@@ -109,6 +109,56 @@ const EVENT_FLOW: FunnelStep[] = [
   { kind: "consult" },
 ];
 
+/**
+ * Event v2 ("Ember Arena", served at /event-v2). Same question set as
+ * EVENT_FLOW - this is load-bearing: achievableAxisMax() sums max option
+ * scores over a variant's questions, so an identical set keeps normalised
+ * scores and bands comparable with /event and all historical leads
+ * (guarded by tests/config/event2Flow.test.ts).
+ *
+ * Differences are all around the questions: a single email capture up front
+ * (no trailing emailGate - the lead posts with the nameGate email), a
+ * full-page instructions step, a redesigned post-game result (share +
+ * pick-a-card tips live inside it), and a ReCOGnAIze closing instead of the
+ * teleconsult pitch.
+ */
+const EVENT2_FLOW: FunnelStep[] = [
+  { kind: "nameGate" },
+  { kind: "instructions" },
+  { kind: "game" },
+  { kind: "gameResult" },
+
+  { kind: "question", questionId: "age" },
+  { kind: "question", questionId: "sex" },
+
+  {
+    kind: "questionGroup",
+    title: "A bit of health history",
+    questionIds: ["highBp", "highCholesterol", "diabetes"],
+  },
+
+  { kind: "statCard", cardId: "lancet2024" },
+
+  {
+    kind: "questionGroup",
+    title: "Your lifestyle",
+    questionIds: ["smoking", "sleep", "exercise", "diet", "alcohol"],
+  },
+
+  { kind: "question", questionId: "tracks" },
+
+  { kind: "question", questionId: "concentrating" },
+  { kind: "question", questionId: "judgement" },
+  { kind: "question", questionId: "forgetfulness" },
+  { kind: "question", questionId: "persistence" }, // pruned if forgetfulness not noticed
+
+  { kind: "statCard", cardId: "salthouse" },
+
+  { kind: "analysing" },
+  { kind: "result" },
+  { kind: "closing" },
+];
+
 const WOMAN_FLOW: FunnelStep[] = [
   { kind: "hook" },
 
@@ -148,6 +198,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   full: FULL_FLOW,
   event: EVENT_FLOW,
   woman: WOMAN_FLOW,
+  event2: EVENT2_FLOW,
 };
 
 /** All question ids in a variant's flow (single questions + grouped pages). */

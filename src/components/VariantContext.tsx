@@ -15,3 +15,12 @@ export const useVariant = () => useContext(VariantContext);
 
 /** Convenience flag for the premium event theme. */
 export const useIsEvent = () => useContext(VariantContext) === "event";
+
+/** Convenience flag for the v2 event ("Ember Arena") experience. */
+export const useIsEvent2 = () => useContext(VariantContext) === "event2";
+
+/** True for either event variant - shared booth behaviour (no paywall etc.). */
+export const useIsEventFamily = () => {
+  const variant = useContext(VariantContext);
+  return variant === "event" || variant === "event2";
+};

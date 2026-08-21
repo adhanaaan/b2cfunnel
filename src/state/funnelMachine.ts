@@ -79,6 +79,15 @@ export function funnelReducer(
       return { ...state, gameTimeMs: action.timeMs, cursor: next };
     }
 
+    case "SKIP_TO_KIND": {
+      // Jump forward to the first step of the given kind; no-op if the kind
+      // isn't in the resolved flow or is behind the cursor.
+      const flow = resolveFlow(state.answers, state.variant);
+      const index = flow.findIndex((s) => s.kind === action.kind);
+      if (index < 0 || index < state.cursor) return state;
+      return { ...state, cursor: index };
+    }
+
     case "ANALYSIS_DONE": {
       // Compute the score once, store it, and advance to the result screen.
       const flow = resolveFlow(state.answers, state.variant);

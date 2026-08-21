@@ -67,10 +67,31 @@ const config: Config = {
           elevated: "#ef9f27",
           high: "#f09595",
         },
+        // "Ember Night" palette (event2 arena arc + TV board). Warm
+        // brown-black ink, never pure black; the brand orange glows on it.
+        night: {
+          ink: "#1a1210",
+          deep: "#120c0a",
+          raised: "#261812",
+          stroke: "#3e2a1f",
+        },
+        ember: {
+          core: "#f77528", // brand primary, unchanged
+          bright: "#ff9a4d",
+          hot: "#ffc29e",
+          shadow: "#7a2e0c",
+        },
+        cream: {
+          DEFAULT: "#fff4ec",
+          dim: "#d8b9a6",
+          faint: "#a8877a",
+        },
+        gold: "#f7c15c",
       },
       fontFamily: {
         sans: ["var(--font-jakarta)", "system-ui", "sans-serif"],
         display: ["var(--font-jakarta)", "system-ui", "sans-serif"],
+        serif: ["var(--font-cormorant)", "Georgia", "serif"],
       },
       borderRadius: {
         // "Round Eight" - 8px default roundness
@@ -83,6 +104,9 @@ const config: Config = {
         // Floating cards with soft shadows
         card: "0 8px 24px -8px rgba(51, 18, 0, 0.12), 0 2px 8px -2px rgba(51, 18, 0, 0.08)",
         float: "0 16px 40px -12px rgba(51, 18, 0, 0.18)",
+        // Night-theme elevation is a glow, not a drop shadow.
+        ember:
+          "0 0 0 1px #3e2a1f, 0 12px 40px -12px rgba(247, 117, 40, 0.35)",
       },
     },
   },

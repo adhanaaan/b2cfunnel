@@ -270,6 +270,80 @@ export const COPY: CopyConfig = {
       body: "We'd love to walk you through what your Brain Health Score means and the science behind it. Find us here at the booth, your full results are also on their way to your inbox.",
       closing: "Built with NTU's Dementia Research Centre.",
     },
+    // Event v2 ("Ember Arena", /event-v2). The arena arc's copy; the quiz arc
+    // reuses the shared screens above. Wording follows the FigJam v2 notes.
+    event2: {
+      splash: {
+        eyebrow: "Reaction Time Challenge",
+        heading: "How fast does your brain process?",
+        body: "A quick symbol-matching test, backed by NTU's Dementia Research Centre. See your score, then explore your full brain health profile.",
+        namePlaceholder: "Your name",
+        emailPlaceholder: "Your email",
+        emailNote:
+          "One email is all we need. It puts you on the live leaderboard and is where your results go. Fastest time of the night wins a $50 Grab voucher.",
+        cta: "Start the challenge",
+      },
+      instructions: {
+        eyebrow: "How to play",
+        heading: "Three rules. Twenty matches.",
+        steps: [
+          "A symbol appears at the top of your screen",
+          "Tap its matching number in the grid below",
+          "Get 20 correct as fast as you can. Wrong taps cost time",
+        ],
+        durationNote: "Most people finish in under a minute.",
+        demoCta: "Show me once",
+        skipCta: "Skip, I've got it",
+      },
+      gameResult: {
+        eyebrow: "Your result",
+        heading: "You just tested your processing speed",
+        youLabel: "Your time",
+        fastestLabel: "Fastest so far",
+        rankLabel: "Your rank",
+        playersLabel: "Players",
+        topPercent: "Top {pct}% tonight",
+        explainer:
+          "Processing speed is how fast your brain takes in what it sees and responds.",
+        shareCta: "Share my time",
+        screenshotPrompt:
+          "Screenshot your rank and dare a colleague to beat it.",
+        tipHeading: "I want to…",
+        tipPickAnother: "Pick a different card",
+        tipSaveCta: "Save this card",
+        bridgeHeading:
+          "Fast reflexes. But how do you score on your overall brain health?",
+        bridgeBody:
+          "Speed is one of four domains. Memory, attention and executive function each tell their own story, and a 3-minute check shows the factors shaping all of them.",
+        cta: "Check my brain health",
+        ctaNote: "Free. About 3 minutes. Entirely optional.",
+        decline: "No thanks, just the game",
+        disclaimer:
+          "Reaction-time games are fun, but not a cognitive assessment.",
+      },
+      closing: {
+        eyebrow: "Your next step",
+        heading: "Ready for the full picture?",
+        body: "Your Brain Health Score and recommendations are on their way to your inbox. Tonight's quiz estimates your risk profile; the ReCOGnAIze assessment shows how your brain is actually performing.",
+        bodyNoQuiz:
+          "Thanks for playing. Reaction speed is one small window into the brain; the ReCOGnAIze assessment shows how yours is actually performing.",
+        reassurance:
+          "Whatever your score tonight, most of the factors behind it can change. That is the point of checking early.",
+        offerName: "ReCOGnAIze brain health assessment",
+        offerPoints: [
+          "Developed at NTU's Dementia Research Centre",
+          "Registered with Singapore's HSA",
+          "Results reviewed with a medical professional",
+        ],
+        cta: "Speak to our team at the booth",
+        shareReminder: "Before you go: share your time and see who beats it.",
+        credibility:
+          "Built with NTU's Dementia Research Centre · 2024 Lancet Commission",
+      },
+      share: {
+        text: "I clocked {time} on the Brain Health Check reaction challenge. Fast reflexes. But how do you score on your overall brain health?",
+      },
+    },
   },
 
   personas: {

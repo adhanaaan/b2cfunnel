@@ -17,7 +17,15 @@ export const Task2Game: React.FC<{
   onSuccess: () => void;
   onError: () => void;
   children?: React.ReactNode;
-}> = ({ tiles, onSuccess, onError, children }) => {
+  /** Backdrop override (event2 night theme). Defaults to the original look. */
+  background?: string;
+}> = ({
+  tiles,
+  onSuccess,
+  onError,
+  children,
+  background = "radial-gradient(#E4E3FF78, #D68DE878)",
+}) => {
   const [refreshKey, updateRefreshKey] = useState(1);
   const [activeEle, setActiveEle] = useState(7);
   const { result, setResult, resetResult } = useResult();
@@ -46,7 +54,7 @@ export const Task2Game: React.FC<{
     <div
       className="items-center h-full fc px-6 justify-between gap-1"
       style={{
-        background: "radial-gradient(#E4E3FF78, #D68DE878)",
+        background,
         paddingTop: "max(0.75rem, env(safe-area-inset-top))",
         paddingBottom: "max(2.25rem, calc(env(safe-area-inset-bottom) + 1.5rem))",
       }}

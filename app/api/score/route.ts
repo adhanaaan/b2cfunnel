@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { submitScore } from "@/lib/supabase/game";
-import { EVENT_PAUSED } from "@/config/event";
+import { EVENT_PAUSED, EVENT2_PAUSED } from "@/config/event";
 
 export const runtime = "nodejs";
 
@@ -10,19 +10,23 @@ interface ScorePayload {
   name?: string;
   email?: string;
   timeMs?: number;
+  /** Which event funnel sent the score; each has its own pause switch. */
+  source?: string;
 }
 
 export async function POST(req: Request) {
-  // Event paused: accept the request but don't record new scores.
-  if (EVENT_PAUSED) {
-    return NextResponse.json({ ok: true, stored: false });
-  }
-
   let payload: ScorePayload;
   try {
     payload = (await req.json()) as ScorePayload;
   } catch {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
+  // Per-source pause: accept the request but don't record new scores, so
+  // pausing one event never silently drops the other's results.
+  const paused = payload.source === "event2" ? EVENT2_PAUSED : EVENT_PAUSED;
+  if (paused) {
+    return NextResponse.json({ ok: true, stored: false });
   }
 
   const name = typeof payload.name === "string" ? payload.name.trim() : "";

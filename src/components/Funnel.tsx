@@ -23,6 +23,10 @@ import { AnalysingScreen } from "@/components/screens/AnalysingScreen";
 import { ResultScreen } from "@/components/screens/ResultScreen";
 import { GameScreen } from "@/components/screens/GameScreen";
 import { LeaderboardScreen } from "@/components/screens/LeaderboardScreen";
+import { Event2Splash } from "@/components/screens/event2/Event2Splash";
+import { Event2Instructions } from "@/components/screens/event2/Event2Instructions";
+import { Event2GameResult } from "@/components/screens/event2/Event2GameResult";
+import { Event2Closing } from "@/components/screens/event2/Event2Closing";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
 import { BookingScreen } from "@/components/screens/BookingScreen";
 import { ConsultScreen } from "@/components/screens/ConsultScreen";
@@ -53,6 +57,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     submitPersonalEmail,
     analysisDone,
     gameDone,
+    skipToKind,
   } = useFunnel(variant);
 
   // Anonymous drop-off tracking: a step view fires whenever the step changes.
@@ -112,7 +117,12 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     void fetch("/api/score", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: state.name, email: state.email, timeMs }),
+      body: JSON.stringify({
+        name: state.name,
+        email: state.email,
+        timeMs,
+        source: state.variant === "event2" ? "event2" : "event",
+      }),
     }).catch(() => {});
     gameDone(timeMs);
   };
@@ -138,7 +148,35 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "nameGate":
-      return <NameGateScreen onSubmit={submitEmail} />;
+      // Event2: the single email capture (leaderboard key + results address).
+      return state.variant === "event2" ? (
+        <Event2Splash onSubmit={submitEmail} />
+      ) : (
+        <NameGateScreen onSubmit={submitEmail} />
+      );
+
+    case "instructions":
+      return (
+        <Event2Instructions
+          onDemo={() => {
+            // Make sure the guided tour runs even on a same-session replay.
+            try {
+              sessionStorage.removeItem("sm_demo_done");
+            } catch {
+              /* ignore */
+            }
+            next();
+          }}
+          onSkip={() => {
+            try {
+              sessionStorage.setItem("sm_demo_done", "1");
+            } catch {
+              /* ignore */
+            }
+            next();
+          }}
+        />
+      );
 
     case "question": {
       const question = QUESTIONS_BY_ID[step.questionId];
@@ -193,7 +231,13 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       ) : null;
 
     case "game":
-      return <GameScreen onComplete={handleGameDone} />;
+      return (
+        <GameScreen
+          onComplete={handleGameDone}
+          theme={state.variant === "event2" ? "night" : "default"}
+          hideBack={state.variant === "event2"}
+        />
+      );
 
     case "leaderboard":
       return (
@@ -213,6 +257,24 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "consult":
       return <ConsultScreen />;
+
+    case "gameResult":
+      return (
+        <Event2GameResult
+          name={state.name}
+          email={state.email}
+          timeMs={state.gameTimeMs}
+          onContinue={next}
+          onDecline={() => {
+            track("hook_declined", { variant: state.variant });
+            skipToKind("closing");
+          }}
+        />
+      );
+
+    case "closing":
+      // Decliners jump here without a computed score - don't promise one.
+      return <Event2Closing tookQuiz={state.result != null} />;
 
     default:
       return null;

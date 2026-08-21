@@ -16,7 +16,16 @@ const COLORS = {
   arrow2: "#E0D0E7",
 };
 
-function steps(): DemoStep[] {
+// Ember-night accents for the event2 arena arc.
+const NIGHT_COLORS = {
+  color: "#7a2e0c",
+  secondaryColor: "#ff9a4d",
+  previousBtn1: "#FDFDFD",
+  previousBtn2: "#f7d2c1",
+  arrow2: "#ffc29e",
+};
+
+function steps(hideBack: boolean): DemoStep[] {
   return [
     {
       elements: [
@@ -47,7 +56,7 @@ function steps(): DemoStep[] {
           className: "scale-125 rounded-full",
           instructionClassName: "mb-8",
           instruction: 'Tap "7" in the number pad below.',
-          showPreviousBtn: true,
+          showPreviousBtn: !hideBack,
           showNextBtn: false,
           arrow: false,
         },
@@ -95,7 +104,17 @@ function steps(): DemoStep[] {
 }
 
 /** The real recognaizelite guided tour, faithfully ported. */
-export function SymbolMatchTour({ onDone }: { onDone: () => void }) {
+export function SymbolMatchTour({
+  onDone,
+  hideBack = false,
+  theme = "default",
+}: {
+  onDone: () => void;
+  /** Hide the mid-tour Back button (event2, per the v2 design notes). */
+  hideBack?: boolean;
+  /** "night" swaps the lavender backdrop for the ember-night look. */
+  theme?: "default" | "night";
+}) {
   const [runKey, setRunKey] = useState(0);
   const score = useRef(-1);
 
@@ -112,25 +131,27 @@ export function SymbolMatchTour({ onDone }: { onDone: () => void }) {
     return () => window.removeEventListener("demo.reset", onReset);
   }, []);
 
+  const night = theme === "night";
   return (
     <div
       key={runKey}
-      className="fixed inset-0 z-50 overflow-hidden"
-      style={{ background: "radial-gradient(#E4E3FF78, #D68DE878)" }}
+      className={["fixed inset-0 z-50 overflow-hidden", night ? "ember-night" : ""].join(" ")}
+      style={night ? undefined : { background: "radial-gradient(#E4E3FF78, #D68DE878)" }}
     >
       <div id="demo-center" className="absolute left-1/2 top-1/2 -z-10 size-0" />
       <DemoProvider
         value={{
           title: "Symbol Matching",
-          steps: steps(),
+          steps: steps(hideBack),
           texts: {},
-          colors: COLORS,
+          colors: night ? NIGHT_COLORS : COLORS,
           onComplete: onDone,
         }}
       >
         <Demo />
         <Task2Game
           tiles={10}
+          background={night ? "transparent" : undefined}
           onError={() => {}}
           onSuccess={() => {
             score.current++;
@@ -138,10 +159,22 @@ export function SymbolMatchTour({ onDone }: { onDone: () => void }) {
           }}
         >
           <div className="z-40 flex w-full max-w-md items-center justify-between">
-            <span className="font-display text-2xl font-extrabold text-[#630092]">
+            <span
+              className={[
+                "font-display text-2xl font-extrabold",
+                night ? "text-cream" : "text-[#630092]",
+              ].join(" ")}
+            >
               Practice
             </span>
-            <span className="rounded-full border-2 border-[#3A3A3A] px-4 py-1 text-sm font-bold text-[#3A3A3A]">
+            <span
+              className={[
+                "rounded-full border-2 px-4 py-1 text-sm font-bold",
+                night
+                  ? "border-cream-dim text-cream-dim"
+                  : "border-[#3A3A3A] text-[#3A3A3A]",
+              ].join(" ")}
+            >
               Demo
             </span>
           </div>
