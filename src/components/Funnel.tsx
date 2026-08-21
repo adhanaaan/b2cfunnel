@@ -234,8 +234,9 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       return (
         <GameScreen
           onComplete={handleGameDone}
-          theme={state.variant === "event2" ? "night" : "default"}
+          theme={state.variant === "event2" ? "warm" : "default"}
           hideBack={state.variant === "event2"}
+          music={state.variant === "event2"}
         />
       );
 

@@ -4,9 +4,11 @@ import { SymbolMatchGame } from "@/components/game/symbol-match/SymbolMatchGame"
 
 interface GameScreenProps {
   onComplete: (timeMs: number) => void;
-  /** "night" = event2 ember look; also hides the tour's back button. */
-  theme?: "default" | "night";
+  /** "warm" = event2 brand light-orange look. */
+  theme?: "default" | "warm";
   hideBack?: boolean;
+  /** Music bed + finish sting (event2 only). */
+  music?: boolean;
 }
 
 /**
@@ -14,8 +16,18 @@ interface GameScreenProps {
  * wrapped with the race-to-20 timer. A game: its result never feeds the
  * brain-health score.
  */
-export function GameScreen({ onComplete, theme, hideBack }: GameScreenProps) {
+export function GameScreen({
+  onComplete,
+  theme,
+  hideBack,
+  music,
+}: GameScreenProps) {
   return (
-    <SymbolMatchGame onComplete={onComplete} theme={theme} hideBack={hideBack} />
+    <SymbolMatchGame
+      onComplete={onComplete}
+      theme={theme}
+      hideBack={hideBack}
+      music={music}
+    />
   );
 }

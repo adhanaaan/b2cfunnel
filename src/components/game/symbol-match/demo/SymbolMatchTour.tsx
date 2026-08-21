@@ -16,13 +16,14 @@ const COLORS = {
   arrow2: "#E0D0E7",
 };
 
-// Ember-night accents for the event2 arena arc.
-const NIGHT_COLORS = {
-  color: "#7a2e0c",
-  secondaryColor: "#ff9a4d",
+// Brand accents for the event2 arc. The deep orange is the one the tour's own
+// HandIcon already points with.
+const WARM_COLORS = {
+  color: "#b7430a",
+  secondaryColor: "#f77528",
   previousBtn1: "#FDFDFD",
-  previousBtn2: "#f7d2c1",
-  arrow2: "#ffc29e",
+  previousBtn2: "#ffe3d1",
+  arrow2: "#f7d2c1",
 };
 
 function steps(hideBack: boolean): DemoStep[] {
@@ -112,8 +113,8 @@ export function SymbolMatchTour({
   onDone: () => void;
   /** Hide the mid-tour Back button (event2, per the v2 design notes). */
   hideBack?: boolean;
-  /** "night" swaps the lavender backdrop for the ember-night look. */
-  theme?: "default" | "night";
+  /** "warm" swaps the lavender backdrop for the brand light orange. */
+  theme?: "default" | "warm";
 }) {
   const [runKey, setRunKey] = useState(0);
   const score = useRef(-1);
@@ -131,27 +132,33 @@ export function SymbolMatchTour({
     return () => window.removeEventListener("demo.reset", onReset);
   }, []);
 
-  const night = theme === "night";
+  const warm = theme === "warm";
   return (
     <div
       key={runKey}
-      className={["fixed inset-0 z-50 overflow-hidden", night ? "ember-night" : ""].join(" ")}
-      style={night ? undefined : { background: "radial-gradient(#E4E3FF78, #D68DE878)" }}
+      className={["fixed inset-0 z-50 overflow-hidden", warm ? "game-warm" : ""].join(" ")}
+      style={warm ? undefined : { background: "radial-gradient(#E4E3FF78, #D68DE878)" }}
     >
+      {warm && (
+        <div
+          aria-hidden
+          className="animate-wash-out pointer-events-none absolute inset-0 z-[1002] bg-[#fff4ee]"
+        />
+      )}
       <div id="demo-center" className="absolute left-1/2 top-1/2 -z-10 size-0" />
       <DemoProvider
         value={{
           title: "Symbol Matching",
           steps: steps(hideBack),
           texts: {},
-          colors: night ? NIGHT_COLORS : COLORS,
+          colors: warm ? WARM_COLORS : COLORS,
           onComplete: onDone,
         }}
       >
         <Demo />
         <Task2Game
           tiles={10}
-          background={night ? "transparent" : undefined}
+          background={warm ? "transparent" : undefined}
           onError={() => {}}
           onSuccess={() => {
             score.current++;
@@ -162,7 +169,7 @@ export function SymbolMatchTour({
             <span
               className={[
                 "font-display text-2xl font-extrabold",
-                night ? "text-cream" : "text-[#630092]",
+                warm ? "text-charcoal" : "text-[#630092]",
               ].join(" ")}
             >
               Practice
@@ -170,8 +177,8 @@ export function SymbolMatchTour({
             <span
               className={[
                 "rounded-full border-2 px-4 py-1 text-sm font-bold",
-                night
-                  ? "border-cream-dim text-cream-dim"
+                warm
+                  ? "border-outline-variant text-outline"
                   : "border-[#3A3A3A] text-[#3A3A3A]",
               ].join(" ")}
             >
