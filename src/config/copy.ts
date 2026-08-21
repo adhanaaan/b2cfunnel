@@ -325,6 +325,8 @@ export const COPY: CopyConfig = {
         eyebrow: "Your next step",
         heading: "Ready for the full picture?",
         body: "Your Brain Health Score and recommendations are on their way to your inbox. Tonight's quiz estimates your risk profile; the ReCOGnAIze assessment shows how your brain is actually performing.",
+        bodyNoQuiz:
+          "Thanks for playing. Reaction speed is one small window into the brain; the ReCOGnAIze assessment shows how yours is actually performing.",
         reassurance:
           "Whatever your score tonight, most of the factors behind it can change. That is the point of checking early.",
         offerName: "ReCOGnAIze brain health assessment",

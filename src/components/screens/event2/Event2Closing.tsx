@@ -10,7 +10,7 @@ import { ComplianceFooter } from "@/components/ui/ComplianceFooter";
  * with a caring line for low scorers and a last nudge to share. No pricing,
  * no teleconsult pitch; the team at the booth takes it from here.
  */
-export function Event2Closing() {
+export function Event2Closing({ tookQuiz = true }: { tookQuiz?: boolean }) {
   const c = COPY.screens.event2.closing;
   return (
     <ScreenShell>
@@ -33,11 +33,13 @@ export function Event2Closing() {
           {c.heading}
         </h1>
         <p className="mx-auto mt-4 max-w-md text-lg leading-relaxed text-secondary">
-          {c.body}
+          {tookQuiz ? c.body : c.bodyNoQuiz}
         </p>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-secondary">
-          {c.reassurance}
-        </p>
+        {tookQuiz && (
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-secondary">
+            {c.reassurance}
+          </p>
+        )}
 
         <div className="mx-auto mt-8 w-full max-w-md rounded-2xl bg-surface-container px-6 py-6 text-left shadow-card">
           <p className="font-display text-lg font-extrabold text-charcoal">

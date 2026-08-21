@@ -273,7 +273,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "closing":
-      return <Event2Closing />;
+      // Decliners jump here without a computed score - don't promise one.
+      return <Event2Closing tookQuiz={state.result != null} />;
 
     default:
       return null;

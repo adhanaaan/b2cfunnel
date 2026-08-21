@@ -190,6 +190,7 @@ export interface Event2Copy {
     eyebrow: string;
     heading: string;
     body: string;
+    bodyNoQuiz: string; // decline path: no score is on its way
     reassurance: string; // caring line, matters most to low scorers
     offerName: string;
     offerPoints: string[];
