@@ -2,7 +2,7 @@
 
 import { useReducer, useCallback } from "react";
 import type { AnswerValue } from "@/types/question";
-import type { QuizVariant } from "@/types/funnel";
+import type { QuizVariant, StepKind } from "@/types/funnel";
 import {
   funnelReducer,
   createInitialState,
@@ -46,6 +46,10 @@ export function useFunnel(variant: QuizVariant) {
     (timeMs: number) => dispatch({ type: "GAME_DONE", timeMs }),
     [],
   );
+  const skipToKind = useCallback(
+    (kind: StepKind) => dispatch({ type: "SKIP_TO_KIND", kind }),
+    [],
+  );
 
   return {
     state,
@@ -58,5 +62,6 @@ export function useFunnel(variant: QuizVariant) {
     submitPersonalEmail,
     analysisDone,
     gameDone,
+    skipToKind,
   };
 }
