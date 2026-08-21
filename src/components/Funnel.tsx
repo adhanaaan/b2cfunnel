@@ -23,6 +23,8 @@ import { AnalysingScreen } from "@/components/screens/AnalysingScreen";
 import { ResultScreen } from "@/components/screens/ResultScreen";
 import { GameScreen } from "@/components/screens/GameScreen";
 import { LeaderboardScreen } from "@/components/screens/LeaderboardScreen";
+import { Event2Splash } from "@/components/screens/event2/Event2Splash";
+import { Event2Instructions } from "@/components/screens/event2/Event2Instructions";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
 import { BookingScreen } from "@/components/screens/BookingScreen";
 import { ConsultScreen } from "@/components/screens/ConsultScreen";
@@ -138,7 +140,35 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "nameGate":
-      return <NameGateScreen onSubmit={submitEmail} />;
+      // Event2: the single email capture (leaderboard key + results address).
+      return state.variant === "event2" ? (
+        <Event2Splash onSubmit={submitEmail} />
+      ) : (
+        <NameGateScreen onSubmit={submitEmail} />
+      );
+
+    case "instructions":
+      return (
+        <Event2Instructions
+          onDemo={() => {
+            // Make sure the guided tour runs even on a same-session replay.
+            try {
+              sessionStorage.removeItem("sm_demo_done");
+            } catch {
+              /* ignore */
+            }
+            next();
+          }}
+          onSkip={() => {
+            try {
+              sessionStorage.setItem("sm_demo_done", "1");
+            } catch {
+              /* ignore */
+            }
+            next();
+          }}
+        />
+      );
 
     case "question": {
       const question = QUESTIONS_BY_ID[step.questionId];
@@ -193,7 +223,13 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       ) : null;
 
     case "game":
-      return <GameScreen onComplete={handleGameDone} />;
+      return (
+        <GameScreen
+          onComplete={handleGameDone}
+          theme={state.variant === "event2" ? "night" : "default"}
+          hideBack={state.variant === "event2"}
+        />
+      );
 
     case "leaderboard":
       return (
