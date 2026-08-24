@@ -107,3 +107,19 @@ describe("SKIP_TO_KIND", () => {
     expect(state.cursor).toBe(atClosing);
   });
 });
+
+describe("RETAKE_GAME", () => {
+  it("jumps back to the game step and clears the previous time", () => {
+    let state = createInitialState("event2");
+    state = funnelReducer(state, { type: "SKIP_TO_KIND", kind: "closing" });
+    state = { ...state, gameTimeMs: 12345 };
+    state = funnelReducer(state, { type: "RETAKE_GAME" });
+    expect(currentStep(state).kind).toBe("game");
+    expect(state.gameTimeMs).toBeUndefined();
+  });
+
+  it("no-ops for a variant whose flow has no game step", () => {
+    const state = createInitialState("full");
+    expect(funnelReducer(state, { type: "RETAKE_GAME" })).toBe(state);
+  });
+});

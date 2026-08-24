@@ -18,6 +18,8 @@ interface Event2GameResultProps {
   onContinue: () => void;
   /** Caring exit: jump to the closing screen instead of backing into the game. */
   onDecline: () => void;
+  /** Play the reaction game again for a fresh time. */
+  onRetake: () => void;
 }
 
 interface Standing {
@@ -69,6 +71,7 @@ export function Event2GameResult({
   timeMs,
   onContinue,
   onDecline,
+  onRetake,
 }: Event2GameResultProps) {
   const c = COPY.screens.event2.gameResult;
   const reduced = useReducedMotion();
@@ -328,6 +331,13 @@ export function Event2GameResult({
           <p className="mt-2 text-center text-xs text-cream-faint" role="status">
             {shareNote ?? c.screenshotPrompt}
           </p>
+          <button
+            type="button"
+            onClick={onRetake}
+            className="mt-3 w-full rounded-xl px-6 py-3 text-sm font-semibold text-cream-dim underline-offset-4 transition hover:text-cream hover:underline"
+          >
+            {c.retakeCta}
+          </button>
         </motion.div>
 
         {/* Pick-a-card brain care tip. */}

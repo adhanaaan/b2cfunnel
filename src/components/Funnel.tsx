@@ -58,6 +58,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     analysisDone,
     gameDone,
     skipToKind,
+    retakeGame,
   } = useFunnel(variant);
 
   // Anonymous drop-off tracking: a step view fires whenever the step changes.
@@ -275,6 +276,10 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           onDecline={() => {
             track("hook_declined", { variant: state.variant });
             skipToKind("closing");
+          }}
+          onRetake={() => {
+            track("game_retake", { variant: state.variant });
+            retakeGame();
           }}
         />
       );

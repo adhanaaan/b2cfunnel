@@ -50,6 +50,10 @@ export function useFunnel(variant: QuizVariant) {
     (kind: StepKind) => dispatch({ type: "SKIP_TO_KIND", kind }),
     [],
   );
+  const retakeGame = useCallback(
+    () => dispatch({ type: "RETAKE_GAME" }),
+    [],
+  );
 
   return {
     state,
@@ -63,5 +67,6 @@ export function useFunnel(variant: QuizVariant) {
     analysisDone,
     gameDone,
     skipToKind,
+    retakeGame,
   };
 }

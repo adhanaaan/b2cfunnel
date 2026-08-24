@@ -176,6 +176,7 @@ export interface Event2Copy {
     explainer: string;
     shareCta: string;
     screenshotPrompt: string;
+    retakeCta: string;
     tipHeading: string; // the pick-a-card prompt
     tipPickAnother: string;
     tipSaveCta: string;

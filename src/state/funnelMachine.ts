@@ -88,6 +88,16 @@ export function funnelReducer(
       return { ...state, cursor: index };
     }
 
+    case "RETAKE_GAME": {
+      // Jump back to the game step and clear the previous time, so the
+      // player gets a genuine fresh run rather than replaying over a stale
+      // result. No-op if this variant's flow has no game step.
+      const flow = resolveFlow(state.answers, state.variant);
+      const index = flow.findIndex((s) => s.kind === "game");
+      if (index < 0) return state;
+      return { ...state, cursor: index, gameTimeMs: undefined };
+    }
+
     case "ANALYSIS_DONE": {
       // Compute the score once, store it, and advance to the result screen.
       const flow = resolveFlow(state.answers, state.variant);
