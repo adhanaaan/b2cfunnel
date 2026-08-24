@@ -308,6 +308,7 @@ export const COPY: CopyConfig = {
         shareCta: "Share my time",
         screenshotPrompt:
           "Screenshot your rank and dare a colleague to beat it.",
+        retakeCta: "Retake the test",
         tipHeading: "I want to…",
         tipPickAnother: "Pick a different card",
         tipSaveCta: "Save this card",

@@ -48,4 +48,7 @@ export type FunnelAction =
   | { type: "GAME_DONE"; timeMs: number }
   // Jump forward to the first step of a kind (event2: decline from gameResult
   // lands on the closing screen rather than backing into the game).
-  | { type: "SKIP_TO_KIND"; kind: StepKind };
+  | { type: "SKIP_TO_KIND"; kind: StepKind }
+  // Jump back to the game step and clear the previous time (event2: "Retake
+  // the test" from the post-game result screen).
+  | { type: "RETAKE_GAME" };
