@@ -340,103 +340,90 @@ export default function LeaderboardV3Board() {
               </p>
             </div>
           ) : (
-            <>
-              {/* The scan tile: oversized QR on white, breathing halo. */}
-              <div
-                className="relative flex flex-[1.15] flex-col items-center justify-center rounded-[1.2vw] px-[1.4vw] py-[2vh] text-center shadow-card"
-                style={{ background: CARD, border: `1px solid ${CARD_LINE}` }}
-              >
-                <p className="text-[3.2vh] font-extrabold uppercase tracking-[0.08em]">
-                  Scan to play
-                </p>
-                <div className="relative mt-[1.4vh]">
-                  <span
-                    aria-hidden
-                    className="animate-glow-pulse absolute inset-[-3vh] rounded-full"
-                    style={{
-                      background: `radial-gradient(circle, ${ORANGE}52, transparent 70%)`,
-                      ["--glow-duration" as string]: "2.6s",
-                    }}
-                  />
-                  <div
-                    className="relative rounded-[1.4vh] bg-white p-[1.6vh]"
-                    style={{ border: `2px solid ${CARD_LINE}` }}
-                  >
-                    {playUrl && (
-                      <QRCodeSVG
-                        value={playUrl}
-                        className="h-[27vh] w-[27vh]"
-                        level="M"
-                        fgColor="#331200"
-                        bgColor="#ffffff"
-                      />
-                    )}
-                  </div>
-                </div>
-                <p className="mt-[1.6vh] text-[2vh] font-bold" style={{ color: INK_SOFT }}>
-                  {leader ? (
-                    <>
-                      Time to beat:{" "}
-                      <span className="tabular-nums" style={{ color: ORANGE_DEEP }}>
-                        {formatTime(leader.timeMs)}
-                      </span>
-                    </>
-                  ) : total > 0 ? (
-                    `${total} minds tested today`
-                  ) : (
-                    "Be the first today"
-                  )}
-                </p>
-              </div>
-
-              {/* The prize card: saturated gradient so it carries across the hall. */}
-              <div
-                className="relative flex flex-1 items-center overflow-hidden rounded-[1.2vw] pl-[1.8vw] shadow-float"
+            <div
+              className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.2vw] shadow-float"
+              style={{
+                background: `linear-gradient(160deg, ${ORANGE_DEEP} 0%, ${ORANGE} 45%, ${ORANGE_SOFT} 100%)`,
+              }}
+            >
+              <span
+                aria-hidden
+                className="animate-glow-pulse absolute left-1/2 top-[24%] h-[44vh] w-[44vh] -translate-x-1/2 -translate-y-1/2 rounded-full"
                 style={{
-                  background: `linear-gradient(120deg, ${ORANGE_DEEP} 0%, ${ORANGE} 45%, ${ORANGE_SOFT} 100%)`,
+                  background: "radial-gradient(circle, #ffffff59, transparent 68%)",
+                  ["--glow-duration" as string]: "4s",
                 }}
-              >
-                <span
-                  aria-hidden
-                  className="animate-glow-pulse absolute right-[-6vh] top-1/2 h-[38vh] w-[38vh] -translate-y-1/2 rounded-full"
-                  style={{
-                    background: "radial-gradient(circle, #ffffff59, transparent 68%)",
-                    ["--glow-duration" as string]: "4s",
-                  }}
-                />
-                <div className="relative z-10 flex-1 py-[2.4vh]">
-                  <p
-                    className="inline-block rounded-full bg-white px-[1vw] py-[0.7vh] text-[1.7vh] font-extrabold uppercase tracking-[0.18em]"
-                    style={{ color: ORANGE_DEEP }}
-                  >
-                    Today&apos;s prize
-                  </p>
-                  <p className="mt-[1.4vh] text-[4.6vh] font-extrabold leading-[1.05] text-white">
-                    Win a<br />
-                    {PRIZE_NAME}
-                  </p>
-                  <p className="mt-[1vh] text-[2.6vh] font-bold" style={{ color: "#ffe4cf" }}>
-                    Worth <span className="text-white">{PRIZE_VALUE}</span>
-                  </p>
-                  <p className="mt-[0.6vh] text-[1.9vh] font-semibold" style={{ color: "#ffd9be" }}>
-                    Fastest mind of the day takes it home
-                  </p>
-                </div>
+              />
+
+              {/* Prize hero: the band is the across-the-hall headline. */}
+              <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-[1.6vw] pt-[2vh] text-center">
+                <p
+                  className="rounded-full bg-white px-[1.1vw] py-[0.7vh] text-[1.8vh] font-extrabold uppercase tracking-[0.18em]"
+                  style={{ color: ORANGE_DEEP }}
+                >
+                  Today&apos;s prize
+                </p>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/fitbit-air.webp"
                   alt={`${PRIZE_NAME} fitness band`}
-                  className="animate-symbol-drift relative z-10 mr-[1.2vw] h-[23vh] w-auto rotate-[8deg] object-contain drop-shadow-[0_14px_24px_rgba(74,26,0,0.45)]"
+                  className="animate-symbol-drift mt-[1.2vh] min-h-0 flex-1 rotate-[8deg] object-contain drop-shadow-[0_18px_28px_rgba(74,26,0,0.45)]"
                   style={{
-                    ["--drift-y" as string]: "-10px",
+                    ["--drift-y" as string]: "-12px",
                     ["--drift-x" as string]: "0px",
-                    ["--drift-tilt" as string]: "0deg",
-                    ["--drift-tilt-to" as string]: "0deg",
+                    ["--drift-tilt" as string]: "8deg",
+                    ["--drift-tilt-to" as string]: "8deg",
                     ["--drift-duration" as string]: "5s",
                   }}
                 />
+                <p className="mt-[1.4vh] text-[5.6vh] font-extrabold leading-none text-white">
+                  Win a {PRIZE_NAME}
+                </p>
+                <p className="mt-[1.2vh] text-[2.6vh] font-bold leading-none" style={{ color: "#ffe4cf" }}>
+                  Worth <span className="text-white">{PRIZE_VALUE}</span> · fastest mind takes
+                  it home
+                </p>
               </div>
-            </>
+
+              {/* Scan strip: label and QR side by side, still readable from afar. */}
+              <div className="relative z-10 m-[1.6vh] flex shrink-0 items-center gap-[1.2vw] rounded-[1vw] bg-white py-[1.4vh] pl-[1.6vw] pr-[1.4vh] shadow-card">
+                <div className="flex-1 text-left">
+                  <p className="text-[3.4vh] font-extrabold leading-[1.1] tracking-tight">
+                    Scan
+                    <br />
+                    to play
+                  </p>
+                  <p className="mt-[1.2vh] text-[1.9vh] font-bold" style={{ color: INK_SOFT }}>
+                    {leader ? (
+                      <>
+                        Time to beat{" "}
+                        <span className="tabular-nums" style={{ color: ORANGE_DEEP }}>
+                          {formatTime(leader.timeMs)}
+                        </span>
+                      </>
+                    ) : total > 0 ? (
+                      `${total} minds tested today`
+                    ) : (
+                      "Be the first today"
+                    )}
+                  </p>
+                </div>
+                <div
+                  className="rounded-[1.2vh] bg-white p-[1vh]"
+                  style={{ border: `2px solid ${CARD_LINE}` }}
+                >
+                  {playUrl && (
+                    <QRCodeSVG
+                      value={playUrl}
+                      className="h-[17vh] w-[17vh]"
+                      level="M"
+                      fgColor="#331200"
+                      bgColor="#ffffff"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
           )}
         </section>
       </div>
