@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 /**
  * Daylight sibling of ArenaShell for the event3 arc: warm cream radial
  * backdrop with the rotated yellow "pill" lines gliding along their diagonal
@@ -61,11 +63,24 @@ export function Event3Shell({
   sparkles = false,
   blobs = false,
 }: Event3ShellProps) {
+  // The arena screens are hard-locked to one viewport. h-dvh alone is not
+  // enough on mobile: the document keeps the taller large-viewport height
+  // (body min-h-screen = 100vh), so the page can still be dragged by the
+  // browser-chrome offset and a step can open mid-page. Pin the document
+  // itself for as long as an arena screen is mounted, and land at the top.
+  useEffect(() => {
+    const html = document.documentElement;
+    html.classList.add("event3-locked");
+    document.body.classList.add("event3-locked");
+    window.scrollTo(0, 0);
+    return () => {
+      html.classList.remove("event3-locked");
+      document.body.classList.remove("event3-locked");
+    };
+  }, []);
+
   return (
-    // h-dvh + overflow-hidden: the arena screens are hard-locked to one
-    // viewport (no scrolling from landing to result); their layouts compress
-    // via clamp()/flex instead of overflowing.
-    <main className="variant-event2 relative isolate flex h-dvh flex-col items-center overflow-hidden px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 text-charcoal tall:pb-[max(1.5rem,env(safe-area-inset-bottom))] tall:pt-6">
+    <main className="variant-event2 fixed inset-0 isolate flex flex-col items-center overflow-hidden px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] text-charcoal">
       <div
         aria-hidden
         className="event3-daylight pointer-events-none fixed inset-0 z-0 overflow-hidden"

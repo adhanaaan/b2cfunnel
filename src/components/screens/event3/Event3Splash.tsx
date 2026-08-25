@@ -21,8 +21,10 @@ const item = {
 
 /**
  * Event3 landing (Figma "01 Landing"): daylight cream backdrop with the
- * animated yellow pill lines, gradient hero words, the spinning brain the
- * user can grab, nickname + email capture, and the ember CTA.
+ * animated yellow pill lines, gradient hero words, the brain hero, nickname
+ * + email capture, and the ember CTA. Vertical rhythm is expressed in dvh so
+ * it holds the designed proportions on any phone - a height breakpoint would
+ * miss real mobile viewports (~700px once the browser chrome is showing).
  */
 export function Event3Splash({ onSubmit }: Event3SplashProps) {
   const c = COPY.screens.event3.splash;
@@ -45,7 +47,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
   };
 
   const inputClass =
-    "h-[50px] tall:h-[56px] w-full rounded-xl bg-white px-5 text-base text-charcoal placeholder:text-cream-faint shadow-[0_2px_12px_-4px_rgba(51,18,0,0.08)] outline-none transition focus:ring-4 focus:ring-ember-core/25";
+    "h-[clamp(48px,6.8dvh,58px)] w-full rounded-xl bg-white px-5 text-base text-charcoal placeholder:text-cream-faint shadow-[0_2px_12px_-4px_rgba(51,18,0,0.08)] outline-none transition focus:ring-4 focus:ring-ember-core/25";
 
   return (
     <Event3Shell pills>
@@ -60,25 +62,28 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
       >
         <motion.p
           variants={item}
-          className="mt-6 text-xs font-bold uppercase tracking-[0.22em] text-ember-core tall:mt-16"
+          className="mt-[7.5dvh] text-xs font-bold uppercase tracking-[0.22em] text-ember-core"
         >
           {c.eyebrow}
         </motion.p>
 
         <motion.h1
           variants={item}
-          className="mx-auto mt-3 max-w-sm text-[2rem] font-bold leading-[1.06] text-[#171717] tall:text-[2.3rem]"
+          className="mx-auto mt-3 max-w-sm text-[2.15rem] font-bold leading-[1.07] text-[#171717]"
         >
           <GradientWords text={c.heading} />
         </motion.h1>
 
-        <motion.div variants={item} className="mt-4 flex justify-center tall:mt-5">
-          <BrainHero className="h-[clamp(120px,18.5dvh,158px)] w-auto" />
+        <motion.div
+          variants={item}
+          className="mt-[2dvh] flex min-h-0 flex-1 items-center justify-center"
+        >
+          <BrainHero className="h-full max-h-[186px] w-auto" />
         </motion.div>
 
         <motion.p
           variants={item}
-          className="mx-auto mt-4 max-w-sm text-base leading-[1.55] text-[#171717] tall:mt-7 tall:text-lg"
+          className="mx-auto mt-[3dvh] max-w-sm text-[1.0625rem] leading-[1.5] text-[#171717]"
         >
           {c.body}
         </motion.p>
@@ -86,7 +91,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
         <motion.form
           variants={item}
           onSubmit={handleSubmit}
-          className="mt-5 space-y-2.5 text-left tall:mt-9 tall:space-y-3"
+          className="mt-[3.5dvh] space-y-2.5 text-left"
         >
           <input
             type="text"
@@ -124,7 +129,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
 
         <motion.div
           variants={item}
-          className="mt-auto flex flex-col items-center gap-2 pt-4 tall:gap-3"
+          className="mt-[3.2dvh] flex flex-col items-center gap-2"
         >
           <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-ember-core">
             {c.poweredBy}
@@ -133,7 +138,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
           <img
             src="/gms-ntu-logo.png"
             alt="Gray Matter Solutions - a spin-off from Nanyang Technological University, Singapore"
-            className="h-8 w-auto tall:h-10"
+            className="h-9 w-auto"
           />
         </motion.div>
       </motion.div>
