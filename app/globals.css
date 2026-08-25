@@ -231,6 +231,19 @@
       linear-gradient(180deg, #120c0a 0%, #1a1210 55%, #2a1006 100%);
   }
 
+  /* ---- Daylight Ember (event3 arena) ---- */
+
+  /* Warm cream radial anchored at the top-left corner (Figma: Defined/
+     Gradient/Peach Glow over Background/Vibrant). */
+  .event3-daylight {
+    background: radial-gradient(
+      140% 100% at 0% 0%,
+      #fae0c7 0%,
+      #fcf0e5 60%,
+      #fff7f2 100%
+    );
+  }
+
   /* The game board (ported from recognaizelite) is built for a light backdrop:
      white glass panels, purple keys, a white halo behind the main icon. It gets
      the brand gradient, matching the quiz screens and the document background. */
@@ -343,6 +356,43 @@
     animation: live-pulse 2s ease-in-out infinite;
   }
 
+  /* Event3 daylight backdrop: the rotated yellow pill lines glide slowly
+     along their own diagonal axis and breathe. transform-only, GPU-friendly. */
+  /* The rotation lives on a wrapper element so reduced-motion (animation:
+     none) still shows the pills at their designed 24deg tilt. */
+  @keyframes pill-drift {
+    0%,
+    100% {
+      transform: translateX(var(--pill-from, -14px));
+      opacity: var(--pill-opacity, 1);
+    }
+    50% {
+      transform: translateX(var(--pill-to, 14px));
+      opacity: calc(var(--pill-opacity, 1) * 0.82);
+    }
+  }
+  .animate-pill-drift {
+    animation: pill-drift var(--pill-duration, 9s) ease-in-out infinite;
+    animation-delay: var(--pill-delay, 0s);
+  }
+
+  /* Event3 sparkle glyphs: a soft twinkle. */
+  @keyframes sparkle-breathe {
+    0%,
+    100% {
+      opacity: var(--sparkle-min, 0.45);
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      opacity: var(--sparkle-max, 0.9);
+      transform: scale(1.12) rotate(8deg);
+    }
+  }
+  .animate-sparkle-breathe {
+    animation: sparkle-breathe var(--sparkle-duration, 5s) ease-in-out infinite;
+    animation-delay: var(--sparkle-delay, 0s);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .animate-crumb,
     .animate-fade-up,
@@ -351,7 +401,9 @@
     .animate-symbol-drift,
     .animate-glow-pulse,
     .animate-ember-burst,
-    .animate-live-pulse {
+    .animate-live-pulse,
+    .animate-pill-drift,
+    .animate-sparkle-breathe {
       animation: none;
     }
     .gauge-needle {

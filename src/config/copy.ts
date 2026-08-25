@@ -364,6 +364,60 @@ export const COPY: CopyConfig = {
         optInConfirmed: "You are on the list. Look out for our first note.",
       },
     },
+    event3: {
+      splash: {
+        eyebrow: "Reaction Time Challenge",
+        heading: "How *fast* does your *brain* process?",
+        body: "Take a quick symbol-matching test to find out your brain processing speed.",
+        namePlaceholder: "Nickname",
+        emailPlaceholder: "Your email",
+        cta: "Start the challenge",
+        poweredBy: "Powered by:",
+      },
+      instructions: {
+        heading: "Reaction Time Challenge",
+        subheading: "Match {count} symbols to its number as fast as you can.",
+        demoBadge: "DEMO · PLAYS ITSELF",
+        helper:
+          "The symbols swap places after every turn, so check the key each time.",
+        demoCta: "Demo round",
+        playCta: "Play",
+      },
+      gameResult: {
+        shareLabel: "Share",
+        retryLabel: "Retry",
+        headingPrefix: "You just tested your",
+        headingHighlight: "processing speed",
+        youLabel: "Your time",
+        rankLabel: "Your rank",
+        fastestLabel: "Fastest so far",
+        bridgeIntro: "Fast reflexes.",
+        bridgeQuestion: "But how do you score on your",
+        bridgeHighlight: "overall brain health?",
+        cta: "Free brain health quiz",
+        disclaimer:
+          "Reaction-time games are fun, but not a cognitive assessment.",
+      },
+      speedPopup: {
+        eyebrow: "What that actually means",
+        headingParts: [
+          "Processing speed is ",
+          "how fast",
+          " your brain ",
+          "takes in",
+          " what it sees and ",
+          "responds",
+          ".",
+        ],
+        intro: "With high processing speed, you can:",
+        points: [
+          "Keep up with fast-paced conversations",
+          "Adapt swiftly to changing environments",
+          "Add up the bill before the cashier finishes scanning",
+        ],
+        closeLabel: "Got it",
+      },
+    },
   },
 
   personas: {

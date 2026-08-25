@@ -194,11 +194,21 @@ const WOMAN_FLOW: FunnelStep[] = [
   { kind: "paywall" },
 ];
 
+/**
+ * Event v3 ("Daylight Ember", served at /event-v3). The Figma redesign only
+ * touches the arena screens (splash, instructions, post-game result) - the
+ * step sequence and question set are exactly EVENT2_FLOW, which keeps
+ * normalised scores and bands comparable with /event-v2 and all historical
+ * leads (see the achievableAxisMax note above).
+ */
+const EVENT3_FLOW: FunnelStep[] = EVENT2_FLOW;
+
 const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   full: FULL_FLOW,
   event: EVENT_FLOW,
   woman: WOMAN_FLOW,
   event2: EVENT2_FLOW,
+  event3: EVENT3_FLOW,
 };
 
 /** All question ids in a variant's flow (single questions + grouped pages). */

@@ -27,6 +27,9 @@ import { Event2Splash } from "@/components/screens/event2/Event2Splash";
 import { Event2Instructions } from "@/components/screens/event2/Event2Instructions";
 import { Event2GameResult } from "@/components/screens/event2/Event2GameResult";
 import { Event2Closing } from "@/components/screens/event2/Event2Closing";
+import { Event3Splash } from "@/components/screens/event3/Event3Splash";
+import { Event3Instructions } from "@/components/screens/event3/Event3Instructions";
+import { Event3GameResult } from "@/components/screens/event3/Event3GameResult";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
 import { BookingScreen } from "@/components/screens/BookingScreen";
 import { ConsultScreen } from "@/components/screens/ConsultScreen";
@@ -122,7 +125,10 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         name: state.name,
         email: state.email,
         timeMs,
-        source: state.variant === "event2" ? "event2" : "event",
+        source:
+          state.variant === "event2" || state.variant === "event3"
+            ? state.variant
+            : "event",
       }),
     }).catch(() => {});
     gameDone(timeMs);
@@ -149,16 +155,20 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "nameGate":
-      // Event2: the single email capture (leaderboard key + results address).
-      return state.variant === "event2" ? (
+      // Event2/3: the single email capture (leaderboard key + results address).
+      return state.variant === "event3" ? (
+        <Event3Splash onSubmit={submitEmail} />
+      ) : state.variant === "event2" ? (
         <Event2Splash onSubmit={submitEmail} />
       ) : (
         <NameGateScreen onSubmit={submitEmail} />
       );
 
-    case "instructions":
+    case "instructions": {
+      const InstructionsScreen =
+        state.variant === "event3" ? Event3Instructions : Event2Instructions;
       return (
-        <Event2Instructions
+        <InstructionsScreen
           onDemo={() => {
             // Make sure the guided tour runs even on a same-session replay.
             try {
@@ -178,6 +188,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           }}
         />
       );
+    }
 
     case "question": {
       const question = QUESTIONS_BY_ID[step.questionId];
@@ -237,15 +248,17 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         />
       ) : null;
 
-    case "game":
+    case "game": {
+      const ember = state.variant === "event2" || state.variant === "event3";
       return (
         <GameScreen
           onComplete={handleGameDone}
-          theme={state.variant === "event2" ? "warm" : "default"}
-          hideBack={state.variant === "event2"}
-          music={state.variant === "event2"}
+          theme={ember ? "warm" : "default"}
+          hideBack={ember}
+          music={ember}
         />
       );
+    }
 
     case "leaderboard":
       return (
@@ -267,6 +280,20 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       return <ConsultScreen />;
 
     case "gameResult":
+      if (state.variant === "event3") {
+        return (
+          <Event3GameResult
+            name={state.name}
+            email={state.email}
+            timeMs={state.gameTimeMs}
+            onContinue={next}
+            onRetake={() => {
+              track("game_retake", { variant: state.variant });
+              retakeGame();
+            }}
+          />
+        );
+      }
       return (
         <Event2GameResult
           name={state.name}

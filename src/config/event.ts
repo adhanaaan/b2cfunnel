@@ -12,3 +12,10 @@ export const EVENT_PAUSED = false;
  * without touching the other.
  */
 export const EVENT2_PAUSED = false;
+
+/**
+ * Independent pause switch for the v3 event (/event-v3). Same contract as
+ * EVENT2_PAUSED: the page shows an "ended" state and new game scores from the
+ * v3 funnel are rejected while this is `true`.
+ */
+export const EVENT3_PAUSED = false;
