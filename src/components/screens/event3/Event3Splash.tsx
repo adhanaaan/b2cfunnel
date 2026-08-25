@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { COPY } from "@/config/copy";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "./Event3Shell";
-import { SpinningBrain } from "./SpinningBrain";
+import { BrainHero } from "./BrainHero";
 import { GradientWords, ctaPrimaryClass } from "./ui";
 
 interface Event3SplashProps {
@@ -45,7 +45,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
   };
 
   const inputClass =
-    "h-[50px] tall:h-[58px] w-full rounded-xl bg-white px-5 text-base text-charcoal placeholder:text-cream-faint shadow-[0_2px_12px_-4px_rgba(51,18,0,0.08)] outline-none transition focus:ring-4 focus:ring-ember-core/25";
+    "h-[50px] tall:h-[56px] w-full rounded-xl bg-white px-5 text-base text-charcoal placeholder:text-cream-faint shadow-[0_2px_12px_-4px_rgba(51,18,0,0.08)] outline-none transition focus:ring-4 focus:ring-ember-core/25";
 
   return (
     <Event3Shell pills>
@@ -60,7 +60,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
       >
         <motion.p
           variants={item}
-          className="mt-2 text-xs font-bold uppercase tracking-[0.22em] text-ember-core tall:mt-6"
+          className="mt-6 text-xs font-bold uppercase tracking-[0.22em] text-ember-core tall:mt-16"
         >
           {c.eyebrow}
         </motion.p>
@@ -72,13 +72,13 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
           <GradientWords text={c.heading} />
         </motion.h1>
 
-        <motion.div variants={item} className="mt-2 flex justify-center">
-          <SpinningBrain className="h-[clamp(110px,20dvh,200px)] w-full max-w-[300px]" />
+        <motion.div variants={item} className="mt-4 flex justify-center tall:mt-5">
+          <BrainHero className="h-[clamp(120px,18.5dvh,158px)] w-auto" />
         </motion.div>
 
         <motion.p
           variants={item}
-          className="mx-auto mt-2 max-w-sm text-base leading-[1.55] text-[#171717] tall:text-lg"
+          className="mx-auto mt-4 max-w-sm text-base leading-[1.55] text-[#171717] tall:mt-7 tall:text-lg"
         >
           {c.body}
         </motion.p>
@@ -86,7 +86,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
         <motion.form
           variants={item}
           onSubmit={handleSubmit}
-          className="mt-4 space-y-2.5 text-left tall:mt-7 tall:space-y-3"
+          className="mt-5 space-y-2.5 text-left tall:mt-9 tall:space-y-3"
         >
           <input
             type="text"

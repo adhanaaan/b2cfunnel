@@ -8,7 +8,7 @@ import { formatTime } from "@/lib/format";
 import { generateResultCard, shareBlob } from "@/lib/shareCard";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "./Event3Shell";
-import { SpinningBrain } from "./SpinningBrain";
+import { BrainHero } from "./BrainHero";
 import { ProcessingSpeedPopup } from "./ProcessingSpeedPopup";
 import { QuestionCircleIcon, RetryIcon, ShareIcon } from "./icons";
 import { ctaInverseClass, emberLabelGradient, emberTextGradient } from "./ui";
@@ -293,11 +293,11 @@ export function Event3GameResult({
         </motion.div>
         </div>
 
-        {/* Bridge into the quiz, with the brain peeking over the card. The
-            asset carries its own Frontal Lobe label and sparkle. */}
+        {/* Bridge into the quiz, with the brain sitting in front of the
+            card's top edge. The asset carries its own label and sparkle. */}
         <motion.div variants={item} className="relative mt-3 pt-20 tall:pt-24">
-          <div className="pointer-events-auto absolute -right-1 bottom-[calc(100%-8.25rem)] z-0 h-[135px] w-[220px] tall:bottom-[calc(100%-9.5rem)] tall:h-[150px] tall:w-[240px]">
-            <SpinningBrain className="h-full w-full" />
+          <div className="pointer-events-none absolute -right-1 bottom-[calc(100%-8.25rem)] z-20 h-[135px] w-[220px] tall:bottom-[calc(100%-9.5rem)] tall:h-[150px] tall:w-[240px]">
+            <BrainHero className="h-full w-full" />
           </div>
 
           <div className="relative z-10 overflow-hidden rounded-2xl bg-gradient-to-b from-[#e8782e] via-[#f09452] to-[#ffbb88] px-5 pb-5 pt-6 shadow-[0_20px_50px_-20px_rgba(232,120,46,0.55)]">
@@ -314,9 +314,16 @@ export function Event3GameResult({
               onClick={onContinue}
               whileTap={reduced ? undefined : { scale: 0.97 }}
               transition={springs.pop}
-              className={`${ctaInverseClass} mt-6`}
+              className={`${ctaInverseClass} relative mt-6 overflow-hidden`}
             >
-              <span className={emberLabelGradient}>{c.cta} →</span>
+              <span className={`relative z-10 ${emberLabelGradient}`}>
+                {c.cta} →
+              </span>
+              {/* Shimmer sweep: a warm glint gliding across every ~2.6s. */}
+              <span
+                aria-hidden
+                className="animate-cta-shimmer pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-[rgba(247,117,40,0.22)] to-transparent"
+              />
             </motion.button>
           </div>
 

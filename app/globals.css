@@ -393,6 +393,21 @@
     animation-delay: var(--sparkle-delay, 0s);
   }
 
+  /* Event3 CTA shimmer: a glint sweeping across the button so it reads as
+     tappable. Applied to a gradient overlay strip inside the button. */
+  @keyframes cta-shimmer {
+    0% {
+      transform: translateX(-120%) skewX(-12deg);
+    }
+    55%,
+    100% {
+      transform: translateX(320%) skewX(-12deg);
+    }
+  }
+  .animate-cta-shimmer {
+    animation: cta-shimmer 2.6s ease-in-out infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .animate-crumb,
     .animate-fade-up,
@@ -403,7 +418,8 @@
     .animate-ember-burst,
     .animate-live-pulse,
     .animate-pill-drift,
-    .animate-sparkle-breathe {
+    .animate-sparkle-breathe,
+    .animate-cta-shimmer {
       animation: none;
     }
     .gauge-needle {
