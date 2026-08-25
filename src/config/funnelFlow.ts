@@ -195,13 +195,16 @@ const WOMAN_FLOW: FunnelStep[] = [
 ];
 
 /**
- * Event v3 ("Daylight Ember", served at /event-v3). The Figma redesign only
- * touches the arena screens (splash, instructions, post-game result) - the
- * step sequence and question set are exactly EVENT2_FLOW, which keeps
- * normalised scores and bands comparable with /event-v2 and all historical
- * leads (see the achievableAxisMax note above).
+ * Event v3 ("Daylight Ember", served at /event-v3). The redesign touches the
+ * arena screens (splash, instructions, post-game result) and drops the
+ * statistics interstitials from the quiz arc; the question set is exactly
+ * EVENT2_FLOW's, which is what keeps normalised scores and bands comparable
+ * with /event-v2 and all historical leads (achievableAxisMax only sums
+ * question steps - see the note above).
  */
-const EVENT3_FLOW: FunnelStep[] = EVENT2_FLOW;
+const EVENT3_FLOW: FunnelStep[] = EVENT2_FLOW.filter(
+  (step) => step.kind !== "statCard",
+);
 
 const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   full: FULL_FLOW,

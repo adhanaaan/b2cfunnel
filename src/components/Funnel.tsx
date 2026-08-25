@@ -72,6 +72,10 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     track("step_view", { variant: state.variant, step: stepName });
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      // Belt and braces: some mobile browsers scroll documentElement/body
+      // instead of the window - reset both so every step opens from the top.
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
     }
   }, [stepName, state.variant]);
 

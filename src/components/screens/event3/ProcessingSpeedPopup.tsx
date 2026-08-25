@@ -98,12 +98,12 @@ export function ProcessingSpeedPopup({ open, onClose }: ProcessingSpeedPopupProp
               {c.points.map((point, i) => (
                 <li
                   key={i}
-                  className="flex items-center gap-3.5 rounded-xl border border-white/25 bg-white/15 px-4 py-3.5"
+                  className="flex items-center gap-3.5 rounded-xl bg-[#fdfaf7] px-4 py-3.5 shadow-[0_2px_10px_-4px_rgba(122,46,12,0.35)]"
                 >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/25 text-[11px] font-bold text-white">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#f5e8dc] text-[11px] font-bold text-secondary">
                     {i + 1}
                   </span>
-                  <span className="text-[15px] leading-snug text-white">
+                  <span className="text-[15px] leading-snug text-charcoal">
                     {point}
                   </span>
                 </li>
