@@ -183,7 +183,7 @@ export function Event3GameResult({
       </div>
 
       <motion.div
-        className="flex min-h-[calc(100dvh-3.5rem)] flex-col"
+        className="flex h-full min-h-0 flex-col"
         variants={{
           hidden: {},
           show: { transition: { staggerChildren: reduced ? 0 : stagger.items } },
@@ -249,13 +249,13 @@ export function Event3GameResult({
           variants={item}
           type="button"
           onClick={skipCountUp}
-          className="mx-auto mt-7 cursor-default text-center"
+          className="mx-auto mt-5 cursor-default text-center tall:mt-7"
           aria-label={`${c.youLabel}: ${timeMs != null ? formatTime(timeMs) : "unavailable"}`}
         >
           <span className="block text-xs font-bold uppercase tracking-[0.22em] text-ember-core">
             {c.youLabel}
           </span>
-          <span className="block text-[70px] font-extrabold leading-[1.05] tabular-nums tracking-[-1.4px] text-[#171717] [text-shadow:0_0_50px_rgba(247,117,40,0.35)]">
+          <span className="block text-[clamp(52px,8.5dvh,70px)] font-extrabold leading-[1.05] tabular-nums tracking-[-1.4px] text-[#171717] [text-shadow:0_0_50px_rgba(247,117,40,0.35)]">
             {timeMs != null ? formatTime(display) : "-"}
           </span>
           <span
@@ -267,8 +267,8 @@ export function Event3GameResult({
         </motion.button>
 
         {/* Standing chips: your rank / fastest so far */}
-        <motion.div variants={item} className="mt-7 flex justify-between gap-3">
-          <div className="flex h-[88px] flex-1 flex-col items-center justify-center gap-0.5 rounded-xl bg-white/45 px-2 py-3 text-center backdrop-blur-[2px]">
+        <motion.div variants={item} className="mt-5 flex justify-between gap-3 tall:mt-7">
+          <div className="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-xl bg-white/45 px-2 py-2.5 text-center backdrop-blur-[2px] tall:py-3">
             <p className={`w-full text-[10px] font-bold uppercase tracking-[0.1em] ${emberLabelGradient}`}>
               {c.rankLabel}
             </p>
@@ -279,7 +279,7 @@ export function Event3GameResult({
               {name ?? " "}
             </p>
           </div>
-          <div className="flex h-[88px] flex-1 flex-col items-center justify-center gap-0.5 rounded-xl bg-white/45 px-2 py-3 text-center backdrop-blur-[2px]">
+          <div className="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-xl bg-white/45 px-2 py-2.5 text-center backdrop-blur-[2px] tall:py-3">
             <p className={`w-full text-[10px] font-bold uppercase tracking-[0.1em] ${emberLabelGradient}`}>
               {c.fastestLabel}
             </p>
@@ -293,16 +293,11 @@ export function Event3GameResult({
         </motion.div>
         </div>
 
-        {/* Bridge into the quiz, with the brain peeking over the card. */}
-        <motion.div variants={item} className="relative mt-4 pt-24">
-          <div className="pointer-events-auto absolute right-0 bottom-[calc(100%-9.5rem)] z-0 h-[160px] w-[200px]">
-            <SpinningBrain className="h-full w-full" glow />
-            <span
-              aria-hidden
-              className="absolute -left-9 top-[42%] rounded-lg bg-[#fdfaf7] px-2 py-1 text-[9px] font-semibold text-[#d97706] shadow-[0_2px_10px_-2px_rgba(51,18,0,0.25)]"
-            >
-              Frontal Lobe
-            </span>
+        {/* Bridge into the quiz, with the brain peeking over the card. The
+            asset carries its own Frontal Lobe label and sparkle. */}
+        <motion.div variants={item} className="relative mt-3 pt-20 tall:pt-24">
+          <div className="pointer-events-auto absolute -right-1 bottom-[calc(100%-8.25rem)] z-0 h-[135px] w-[220px] tall:bottom-[calc(100%-9.5rem)] tall:h-[150px] tall:w-[240px]">
+            <SpinningBrain className="h-full w-full" />
           </div>
 
           <div className="relative z-10 overflow-hidden rounded-2xl bg-gradient-to-b from-[#e8782e] via-[#f09452] to-[#ffbb88] px-5 pb-5 pt-6 shadow-[0_20px_50px_-20px_rgba(232,120,46,0.55)]">

@@ -62,7 +62,10 @@ export function Event3Shell({
   blobs = false,
 }: Event3ShellProps) {
   return (
-    <main className="variant-event2 relative isolate flex min-h-dvh flex-col items-center overflow-hidden px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 text-charcoal">
+    // h-dvh + overflow-hidden: the arena screens are hard-locked to one
+    // viewport (no scrolling from landing to result); their layouts compress
+    // via clamp()/flex instead of overflowing.
+    <main className="variant-event2 relative isolate flex h-dvh flex-col items-center overflow-hidden px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 text-charcoal tall:pb-[max(1.5rem,env(safe-area-inset-bottom))] tall:pt-6">
       <div
         aria-hidden
         className="event3-daylight pointer-events-none fixed inset-0 z-0 overflow-hidden"
@@ -111,7 +114,7 @@ export function Event3Shell({
           ))}
       </div>
 
-      <div className="relative z-10 flex w-full max-w-lg flex-1 flex-col">
+      <div className="relative z-10 flex min-h-0 w-full max-w-lg flex-1 flex-col">
         {children}
       </div>
     </main>

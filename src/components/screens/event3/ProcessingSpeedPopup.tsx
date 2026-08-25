@@ -12,9 +12,9 @@ interface ProcessingSpeedPopupProps {
 
 /**
  * The "?" popup on the event3 result: what processing speed actually means.
- * A night-toned card (the design system's ember-night surface) over the
- * daylight page, with the serif-italic / bold-sans mixed heading and the
- * three "with high processing speed" rows.
+ * A gradient-peach card (the design system's vibrant ember-to-peach ramp,
+ * as on the bridge card) with the serif-italic / bold-sans mixed heading
+ * and the three "with high processing speed" rows.
  */
 export function ProcessingSpeedPopup({ open, onClose }: ProcessingSpeedPopupProps) {
   const c = COPY.screens.event3.speedPopup;
@@ -44,14 +44,14 @@ export function ProcessingSpeedPopup({ open, onClose }: ProcessingSpeedPopupProp
             type="button"
             aria-label={c.closeLabel}
             onClick={onClose}
-            className="absolute inset-0 bg-night-ink/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-night-ink/40 backdrop-blur-sm"
           />
 
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-labelledby="speed-popup-heading"
-            className="relative w-full max-w-sm overflow-hidden rounded-2xl bg-gradient-to-b from-[#4b2513] via-[#331709] to-[#210e06] px-6 pb-7 pt-8 text-left shadow-[0_24px_80px_-16px_rgba(26,14,8,0.8)]"
+            className="relative w-full max-w-sm overflow-hidden rounded-2xl bg-gradient-to-b from-[#e8782e] via-[#f09452] to-[#ffbb88] px-6 pb-7 pt-8 text-left shadow-[0_24px_80px_-16px_rgba(122,46,12,0.55)]"
             initial={reduced ? false : { opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduced ? undefined : { opacity: 0, y: 16, scale: 0.97 }}
@@ -61,14 +61,14 @@ export function ProcessingSpeedPopup({ open, onClose }: ProcessingSpeedPopupProp
               type="button"
               onClick={onClose}
               aria-label={c.closeLabel}
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-cream-dim transition hover:bg-white/10 hover:text-cream"
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-cream/90 transition hover:bg-white/20 hover:text-white"
             >
               <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
                 <path d="M5 5l10 10M15 5L5 15" />
               </svg>
             </button>
 
-            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-cream-dim">
+            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-cream/90">
               {c.eyebrow}
             </p>
 
@@ -80,7 +80,7 @@ export function ProcessingSpeedPopup({ open, onClose }: ProcessingSpeedPopupProp
                 i % 2 === 1 ? (
                   <em
                     key={i}
-                    className="font-serif text-[1.9rem] font-medium italic text-cream"
+                    className="font-serif text-[1.9rem] font-medium italic text-[#fff4ec]"
                   >
                     {part}
                   </em>
@@ -90,7 +90,7 @@ export function ProcessingSpeedPopup({ open, onClose }: ProcessingSpeedPopupProp
               )}
             </h2>
 
-            <p className="mt-6 text-[15px] leading-relaxed text-cream-dim">
+            <p className="mt-6 text-[15px] leading-relaxed text-cream/95">
               {c.intro}
             </p>
 
@@ -98,12 +98,12 @@ export function ProcessingSpeedPopup({ open, onClose }: ProcessingSpeedPopupProp
               {c.points.map((point, i) => (
                 <li
                   key={i}
-                  className="flex items-center gap-3.5 rounded-xl border border-white/10 bg-white/[0.06] px-4 py-3.5"
+                  className="flex items-center gap-3.5 rounded-xl border border-white/25 bg-white/15 px-4 py-3.5"
                 >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-[11px] font-bold text-cream-dim">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/25 text-[11px] font-bold text-white">
                     {i + 1}
                   </span>
-                  <span className="text-[15px] leading-snug text-cream">
+                  <span className="text-[15px] leading-snug text-white">
                     {point}
                   </span>
                 </li>
