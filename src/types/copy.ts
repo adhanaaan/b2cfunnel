@@ -222,6 +222,53 @@ export interface Event2Copy {
   };
 }
 
+// Event v3 ("Daylight Ember", /event-v3). Redesigned arena screens only;
+// the game, quiz arc, report and closing reuse the event2 copy.
+export interface Event3Copy {
+  splash: {
+    eyebrow: string;
+    // Hero words wrapped in *asterisks* render with the warm ember gradient.
+    heading: string;
+    body: string;
+    namePlaceholder: string;
+    emailPlaceholder: string;
+    cta: string;
+    poweredBy: string;
+  };
+  instructions: {
+    heading: string;
+    // Rendered with the {count} bolded inline.
+    subheading: string;
+    demoBadge: string;
+    helper: string;
+    demoCta: string; // runs the guided in-game tour
+    playCta: string; // straight to the countdown
+  };
+  gameResult: {
+    shareLabel: string;
+    retryLabel: string;
+    headingPrefix: string;
+    headingHighlight: string; // gradient words, carries the "?" popup trigger
+    youLabel: string;
+    rankLabel: string;
+    fastestLabel: string;
+    bridgeIntro: string;
+    bridgeQuestion: string;
+    bridgeHighlight: string;
+    cta: string;
+    disclaimer: string;
+  };
+  // The "?" popup: what processing speed actually means.
+  speedPopup: {
+    eyebrow: string;
+    // Heading fragments alternate plain/emphasised, starting plain.
+    headingParts: string[];
+    intro: string;
+    points: string[];
+    closeLabel: string;
+  };
+}
+
 export interface FaqItem {
   q: string;
   a: string;
@@ -293,6 +340,7 @@ export interface ScreenCopy {
   eventHook: EventHookCopy;
   consult: ConsultCopy;
   event2: Event2Copy;
+  event3: Event3Copy;
 }
 
 // What changes per persona on the result screen: the score blurb (per band) and

@@ -16,11 +16,22 @@ export const useVariant = () => useContext(VariantContext);
 /** Convenience flag for the premium event theme. */
 export const useIsEvent = () => useContext(VariantContext) === "event";
 
-/** Convenience flag for the v2 event ("Ember Arena") experience. */
-export const useIsEvent2 = () => useContext(VariantContext) === "event2";
+/**
+ * Convenience flag for the v2-style event experience. Event v3 only redesigns
+ * the arena screens (splash, instructions, post-game result); everything
+ * downstream - the quiz arc, report and closing - is intentionally identical
+ * to v2, so v3 shares this flag.
+ */
+export const useIsEvent2 = () => {
+  const variant = useContext(VariantContext);
+  return variant === "event2" || variant === "event3";
+};
 
-/** True for either event variant - shared booth behaviour (no paywall etc.). */
+/** Convenience flag for the v3 event ("Daylight Ember") arena screens. */
+export const useIsEvent3 = () => useContext(VariantContext) === "event3";
+
+/** True for any event variant - shared booth behaviour (no paywall etc.). */
 export const useIsEventFamily = () => {
   const variant = useContext(VariantContext);
-  return variant === "event" || variant === "event2";
+  return variant === "event" || variant === "event2" || variant === "event3";
 };

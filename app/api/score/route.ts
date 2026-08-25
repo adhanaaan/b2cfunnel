@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { submitScore } from "@/lib/supabase/game";
-import { EVENT_PAUSED, EVENT2_PAUSED } from "@/config/event";
+import { EVENT_PAUSED, EVENT2_PAUSED, EVENT3_PAUSED } from "@/config/event";
 
 export const runtime = "nodejs";
 
@@ -24,7 +24,12 @@ export async function POST(req: Request) {
 
   // Per-source pause: accept the request but don't record new scores, so
   // pausing one event never silently drops the other's results.
-  const paused = payload.source === "event2" ? EVENT2_PAUSED : EVENT_PAUSED;
+  const paused =
+    payload.source === "event3"
+      ? EVENT3_PAUSED
+      : payload.source === "event2"
+        ? EVENT2_PAUSED
+        : EVENT_PAUSED;
   if (paused) {
     return NextResponse.json({ ok: true, stored: false });
   }
