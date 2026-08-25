@@ -3,19 +3,20 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { springs } from "@/lib/motion";
-import { MoonSymbol, StarSymbol, SunSymbol, TappingHand } from "./DemoSymbols";
+import { TappingHand } from "./DemoSymbols";
 
 /**
  * The self-playing demo on the event3 instructions screen: an endless
  * GIF-like loop showing a real round in real time. A symbol appears, its
  * legend slot lights up, the hand slides to the matching key and taps it -
- * then the next round. The scripted answers are 0, 2, 1.
+ * then the next round. The scripted answers are 0, 2, 1, and the symbols
+ * are the real game's assets so the demo looks exactly like play.
  */
 
 const LEGEND = [
-  { digit: 0, Symbol: SunSymbol },
-  { digit: 1, Symbol: MoonSymbol },
-  { digit: 2, Symbol: StarSymbol },
+  { digit: 0, src: "/images/task-2/sun.png" },
+  { digit: 1, src: "/images/task-2/moon.png" },
+  { digit: 2, src: "/images/task-2/star.png" },
 ] as const;
 
 /** Scripted correct answers, one per round, looping. */
@@ -61,7 +62,7 @@ export function AutoPlayDemo({ badge }: { badge: string }) {
   const answer = reduced ? 0 : ROUNDS[round];
   const highlighted = reduced || phase !== "prompt";
   const pressed = reduced || phase === "press";
-  const Prompt = LEGEND[answer].Symbol;
+  const promptSrc = LEGEND[answer].src;
 
   return (
     <div className="w-full max-w-[320px]">
@@ -72,25 +73,25 @@ export function AutoPlayDemo({ badge }: { badge: string }) {
         </span>
       </div>
 
-      {/* Prompt symbol */}
-      <div className="mt-3.5 flex h-[96px] items-center justify-center">
+      {/* Prompt symbol (real game asset) */}
+      <div className="mt-3.5 flex h-[clamp(60px,10dvh,96px)] items-center justify-center">
         <AnimatePresence mode="wait" initial={false}>
-          <motion.div
+          <motion.img
             key={`prompt-${round}`}
+            src={promptSrc}
+            alt=""
             initial={reduced ? false : { scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={reduced ? undefined : { scale: 0.7, opacity: 0 }}
             transition={springs.pop}
-            className="h-[96px] w-[96px]"
-          >
-            <Prompt className="h-full w-full" />
-          </motion.div>
+            className="h-full w-auto"
+          />
         </AnimatePresence>
       </div>
 
       {/* Legend card: digit above symbol, answer slot highlighted */}
       <div className="mt-3 flex h-[86px] items-center justify-between rounded-2xl border border-[#f1e2d5] bg-white px-2.5 shadow-[0_2px_12px_-6px_rgba(51,18,0,0.1)]">
-        {LEGEND.map(({ digit, Symbol }) => {
+        {LEGEND.map(({ digit, src }) => {
           const active = highlighted && digit === answer;
           return (
             <div
@@ -105,7 +106,8 @@ export function AutoPlayDemo({ badge }: { badge: string }) {
               <span className="text-[13px] font-bold leading-4 text-charcoal">
                 {digit}
               </span>
-              <Symbol className="h-[30px] w-[30px]" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={src} alt="" className="h-[30px] w-[30px] object-contain" />
             </div>
           );
         })}

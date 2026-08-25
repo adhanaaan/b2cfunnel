@@ -45,12 +45,12 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
   };
 
   const inputClass =
-    "h-[58px] w-full rounded-xl bg-white px-5 text-base text-charcoal placeholder:text-cream-faint shadow-[0_2px_12px_-4px_rgba(51,18,0,0.08)] outline-none transition focus:ring-4 focus:ring-ember-core/25";
+    "h-[50px] tall:h-[58px] w-full rounded-xl bg-white px-5 text-base text-charcoal placeholder:text-cream-faint shadow-[0_2px_12px_-4px_rgba(51,18,0,0.08)] outline-none transition focus:ring-4 focus:ring-ember-core/25";
 
   return (
     <Event3Shell pills>
       <motion.div
-        className="flex min-h-[calc(100dvh-3.5rem)] flex-col text-center"
+        className="flex h-full min-h-0 flex-col text-center"
         variants={{
           hidden: {},
           show: { transition: { staggerChildren: reduced ? 0 : stagger.items } },
@@ -60,25 +60,25 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
       >
         <motion.p
           variants={item}
-          className="mt-6 text-xs font-bold uppercase tracking-[0.22em] text-ember-core"
+          className="mt-2 text-xs font-bold uppercase tracking-[0.22em] text-ember-core tall:mt-6"
         >
           {c.eyebrow}
         </motion.p>
 
         <motion.h1
           variants={item}
-          className="mx-auto mt-3 max-w-sm text-[2.3rem] font-bold leading-[1.06] text-[#171717]"
+          className="mx-auto mt-3 max-w-sm text-[2rem] font-bold leading-[1.06] text-[#171717] tall:text-[2.3rem]"
         >
           <GradientWords text={c.heading} />
         </motion.h1>
 
         <motion.div variants={item} className="mt-2 flex justify-center">
-          <SpinningBrain className="h-[200px] w-[250px]" />
+          <SpinningBrain className="h-[clamp(110px,20dvh,200px)] w-full max-w-[300px]" />
         </motion.div>
 
         <motion.p
           variants={item}
-          className="mx-auto mt-2 max-w-sm text-lg leading-[1.6] text-[#171717]"
+          className="mx-auto mt-2 max-w-sm text-base leading-[1.55] text-[#171717] tall:text-lg"
         >
           {c.body}
         </motion.p>
@@ -86,7 +86,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
         <motion.form
           variants={item}
           onSubmit={handleSubmit}
-          className="mt-8 space-y-3 text-left"
+          className="mt-4 space-y-2.5 text-left tall:mt-7 tall:space-y-3"
         >
           <input
             type="text"
@@ -124,7 +124,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
 
         <motion.div
           variants={item}
-          className="mt-auto flex flex-col items-center gap-3 pt-8"
+          className="mt-auto flex flex-col items-center gap-2 pt-4 tall:gap-3"
         >
           <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-ember-core">
             {c.poweredBy}
@@ -133,7 +133,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
           <img
             src="/gms-ntu-logo.png"
             alt="Gray Matter Solutions - a spin-off from Nanyang Technological University, Singapore"
-            className="h-10 w-auto"
+            className="h-8 w-auto tall:h-10"
           />
         </motion.div>
       </motion.div>

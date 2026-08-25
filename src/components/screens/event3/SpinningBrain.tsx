@@ -7,7 +7,9 @@ import {
   useMotionValue,
   useReducedMotion,
 } from "framer-motion";
-import { BrainArt } from "./BrainArt";
+
+/** The exported design asset: glowing frontal lobe, sparkle and label baked in. */
+const BRAIN_SRC = "/images/event3/brain.webp";
 
 /** Cruise speed of the idle spin, degrees per second. Slow, showroom-like. */
 const BASE_SPEED = 24;
@@ -25,14 +27,7 @@ const clamp = (v: number, lo: number, hi: number) =>
  * momentum, easing back to the cruise speed (keeping the flung direction).
  * Honours prefers-reduced-motion by rendering the brain static.
  */
-export function SpinningBrain({
-  className = "",
-  glow = true,
-}: {
-  className?: string;
-  /** The sparkle badge floating on the lit hemisphere. */
-  glow?: boolean;
-}) {
+export function SpinningBrain({ className = "" }: { className?: string }) {
   const reduced = useReducedMotion();
   const rotateY = useMotionValue(0);
   const velocity = useRef(BASE_SPEED);
@@ -87,22 +82,17 @@ export function SpinningBrain({
       aria-label="A warm 3D brain, slowly spinning. Drag to spin it yourself."
     >
       <motion.div
-        className="cursor-grab active:cursor-grabbing"
+        className="h-full w-full cursor-grab active:cursor-grabbing"
         style={{ rotateY, transformStyle: "preserve-3d" }}
       >
-        <BrainArt className="h-full w-full" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={BRAIN_SRC}
+          alt=""
+          draggable={false}
+          className="pointer-events-none h-full w-full select-none object-contain"
+        />
       </motion.div>
-
-      {glow && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-[24%] top-[8%] flex h-[44%] max-h-[90px] w-auto aspect-square items-center justify-center rounded-full bg-[radial-gradient(circle_at_25%_25%,rgba(245,158,10,0.25),rgba(255,235,87,0.06))] shadow-[0px_0px_54px_0px_#fbe28c]"
-        >
-          <span className="text-[2rem] font-bold leading-none text-white [text-shadow:0_0_18px_rgba(255,226,140,0.9)]">
-            ✦
-          </span>
-        </div>
-      )}
     </div>
   );
 }

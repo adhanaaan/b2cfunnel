@@ -43,7 +43,7 @@ export function Event3Instructions({ onDemo, onSkip }: Event3InstructionsProps) 
   return (
     <Event3Shell pills={false} blobs>
       <motion.div
-        className="flex min-h-[calc(100dvh-3.5rem)] flex-col items-center text-center"
+        className="flex h-full min-h-0 flex-col items-center text-center"
         variants={{
           hidden: {},
           show: { transition: { staggerChildren: reduced ? 0 : stagger.items } },
@@ -54,27 +54,27 @@ export function Event3Instructions({ onDemo, onSkip }: Event3InstructionsProps) 
         <div className="flex flex-1 flex-col items-center justify-center">
         <motion.h1
           variants={item}
-          className="max-w-sm text-[2.3rem] font-bold leading-[1.06] text-[#171717]"
+          className="max-w-sm text-[2rem] font-bold leading-[1.06] text-[#171717] tall:text-[2.3rem]"
         >
           {c.heading}
         </motion.h1>
 
         <motion.p
           variants={item}
-          className="mt-4 text-[14.5px] leading-normal text-secondary"
+          className="mt-3 text-[14.5px] leading-normal text-secondary tall:mt-4"
         >
           {subBefore}
           <strong className="font-bold">20</strong>
           {subAfter}
         </motion.p>
 
-        <motion.div variants={item} className="mt-6 flex w-full justify-center">
+        <motion.div variants={item} className="mt-4 flex w-full justify-center tall:mt-6">
           <AutoPlayDemo badge={c.demoBadge} />
         </motion.div>
 
         <motion.p
           variants={item}
-          className="mx-auto mt-4 max-w-[300px] text-[12.5px] leading-normal text-outline"
+          className="mx-auto mt-3 max-w-[300px] text-[12.5px] leading-normal text-outline tall:mt-4"
         >
           {c.helper}
         </motion.p>
