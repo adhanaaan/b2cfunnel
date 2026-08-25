@@ -10,11 +10,11 @@ export const emberLabelGradient =
 
 /** Primary CTA: ember gradient fill (Figma Button/Ember CTA, pressed = 97%). */
 export const ctaPrimaryClass =
-  "flex h-[54px] tall:h-[60px] w-full items-center justify-center rounded-xl bg-gradient-to-r from-ember-core to-ember-bright px-6 text-lg font-extrabold text-[#fafafa] shadow-[0_12px_40px_-12px_rgba(247,117,40,0.55)] transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-core";
+  "flex h-[clamp(52px,7.2dvh,60px)] w-full items-center justify-center rounded-xl bg-gradient-to-r from-ember-core to-ember-bright px-6 text-lg font-extrabold text-[#fafafa] shadow-[0_12px_40px_-12px_rgba(247,117,40,0.55)] transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-core";
 
 /** Inverse CTA: white fill with the gradient label. */
 export const ctaInverseClass =
-  "flex h-[54px] tall:h-[60px] w-full items-center justify-center rounded-xl bg-white px-6 text-lg font-extrabold shadow-[0_12px_40px_-12px_rgba(247,117,40,0.35)] transition hover:brightness-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-core";
+  "flex h-[clamp(52px,7.2dvh,60px)] w-full items-center justify-center rounded-xl bg-white px-6 text-lg font-extrabold shadow-[0_12px_40px_-12px_rgba(247,117,40,0.35)] transition hover:brightness-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-core";
 
 /**
  * Renders copy where words wrapped in *asterisks* take the warm ember

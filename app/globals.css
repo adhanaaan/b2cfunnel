@@ -244,6 +244,22 @@
     );
   }
 
+  /* While an event3 arena screen is mounted the document itself is pinned, so
+     the page can never be dragged by the mobile browser-chrome offset (body
+     carries min-h-screen = 100vh, which is taller than the visible dvh) and a
+     new step always opens at the top. */
+  html.event3-locked {
+    overflow: hidden;
+    height: 100%;
+  }
+  body.event3-locked {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
   /* The game board (ported from recognaizelite) is built for a light backdrop:
      white glass panels, purple keys, a white halo behind the main icon. It gets
      the brand gradient, matching the quiz screens and the document background. */
