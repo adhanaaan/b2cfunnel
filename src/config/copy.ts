@@ -68,7 +68,7 @@ export const COPY: CopyConfig = {
       body: "A quick symbol-matching challenge, inspired by the tasks researchers use to study processing speed. See how you do, then explore your full brain health profile, built with NTU's Dementia Research Centre.",
       placeholder: "Your name",
       emailPlaceholder: "Your email",
-      emailNote: "Your email logs your result on the live leaderboard. Fastest processing speed of the night claims a $50 Grab voucher.",
+      emailNote: "Your email logs your result on the live leaderboard. Fastest processing speed of the day claims a $50 Grab voucher.",
       cta: "Start the challenge →",
     },
     emailGate: {
@@ -280,7 +280,7 @@ export const COPY: CopyConfig = {
         namePlaceholder: "Your name",
         emailPlaceholder: "Your email",
         emailNote:
-          "One email is all we need. It puts you on the live leaderboard and is where your results go. Fastest time of the night wins a $50 Grab voucher.",
+          "One email is all we need. It puts you on the live leaderboard and is where your results go. Fastest time of the day wins a $50 Grab voucher.",
         cta: "Start the challenge",
       },
       instructions: {
@@ -302,7 +302,7 @@ export const COPY: CopyConfig = {
         fastestLabel: "Fastest so far",
         rankLabel: "Your rank",
         playersLabel: "Players",
-        topPercent: "Top {pct}% tonight",
+        topPercent: "Top {pct}% today",
         explainer:
           "Processing speed is how fast your brain takes in what it sees and responds.",
         shareCta: "Share my time",
@@ -325,11 +325,11 @@ export const COPY: CopyConfig = {
       closing: {
         eyebrow: "Your next step",
         heading: "Ready for the full picture?",
-        body: "Your Brain Health Score and recommendations are on their way to your inbox. Tonight's quiz estimates your risk profile; the ReCOGnAIze assessment shows how your brain is actually performing.",
+        body: "Your Brain Health Score and recommendations are on their way to your inbox. Today's quiz estimates your risk profile; the ReCOGnAIze assessment shows how your brain is actually performing.",
         bodyNoQuiz:
           "Thanks for playing. Reaction speed is one small window into the brain; the ReCOGnAIze assessment shows how yours is actually performing.",
         reassurance:
-          "Whatever your score tonight, most of the factors behind it can change. That is the point of checking early.",
+          "Whatever your score today, most of the factors behind it can change. That is the point of checking early.",
         offerName: "ReCOGnAIze brain health assessment",
         offerPoints: [
           "Developed at NTU's Dementia Research Centre",

@@ -12,7 +12,7 @@ interface Entry {
 
 const TOP_N = 10;
 const PRIZE = "$50 Grab Voucher";
-const PRIZE_VALUE = "Awarded live tonight";
+const PRIZE_VALUE = "Awarded live today";
 const HOW_TO_WIN = [
   "Scan the code",
   "Match 20 symbols, fast",
@@ -187,7 +187,7 @@ export default function LeaderboardBoard() {
               className="mt-[1.8vh] font-semibold text-[2.4vh]"
               style={{ color: C.textVar }}
             >
-              The single fastest processing speed of the night takes it.
+              The single fastest processing speed of the day takes it.
             </p>
           </div>
 

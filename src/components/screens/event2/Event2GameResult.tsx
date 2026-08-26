@@ -307,7 +307,7 @@ export function Event2GameResult({
             <p className="font-display text-2xl font-extrabold tabular-nums text-cream">
               {standing.total ?? "-"}
             </p>
-            <p className="mt-0.5 text-[11px] font-semibold text-cream-dim">tonight</p>
+            <p className="mt-0.5 text-[11px] font-semibold text-cream-dim">today</p>
           </div>
         </motion.div>
 
