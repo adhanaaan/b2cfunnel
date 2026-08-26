@@ -213,7 +213,7 @@ export default function LeaderboardV2Board() {
               Reaction Time Challenge
             </p>
             <h1 className="font-serif text-[5.6vh] font-semibold leading-none" style={{ color: CREAM }}>
-              The Fastest Minds Tonight
+              The Fastest Minds Today
             </h1>
           </div>
         </div>
@@ -347,7 +347,7 @@ export default function LeaderboardV2Board() {
                 The challenge has ended
               </p>
               <p className="mt-[2vh] text-[2.4vh] font-semibold" style={{ color: CREAM_DIM }}>
-                {total > 0 ? `${total} minds tested tonight` : "Thanks for playing"}
+                {total > 0 ? `${total} minds tested today` : "Thanks for playing"}
               </p>
             </div>
           ) : (
@@ -388,12 +388,12 @@ export default function LeaderboardV2Board() {
                   {PRIZE}
                 </p>
                 <p className="text-[1.9vh] font-semibold" style={{ color: CREAM_DIM }}>
-                  Fastest mind of the night takes it
+                  Fastest mind of the day takes it
                 </p>
               </div>
 
               <p className="mt-[1.6vh] text-[2.2vh] font-bold" style={{ color: CREAM_DIM }}>
-                {total > 0 ? `${total} minds tested tonight` : "Be the first tonight"}
+                {total > 0 ? `${total} minds tested today` : "Be the first today"}
               </p>
             </>
           )}
