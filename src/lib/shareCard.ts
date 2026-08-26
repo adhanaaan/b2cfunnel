@@ -387,8 +387,8 @@ function drawDaylightCard(
   ctx.roundRect(W / 2 - 110, 596, 220, 10, 5);
   ctx.fill();
 
-  // Stat card: rank / symbols.
-  const cw = 760;
+  // Stat card: the player's rank.
+  const cw = 520;
   const ch = 150;
   const cx = (W - cw) / 2;
   const cy = 660;
@@ -405,34 +405,24 @@ function drawDaylightCard(
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  const colA = cx + cw * 0.27;
-  const colB = cx + cw * 0.73;
   ctx.fillStyle = "#f16d39";
   ctx.font = `700 22px ${jakarta}`;
   ctx.letterSpacing = "3px";
-  ctx.fillText("YOUR RANK", colA, cy + 56);
-  ctx.fillText("SYMBOLS", colB, cy + 56);
+  ctx.fillText("YOUR RANK", W / 2, cy + 56);
   ctx.letterSpacing = "0px";
   ctx.fillStyle = "#171717";
   ctx.font = `800 52px ${jakarta}`;
   ctx.fillText(
     opts.rank && opts.total ? `#${opts.rank} / ${opts.total}` : "-",
-    colA,
+    W / 2,
     cy + 114,
   );
-  ctx.fillText("20", colB, cy + 114);
-  ctx.strokeStyle = "rgba(125,87,71,0.22)";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(cx + cw / 2, cy + 34);
-  ctx.lineTo(cx + cw / 2, cy + ch - 34);
-  ctx.stroke();
 
   // Ember bridge block: the dare, the QR and the link.
   const bw = 880;
   const bx = (W - bw) / 2;
   const by = 850;
-  const bh = 425;
+  const bh = 400;
   const ember = ctx.createLinearGradient(0, by, 0, by + bh);
   ember.addColorStop(0, "#e8782e");
   ember.addColorStop(0.5, "#f09452");
@@ -455,11 +445,7 @@ function drawDaylightCard(
   ctx.fillText("Try it for yourself here:", W / 2, by + 124);
 
   // Drawn at the QR canvas's own 190px so the modules stay pixel-crisp.
-  drawQr(ctx, opts.qrCanvas, W / 2, by + 252, 190);
-
-  ctx.fillStyle = "#fff4ec";
-  ctx.font = `700 30px ${jakarta}`;
-  ctx.fillText(opts.url.replace(/^https?:\/\//, ""), W / 2, by + 382);
+  drawQr(ctx, opts.qrCanvas, W / 2, by + 248, 190);
 
   ctx.fillStyle = "#a98d80";
   ctx.font = `500 24px ${jakarta}`;

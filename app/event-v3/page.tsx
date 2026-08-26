@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Reaction Time Challenge",
     description:
-      "How fast does your brain process? A 60-second symbol-matching test, backed by NTU's Dementia Research Centre.",
+      "How fast does your brain process? A 60-second symbol-matching test.",
     images: ["/og-event-v3.png"],
   },
 };
