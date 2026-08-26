@@ -65,7 +65,7 @@ function ConsentCheckbox({
 
 /**
  * Event3 landing (Figma "01 Landing"): daylight cream backdrop with the
- * animated yellow pill lines, gradient hero words, the brain hero, nickname
+ * animated yellow pill lines, gradient hero words, the brain hero, name
  * + email capture, and the ember CTA. Vertical rhythm is expressed in dvh so
  * it holds the designed proportions on any phone - a height breakpoint would
  * miss real mobile viewports (~700px once the browser chrome is showing).
@@ -82,7 +82,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim().length === 0) {
-      setError("Please enter a nickname.");
+      setError("Please enter your name.");
       return;
     }
     if (!EMAIL_RE.test(email.trim())) {
@@ -162,11 +162,11 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
         >
           <input
             type="text"
-            autoComplete="nickname"
+            autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={c.namePlaceholder}
-            aria-label="Nickname"
+            aria-label="Name"
             className={inputClass}
           />
           <input

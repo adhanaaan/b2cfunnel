@@ -41,11 +41,11 @@ const SECTIONS: Section[] = [
         table: [
           [
             "What you type in",
-            "A nickname and an email address, plus the consent choices you make on the first screen.",
+            "Your name and an email address, plus the consent choices you make on the first screen.",
           ],
           [
             "How you played",
-            "Your reaction-time result, your best time, and your position on the leaderboard. Your nickname and time are shown on the leaderboard for other players at the event to see.",
+            "Your reaction-time result, your best time, and your position on the leaderboard. Your name and time are shown on the leaderboard for other players at the event to see.",
           ],
           [
             "Your quiz answers (optional)",
@@ -71,7 +71,7 @@ const SECTIONS: Section[] = [
       {
         list: [
           "To show you your reaction time and, if you take it, your Brain Health Score.",
-          "To place you on the event leaderboard, using your nickname and your time.",
+          "To place you on the event leaderboard, using your name and your time.",
           "To email you your results and the recommendations that go with them.",
           "To contact you if you win the prize.",
           "To answer you if you write to us.",
@@ -120,7 +120,7 @@ const SECTIONS: Section[] = [
       {
         table: [
           ["Leaderboard entries and game times", `Kept for ${PRIVACY.retention.leaderboard}.`],
-          ["Your nickname, email and quiz answers", `Kept for ${PRIVACY.retention.contact}.`],
+          ["Your name, email and quiz answers", `Kept for ${PRIVACY.retention.contact}.`],
           ["Anonymised, aggregate statistics", `Kept ${PRIVACY.retention.aggregates}.`],
         ],
       },

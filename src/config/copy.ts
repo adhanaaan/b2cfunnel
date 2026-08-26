@@ -369,7 +369,7 @@ export const COPY: CopyConfig = {
         eyebrow: "Reaction Time Challenge",
         heading: "How *fast* does your *brain* process?",
         body: "Take a quick symbol-matching test to find out your brain processing speed.",
-        namePlaceholder: "Nickname",
+        namePlaceholder: "Name",
         emailPlaceholder: "Your email",
         consentRequired:
           "(Required) I agree to be contacted about my results and prize.",
