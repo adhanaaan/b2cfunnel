@@ -161,7 +161,7 @@ const SECTIONS: Section[] = [
   {
     heading: "13. How to contact us",
     blocks: [
-      `For anything about your personal data, including access, correction, deletion or withdrawing consent, contact our Data Protection Officer at ${PRIVACY.dpoEmail}, or message us on WhatsApp at +${PRIVACY.whatsappNumber}.`,
+      `For anything about your personal data, including access, correction, deletion or withdrawing consent, write to our Data Protection Officer at ${PRIVACY.dpoEmail}.`,
       "If you are not satisfied with how we have handled your request, you may raise the matter with Singapore's Personal Data Protection Commission at pdpc.gov.sg.",
     ],
   },
