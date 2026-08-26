@@ -11,9 +11,7 @@ export const PRIVACY = {
   organisation: "Gray Matter Solutions Pte Ltd",
   organisationNote: "a spin-off from Nanyang Technological University, Singapore",
   /** Data Protection Officer contact, as required by PDPA s.11(3). */
-  dpoEmail: "privacy@graymattercognition.com",
-  /** Same number already used for the assessment enquiries. */
-  whatsappNumber: "6596747608",
+  dpoEmail: "tech@graymattercognition.com",
   /** Shown at the top of the policy; update whenever the text changes. */
   lastUpdated: "26 August 2026",
   /** How long each kind of record is kept (PDPA Retention Limitation). */
