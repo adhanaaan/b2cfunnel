@@ -135,6 +135,7 @@ export function Event3GameResult({
         total: standing.total ?? undefined,
         url: playUrl,
         qrCanvas,
+        theme: "daylight",
       });
       if (!cancelled) cardRef.current = blob;
     }, 300);
@@ -148,10 +149,19 @@ export function Event3GameResult({
     if (sharing || timeMs == null) return;
     setSharing(true);
     try {
-      const text = COPY.screens.event2.share.text.replace(
-        "{time}",
-        formatTime(timeMs),
-      );
+      // "I scored 0:41.8 ... / Rank 63/181 / Can you beat my score? ..." -
+      // the share ladder appends the play URL under the closing colon.
+      const sc = COPY.screens.event3.share;
+      const lines = [sc.text.replace("{time}", formatTime(timeMs))];
+      if (standing.rank && standing.total) {
+        lines.push(
+          sc.rankLine
+            .replace("{rank}", String(standing.rank))
+            .replace("{total}", String(standing.total)),
+        );
+      }
+      lines.push(sc.cta);
+      const text = lines.join("\n");
       const outcome = await shareBlob(
         cardRef.current,
         text,

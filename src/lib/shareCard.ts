@@ -2,9 +2,11 @@ import { formatTime } from "@/lib/format";
 import type { TipCategory } from "@/config/tips";
 
 /**
- * Client-side share cards for event2: a 1080x1350 (4:5) result poster and a
- * matching brain-care tip poster, drawn on an offscreen canvas so sharing
- * works offline at the booth with zero new dependencies.
+ * Client-side share cards for the event arcs: a 1080x1350 (4:5) result poster
+ * and a matching brain-care tip poster, drawn on an offscreen canvas so
+ * sharing works offline at the booth with zero new dependencies. The result
+ * poster has two skins - the original ember night (event2) and the cream
+ * daylight one matching the event3 screens.
  *
  * Sharing ladder: navigator.share with the image file, else download plus a
  * clipboard caption, else text-only share, else clipboard. Callers should
@@ -23,6 +25,11 @@ export interface ResultCardOpts {
   url: string;
   /** Rendered QR canvas (e.g. a hidden QRCodeCanvas) to stamp onto the card. */
   qrCanvas?: HTMLCanvasElement | null;
+  /**
+   * Poster skin. "night" is the original ember-night card (event2); "daylight"
+   * matches the event3 arc's cream "Daylight Ember" screens.
+   */
+  theme?: "night" | "daylight";
 }
 
 /** Resolve a next/font CSS variable to a concrete canvas font family. */
@@ -69,6 +76,107 @@ function paintNight(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fill();
+  }
+}
+
+/** The event3 daylight backdrop: cream radial wash, yellow pills, sparkles. */
+function paintDaylight(ctx: CanvasRenderingContext2D) {
+  const base = ctx.createRadialGradient(0, 0, 0, 0, 0, W * 1.5);
+  base.addColorStop(0, "#fae0c7");
+  base.addColorStop(0.6, "#fcf0e5");
+  base.addColorStop(1, "#fff7f2");
+  ctx.fillStyle = base;
+  ctx.fillRect(0, 0, W, H);
+
+  // The rotated pill lines, baked at the corners they occupy on screen.
+  const pills: Array<[number, number, number, number, boolean]> = [
+    [W - 120, -40, 420, 78, true],
+    [W - 95, 70, 380, 56, false],
+    [-230, 900, 420, 78, true],
+    [-205, 1010, 380, 56, false],
+  ];
+  for (const [x, y, w, h, solid] of pills) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((24 * Math.PI) / 180);
+    if (solid) {
+      ctx.fillStyle = "#fde68a";
+    } else {
+      const g = ctx.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, "rgba(255,255,112,0.30)");
+      g.addColorStop(1, "rgba(245,158,10,0.10)");
+      ctx.fillStyle = g;
+    }
+    ctx.beginPath();
+    ctx.roundRect(0, 0, w, h, h / 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Four-point sparkles, the flat cousins of the on-screen twinklers.
+  const sparkles: Array<[number, number, number, number]> = [
+    [70, 470, 30, 0.6],
+    [1010, 300, 22, 0.5],
+    [105, 1105, 26, 0.45],
+    [975, 1180, 20, 0.5],
+  ];
+  for (const [x, y, s, a] of sparkles) {
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.fillStyle = "#f6c76d";
+    ctx.translate(x, y);
+    ctx.beginPath();
+    ctx.moveTo(0, -s);
+    ctx.quadraticCurveTo(s * 0.18, -s * 0.18, s, 0);
+    ctx.quadraticCurveTo(s * 0.18, s * 0.18, 0, s);
+    ctx.quadraticCurveTo(-s * 0.18, s * 0.18, -s, 0);
+    ctx.quadraticCurveTo(-s * 0.18, -s * 0.18, 0, -s);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+/** Logo mark plus the wordmark, centred as one row. */
+function drawBrandRow(
+  ctx: CanvasRenderingContext2D,
+  logo: HTMLImageElement | null,
+  font: string,
+  y: number,
+) {
+  const label = "GRAY MATTER SOLUTIONS";
+  ctx.font = `700 24px ${font}`;
+  ctx.letterSpacing = "4px";
+  const textWidth = ctx.measureText(label).width;
+  const h = 56;
+  const w = logo ? (logo.width / logo.height) * h : 0;
+  const gap = logo ? 18 : 0;
+  const startX = (W - (w + gap + textWidth)) / 2;
+  if (logo) {
+    ctx.globalAlpha = 0.95;
+    ctx.drawImage(logo, startX, y, w, h);
+    ctx.globalAlpha = 1;
+  }
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#7d5747";
+  ctx.fillText(label, startX + w + gap, y + h / 2 + 9);
+  ctx.letterSpacing = "0px";
+  ctx.textAlign = "center";
+}
+
+/** Fit text to a max width by stepping the font size down. */
+function fitFont(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  weight: number,
+  size: number,
+  font: string,
+  maxWidth: number,
+) {
+  let px = size;
+  ctx.font = `${weight} ${px}px ${font}`;
+  while (ctx.measureText(text).width > maxWidth && px > 24) {
+    px -= 2;
+    ctx.font = `${weight} ${px}px ${font}`;
   }
 }
 
@@ -158,6 +266,11 @@ export async function generateResultCard(
   const cormorant = fontFamily("--font-cormorant", "Georgia, serif");
   const logo = await loadImage("/gms-logo.png");
 
+  if (opts.theme === "daylight") {
+    drawDaylightCard(ctx, opts, jakarta, logo);
+    return toBlob(canvas);
+  }
+
   paintNight(ctx);
   drawLogo(ctx, logo, true, 88);
 
@@ -221,6 +334,140 @@ export async function generateResultCard(
   );
 
   return toBlob(canvas);
+}
+
+/**
+ * The event3 daylight poster: same information as the night card, drawn in
+ * the "Daylight Ember" vocabulary of the event3 screens (cream wash, yellow
+ * pills, gradient hero number, white stat card, ember bridge block).
+ */
+function drawDaylightCard(
+  ctx: CanvasRenderingContext2D,
+  opts: ResultCardOpts,
+  jakarta: string,
+  logo: HTMLImageElement | null,
+) {
+  paintDaylight(ctx);
+  ctx.textAlign = "center";
+
+  drawBrandRow(ctx, logo, jakarta, 86);
+
+  // Eyebrow.
+  ctx.fillStyle = "#f16d39";
+  ctx.font = `700 28px ${jakarta}`;
+  ctx.letterSpacing = "7px";
+  ctx.fillText("REACTION TIME CHALLENGE", W / 2, 262);
+  ctx.letterSpacing = "0px";
+
+  // Who scored, shrunk to fit a long nickname.
+  const who = opts.name.trim() ? `${opts.name.trim()} scored` : "I scored";
+  ctx.fillStyle = "#171717";
+  fitFont(ctx, who, 700, 46, jakarta, W - 160);
+  ctx.fillText(who, W / 2, 352);
+
+  // The time, huge, in the ember gradient with a soft warm bloom.
+  const time = ctx.createLinearGradient(0, 380, 0, 600);
+  time.addColorStop(0, "#e8782e");
+  time.addColorStop(0.55, "#f09452");
+  time.addColorStop(1, "#ffbb88");
+  ctx.save();
+  ctx.shadowColor = "rgba(247,117,40,0.35)";
+  ctx.shadowBlur = 70;
+  ctx.fillStyle = time;
+  ctx.font = `800 190px ${jakarta}`;
+  ctx.fillText(formatTime(opts.timeMs), W / 2, 560);
+  ctx.restore();
+
+  // The underline bar from the on-screen result.
+  const bar = ctx.createLinearGradient(W / 2 - 110, 0, W / 2 + 110, 0);
+  bar.addColorStop(0, "#f77528");
+  bar.addColorStop(1, "#ffc29e");
+  ctx.fillStyle = bar;
+  ctx.beginPath();
+  ctx.roundRect(W / 2 - 110, 596, 220, 10, 5);
+  ctx.fill();
+
+  // Stat card: rank / symbols.
+  const cw = 760;
+  const ch = 150;
+  const cx = (W - cw) / 2;
+  const cy = 660;
+  ctx.fillStyle = "rgba(255,255,255,0.7)";
+  ctx.beginPath();
+  ctx.roundRect(cx, cy, cw, ch, 28);
+  ctx.save();
+  ctx.shadowColor = "rgba(51,18,0,0.10)";
+  ctx.shadowBlur = 30;
+  ctx.shadowOffsetY = 10;
+  ctx.fill();
+  ctx.restore();
+  ctx.strokeStyle = "rgba(247,117,40,0.18)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  const colA = cx + cw * 0.27;
+  const colB = cx + cw * 0.73;
+  ctx.fillStyle = "#f16d39";
+  ctx.font = `700 22px ${jakarta}`;
+  ctx.letterSpacing = "3px";
+  ctx.fillText("YOUR RANK", colA, cy + 56);
+  ctx.fillText("SYMBOLS", colB, cy + 56);
+  ctx.letterSpacing = "0px";
+  ctx.fillStyle = "#171717";
+  ctx.font = `800 52px ${jakarta}`;
+  ctx.fillText(
+    opts.rank && opts.total ? `#${opts.rank} / ${opts.total}` : "-",
+    colA,
+    cy + 114,
+  );
+  ctx.fillText("20", colB, cy + 114);
+  ctx.strokeStyle = "rgba(125,87,71,0.22)";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx + cw / 2, cy + 34);
+  ctx.lineTo(cx + cw / 2, cy + ch - 34);
+  ctx.stroke();
+
+  // Ember bridge block: the dare, the QR and the link.
+  const bw = 880;
+  const bx = (W - bw) / 2;
+  const by = 850;
+  const bh = 425;
+  const ember = ctx.createLinearGradient(0, by, 0, by + bh);
+  ember.addColorStop(0, "#e8782e");
+  ember.addColorStop(0.5, "#f09452");
+  ember.addColorStop(1, "#ffbb88");
+  ctx.fillStyle = ember;
+  ctx.beginPath();
+  ctx.roundRect(bx, by, bw, bh, 36);
+  ctx.save();
+  ctx.shadowColor = "rgba(232,120,46,0.45)";
+  ctx.shadowBlur = 50;
+  ctx.shadowOffsetY = 20;
+  ctx.fill();
+  ctx.restore();
+
+  ctx.fillStyle = "#fff4ec";
+  ctx.font = `800 52px ${jakarta}`;
+  ctx.fillText("Can you beat my score?", W / 2, by + 78);
+  ctx.fillStyle = "rgba(255,244,236,0.92)";
+  ctx.font = `600 30px ${jakarta}`;
+  ctx.fillText("Try it for yourself here:", W / 2, by + 124);
+
+  // Drawn at the QR canvas's own 190px so the modules stay pixel-crisp.
+  drawQr(ctx, opts.qrCanvas, W / 2, by + 252, 190);
+
+  ctx.fillStyle = "#fff4ec";
+  ctx.font = `700 30px ${jakarta}`;
+  ctx.fillText(opts.url.replace(/^https?:\/\//, ""), W / 2, by + 382);
+
+  ctx.fillStyle = "#a98d80";
+  ctx.font = `500 24px ${jakarta}`;
+  ctx.fillText(
+    "Reaction-time games are fun, but not a cognitive assessment.",
+    W / 2,
+    1312,
+  );
 }
 
 /** The cream brain-care tip poster revealed by the pick-a-card flip. */
