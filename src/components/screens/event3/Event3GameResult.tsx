@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { animate, motion, useReducedMotion } from "framer-motion";
 import { QRCodeCanvas } from "qrcode.react";
 import { COPY } from "@/config/copy";
@@ -13,6 +13,13 @@ import { BrainHero } from "./BrainHero";
 import { ProcessingSpeedPopup } from "./ProcessingSpeedPopup";
 import { QuestionCircleIcon, RetryIcon, ShareIcon } from "./icons";
 import { ctaInverseClass, emberLabelGradient, emberTextGradient } from "./ui";
+
+/**
+ * Where the share card's QR and caption send people. Absolute on purpose
+ * (same reasoning as the TV board): the screen may run from localhost or a
+ * preview deploy, but a scanned phone must always land on production.
+ */
+const PLAY_URL = "https://brainhealthcheck.vercel.app/event-v3";
 
 interface Event3GameResultProps {
   name?: string;
@@ -63,14 +70,6 @@ export function Event3GameResult({
   const [popupOpen, setPopupOpen] = useState(false);
   const qrHostRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<Blob | null>(null);
-
-  const playUrl = useMemo(
-    () =>
-      typeof window !== "undefined"
-        ? `${window.location.origin}/event-v3`
-        : "https://brainhealthcheck.vercel.app/event-v3",
-    [],
-  );
 
   // Live standings: the fastest so far and your rank.
   useEffect(() => {
@@ -135,8 +134,9 @@ export function Event3GameResult({
         timeMs,
         rank: standing.rank ?? undefined,
         total: standing.total ?? undefined,
-        url: playUrl,
+        url: PLAY_URL,
         qrCanvas,
+        theme: "daylight",
       });
       if (!cancelled) cardRef.current = blob;
     }, 300);
@@ -144,20 +144,29 @@ export function Event3GameResult({
       cancelled = true;
       clearTimeout(t);
     };
-  }, [name, timeMs, standing.rank, standing.total, playUrl]);
+  }, [name, timeMs, standing.rank, standing.total]);
 
   const share = async () => {
     if (sharing || timeMs == null) return;
     setSharing(true);
     try {
-      const text = COPY.screens.event2.share.text.replace(
-        "{time}",
-        formatTime(timeMs),
-      );
+      // "I scored 0:41.8 ... / Rank 63/181 / Can you beat my score? ..." -
+      // the share ladder appends the play URL under the closing colon.
+      const sc = COPY.screens.event3.share;
+      const lines = [sc.text.replace("{time}", formatTime(timeMs))];
+      if (standing.rank && standing.total) {
+        lines.push(
+          sc.rankLine
+            .replace("{rank}", String(standing.rank))
+            .replace("{total}", String(standing.total)),
+        );
+      }
+      lines.push(sc.cta);
+      const text = lines.join("\n");
       const outcome = await shareBlob(
         cardRef.current,
         text,
-        playUrl,
+        PLAY_URL,
         "brain-speed.png",
       );
       setShareNote(
@@ -181,7 +190,7 @@ export function Event3GameResult({
     <Event3Shell pills sparkles>
       {/* Hidden QR used by the canvas share card. */}
       <div ref={qrHostRef} className="hidden" aria-hidden>
-        <QRCodeCanvas value={playUrl} size={190} marginSize={0} />
+        <QRCodeCanvas value={PLAY_URL} size={190} marginSize={0} />
       </div>
 
       <motion.div

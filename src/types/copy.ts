@@ -264,6 +264,13 @@ export interface Event3Copy {
     cta: string;
     disclaimer: string;
   };
+  // Share-sheet caption, assembled from these lines. The play URL is appended
+  // by the share ladder, so the last line ends on a colon.
+  share: {
+    text: string; // contains {time}
+    rankLine: string; // contains {rank} and {total}; dropped if rank is unknown
+    cta: string;
+  };
   // The "?" popup: what processing speed actually means.
   speedPopup: {
     eyebrow: string;

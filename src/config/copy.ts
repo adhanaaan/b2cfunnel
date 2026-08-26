@@ -405,6 +405,11 @@ export const COPY: CopyConfig = {
         disclaimer:
           "Reaction-time games are fun, but not a cognitive assessment.",
       },
+      share: {
+        text: "I scored {time} on the Brain Health Reaction Challenge",
+        rankLine: "Rank {rank}/{total}",
+        cta: "Can you beat my score? Try it for yourself here:",
+      },
       speedPopup: {
         eyebrow: "What that actually means",
         headingParts: [

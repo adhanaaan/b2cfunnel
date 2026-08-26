@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Reaction Time Challenge",
     description:
-      "Fast reflexes. But how do you score on your overall brain health?",
-    images: ["/og-event-v2.png"],
+      "How fast does your brain process? A 60-second symbol-matching test.",
+    images: ["/og-event-v3.png"],
   },
 };
 
