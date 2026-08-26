@@ -24,8 +24,12 @@ interface Entry {
 
 const TOP_N = 8;
 const POLL_MS = 8000;
-/** Where the QR sends players. */
-const PLAY_PATH = "/event-v3";
+/**
+ * Where the QR sends players. Absolute on purpose: the board itself may run
+ * from localhost or a preview deploy, but a scanned phone must always land on
+ * production.
+ */
+const PLAY_URL = "https://brainhealthcheck.vercel.app/event-v3";
 const FACT_MS = 8000;
 const PRIZE_NAME = "Fitbit Air";
 const PRIZE_VALUE = "$189";
@@ -60,17 +64,12 @@ const keyOf = (e: Entry) => `${e.name}·${Math.round(e.timeMs)}`;
 export default function LeaderboardV3Board() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [total, setTotal] = useState(0);
-  const [playUrl, setPlayUrl] = useState("");
   const [factIdx, setFactIdx] = useState(0);
   const [celebration, setCelebration] = useState<Entry | null>(null);
   const prevTopRef = useRef<Set<string>>(new Set());
   const firstLoadRef = useRef(true);
   const queueRef = useRef<Entry[]>([]);
   const busyRef = useRef(false);
-
-  useEffect(() => {
-    setPlayUrl(`${window.location.origin}${PLAY_PATH}`);
-  }, []);
 
   // Celebration queue: play one 4s takeover at a time, never overlapping.
   const pump = () => {
@@ -414,15 +413,13 @@ export default function LeaderboardV3Board() {
                   className="rounded-[1.2vh] bg-white p-[1vh]"
                   style={{ border: `2px solid ${CARD_LINE}` }}
                 >
-                  {playUrl && (
-                    <QRCodeSVG
-                      value={playUrl}
-                      className="h-[17vh] w-[17vh]"
-                      level="M"
-                      fgColor="#331200"
-                      bgColor="#ffffff"
-                    />
-                  )}
+                  <QRCodeSVG
+                    value={PLAY_URL}
+                    className="h-[17vh] w-[17vh]"
+                    level="M"
+                    fgColor="#331200"
+                    bgColor="#ffffff"
+                  />
                 </div>
               </div>
             </div>
