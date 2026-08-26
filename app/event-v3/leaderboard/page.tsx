@@ -24,6 +24,8 @@ interface Entry {
 
 const TOP_N = 8;
 const POLL_MS = 8000;
+/** Where the QR sends players. */
+const PLAY_PATH = "/event-v3";
 const FACT_MS = 8000;
 const PRIZE_NAME = "Fitbit Air";
 const PRIZE_VALUE = "$189";
@@ -67,7 +69,7 @@ export default function LeaderboardV3Board() {
   const busyRef = useRef(false);
 
   useEffect(() => {
-    setPlayUrl(`${window.location.origin}/event-v2`);
+    setPlayUrl(`${window.location.origin}${PLAY_PATH}`);
   }, []);
 
   // Celebration queue: play one 4s takeover at a time, never overlapping.
