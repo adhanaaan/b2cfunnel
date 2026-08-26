@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { submitScore } from "@/lib/supabase/game";
-import { EVENT_PAUSED, EVENT2_PAUSED, EVENT3_PAUSED } from "@/config/event";
+import {
+  EVENT_PAUSED,
+  EVENT2_PAUSED,
+  EVENT3_PAUSED,
+  EVENT3_SOURCE,
+} from "@/config/event";
 
 export const runtime = "nodejs";
 
@@ -10,7 +15,11 @@ interface ScorePayload {
   name?: string;
   email?: string;
   timeMs?: number;
-  /** Which event funnel sent the score; each has its own pause switch. */
+  /**
+   * Which event the score was played at - "event", "event2", or EVENT3_SOURCE.
+   * Selects the pause switch, and is stored so each board can filter to its
+   * own standings.
+   */
   source?: string;
 }
 
@@ -25,7 +34,7 @@ export async function POST(req: Request) {
   // Per-source pause: accept the request but don't record new scores, so
   // pausing one event never silently drops the other's results.
   const paused =
-    payload.source === "event3"
+    payload.source === EVENT3_SOURCE
       ? EVENT3_PAUSED
       : payload.source === "event2"
         ? EVENT2_PAUSED
@@ -43,7 +52,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    await submitScore(name, email, timeMs);
+    await submitScore(name, email, timeMs, payload.source ?? null);
   } catch (err) {
     console.error("[score] insert failed:", err);
     return NextResponse.json({ error: "Could not save your score." }, { status: 500 });

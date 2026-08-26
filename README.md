@@ -111,14 +111,31 @@ create table public.game_scores (
   created_at timestamptz not null default now(),
   name       text not null,
   email      text not null,
-  time_ms    integer not null
+  time_ms    integer not null,
+  source     text                 -- which event this score was played at
 );
 create index on public.game_scores (created_at);
 create index on public.game_scores (email);
+create index on public.game_scores (source);
+
+-- add these to an existing table (safe: nullable, no backfill, no deletes):
+alter table public.game_scores add column if not exists source text;
+create index if not exists game_scores_source_idx on public.game_scores (source);
 
 -- Reads/writes go only through the server API routes (service-role key).
 alter table public.game_scores enable row level security;
 ```
+
+**`source` scopes a board to one event.** Every score is tagged with the event
+it was played at (`"event"`, `"event2"`, or `EVENT3_SOURCE` from
+`src/config/event.ts`), and `/api/leaderboard?source=...` filters to it. The v3
+board and the v3 in-funnel standings pass `EVENT3_SOURCE`; the v1 and v2 boards
+send no `source` and so keep ranking every row, history included.
+
+To start a **fresh board** at the next v3 event, change `EVENT3_SOURCE` to a new
+string. Older scores keep their old tag and stay in the table - they just stop
+appearing on the board. Nothing is ever deleted. Rows written before the column
+existed carry `null` and never match a filter.
 
 The leaderboard shows **today's best time per email** (Singapore time), fastest
 first. Players may retry; only their best counts.

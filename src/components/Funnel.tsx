@@ -11,6 +11,7 @@ import { totalQuestions, questionNumber } from "@/config/funnelFlow";
 import type { LeadPayload } from "@/lib/supabase/types";
 import type { QuizVariant } from "@/types/funnel";
 import { VariantProvider } from "@/components/VariantContext";
+import { EVENT3_SOURCE } from "@/config/event";
 
 import { HookScreen } from "@/components/screens/HookScreen";
 import { PostGameHook } from "@/components/screens/PostGameHook";
@@ -130,9 +131,11 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         email: state.email,
         timeMs,
         source:
-          state.variant === "event2" || state.variant === "event3"
-            ? state.variant
-            : "event",
+          state.variant === "event3"
+            ? EVENT3_SOURCE
+            : state.variant === "event2"
+              ? "event2"
+              : "event",
       }),
     }).catch(() => {});
     gameDone(timeMs);

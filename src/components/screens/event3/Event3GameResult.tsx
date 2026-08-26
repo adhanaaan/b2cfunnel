@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { animate, motion, useReducedMotion } from "framer-motion";
 import { QRCodeCanvas } from "qrcode.react";
 import { COPY } from "@/config/copy";
+import { EVENT3_SOURCE } from "@/config/event";
 import { formatTime } from "@/lib/format";
 import { generateResultCard, shareBlob } from "@/lib/shareCard";
 import { springs, stagger } from "@/lib/motion";
@@ -77,7 +78,8 @@ export function Event3GameResult({
     (async () => {
       try {
         const res = await fetch(
-          `/api/leaderboard?limit=1${email ? `&email=${encodeURIComponent(email)}` : ""}`,
+          `/api/leaderboard?limit=1&source=${encodeURIComponent(EVENT3_SOURCE)}` +
+            (email ? `&email=${encodeURIComponent(email)}` : ""),
           { cache: "no-store" },
         );
         const data = await res.json();

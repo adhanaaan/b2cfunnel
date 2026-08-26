@@ -6,32 +6,47 @@ export interface LeaderboardEntry {
   timeMs: number;
 }
 
-/** Record a game result. No-ops gracefully if Supabase isn't configured. */
+/**
+ * Record a game result. No-ops gracefully if Supabase isn't configured.
+ *
+ * `source` tags the row with the event it was played at (see EVENT3_SOURCE in
+ * config/event.ts) so each board can show only its own standings. Rows written
+ * before the column existed carry null and simply never match a filter.
+ */
 export async function submitScore(
   name: string,
   email: string,
   timeMs: number,
+  source?: string | null,
 ): Promise<void> {
   if (!isSupabaseConfigured()) return;
   const sb = getServerSupabase();
   await sb
     .from("game_scores")
-    .insert({ name, email, time_ms: Math.round(timeMs) });
+    .insert({ name, email, time_ms: Math.round(timeMs), source: source ?? null });
 }
 
 /**
  * Event leaderboard: best time per email, fastest first, across the whole
  * event (no daily reset). Returns [] when Supabase isn't configured.
+ *
+ * Pass `source` to scope the board to one event's scores; omit it to keep the
+ * historical behaviour of ranking every row in the table.
  */
 export async function getLeaderboard(
   limit = 50,
+  source?: string | null,
 ): Promise<LeaderboardEntry[]> {
   if (!isSupabaseConfigured()) return [];
   const sb = getServerSupabase();
-  const { data, error } = await sb
+  let query = sb
     .from("game_scores")
     .select("name, email, time_ms")
     .order("time_ms", { ascending: true });
+
+  if (source) query = query.eq("source", source);
+
+  const { data, error } = await query;
 
   if (error || !data) return [];
 

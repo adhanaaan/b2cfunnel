@@ -8,8 +8,10 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const email = url.searchParams.get("email")?.trim().toLowerCase() ?? null;
   const limit = Math.min(Number(url.searchParams.get("limit")) || 10, 100);
+  // Scope the board to one event when asked; no param = every score, as before.
+  const source = url.searchParams.get("source")?.trim() || null;
 
-  const all = await getLeaderboard(200);
+  const all = await getLeaderboard(200, source);
 
   const rankIndex = email
     ? all.findIndex((e) => e.email.toLowerCase() === email)

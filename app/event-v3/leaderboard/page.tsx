@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 import { formatTime } from "@/lib/format";
-import { EVENT2_PAUSED } from "@/config/event";
+import { EVENT3_PAUSED, EVENT3_SOURCE } from "@/config/event";
 import { BRAIN_FACTS } from "@/config/tips";
 import { springs } from "@/lib/motion";
 
@@ -92,9 +92,10 @@ export default function LeaderboardV3Board() {
     let active = true;
     const load = async () => {
       try {
-        const res = await fetch(`/api/leaderboard?limit=${TOP_N}`, {
-          cache: "no-store",
-        });
+        const res = await fetch(
+          `/api/leaderboard?limit=${TOP_N}&source=${encodeURIComponent(EVENT3_SOURCE)}`,
+          { cache: "no-store" },
+        );
         const data = await res.json();
         if (!active || !Array.isArray(data.entries)) return;
         const next: Entry[] = data.entries;
@@ -103,7 +104,7 @@ export default function LeaderboardV3Board() {
 
         // New podium entrants (skip the very first load: nothing is "new").
         const podium = next.slice(0, 3);
-        if (!firstLoadRef.current && !EVENT2_PAUSED) {
+        if (!firstLoadRef.current && !EVENT3_PAUSED) {
           for (const e of podium) {
             if (!prevTopRef.current.has(keyOf(e))) queueRef.current.push(e);
           }
@@ -192,7 +193,7 @@ export default function LeaderboardV3Board() {
           className="flex items-center gap-[0.6vw] rounded-full px-[1.4vw] py-[1vh] text-[2vh] font-bold shadow-card"
           style={{ background: CARD, border: `1px solid ${CARD_LINE}`, color: INK_SOFT }}
         >
-          {EVENT2_PAUSED ? (
+          {EVENT3_PAUSED ? (
             "Final standings"
           ) : (
             <>
@@ -322,7 +323,7 @@ export default function LeaderboardV3Board() {
 
         {/* Engage rail: QR tile + prize card. */}
         <section className="flex min-h-0 flex-[0.78] flex-col gap-[1.8vh]">
-          {EVENT2_PAUSED ? (
+          {EVENT3_PAUSED ? (
             <div
               className="flex flex-1 flex-col items-center justify-center rounded-[1.2vw] p-[2vw] text-center shadow-card"
               style={{ background: CARD, border: `1px solid ${CARD_LINE}` }}

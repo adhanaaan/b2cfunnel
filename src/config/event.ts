@@ -19,3 +19,14 @@ export const EVENT2_PAUSED = false;
  * v3 funnel are rejected while this is `true`.
  */
 export const EVENT3_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the v3 funnel. Every /event-v3 score is tagged with
+ * this string, and the v3 board only shows rows that match it - which is what
+ * keeps v3's standings clear of v1/v2 history.
+ *
+ * To start a fresh board at the next v3 event, change this string. Previous
+ * scores keep their old tag and stay in the table; they just stop appearing.
+ * Nothing is ever deleted.
+ */
+export const EVENT3_SOURCE = "event3";
