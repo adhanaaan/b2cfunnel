@@ -371,6 +371,13 @@ export const COPY: CopyConfig = {
         body: "Take a quick symbol-matching test to find out your brain processing speed.",
         namePlaceholder: "Nickname",
         emailPlaceholder: "Your email",
+        consentRequired:
+          "(Required) I agree to be contacted about my results and prize.",
+        consentRequiredError:
+          "Please agree to be contacted so we can send you your results.",
+        consentMarketing:
+          "Send me occasional brain health tips and updates.",
+        privacyLinkLabel: "Privacy Policy",
         cta: "Start the challenge",
         poweredBy: "Powered by:",
       },

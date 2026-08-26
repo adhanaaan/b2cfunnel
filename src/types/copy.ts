@@ -232,6 +232,12 @@ export interface Event3Copy {
     body: string;
     namePlaceholder: string;
     emailPlaceholder: string;
+    // PDPA consent. The first is required to play (we email results and need
+    // to reach the prize winner); the second is a separate marketing opt-in.
+    consentRequired: string;
+    consentRequiredError: string;
+    consentMarketing: string;
+    privacyLinkLabel: string;
     cta: string;
     poweredBy: string;
   };
