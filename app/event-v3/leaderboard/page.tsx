@@ -35,8 +35,11 @@ const FACT_MS = 8000;
  */
 const PLAY_URL = "https://brainhealthcheck.vercel.app/event-v3";
 
-/** Share of players who finish the quiz, shown on the scan card's stat tile. */
-const REPORT_RATE = 0.7;
+/**
+ * How often the completion stat is refreshed. Slower than the standings: the
+ * rate moves over the course of an event, not shot to shot.
+ */
+const RATE_POLL_MS = 30000;
 
 const HOW_TO = [
   "Play the speed game",
@@ -280,8 +283,7 @@ function StandingRow({
 
 /* ------------------------------ Scan card ------------------------------- */
 
-function ScanCard() {
-  const pct = Math.round(REPORT_RATE * 100);
+function ScanCard({ reportPct }: { reportPct: number | null }) {
   return (
     <div className="flex h-full flex-col justify-center rounded-2xl bg-surface-container p-3 sm:p-5">
       <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[1.4vh] rounded-xl bg-white p-4 shadow-card sm:gap-[2.2vh] sm:p-5">
@@ -313,7 +315,10 @@ function ScanCard() {
             ))}
           </ol>
 
-          {/* Stat tile: completion rate, plus the live time to beat when set. */}
+          {/* Stat tile: live completion rate, hidden until it means something
+              (see MIN_PLAYERS_FOR_RATE - early in an event, one unfinished
+              quiz would read as "0% folks got their report"). */}
+          {reportPct !== null && (
           <div
             className="relative overflow-hidden rounded-xl shadow-card"
             style={{ background: STAT_SURFACE }}
@@ -329,7 +334,7 @@ function ScanCard() {
             <p
               className={`${T.statBody} relative px-[1em] pb-[1.3em] pt-[0.8em] text-center leading-[1.39] text-charcoal`}
             >
-              <span className={`${T.statBig} font-bold`}>{pct}%</span>{" "}
+              <span className={`${T.statBig} font-bold`}>{reportPct}%</span>{" "}
               <span className="font-normal">folks got their </span>
               <span className="font-bold">brain health report</span>{" "}
               <span aria-hidden>🧠</span>
@@ -340,10 +345,11 @@ function ScanCard() {
             >
               <div
                 className="h-full"
-                style={{ width: `${pct}%`, background: PROGRESS_GRADIENT }}
+                style={{ width: `${reportPct}%`, background: PROGRESS_GRADIENT }}
               />
             </div>
           </div>
+          )}
 
         </div>
       </div>
@@ -404,6 +410,8 @@ export default function LeaderboardV3Board() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [total, setTotal] = useState(0);
   const [factIdx, setFactIdx] = useState(0);
+  // null until the rate is worth showing (nobody has played, or too few have).
+  const [reportPct, setReportPct] = useState<number | null>(null);
   const [celebration, setCelebration] = useState<Entry | null>(null);
   const prevTopRef = useRef<Set<string>>(new Set());
   const firstLoadRef = useRef(true);
@@ -462,6 +470,31 @@ export default function LeaderboardV3Board() {
       clearInterval(id);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Completion rate for this event day: reports over players, from the same
+  // source tag the standings use. Keeps the last good value on error.
+  useEffect(() => {
+    let active = true;
+    const load = async () => {
+      try {
+        const res = await fetch(
+          `/api/report-rate?source=${encodeURIComponent(EVENT3_SOURCE)}`,
+          { cache: "no-store" },
+        );
+        const data = await res.json();
+        if (!active || typeof data.pct !== "number") return;
+        setReportPct(data.meaningful ? data.pct : null);
+      } catch {
+        /* keep the last good rate */
+      }
+    };
+    load();
+    const id = setInterval(load, RATE_POLL_MS);
+    return () => {
+      active = false;
+      clearInterval(id);
+    };
   }, []);
 
   useEffect(() => {
@@ -543,7 +576,7 @@ export default function LeaderboardV3Board() {
               </p>
             </div>
           ) : (
-            <ScanCard />
+            <ScanCard reportPct={reportPct} />
           )}
         </div>
 

@@ -11,7 +11,7 @@ import { totalQuestions, questionNumber } from "@/config/funnelFlow";
 import type { LeadPayload } from "@/lib/supabase/types";
 import type { QuizVariant } from "@/types/funnel";
 import { VariantProvider } from "@/components/VariantContext";
-import { EVENT3_SOURCE } from "@/config/event";
+import { eventSource } from "@/config/event";
 
 import { HookScreen } from "@/components/screens/HookScreen";
 import { PostGameHook } from "@/components/screens/PostGameHook";
@@ -98,6 +98,9 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       answers: state.answers,
       gameTimeMs: state.gameTimeMs,
       tipsConsent: state.tipsConsent,
+      // Same tag as the score row, so the board's report rate can divide
+      // reports by players for one event day.
+      source: eventSource(state.variant) ?? undefined,
     };
     void fetch("/api/lead", {
       method: "POST",
@@ -132,12 +135,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         email: state.email,
         timeMs,
         tipsConsent: state.tipsConsent,
-        source:
-          state.variant === "event3"
-            ? EVENT3_SOURCE
-            : state.variant === "event2"
-              ? "event2"
-              : "event",
+        source: eventSource(state.variant) ?? "event",
       }),
     }).catch(() => {});
     gameDone(timeMs);

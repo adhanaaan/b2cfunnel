@@ -93,6 +93,7 @@ create table public.leads (
   band         text,
   answers      jsonb,
   tips_consent boolean,             -- brain health tips consent, null = never asked
+  source       text,                -- which event this report came from
   user_agent   text
 );
 
@@ -100,6 +101,9 @@ create table public.leads (
 alter table public.leads add column if not exists game_time_ms integer;
 -- brain-health-tips consent; nullable on purpose (see below):
 alter table public.leads add column if not exists tips_consent boolean;
+-- which event the report came from, matching game_scores.source:
+alter table public.leads add column if not exists source text;
+create index if not exists leads_source_idx on public.leads (source);
 
 -- RLS on, with NO anon insert policy: writes happen only through the server
 -- route using the service-role key, so the public key can never write.
@@ -148,6 +152,19 @@ existed carry `null` and never match a filter.
 
 The leaderboard shows **today's best time per email** (Singapore time), fastest
 first. Players may retry; only their best counts.
+
+**`leads.source` carries the same event tag as `game_scores.source`**, which is
+what makes the board's completion stat possible: `GET /api/report-rate?source=…`
+counts unique emails in `game_scores` for that bucket (people who played) and
+unique emails in `leads` for the same bucket (people who got their report), and
+returns the percentage. Only people who actually played count, so a lead with no
+score at that event cannot push the rate above 100%, and a player who retries the
+game counts once.
+
+The `/event-v3` board polls it every 30s for the "N% folks got their brain health
+report" tile. The tile stays hidden until at least `MIN_PLAYERS_FOR_RATE`
+(`src/lib/reportRate.ts`) people have played - early in an event a single
+unfinished quiz would otherwise read as "0% folks got their report".
 
 **`tips_consent` records the brain health tips consent** as a three-state value:
 `true` (ticked), `false` (left unticked), or `null` when we never asked - every

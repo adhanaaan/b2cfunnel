@@ -1,3 +1,5 @@
+import type { QuizVariant } from "@/types/funnel";
+
 /**
  * Event pause switch. Flip to `false` (and redeploy) to reopen the event:
  * /event and the TV board show an "ended" state and new game scores are
@@ -44,3 +46,25 @@ export const DBS_DAY2_SOURCE = "dbs-day2";
  * older "event3" rows stay under theirs.
  */
 export const EVENT3_SOURCE: string = DBS_DAY1_SOURCE;
+
+/**
+ * The bucket a variant's rows are tagged with, for both `game_scores.source`
+ * and `leads.source`. Shared so a score and the report that follows it always
+ * carry the same tag - the report rate on the board divides one by the other,
+ * and a mismatch would quietly read as nobody finishing.
+ *
+ * Returns null for the non-event funnels (`/`, `/woman`), whose rows are not
+ * part of any event's standings or completion rate.
+ */
+export function eventSource(variant: QuizVariant): string | null {
+  switch (variant) {
+    case "event3":
+      return EVENT3_SOURCE;
+    case "event2":
+      return "event2";
+    case "event":
+      return "event";
+    default:
+      return null;
+  }
+}

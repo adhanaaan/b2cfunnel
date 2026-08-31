@@ -18,6 +18,12 @@ export interface LeadRow {
    * asked carry null, which means "unknown", not "declined".
    */
   tips_consent?: boolean | null;
+  /**
+   * Which event the report was generated at, matching `game_scores.source`
+   * (see eventSource in config/event.ts). Null for the non-event funnels and
+   * for leads captured before the column existed.
+   */
+  source?: string | null;
   user_agent?: string | null;
 }
 
@@ -33,4 +39,5 @@ export interface LeadPayload {
   answers?: Answers;
   gameTimeMs?: number;
   tipsConsent?: boolean;
+  source?: string;
 }
