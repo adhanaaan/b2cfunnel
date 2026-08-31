@@ -12,6 +12,12 @@ export interface LeadRow {
   band?: BandName | null;
   answers?: Answers | null;
   game_time_ms?: number | null;
+  /**
+   * Whether the visitor ticked the brain-health-tips consent (landing page, or
+   * the opt-in on the report). Optional and nullable: leads captured before we
+   * asked carry null, which means "unknown", not "declined".
+   */
+  tips_consent?: boolean | null;
   user_agent?: string | null;
 }
 
@@ -26,4 +32,5 @@ export interface LeadPayload {
   band?: BandName;
   answers?: Answers;
   gameTimeMs?: number;
+  tipsConsent?: boolean;
 }

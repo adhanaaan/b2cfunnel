@@ -92,11 +92,14 @@ create table public.leads (
   total_score  numeric,
   band         text,
   answers      jsonb,
+  tips_consent boolean,             -- brain health tips consent, null = never asked
   user_agent   text
 );
 
--- add this column if the table already existed:
+-- add these columns if the table already existed:
 alter table public.leads add column if not exists game_time_ms integer;
+-- brain-health-tips consent; nullable on purpose (see below):
+alter table public.leads add column if not exists tips_consent boolean;
 
 -- RLS on, with NO anon insert policy: writes happen only through the server
 -- route using the service-role key, so the public key can never write.
@@ -112,7 +115,8 @@ create table public.game_scores (
   name       text not null,
   email      text not null,
   time_ms    integer not null,
-  source     text                 -- which event this score was played at
+  source     text,                -- which event this score was played at
+  tips_consent boolean            -- brain health tips consent, null = never asked
 );
 create index on public.game_scores (created_at);
 create index on public.game_scores (email);
@@ -121,6 +125,7 @@ create index on public.game_scores (source);
 -- add these to an existing table (safe: nullable, no backfill, no deletes):
 alter table public.game_scores add column if not exists source text;
 create index if not exists game_scores_source_idx on public.game_scores (source);
+alter table public.game_scores add column if not exists tips_consent boolean;
 
 -- Reads/writes go only through the server API routes (service-role key).
 alter table public.game_scores enable row level security;
@@ -132,13 +137,37 @@ it was played at (`"event"`, `"event2"`, or `EVENT3_SOURCE` from
 board and the v3 in-funnel standings pass `EVENT3_SOURCE`; the v1 and v2 boards
 send no `source` and so keep ranking every row, history included.
 
-To start a **fresh board** at the next v3 event, change `EVENT3_SOURCE` to a new
+The DBS buckets are `dbs-day1` (1 Sep) and `dbs-day2` (2 Sep); flip
+`EVENT3_SOURCE` in `src/config/event.ts` from `DBS_DAY1_SOURCE` to
+`DBS_DAY2_SOURCE` between the days to open day 2 on an empty board.
+
+To start a **fresh board** at any later v3 event, change `EVENT3_SOURCE` to a new
 string. Older scores keep their old tag and stay in the table - they just stop
 appearing on the board. Nothing is ever deleted. Rows written before the column
 existed carry `null` and never match a filter.
 
 The leaderboard shows **today's best time per email** (Singapore time), fastest
 first. Players may retry; only their best counts.
+
+**`tips_consent` records the brain health tips consent** as a three-state value:
+`true` (ticked), `false` (left unticked), or `null` when we never asked - every
+row written before this column existed, and any event whose landing page has no
+such checkbox. It is deliberately nullable and never backfilled, so old data is
+not silently read as a decline.
+
+Where each value comes from:
+
+- **Landing page** (`/event-v3`): the "Send me occasional brain health tips and
+  updates" checkbox rides along with the name + email capture and is written to
+  both `game_scores.tips_consent` (with the score) and `leads.tips_consent`
+  (with the lead).
+- **Report page**: ticking the tips opt-in inserts into `newsletter_optins` as
+  before, and now also stamps `leads.tips_consent = true` on that email's rows.
+  The opt-in can only turn consent on; there is no un-tick in the UI.
+
+Both writes are tolerant of a database that does not have the column yet: the
+insert is retried without it, so a lead or a score is never lost to a pending
+migration.
 
 And a `funnel_events` table for **anonymous drop-off analytics** (no PII - a
 random per-session id, the step name and the variant):

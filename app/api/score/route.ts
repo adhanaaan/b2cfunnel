@@ -21,6 +21,11 @@ interface ScorePayload {
    * own standings.
    */
   source?: string;
+  /**
+   * Whether the player ticked the brain-health-tips box on the landing page.
+   * Optional: omitted by variants that never asked, and stored as null there.
+   */
+  tipsConsent?: boolean;
 }
 
 export async function POST(req: Request) {
@@ -52,7 +57,13 @@ export async function POST(req: Request) {
   }
 
   try {
-    await submitScore(name, email, timeMs, payload.source ?? null);
+    await submitScore(
+      name,
+      email,
+      timeMs,
+      payload.source ?? null,
+      typeof payload.tipsConsent === "boolean" ? payload.tipsConsent : null,
+    );
   } catch (err) {
     console.error("[score] insert failed:", err);
     return NextResponse.json({ error: "Could not save your score." }, { status: 500 });

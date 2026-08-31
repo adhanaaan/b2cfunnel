@@ -9,7 +9,11 @@ import { BrainHero } from "./BrainHero";
 import { GradientWords, ctaPrimaryClass } from "./ui";
 
 interface Event3SplashProps {
-  onSubmit: (name: string, email: string) => void;
+  /**
+   * `tipsConsent` is the marketing checkbox: it rides along with the capture so
+   * the score and lead rows record what the player chose, ticked or not.
+   */
+  onSubmit: (name: string, email: string, tipsConsent: boolean) => void;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -108,7 +112,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
         }),
       }).catch(() => {});
     }
-    onSubmit(name.trim(), email.trim());
+    onSubmit(name.trim(), email.trim(), marketingConsent);
   };
 
   const inputClass =

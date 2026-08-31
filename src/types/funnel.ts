@@ -35,6 +35,9 @@ export interface FunnelState {
   emailCaptured: boolean;
   result?: ScoreResult;
   gameTimeMs?: number; // reaction-game result (event only)
+  // Brain-health-tips consent from the landing page. Undefined when the variant
+  // never asked, which is stored as null rather than false.
+  tipsConsent?: boolean;
 }
 
 export type FunnelAction =
@@ -42,7 +45,7 @@ export type FunnelAction =
   | { type: "NEXT" }
   | { type: "BACK" }
   | { type: "SUBMIT_NAME"; name: string }
-  | { type: "SUBMIT_EMAIL"; name: string; email: string }
+  | { type: "SUBMIT_EMAIL"; name: string; email: string; tipsConsent?: boolean }
   | { type: "SUBMIT_PERSONAL_EMAIL"; name: string; email: string }
   | { type: "ANALYSIS_DONE" }
   | { type: "GAME_DONE"; timeMs: number }
