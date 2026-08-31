@@ -1,4 +1,5 @@
 import { getServerSupabase, isSupabaseConfigured } from "./server";
+import { insertWithOptionalColumn } from "./optionalColumn";
 
 export interface LeaderboardEntry {
   name: string;
@@ -12,18 +13,33 @@ export interface LeaderboardEntry {
  * `source` tags the row with the event it was played at (see EVENT3_SOURCE in
  * config/event.ts) so each board can show only its own standings. Rows written
  * before the column existed carry null and simply never match a filter.
+ *
+ * `tipsConsent` is whether the player ticked the brain-health-tips box on the
+ * landing page - `null` when we never asked (older events) or the column is not
+ * in the database yet, so it is always a three-state value: true, false, or
+ * unknown.
  */
 export async function submitScore(
   name: string,
   email: string,
   timeMs: number,
   source?: string | null,
+  tipsConsent?: boolean | null,
 ): Promise<void> {
   if (!isSupabaseConfigured()) return;
   const sb = getServerSupabase();
-  await sb
-    .from("game_scores")
-    .insert({ name, email, time_ms: Math.round(timeMs), source: source ?? null });
+  const row = {
+    name,
+    email,
+    time_ms: Math.round(timeMs),
+    source: source ?? null,
+  };
+  await insertWithOptionalColumn(
+    "tips_consent",
+    tipsConsent ?? null,
+    row,
+    (values) => sb.from("game_scores").insert(values),
+  );
 }
 
 /**

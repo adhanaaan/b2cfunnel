@@ -97,6 +97,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       band: result.band,
       answers: state.answers,
       gameTimeMs: state.gameTimeMs,
+      tipsConsent: state.tipsConsent,
     };
     void fetch("/api/lead", {
       method: "POST",
@@ -130,6 +131,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         name: state.name,
         email: state.email,
         timeMs,
+        tipsConsent: state.tipsConsent,
         source:
           state.variant === "event3"
             ? EVENT3_SOURCE
@@ -250,7 +252,10 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           result={state.result}
           onUnlock={next}
           name={state.name}
-          email={state.email}
+          // The same address the lead row was written with, so the report
+          // opt-in stamps consent on that row (the /event variant collects a
+          // separate personal email at the end).
+          email={state.personalEmail ?? state.email}
           gameTimeMs={state.gameTimeMs}
         />
       ) : null;

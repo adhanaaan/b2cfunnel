@@ -56,6 +56,9 @@ export function funnelReducer(
         name: action.name,
         email: action.email,
         emailCaptured: true,
+        // Left untouched when the gate doesn't ask, so it stays undefined
+        // ("never asked") rather than becoming a false we never collected.
+        tipsConsent: action.tipsConsent ?? state.tipsConsent,
         cursor: next,
       };
     }

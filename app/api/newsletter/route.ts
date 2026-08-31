@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { recordNewsletterOptIn } from "@/lib/supabase/newsletter";
+import { markLeadTipsConsent } from "@/lib/supabase/leads";
 
 export const runtime = "nodejs";
 
@@ -26,6 +27,15 @@ export async function POST(req: Request) {
   if (!email || !EMAIL_RE.test(email)) {
     return NextResponse.json({ error: "Invalid email." }, { status: 400 });
   }
+
+  // Also stamp the consent on the lead row so `leads.tips_consent` reflects the
+  // report opt-in, not just the landing-page checkbox. Independent of the
+  // opt-in table: neither write should be able to lose the other.
+  // Awaited, not fire-and-forget: the response ends the serverless invocation
+  // and a detached promise can be cut off mid-write.
+  await markLeadTipsConsent(email).catch((err) => {
+    console.error("[newsletter] lead consent update failed:", err);
+  });
 
   try {
     await recordNewsletterOptIn(
