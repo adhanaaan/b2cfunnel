@@ -399,9 +399,9 @@ export const COPY: CopyConfig = {
         rankLabel: "Your rank",
         fastestLabel: "Fastest so far",
         bridgeIntro: "Fast reflexes.",
-        bridgeQuestion: "But how do you score on your",
-        bridgeHighlight: "overall brain health?",
-        cta: "Free brain health quiz",
+        bridgeQuestion: "Continue filling out a questionnaire for",
+        bridgeHighlight: "your brain health report",
+        cta: "Continue to report",
         disclaimer:
           "Reaction-time games are fun, but not a cognitive assessment.",
       },
