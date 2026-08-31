@@ -337,10 +337,6 @@ export function Event3GameResult({
               />
             </motion.button>
           </div>
-
-          <p className="mt-3 text-center text-xs italic leading-5 text-cream-faint">
-            {c.disclaimer}
-          </p>
         </motion.div>
       </motion.div>
 

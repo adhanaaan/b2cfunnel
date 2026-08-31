@@ -178,9 +178,6 @@ export function PostGameHook({
         </div>
 
         <p className="mt-4 text-center text-xs text-outline">{c.credibility}</p>
-        <p className="mt-1 text-center text-xs italic text-outline">
-          {c.disclaimer}
-        </p>
       </div>
     </ScreenShell>
   );

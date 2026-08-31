@@ -104,7 +104,6 @@ export interface GameCopy {
   body: string;
   placeholder: string;
   cta: string;
-  disclaimer: string;
 }
 
 export interface LeaderboardCopy {
@@ -118,7 +117,6 @@ export interface LeaderboardCopy {
   bridgeHeading: string;
   bridgeBody: string;
   cta: string;
-  disclaimer: string;
 }
 
 // Post-game opt-in hook (event only). Recaps the player's processing-speed
@@ -142,7 +140,6 @@ export interface EventHookCopy {
   cta: string;
   decline: string;
   credibility: string;
-  disclaimer: string;
 }
 
 // Event v2 ("Ember Arena", /event-v2). One block per screen in the arena arc;
@@ -185,7 +182,6 @@ export interface Event2Copy {
     cta: string;
     ctaNote: string;
     decline: string;
-    disclaimer: string;
   };
   closing: {
     eyebrow: string;
@@ -262,7 +258,6 @@ export interface Event3Copy {
     bridgeQuestion: string;
     bridgeHighlight: string;
     cta: string;
-    disclaimer: string;
   };
   // Share-sheet caption, assembled from these lines. The play URL is appended
   // by the share ladder, so the last line ends on a colon.

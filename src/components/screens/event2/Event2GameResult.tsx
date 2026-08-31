@@ -374,13 +374,6 @@ export function Event2GameResult({
             {c.decline}
           </button>
         </motion.div>
-
-        <motion.p
-          variants={item}
-          className="mt-4 text-center text-xs italic text-cream-faint"
-        >
-          {c.disclaimer}
-        </motion.p>
       </motion.div>
 
       {/* Dawn wipe: night hands over to the light quiz arc. */}
