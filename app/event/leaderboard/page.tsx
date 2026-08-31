@@ -371,8 +371,7 @@ export default function LeaderboardBoard() {
         className="shrink-0 px-[3vw] py-[1.4vh] text-center text-[1.4vh]"
         style={{ color: "#9AA0AC", borderTop: `1px solid ${C.border}` }}
       >
-        Games are for entertainment. Reaction-time games are fun, but not a
-        cognitive assessment. © Gray Matter Solutions.
+        Games are for entertainment. © Gray Matter Solutions.
       </footer>
     </main>
   );

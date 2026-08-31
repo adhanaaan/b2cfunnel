@@ -319,16 +319,6 @@ export function SymbolMatchGame({
           </div>
         </div>
       </Task2Game>
-
-      <p
-        className={[
-          "pointer-events-none absolute inset-x-0 px-4 text-center text-[11px] italic",
-          warm ? "text-outline" : "text-[#5b2c6f]/70",
-        ].join(" ")}
-        style={{ bottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
-      >
-        Reaction-time games are fun, but not a cognitive assessment.
-      </p>
     </div>
   );
 }

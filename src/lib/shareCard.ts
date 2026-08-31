@@ -325,13 +325,6 @@ export async function generateResultCard(
     W / 2,
     hasQr ? 1268 : 1120,
   );
-  ctx.fillStyle = "#a8877a";
-  ctx.font = `500 24px ${jakarta}`;
-  ctx.fillText(
-    "Reaction-time games are fun, but not a cognitive assessment.",
-    W / 2,
-    1312,
-  );
 
   return toBlob(canvas);
 }
@@ -446,14 +439,6 @@ function drawDaylightCard(
 
   // Drawn at the QR canvas's own 190px so the modules stay pixel-crisp.
   drawQr(ctx, opts.qrCanvas, W / 2, by + 248, 190);
-
-  ctx.fillStyle = "#a98d80";
-  ctx.font = `500 24px ${jakarta}`;
-  ctx.fillText(
-    "Reaction-time games are fun, but not a cognitive assessment.",
-    W / 2,
-    1312,
-  );
 }
 
 /** The cream brain-care tip poster revealed by the pick-a-card flip. */

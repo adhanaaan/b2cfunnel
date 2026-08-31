@@ -183,9 +183,6 @@ export function LeaderboardScreen({
             {c.cta}
           </button>
         </div>
-        <p className="mt-4 text-center text-xs italic text-outline">
-          {c.disclaimer}
-        </p>
       </div>
     </ScreenShell>
   );

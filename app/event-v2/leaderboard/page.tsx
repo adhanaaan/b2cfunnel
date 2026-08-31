@@ -444,9 +444,8 @@ export default function LeaderboardV2Board() {
         className="relative z-10 shrink-0 px-[3vw] py-[1.2vh] text-center text-[1.5vh]"
         style={{ color: CREAM_FAINT, borderTop: `1px solid ${STROKE}` }}
       >
-        Games are for entertainment. Reaction-time games are fun, but not a
-        cognitive assessment. © Gray Matter Solutions · Built with NTU&apos;s
-        Dementia Research Centre.
+        Games are for entertainment. © Gray Matter Solutions · Built with
+        NTU&apos;s Dementia Research Centre.
       </footer>
 
       {/* Podium celebration takeover (queued, one at a time). */}

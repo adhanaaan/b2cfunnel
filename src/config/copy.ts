@@ -223,7 +223,6 @@ export const COPY: CopyConfig = {
       placeholder:
         "Game placeholder: your symbol-matching game will drop in here.",
       cta: "Continue to the leaderboard",
-      disclaimer: "Reaction-time games are fun, but not a cognitive assessment.",
     },
     leaderboard: {
       eyebrow: "Event leaderboard",
@@ -237,7 +236,6 @@ export const COPY: CopyConfig = {
       bridgeBody:
         "Your reaction time is one slice of the picture. See what it says about your brain, and what else shapes your brain health.",
       cta: "See what this means →",
-      disclaimer: "Reaction-time games are fun, but not a cognitive assessment.",
     },
     eventHook: {
       eyebrow: "Brain Health",
@@ -261,8 +259,6 @@ export const COPY: CopyConfig = {
       decline: "No thanks, just the game",
       credibility:
         "Built with NTU's Dementia Research Centre · 2024 Lancet Commission",
-      disclaimer:
-        "Reaction-time games are fun, but not a cognitive assessment.",
     },
     consult: {
       eyebrow: "Let's talk",
@@ -319,8 +315,6 @@ export const COPY: CopyConfig = {
         cta: "Check my brain health",
         ctaNote: "Free. About 3 minutes. Entirely optional.",
         decline: "No thanks, just the game",
-        disclaimer:
-          "Reaction-time games are fun, but not a cognitive assessment.",
       },
       closing: {
         eyebrow: "Your next step",
@@ -402,8 +396,6 @@ export const COPY: CopyConfig = {
         bridgeQuestion: "Continue filling out a questionnaire for",
         bridgeHighlight: "your brain health report",
         cta: "Continue to report",
-        disclaimer:
-          "Reaction-time games are fun, but not a cognitive assessment.",
       },
       share: {
         text: "I scored {time} on the Brain Health Reaction Challenge",
