@@ -21,12 +21,26 @@ export const EVENT2_PAUSED = false;
 export const EVENT3_PAUSED = false;
 
 /**
- * Leaderboard bucket for the v3 funnel. Every /event-v3 score is tagged with
- * this string, and the v3 board only shows rows that match it - which is what
- * keeps v3's standings clear of v1/v2 history.
+ * Leaderboard buckets for the v3 funnel, one per event day. Every /event-v3
+ * score is tagged with the active bucket, and the v3 board only shows rows
+ * that match it - which is what keeps each day's standings clear of every
+ * other event's history.
  *
- * To start a fresh board at the next v3 event, change this string. Previous
- * scores keep their old tag and stay in the table; they just stop appearing.
- * Nothing is ever deleted.
+ * Nothing is ever deleted: rows keep the tag they were written with, so
+ * switching buckets clears the board without touching the database.
  */
-export const EVENT3_SOURCE = "event3";
+export const DBS_DAY1_SOURCE = "dbs-day1";
+export const DBS_DAY2_SOURCE = "dbs-day2";
+
+/**
+ * The bucket currently in play. This is the only line to change between
+ * events:
+ *
+ *   - DBS day 1 (1 Sep): DBS_DAY1_SOURCE  <- active
+ *   - DBS day 2 (2 Sep): DBS_DAY2_SOURCE
+ *
+ * Flip it to DBS_DAY2_SOURCE (and redeploy) at the end of day 1 to start day 2
+ * on an empty board. Day 1's rows stay in the table under "dbs-day1", and the
+ * older "event3" rows stay under theirs.
+ */
+export const EVENT3_SOURCE: string = DBS_DAY1_SOURCE;
