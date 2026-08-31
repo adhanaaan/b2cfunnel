@@ -4,7 +4,7 @@ import {
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
 import type { LeadPayload, LeadRow } from "@/lib/supabase/types";
-import { insertWithOptionalColumn } from "@/lib/supabase/optionalColumn";
+import { insertWithOptionalColumns } from "@/lib/supabase/optionalColumn";
 
 // Service key must run on the Node runtime, not edge.
 export const runtime = "nodejs";
@@ -51,17 +51,17 @@ export async function POST(req: Request) {
     // Three-state on purpose: true, false, or null when we never asked.
     tips_consent:
       typeof payload.tipsConsent === "boolean" ? payload.tipsConsent : null,
+    source: typeof payload.source === "string" ? payload.source : null,
     user_agent: req.headers.get("user-agent"),
   };
 
   try {
     const supabase = getServerSupabase();
-    // tips_consent is optional in the database, so a database that predates the
-    // column must never cost us the lead.
-    const { tips_consent: tipsConsent, ...rest } = row;
-    const { error } = await insertWithOptionalColumn(
-      "tips_consent",
-      tipsConsent ?? null,
+    // tips_consent and source are optional in the database, so a database that
+    // predates either column must never cost us the lead.
+    const { tips_consent: tipsConsent, source, ...rest } = row;
+    const { error } = await insertWithOptionalColumns(
+      { tips_consent: tipsConsent ?? null, source: source ?? null },
       rest,
       (values) => supabase.from("leads").insert(values),
     );
