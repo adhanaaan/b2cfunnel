@@ -1,5 +1,5 @@
 import { getServerSupabase, isSupabaseConfigured } from "./server";
-import { insertWithOptionalColumn } from "./optionalColumn";
+import { insertWithOptionalColumns } from "./optionalColumn";
 
 export interface LeaderboardEntry {
   name: string;
@@ -34,9 +34,8 @@ export async function submitScore(
     time_ms: Math.round(timeMs),
     source: source ?? null,
   };
-  await insertWithOptionalColumn(
-    "tips_consent",
-    tipsConsent ?? null,
+  await insertWithOptionalColumns(
+    { tips_consent: tipsConsent ?? null },
     row,
     (values) => sb.from("game_scores").insert(values),
   );
