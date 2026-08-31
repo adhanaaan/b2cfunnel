@@ -17,11 +17,12 @@ export interface ReportRate {
 }
 
 /**
- * How many players it takes before the percentage is worth showing. With one
- * or two players a single unfinished quiz reads as "0% folks got their report",
- * which is technically true and useless on a 55" panel at an event.
+ * How many players it takes before the percentage is shown. One is enough: the
+ * tile appears as soon as somebody has played, so the board is never silently
+ * missing a panel at an event. Only the genuinely empty case (nobody has played
+ * this event yet, so there is no true percentage to print) hides it.
  */
-export const MIN_PLAYERS_FOR_RATE = 5;
+export const MIN_PLAYERS_FOR_RATE = 1;
 
 /** Case-insensitive unique count, since emails are typed by hand at a booth. */
 function uniqueEmails(emails: readonly string[]): Set<string> {

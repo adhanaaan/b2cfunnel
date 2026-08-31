@@ -34,9 +34,9 @@ describe("computeReportRate", () => {
     expect(rate.meaningful).toBe(false);
   });
 
-  it("withholds the rate until enough people have played", () => {
-    const few = computeReportRate(players(MIN_PLAYERS_FOR_RATE - 1), []);
-    expect(few.meaningful).toBe(false);
+  it("shows the rate as soon as somebody has played", () => {
+    const none = computeReportRate([], []);
+    expect(none.meaningful).toBe(false);
 
     const enough = computeReportRate(players(MIN_PLAYERS_FOR_RATE), []);
     expect(enough.meaningful).toBe(true);
