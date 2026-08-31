@@ -638,8 +638,8 @@ export default function LeaderboardV3Board() {
         className={`${T.footer} relative z-10 shrink-0 px-[4vw] py-2.5 text-center lg:px-[3vw]`}
         style={{ color: INK_FAINT, borderTop: `1px solid ${CARD_LINE}` }}
       >
-        Games are for entertainment. © Gray Matter Solutions · Built with
-        NTU&apos;s Dementia Research Centre.
+        Gray Matter Solutions · A Spin-off from Nanyang Technological
+        University, Singapore
       </footer>
 
       {/* Podium celebration takeover (queued, one at a time). */}
