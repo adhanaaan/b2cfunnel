@@ -35,15 +35,16 @@ export const DBS_DAY1_SOURCE = "dbs-day1";
 export const DBS_DAY2_SOURCE = "dbs-day2";
 
 /**
- * The bucket currently in play. This is the only line to change between
- * events:
+ * The bucket currently in play.
  *
- *   - DBS day 1 (1 Sep): DBS_DAY1_SOURCE  <- active
- *   - DBS day 2 (2 Sep): DBS_DAY2_SOURCE
+ * DBS (1-2 Sep) runs BOTH DAYS on DBS_DAY1_SOURCE, by decision: one
+ * leaderboard carries across the two days, so day 2 opens on day 1's
+ * standings rather than an empty board. Do not flip this to DBS_DAY2_SOURCE
+ * overnight - that would clear the board mid-event.
  *
- * Flip it to DBS_DAY2_SOURCE (and redeploy) at the end of day 1 to start day 2
- * on an empty board. Day 1's rows stay in the table under "dbs-day1", and the
- * older "event3" rows stay under theirs.
+ * DBS_DAY2_SOURCE is kept for the next event that does want a fresh board:
+ * point this at it (and redeploy) to start one. Whatever this is set to, older
+ * rows keep the tag they were written with and simply stop appearing.
  */
 export const EVENT3_SOURCE: string = DBS_DAY1_SOURCE;
 

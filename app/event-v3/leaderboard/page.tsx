@@ -320,10 +320,14 @@ function ScanRail() {
         </span>
       </p>
 
-      {/* QR + bolt. The QR takes the height that is left, so it stays the
-          biggest thing in the rail without ever pushing the headline off. */}
+      {/* QR + bolt. The code is sized explicitly rather than by aspect-ratio
+          against a percentage height: Safari (which runs the board at events)
+          resolves `aspect-square h-full` inside nested flex differently from
+          Chromium and collapsed the code to a fraction of its intended size on
+          a 13" laptop. min(vw, vh) keeps it as large as the column and the
+          leftover height allow, in every engine. */}
       <div className="relative flex min-h-0 flex-1 items-center justify-center lg:justify-start">
-        <div className="relative flex h-full max-w-full items-center">
+        <div className="relative flex max-w-full items-center">
           {/* Scannability settings measured at a live event (#46), kept
               through the redesign: no size cap, so the code grows until the
               column or the leftover height stops it; level L needs 29 modules
@@ -333,7 +337,7 @@ function ScanRail() {
               black thresholds better than the brand brown on a washed-out
               projector and is indistinguishable across a room. */}
           <div
-            className="flex aspect-square h-full max-w-full items-center justify-center rounded-[1.4rem] bg-white p-[0.25rem]"
+            className="flex size-[min(70vw,40vh)] max-w-full items-center justify-center rounded-[1.4rem] bg-white p-[0.25rem] lg:size-[min(29vw,46vh)]"
             style={{ border: "0.5rem solid #111111" }}
           >
             <QRCodeSVG
