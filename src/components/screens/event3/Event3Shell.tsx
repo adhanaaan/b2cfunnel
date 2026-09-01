@@ -17,6 +17,12 @@ interface Event3ShellProps {
   sparkles?: boolean;
   /** Soft peach blobs instead of pills (instructions page). */
   blobs?: boolean;
+  /**
+   * Let the page scroll instead of pinning it to one viewport. Off by default,
+   * so the arena screens keep their hard lock; used by longer-than-a-screen
+   * content such as the /event-v5 consent preview.
+   */
+  scroll?: boolean;
 }
 
 // One solid + one soft gradient pill per corner cluster, as designed.
@@ -62,6 +68,7 @@ export function Event3Shell({
   pills = true,
   sparkles = false,
   blobs = false,
+  scroll = false,
 }: Event3ShellProps) {
   // The arena screens are hard-locked to one viewport. h-dvh alone is not
   // enough on mobile: the document keeps the taller large-viewport height
@@ -69,6 +76,7 @@ export function Event3Shell({
   // browser-chrome offset and a step can open mid-page. Pin the document
   // itself for as long as an arena screen is mounted, and land at the top.
   useEffect(() => {
+    if (scroll) return;
     const html = document.documentElement;
     html.classList.add("event3-locked");
     document.body.classList.add("event3-locked");
@@ -77,10 +85,16 @@ export function Event3Shell({
       html.classList.remove("event3-locked");
       document.body.classList.remove("event3-locked");
     };
-  }, []);
+  }, [scroll]);
 
   return (
-    <main className="variant-event2 fixed inset-0 isolate flex flex-col items-center overflow-hidden px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] text-charcoal">
+    <main
+      className={`variant-event2 isolate flex flex-col items-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] text-charcoal ${
+        scroll
+          ? "relative min-h-dvh w-full overflow-x-hidden"
+          : "fixed inset-0 overflow-hidden"
+      }`}
+    >
       <div
         aria-hidden
         className="event3-daylight pointer-events-none fixed inset-0 z-0 overflow-hidden"
