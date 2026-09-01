@@ -65,18 +65,11 @@ export async function getLeaderboard(
 
   if (error || !data) return [];
 
-  // data is sorted ascending, so the first row per player is their best.
-  //
-  // Keyed on a normalised email: booth emails are typed by hand, so the same
-  // person can arrive as "Rylee@X.com" and "rylee@x.com" and would otherwise
-  // occupy two rows on the board (seen live at the DBS event). Same rule as
-  // computeReportRate, so the board and the completion stat count one person
-  // the same way.
+  // data is sorted ascending, so the first row per email is that player's best.
   const best = new Map<string, LeaderboardEntry>();
   for (const r of data as { name: string; email: string; time_ms: number }[]) {
-    const key = (r.email ?? "").trim().toLowerCase();
-    if (!best.has(key)) {
-      best.set(key, { name: r.name, email: r.email, timeMs: r.time_ms });
+    if (!best.has(r.email)) {
+      best.set(r.email, { name: r.name, email: r.email, timeMs: r.time_ms });
     }
   }
   return [...best.values()]
