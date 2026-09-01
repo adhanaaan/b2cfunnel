@@ -349,6 +349,9 @@ export interface ScreenCopy {
   consult: ConsultCopy;
   event2: Event2Copy;
   event3: Event3Copy;
+  // Speed Game (/speedgame). An independent duplicate of the event3 arena arc
+  // - same shape, its own copy block so the two can be worded independently.
+  speedgame: Event3Copy;
 }
 
 // What changes per persona on the result screen: the score blurb (per band) and

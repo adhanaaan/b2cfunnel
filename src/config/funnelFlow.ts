@@ -206,12 +206,23 @@ const EVENT3_FLOW: FunnelStep[] = EVENT2_FLOW.filter(
   (step) => step.kind !== "statCard",
 );
 
+/**
+ * Speed Game (/speedgame). An independent duplicate of EVENT3_FLOW - same
+ * step sequence and question set, kept as its own array (rather than an alias
+ * of EVENT3_FLOW) so the two flows can diverge later without one edit
+ * silently changing the other.
+ */
+const SPEEDGAME_FLOW: FunnelStep[] = EVENT2_FLOW.filter(
+  (step) => step.kind !== "statCard",
+);
+
 const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   full: FULL_FLOW,
   event: EVENT_FLOW,
   woman: WOMAN_FLOW,
   event2: EVENT2_FLOW,
   event3: EVENT3_FLOW,
+  speedgame: SPEEDGAME_FLOW,
 };
 
 /** All question ids in a variant's flow (single questions + grouped pages). */

@@ -31,6 +31,9 @@ import { Event2Closing } from "@/components/screens/event2/Event2Closing";
 import { Event3Splash } from "@/components/screens/event3/Event3Splash";
 import { Event3Instructions } from "@/components/screens/event3/Event3Instructions";
 import { Event3GameResult } from "@/components/screens/event3/Event3GameResult";
+import { SpeedgameSplash } from "@/components/screens/speedgame/SpeedgameSplash";
+import { SpeedgameInstructions } from "@/components/screens/speedgame/SpeedgameInstructions";
+import { SpeedgameGameResult } from "@/components/screens/speedgame/SpeedgameGameResult";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
 import { BookingScreen } from "@/components/screens/BookingScreen";
 import { ConsultScreen } from "@/components/screens/ConsultScreen";
@@ -162,8 +165,11 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "nameGate":
-      // Event2/3: the single email capture (leaderboard key + results address).
-      return state.variant === "event3" ? (
+      // Event2/3/Speed Game: the single email capture (leaderboard key +
+      // results address).
+      return state.variant === "speedgame" ? (
+        <SpeedgameSplash onSubmit={submitEmail} />
+      ) : state.variant === "event3" ? (
         <Event3Splash onSubmit={submitEmail} />
       ) : state.variant === "event2" ? (
         <Event2Splash onSubmit={submitEmail} />
@@ -173,7 +179,11 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "instructions": {
       const InstructionsScreen =
-        state.variant === "event3" ? Event3Instructions : Event2Instructions;
+        state.variant === "speedgame"
+          ? SpeedgameInstructions
+          : state.variant === "event3"
+            ? Event3Instructions
+            : Event2Instructions;
       return (
         <InstructionsScreen
           onDemo={() => {
@@ -259,7 +269,10 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       ) : null;
 
     case "game": {
-      const ember = state.variant === "event2" || state.variant === "event3";
+      const ember =
+        state.variant === "event2" ||
+        state.variant === "event3" ||
+        state.variant === "speedgame";
       return (
         <GameScreen
           onComplete={handleGameDone}
@@ -290,6 +303,20 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       return <ConsultScreen />;
 
     case "gameResult":
+      if (state.variant === "speedgame") {
+        return (
+          <SpeedgameGameResult
+            name={state.name}
+            email={state.email}
+            timeMs={state.gameTimeMs}
+            onContinue={next}
+            onRetake={() => {
+              track("game_retake", { variant: state.variant });
+              retakeGame();
+            }}
+          />
+        );
+      }
       if (state.variant === "event3") {
         return (
           <Event3GameResult

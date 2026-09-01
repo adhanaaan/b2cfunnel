@@ -422,6 +422,71 @@ export const COPY: CopyConfig = {
         closeLabel: "Got it",
       },
     },
+    // Speed Game (/speedgame). Independent duplicate of the event3 arena arc.
+    speedgame: {
+      splash: {
+        eyebrow: "Reaction Time Challenge",
+        heading: "How *fast* does your *brain* process?",
+        body: "Take a quick symbol-matching test to find out your brain processing speed.",
+        namePlaceholder: "Name",
+        emailPlaceholder: "Your email",
+        consentRequired:
+          "(Required) I agree to be contacted about my results and prize.",
+        consentRequiredError:
+          "Please agree to be contacted so we can send you your results.",
+        consentMarketing:
+          "Send me occasional brain health tips and updates.",
+        privacyLinkLabel: "Privacy Policy",
+        cta: "Start the challenge",
+        poweredBy: "Powered by:",
+      },
+      instructions: {
+        heading: "Reaction Time Challenge",
+        subheading: "Match {count} symbols to its number as fast as you can.",
+        demoBadge: "DEMO · PLAYS ITSELF",
+        helper:
+          "The symbols swap places after every turn, so check the key each time.",
+        demoCta: "Demo round",
+        playCta: "Play",
+      },
+      gameResult: {
+        shareLabel: "Share",
+        retryLabel: "Retry",
+        headingPrefix: "You just tested your",
+        headingHighlight: "processing speed",
+        youLabel: "Your time",
+        rankLabel: "Your rank",
+        fastestLabel: "Fastest so far",
+        bridgeIntro: "Fast reflexes.",
+        bridgeQuestion: "Continue filling out a questionnaire for",
+        bridgeHighlight: "your brain health report",
+        cta: "Continue to report",
+      },
+      share: {
+        text: "I scored {time} on the Brain Health Reaction Challenge",
+        rankLine: "Rank {rank}/{total}",
+        cta: "Can you beat my score? Try it for yourself here:",
+      },
+      speedPopup: {
+        eyebrow: "What that actually means",
+        headingParts: [
+          "Processing speed is ",
+          "how fast",
+          " your brain ",
+          "takes in",
+          " what it sees and ",
+          "responds",
+          ".",
+        ],
+        intro: "With high processing speed, you can:",
+        points: [
+          "Keep up with fast-paced conversations",
+          "Adapt swiftly to changing environments",
+          "Add up the bill before the cashier finishes scanning",
+        ],
+        closeLabel: "Got it",
+      },
+    },
   },
 
   personas: {

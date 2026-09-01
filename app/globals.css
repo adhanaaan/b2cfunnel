@@ -260,6 +260,29 @@
     overflow: hidden;
   }
 
+  /* ---- Speed Game arena (independent duplicate of Daylight Ember) ---- */
+
+  .speedgame-daylight {
+    background: radial-gradient(
+      140% 100% at 0% 0%,
+      #fae0c7 0%,
+      #fcf0e5 60%,
+      #fff7f2 100%
+    );
+  }
+
+  html.speedgame-locked {
+    overflow: hidden;
+    height: 100%;
+  }
+  body.speedgame-locked {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
   /* The game board (ported from recognaizelite) is built for a light backdrop:
      white glass panels, purple keys, a white halo behind the main icon. It gets
      the brand gradient, matching the quiz screens and the document background. */
