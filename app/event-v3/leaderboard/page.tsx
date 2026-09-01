@@ -285,30 +285,41 @@ function StandingRow({
 
 function ScanCard({ reportPct }: { reportPct: number | null }) {
   return (
-    <div className="flex h-full flex-col justify-center rounded-2xl bg-surface-container p-3 sm:p-5">
-      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[1.4vh] rounded-xl bg-white p-4 shadow-card sm:gap-[2.2vh] sm:p-5">
-        {/* The QR absorbs whatever height is left so it stays as large as the
-            card allows without ever pushing the copy below out of view. */}
+    <div className="flex h-full flex-col justify-center rounded-2xl bg-surface-container p-3 sm:p-4">
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[1.4vh] rounded-xl bg-white p-4 shadow-card sm:gap-[1.8vh]">
+        {/* Scanning this from across a room is the whole job of this card, so
+            the QR takes every pixel the card can spare: no size cap, growing
+            until the column width or the leftover height stops it.
+
+            Level L over M - this URL needs 29 modules at L against 33 at M, so
+            each module is ~14% larger in the same box, and a projected screen
+            is clean enough that L's lower damage tolerance costs nothing.
+            marginSize={4} puts the spec'd four-module quiet zone inside the
+            SVG; the CSS padding it replaces came to barely one module at this
+            size, which is a common reason scanners give up at distance. Pure
+            black beats the brand brown for camera thresholding on a washed-out
+            projector, and is indistinguishable from it across a room. */}
         <div className="flex min-h-[11rem] w-full min-w-0 flex-1 items-center justify-center lg:min-h-0">
-          <div className="flex aspect-square h-full max-h-[19rem] max-w-full items-center justify-center rounded-[1.6rem] border-[5px] border-outline-variant bg-white p-[0.4rem] sm:p-[0.9rem]">
+          <div className="flex aspect-square h-full max-w-full items-center justify-center rounded-[1.6rem] border-[5px] border-outline-variant bg-white p-[0.25rem]">
             <QRCodeSVG
               value={PLAY_URL}
               className="h-full w-full"
-              level="M"
-              fgColor="#331200"
+              level="L"
+              marginSize={4}
+              fgColor="#000000"
               bgColor="#ffffff"
             />
           </div>
         </div>
 
-        <div className="flex w-full min-w-0 shrink-0 flex-col gap-[1.2vh] sm:gap-[1.9vh]">
+        <div className="flex w-full min-w-0 shrink-0 flex-col gap-[1.2vh] px-4 pb-4 sm:gap-[1.1vh]">
           <p
             className={`${T.scanTitle} font-extrabold leading-[1.1] tracking-tight text-charcoal`}
           >
             Scan to test your speed
           </p>
           <ol
-            className={`${T.scanList} list-decimal space-y-[0.2em] ps-[1.4em] leading-[1.39] text-charcoal`}
+            className={`${T.scanList} list-decimal ps-[1.4em] leading-[1.25] text-charcoal`}
           >
             {HOW_TO.map((step) => (
               <li key={step}>{step}</li>
@@ -332,7 +343,7 @@ function ScanCard({ reportPct }: { reportPct: number | null }) {
               }}
             />
             <p
-              className={`${T.statBody} relative px-[1em] pb-[1.3em] pt-[0.8em] text-center leading-[1.39] text-charcoal`}
+              className={`${T.statBody} relative px-[1em] pb-[1.05em] pt-[0.55em] text-center leading-[1.3] text-charcoal`}
             >
               <span className={`${T.statBig} font-bold`}>{reportPct}%</span>{" "}
               <span className="font-normal">folks got their </span>
@@ -552,7 +563,7 @@ export default function LeaderboardV3Board() {
       </header>
 
       {/* Body: scan | standings | prize. Reflows to 1 col, then 2, then 3. */}
-      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 md:grid-cols-2 lg:grid-cols-[450fr_697fr_544fr] lg:gap-[1.6vw] lg:px-[3vw] lg:py-[2vh]">
+      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 md:grid-cols-2 lg:grid-cols-[560fr_660fr_520fr] lg:gap-[1.6vw] lg:px-[3vw] lg:py-[2vh]">
         <div className="order-2 md:order-2 lg:order-1 lg:min-h-0">
           {EVENT3_PAUSED ? (
             <div
