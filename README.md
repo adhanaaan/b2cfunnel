@@ -162,9 +162,11 @@ score at that event cannot push the rate above 100%, and a player who retries th
 game counts once.
 
 The `/event-v3` board polls it every 30s for the "N% folks got their brain health
-report" tile. The tile stays hidden until at least `MIN_PLAYERS_FOR_RATE`
-(`src/lib/reportRate.ts`) people have played - early in an event a single
-unfinished quiz would otherwise read as "0% folks got their report".
+report" tile. The tile is hidden only when there is no true percentage to print:
+nobody has played this event yet, or `leads.source` is missing so reports cannot
+be counted. **If the tile is missing on a deployed board, hit
+`/api/report-rate?source=<bucket>` directly** - `players: 0` means the migration
+above has not been run or no scores carry that tag yet.
 
 **`tips_consent` records the brain health tips consent** as a three-state value:
 `true` (ticked), `false` (left unticked), or `null` when we never asked - every

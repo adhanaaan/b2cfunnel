@@ -326,9 +326,9 @@ function ScanCard({ reportPct }: { reportPct: number | null }) {
             ))}
           </ol>
 
-          {/* Stat tile: live completion rate, hidden until it means something
-              (see MIN_PLAYERS_FOR_RATE - early in an event, one unfinished
-              quiz would read as "0% folks got their report"). */}
+          {/* Stat tile: live completion rate. Hidden only while nobody has
+              played this event (no true percentage to print) or while the rate
+              cannot be read yet - see getReportRate. */}
           {reportPct !== null && (
           <div
             className="relative overflow-hidden rounded-xl shadow-card"
