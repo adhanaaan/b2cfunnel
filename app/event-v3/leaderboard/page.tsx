@@ -57,15 +57,16 @@ const EMPTY_TIME = "#dcc4b6";
 const RANK_SILVER = "#c3cad6";
 const RANK_BRONZE = "#d99058";
 const PRIZE_WARM = "#ffe4cf";
-const STAT_SURFACE = "#fdfaf7";
+// Scan-rail headline: deep ember for the emphasised words, and the highlighter
+// yellow behind "< 60 SECONDS" (the Processing Speed domain's light tone).
+const SCAN_ACCENT = "#993c1d";
+const SCAN_HIGHLIGHT = "#fde68a";
 
 const CANVAS =
   "linear-gradient(150deg, #fff8f6 15%, #fdeee4 46%, #fbe3d3 85%)";
 const LEADER_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
 const PRIZE_GRADIENT =
   "linear-gradient(147deg, #ff6002 3%, #f77528 46%, rgba(255,199,156,0.87) 99%)";
-const PROGRESS_GRADIENT =
-  "linear-gradient(169deg, #ff8a1f 7%, #f9550f 52%, #d62f16 94%)";
 
 /**
  * Clamped type sizes. The middle term is `min(vh, vw)` on purpose: the board is
@@ -88,9 +89,9 @@ const T = {
   prizeTitle: "text-[clamp(1.375rem,min(5.5vh,7.5vw),3.75rem)]",
   prizeWorth: "text-[clamp(0.8125rem,min(2.6vh,3.6vw),1.75rem)]",
   scanTitle: "text-[clamp(1rem,min(3vh,4.4vw),2rem)]",
-  scanList: "text-[clamp(0.8125rem,min(2.2vh,3.4vw),1.5rem)]",
-  statBig: "text-[clamp(1rem,min(2.8vh,4vw),1.875rem)]",
-  statBody: "text-[clamp(0.75rem,min(2.15vh,3.2vw),1.4375rem)]",
+  // The scan headline is the loudest type on the board: sized off the 48.6px
+  // base of the design, with the emphasised words stepped up in em from there.
+  scanHead: "text-[clamp(1.375rem,min(4.5vh,4.8vw),3.0375rem)]",
   fact: "text-[clamp(0.75rem,min(2.5vh,3.4vw),1.6875rem)]",
   footer: "text-[clamp(0.5625rem,min(1.5vh,2.2vw),1rem)]",
 };
@@ -281,26 +282,60 @@ function StandingRow({
   );
 }
 
-/* ------------------------------ Scan card ------------------------------- */
+/* ------------------------------ Scan rail ------------------------------- */
 
-function ScanCard({ reportPct }: { reportPct: number | null }) {
+/**
+ * The left rail: the call to action, then the QR as large as the column allows.
+ * Deliberately card-less - the headline sits straight on the canvas so it reads
+ * from across a room, with the game's own lightning symbol tucked beside the
+ * code the way the design has it.
+ */
+function ScanRail() {
   return (
-    <div className="flex h-full flex-col justify-center rounded-2xl bg-surface-container p-3 sm:p-4">
-      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[1.4vh] rounded-xl bg-white p-4 shadow-card sm:gap-[1.8vh]">
-        {/* Scanning this from across a room is the whole job of this card, so
-            the QR takes every pixel the card can spare: no size cap, growing
-            until the column width or the leftover height stops it.
+    <div className="flex h-full min-h-0 flex-col justify-center gap-[2vh] lg:gap-[3vh]">
+      <p
+        className={`${T.scanHead} shrink-0 font-extrabold leading-[1.28] tracking-tight text-charcoal`}
+      >
+        SCAN TO{" "}
+        <span className="text-[1.27em]" style={{ color: SCAN_ACCENT }}>
+          MEASURE
+        </span>
+        <br />
+        YOUR{" "}
+        <span className="text-[1.29em]" style={{ color: SCAN_ACCENT }}>
+          SPEED
+        </span>
+        <br />
+        <span className="text-[1.18em]">
+          in{" "}
+          {/* The vw term in T.scanHead is tuned so this phrase fits one line
+              at every width; box-decoration-clone keeps the highlight whole if
+              a future string ever does wrap. */}
+          <span
+            className="box-decoration-clone px-[0.14em] py-[0.02em] text-[1.11em]"
+            style={{ background: SCAN_HIGHLIGHT }}
+          >
+            &lt; 60 SECONDS
+          </span>
+        </span>
+      </p>
 
-            Level L over M - this URL needs 29 modules at L against 33 at M, so
-            each module is ~14% larger in the same box, and a projected screen
-            is clean enough that L's lower damage tolerance costs nothing.
-            marginSize={4} puts the spec'd four-module quiet zone inside the
-            SVG; the CSS padding it replaces came to barely one module at this
-            size, which is a common reason scanners give up at distance. Pure
-            black beats the brand brown for camera thresholding on a washed-out
-            projector, and is indistinguishable from it across a room. */}
-        <div className="flex min-h-[11rem] w-full min-w-0 flex-1 items-center justify-center lg:min-h-0">
-          <div className="flex aspect-square h-full max-w-full items-center justify-center rounded-[1.6rem] border-[5px] border-outline-variant bg-white p-[0.25rem]">
+      {/* QR + bolt. The QR takes the height that is left, so it stays the
+          biggest thing in the rail without ever pushing the headline off. */}
+      <div className="relative flex min-h-0 flex-1 items-center justify-center lg:justify-start">
+        <div className="relative flex h-full max-w-full items-center">
+          {/* Scannability settings measured at a live event (#46), kept
+              through the redesign: no size cap, so the code grows until the
+              column or the leftover height stops it; level L needs 29 modules
+              against M's 33, making each ~14% larger in the same box; and
+              marginSize={4} puts the spec'd four-module quiet zone inside the
+              SVG, where the design's black frame cannot eat into it. Pure
+              black thresholds better than the brand brown on a washed-out
+              projector and is indistinguishable across a room. */}
+          <div
+            className="flex aspect-square h-full max-w-full items-center justify-center rounded-[1.4rem] bg-white p-[0.25rem]"
+            style={{ border: "0.5rem solid #111111" }}
+          >
             <QRCodeSVG
               value={PLAY_URL}
               className="h-full w-full"
@@ -310,58 +345,20 @@ function ScanCard({ reportPct }: { reportPct: number | null }) {
               bgColor="#ffffff"
             />
           </div>
-        </div>
-
-        <div className="flex w-full min-w-0 shrink-0 flex-col gap-[1.2vh] px-4 pb-4 sm:gap-[1.1vh]">
-          <p
-            className={`${T.scanTitle} font-extrabold leading-[1.1] tracking-tight text-charcoal`}
-          >
-            Scan to test your speed
-          </p>
-          <ol
-            className={`${T.scanList} list-decimal ps-[1.4em] leading-[1.25] text-charcoal`}
-          >
-            {HOW_TO.map((step) => (
-              <li key={step}>{step}</li>
-            ))}
-          </ol>
-
-          {/* Stat tile: live completion rate, hidden until it means something
-              (see MIN_PLAYERS_FOR_RATE - early in an event, one unfinished
-              quiz would read as "0% folks got their report"). */}
-          {reportPct !== null && (
-          <div
-            className="relative overflow-hidden rounded-xl shadow-card"
-            style={{ background: STAT_SURFACE }}
-          >
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(60% 120% at 25% 50%, rgba(245,158,10,0.25), rgba(255,235,87,0.06) 100%)",
-              }}
-            />
-            <p
-              className={`${T.statBody} relative px-[1em] pb-[1.05em] pt-[0.55em] text-center leading-[1.3] text-charcoal`}
-            >
-              <span className={`${T.statBig} font-bold`}>{reportPct}%</span>{" "}
-              <span className="font-normal">folks got their </span>
-              <span className="font-bold">brain health report</span>{" "}
-              <span aria-hidden>🧠</span>
-            </p>
-            <div
-              aria-hidden
-              className="absolute inset-x-0 bottom-0 h-[0.6vh] min-h-[6px] bg-[#d9d9d9]"
-            >
-              <div
-                className="h-full"
-                style={{ width: `${reportPct}%`, background: PROGRESS_GRADIENT }}
-              />
-            </div>
-          </div>
-          )}
-
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/task-2/flash.png"
+            alt=""
+            aria-hidden
+            className="animate-symbol-drift pointer-events-none absolute -bottom-[3%] -right-[9%] w-[clamp(3.5rem,min(18vh,14vw),11rem)] rotate-[17deg] drop-shadow-[0_18px_32px_rgba(0,0,0,0.25)]"
+            style={{
+              ["--drift-y" as string]: "-10px",
+              ["--drift-x" as string]: "0px",
+              ["--drift-tilt" as string]: "17deg",
+              ["--drift-tilt-to" as string]: "22deg",
+              ["--drift-duration" as string]: "6s",
+            }}
+          />
         </div>
       </div>
     </div>
@@ -376,7 +373,7 @@ function PrizeCard() {
       className="flex h-full flex-col rounded-2xl px-4 pb-4 sm:px-5 sm:pb-5"
       style={{ background: PRIZE_GRADIENT }}
     >
-      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[2vh] px-2 pb-1 pt-4 text-center sm:gap-[3.2vh] sm:px-5 sm:pt-6">
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[2vh] px-2 pb-1 pt-4 text-center sm:gap-[3.2vh] sm:px-5 sm:pt-6 lg:px-1.5">
         <div className="flex shrink-0 flex-col items-center gap-[1.8vh]">
           <p
             className={`${T.prizeChip} rounded-full bg-white px-[1.05em] py-[0.5em] font-extrabold uppercase tracking-[0.18em]`}
@@ -508,18 +505,22 @@ export default function LeaderboardV3Board() {
     };
   }, []);
 
+  // Strip slots: every brain fact, the how-to, and - once there is one - the
+  // live completion rate. The rate lives here rather than in a tile of its own,
+  // so the scan rail stays the single call to action the design asks for.
+  const slots = BRAIN_FACTS.length + 1 + (reportPct !== null ? 1 : 0);
+
   useEffect(() => {
-    const id = setInterval(
-      () => setFactIdx((i) => (i + 1) % (BRAIN_FACTS.length + 1)),
-      FACT_MS,
-    );
+    const id = setInterval(() => setFactIdx((i) => (i + 1) % slots), FACT_MS);
     return () => clearInterval(id);
-  }, []);
+  }, [slots]);
 
   const rows = Array.from({ length: TOP_N }, (_, i) => entries[i] ?? null);
   const leader = entries[0] ?? null;
-  // Every (facts+1)th slot shows the how-to instead of a fact.
-  const showHowTo = factIdx === BRAIN_FACTS.length;
+  // Guarded modulo: the slot count shrinks again if the rate goes away.
+  const slot = factIdx % slots;
+  const showHowTo = slot === BRAIN_FACTS.length;
+  const showRate = reportPct !== null && slot === BRAIN_FACTS.length + 1;
 
   return (
     <main
@@ -563,7 +564,7 @@ export default function LeaderboardV3Board() {
       </header>
 
       {/* Body: scan | standings | prize. Reflows to 1 col, then 2, then 3. */}
-      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 md:grid-cols-2 lg:grid-cols-[560fr_660fr_520fr] lg:gap-[1.6vw] lg:px-[3vw] lg:py-[2vh]">
+      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 md:grid-cols-2 lg:grid-cols-[588fr_640fr_499fr] lg:gap-[1.6vw] lg:px-[3vw] lg:py-[2vh]">
         <div className="order-2 md:order-2 lg:order-1 lg:min-h-0">
           {EVENT3_PAUSED ? (
             <div
@@ -587,7 +588,7 @@ export default function LeaderboardV3Board() {
               </p>
             </div>
           ) : (
-            <ScanCard reportPct={reportPct} />
+            <ScanRail />
           )}
         </div>
 
@@ -621,7 +622,17 @@ export default function LeaderboardV3Board() {
             transition={{ duration: 0.45 }}
             className={`${T.fact} text-center`}
           >
-            {showHowTo ? (
+            {showRate ? (
+              <>
+                <span className="font-extrabold text-primary">
+                  {reportPct}%
+                </span>{" "}
+                <span className="font-semibold">
+                  folks got their brain health report
+                </span>{" "}
+                <span aria-hidden>🧠</span>
+              </>
+            ) : showHowTo ? (
               <span className="font-bold">
                 {HOW_TO.map((t, i) => (
                   <span key={t}>
@@ -637,7 +648,7 @@ export default function LeaderboardV3Board() {
                 <span className="font-bold uppercase tracking-[0.2em] text-primary">
                   Brain fact&nbsp;&nbsp;
                 </span>
-                <span className="font-semibold">{BRAIN_FACTS[factIdx]}</span>
+                <span className="font-semibold">{BRAIN_FACTS[slot]}</span>
               </>
             )}
           </motion.p>
