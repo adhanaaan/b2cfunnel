@@ -23,6 +23,11 @@ interface Event3ShellProps {
    * content such as the /event-v5 consent preview.
    */
   scroll?: boolean;
+  /**
+   * Adds the partner's navy pill to the corners (event6 consent page, where
+   * the backdrop carries both brands).
+   */
+  navyPills?: boolean;
 }
 
 // One solid + one soft gradient pill per corner cluster, as designed.
@@ -79,6 +84,7 @@ export function Event3Shell({
   sparkles = false,
   blobs = false,
   scroll = false,
+  navyPills = false,
 }: Event3ShellProps) {
   // The arena screens are hard-locked to one viewport. h-dvh alone is not
   // enough on mobile: the document keeps the taller large-viewport height
