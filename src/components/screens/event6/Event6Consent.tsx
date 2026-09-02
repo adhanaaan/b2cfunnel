@@ -6,7 +6,7 @@ import { COPY } from "@/config/copy";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "@/components/screens/event3/Event3Shell";
 import { ctaPrimaryClass } from "@/components/screens/event3/ui";
-import { PartnerLogo } from "@/components/screens/event6/PartnerLogo";
+import { PartnerLogo } from "@/components/screens/event3/PartnerLogo";
 
 interface Event6ConsentProps {
   onSubmit: (accepted: boolean[]) => void;

@@ -38,6 +38,11 @@ export function useFunnel(variant: QuizVariant) {
       dispatch({ type: "SUBMIT_PERSONAL_EMAIL", name, email }),
     [],
   );
+  const submitConsent = useCallback(
+    (partnerConsent: boolean) =>
+      dispatch({ type: "SUBMIT_CONSENT", partnerConsent }),
+    [],
+  );
   const analysisDone = useCallback(
     () => dispatch({ type: "ANALYSIS_DONE" }),
     [],
@@ -64,6 +69,7 @@ export function useFunnel(variant: QuizVariant) {
     submitName,
     submitEmail,
     submitPersonalEmail,
+    submitConsent,
     analysisDone,
     gameDone,
     skipToKind,

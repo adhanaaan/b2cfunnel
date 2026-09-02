@@ -237,6 +237,21 @@ export interface Event3Copy {
     cta: string;
     poweredBy: string;
   };
+  // Partner consent page, between the landing and the instructions. IHH's
+  // wording is one all-or-nothing agreement, so it is one tick over the whole
+  // block rather than a tick per clause.
+  consent: {
+    heading: string;
+    body: string;
+    eyebrow: string;
+    // The clauses the single tick covers, in the partner's own words. {link}
+    // marks where the inline link sits inside a clause.
+    clauses: { text: string; link?: { label: string; href: string } }[];
+    // Sits below the tick, unticked: a statement of the withdrawal right, not
+    // something to agree to.
+    withdrawal: { text: string; link?: { label: string; href: string } };
+    cta: string;
+  };
   instructions: {
     heading: string;
     // Rendered with the {count} bolded inline.

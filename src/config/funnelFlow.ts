@@ -201,19 +201,23 @@ const WOMAN_FLOW: FunnelStep[] = [
  * EVENT2_FLOW's, which is what keeps normalised scores and bands comparable
  * with /event-v2 and all historical leads (achievableAxisMax only sums
  * question steps - see the note above).
+ *
+ * The partner consent page sits directly after the landing, so it is answered
+ * before the instructions and their demo round - nothing is played until the
+ * partner's consent has been put to the player.
  */
 const EVENT3_FLOW: FunnelStep[] = EVENT2_FLOW.filter(
   (step) => step.kind !== "statCard",
+).flatMap((step) =>
+  step.kind === "nameGate" ? [step, { kind: "consent" } as FunnelStep] : [step],
 );
 
 /**
- * Event v6 (/event-v6, preview): the v3 flow with the partner consent page
- * between the landing and the instructions - consent on the landing stays as
- * it is, and the partner's own consents get a page of their own.
+ * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
+ * so the split-tick treatment of the partner consents (one box per clause) can
+ * still be walked through and compared against the single tick that v3 ships.
  */
-const EVENT6_FLOW: FunnelStep[] = EVENT3_FLOW.flatMap((step) =>
-  step.kind === "nameGate" ? [step, { kind: "consent" } as FunnelStep] : [step],
-);
+const EVENT6_FLOW: FunnelStep[] = EVENT3_FLOW;
 
 const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   full: FULL_FLOW,

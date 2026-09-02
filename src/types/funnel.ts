@@ -16,7 +16,7 @@ export type QuizVariant =
 export type FunnelStep =
   | { kind: "hook" }
   | { kind: "nameGate" }
-  | { kind: "consent" } // event6: partner consent page between landing and game
+  | { kind: "consent" } // event3/event6: partner consent page between landing and game
   | { kind: "question"; questionId: string }
   | { kind: "questionGroup"; title: string; questionIds: string[] }
   | { kind: "statCard"; cardId: string }
@@ -47,6 +47,10 @@ export interface FunnelState {
   // Brain-health-tips consent from the landing page. Undefined when the variant
   // never asked, which is stored as null rather than false.
   tipsConsent?: boolean;
+  // The partner (IHH) consent from the consent page. Same three states as
+  // tipsConsent: ticked, left unticked, or undefined when the variant has no
+  // consent page at all.
+  partnerConsent?: boolean;
 }
 
 export type FunnelAction =
@@ -56,6 +60,8 @@ export type FunnelAction =
   | { type: "SUBMIT_NAME"; name: string }
   | { type: "SUBMIT_EMAIL"; name: string; email: string; tipsConsent?: boolean }
   | { type: "SUBMIT_PERSONAL_EMAIL"; name: string; email: string }
+  // Consent page: records the partner consent, ticked or not, and moves on.
+  | { type: "SUBMIT_CONSENT"; partnerConsent: boolean }
   | { type: "ANALYSIS_DONE" }
   | { type: "GAME_DONE"; timeMs: number }
   // Jump forward to the first step of a kind (event2: decline from gameResult

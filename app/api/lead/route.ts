@@ -51,17 +51,30 @@ export async function POST(req: Request) {
     // Three-state on purpose: true, false, or null when we never asked.
     tips_consent:
       typeof payload.tipsConsent === "boolean" ? payload.tipsConsent : null,
+    partner_consent:
+      typeof payload.partnerConsent === "boolean"
+        ? payload.partnerConsent
+        : null,
     source: typeof payload.source === "string" ? payload.source : null,
     user_agent: req.headers.get("user-agent"),
   };
 
   try {
     const supabase = getServerSupabase();
-    // tips_consent and source are optional in the database, so a database that
-    // predates either column must never cost us the lead.
-    const { tips_consent: tipsConsent, source, ...rest } = row;
+    // tips_consent, partner_consent and source are optional in the database, so
+    // a database that predates any of them must never cost us the lead.
+    const {
+      tips_consent: tipsConsent,
+      partner_consent: partnerConsent,
+      source,
+      ...rest
+    } = row;
     const { error } = await insertWithOptionalColumns(
-      { tips_consent: tipsConsent ?? null, source: source ?? null },
+      {
+        tips_consent: tipsConsent ?? null,
+        partner_consent: partnerConsent ?? null,
+        source: source ?? null,
+      },
       rest,
       (values) => supabase.from("leads").insert(values),
     );
