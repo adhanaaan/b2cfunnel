@@ -7,6 +7,7 @@ import {
   IHH_DPO_EMAIL,
   IHH_NOTICE_URL,
   IHH_RECONCILED,
+  IHH_SPLIT,
   IHH_VERBATIM,
 } from "@/config/ihhConsent";
 import { springs, stagger } from "@/lib/motion";
@@ -21,7 +22,12 @@ const item = {
   show: { opacity: 1, y: 0, transition: springs.enter },
 };
 
-type Mode = "verbatim" | "reconciled";
+/**
+ * verbatim   - IHH's text as supplied, all on the landing.
+ * twoPage    - IHH's text split into separate optional ticks, on its own page.
+ * reconciled - the same purposes reworded, all on the landing.
+ */
+type Mode = "verbatim" | "twoPage" | "reconciled";
 
 const linkClass =
   "font-semibold text-ember-core underline underline-offset-2 break-words";
@@ -113,9 +119,10 @@ function ModeBar({ mode, onChange }: { mode: Mode; onChange: (m: Mode) => void }
       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ember-core">
         Preview only · nothing is saved
       </p>
-      <div className="flex gap-1.5">
-        {tab("verbatim", "IHH as supplied")}
-        {tab("reconciled", "Reconciled split")}
+      <div className="flex flex-wrap justify-center gap-1.5">
+        {tab("verbatim", "IHH bundled (1 pg)")}
+        {tab("twoPage", "IHH split · page 2")}
+        {tab("reconciled", "Reworded (1 pg)")}
       </div>
     </div>
   );
@@ -136,33 +143,69 @@ export function Event5Splash() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [agreeAll, setAgreeAll] = useState(false);
-  const [required, setRequired] = useState(false);
   const [optional, setOptional] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState<string | null>(null);
+  /** twoPage only: 1 = name + email, 2 = the consent page. */
+  const [step, setStep] = useState<1 | 2>(1);
+
+  /** Consent lives on its own page, so page 1 carries none of it. */
+  const consentOnThisPage = mode !== "twoPage" || step === 2;
+  const showCapture = mode !== "twoPage" || step === 1;
+
+  const reset = (m: Mode) => {
+    setMode(m);
+    setStep(1);
+    setError(null);
+    setSubmitted(null);
+  };
+
+  const validCapture = () => {
+    if (name.trim().length === 0) {
+      setError("Please enter your name.");
+      return false;
+    }
+    if (!EMAIL_RE.test(email.trim())) {
+      setError("Please enter a valid email address.");
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(null);
-    if (name.trim().length === 0) return setError("Please enter your name.");
-    if (!EMAIL_RE.test(email.trim())) return setError("Please enter a valid email address.");
 
-    if (mode === "verbatim") {
-      if (!agreeAll) return setError("Please agree to the terms to continue.");
+    // twoPage step 1: nothing is transmitted here, so the details can be
+    // taken before consent is asked for on the next page.
+    if (mode === "twoPage" && step === 1) {
+      if (!validCapture()) return;
       setError(null);
-      // Everything is bundled into one tick: there is no way to record that
-      // someone wanted the results but not the marketing.
-      return setSubmitted("Consent captured as: all-or-nothing (marketing included).");
+      setStep(2);
+      return;
     }
 
-    if (!required) return setError(c.consentRequiredError);
+    if (mode !== "twoPage" && !validCapture()) return;
+
+    if (mode !== "verbatim") {
+      // Every tick is optional, so nothing here can block play.
+      setError(null);
+      const set = mode === "twoPage" ? IHH_SPLIT : IHH_RECONCILED;
+      const picked = set.ticks.filter((t) => optional[t.id]).map((t) => t.id);
+      const missingService = !optional.service;
+      return setSubmitted(
+        `Consent captured: ${picked.length ? picked.join(", ") : "none ticked"}.` +
+          (missingService
+            ? " No contact consent — result shown on screen only, no email, no prize contact."
+            : ""),
+      );
+    }
+
+    if (!agreeAll) return setError("Please agree to the terms to continue.");
     setError(null);
-    const picked = IHH_RECONCILED.optional
-      .filter((o) => optional[o.id])
-      .map((o) => o.id);
-    setSubmitted(
-      `Consent captured as: required = yes; optional = ${picked.length ? picked.join(", ") : "none"}.`,
-    );
+    // Everything is bundled into one tick: there is no way to record that
+    // someone wanted the results but not the marketing.
+    setSubmitted("Consent captured as: all-or-nothing (marketing included).");
   };
 
   const inputClass =
@@ -180,7 +223,13 @@ export function Event5Splash() {
         animate="show"
       >
         <div aria-hidden className="h-4" />
-        <ModeBar mode={mode} onChange={(m) => { setMode(m); setError(null); setSubmitted(null); }} />
+        <ModeBar mode={mode} onChange={reset} />
+
+        {mode === "twoPage" && (
+          <p className="mx-auto mb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-ember-core">
+            Page {step} of 2 · {step === 1 ? "your details" : "consent"}
+          </p>
+        )}
 
         <motion.p variants={item} className="mt-2 text-xs font-bold uppercase tracking-[0.22em] text-ember-core">
           {c.eyebrow}
@@ -190,42 +239,54 @@ export function Event5Splash() {
           variants={item}
           className="mx-auto mt-3 max-w-sm text-[clamp(1.8rem,4.4dvh,2.15rem)] font-bold leading-[1.07] text-[#171717]"
         >
-          <GradientWords text={c.heading} />
+          {showCapture ? (
+            <GradientWords text={c.heading} />
+          ) : (
+            "Before we start"
+          )}
         </motion.h1>
 
-        <motion.div variants={item} className="mt-3 flex items-center justify-center">
-          <BrainHero className="h-auto max-h-[150px] w-auto" />
-        </motion.div>
+        {showCapture && (
+          <motion.div variants={item} className="mt-3 flex items-center justify-center">
+            <BrainHero className="h-auto max-h-[150px] w-auto" />
+          </motion.div>
+        )}
 
         <motion.p
           variants={item}
           className="mx-auto mt-3 max-w-sm text-[clamp(0.9375rem,2.2dvh,1.0625rem)] leading-[1.45] text-[#171717]"
         >
-          {c.body}
+          {showCapture
+            ? c.body
+            : "Tick whatever you're happy with. You can play either way."}
         </motion.p>
 
         <motion.form variants={item} onSubmit={handleSubmit} className="mt-4 space-y-2.5 text-left">
-          <input
-            type="text"
-            autoComplete="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={c.namePlaceholder}
-            aria-label="Name"
-            className={inputClass}
-          />
-          <input
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={c.emailPlaceholder}
-            aria-label="Email"
-            className={inputClass}
-          />
+          {showCapture && (
+            <>
+              <input
+                type="text"
+                autoComplete="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={c.namePlaceholder}
+                aria-label="Name"
+                className={inputClass}
+              />
+              <input
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={c.emailPlaceholder}
+                aria-label="Email"
+                className={inputClass}
+              />
+            </>
+          )}
 
-          {mode === "verbatim" ? (
+          {!consentOnThisPage ? null : mode === "verbatim" ? (
             <div className="space-y-2 pt-0.5">
               <ul className="space-y-2 rounded-xl bg-white/70 p-3">
                 {IHH_VERBATIM.clauses.map((clause, i) => (
@@ -248,34 +309,35 @@ export function Event5Splash() {
               </ConsentCheckbox>
             </div>
           ) : (
-            <div className="space-y-2 pt-0.5">
-              <ConsentCheckbox
-                checked={required}
-                onChange={(v) => {
-                  setRequired(v);
-                  if (v) setError(null);
-                }}
-              >
-                {withLinks(IHH_RECONCILED.required.label)}
-              </ConsentCheckbox>
-              {IHH_RECONCILED.optional.map((o) => (
-                <ConsentCheckbox
-                  key={o.id}
-                  checked={Boolean(optional[o.id])}
-                  onChange={(v) => setOptional((prev) => ({ ...prev, [o.id]: v }))}
-                >
-                  {o.label}
-                  {"note" in o && o.note ? (
-                    <em className="mt-0.5 block text-[10.5px] not-italic text-ember-core">
-                      ⚠ {o.note}
-                    </em>
-                  ) : null}
-                </ConsentCheckbox>
-              ))}
-              <p className="text-[11px] leading-[1.4] text-secondary">
-                {withLinks(IHH_RECONCILED.withdrawal)}
-              </p>
-            </div>
+            (() => {
+              // twoPage keeps IHH's exact words and only splits the ticks;
+              // reconciled also rewords them. Every tick is optional in both.
+              const set = mode === "twoPage" ? IHH_SPLIT : IHH_RECONCILED;
+              return (
+                <div className="space-y-2 pt-0.5">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-ember-core">
+                    All optional — tick what you are happy with
+                  </p>
+                  {set.ticks.map((t) => (
+                    <ConsentCheckbox
+                      key={t.id}
+                      checked={Boolean(optional[t.id])}
+                      onChange={(v) => setOptional((prev) => ({ ...prev, [t.id]: v }))}
+                    >
+                      {withLinks(t.label)}
+                      {t.note ? (
+                        <em className="mt-0.5 block text-[10.5px] not-italic text-ember-core">
+                          {t.note}
+                        </em>
+                      ) : null}
+                    </ConsentCheckbox>
+                  ))}
+                  <p className="text-[11px] leading-[1.4] text-secondary">
+                    {withLinks(set.withdrawal)}
+                  </p>
+                </div>
+              );
+            })()
           )}
 
           {error && (
@@ -296,8 +358,21 @@ export function Event5Splash() {
             transition={springs.pop}
             className={ctaPrimaryClass}
           >
-            {c.cta} →
+            {mode === "twoPage" && step === 1 ? "Continue" : c.cta} →
           </motion.button>
+
+          {mode === "twoPage" && step === 2 && (
+            <button
+              type="button"
+              onClick={() => {
+                setStep(1);
+                setError(null);
+              }}
+              className="w-full pt-1 text-[12px] font-semibold text-secondary underline underline-offset-2"
+            >
+              ← Back
+            </button>
+          )}
         </motion.form>
 
         <div aria-hidden className="h-8" />
