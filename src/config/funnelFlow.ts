@@ -1,6 +1,7 @@
 import type { FunnelStep, QuizVariant } from "@/types/funnel";
 import type { Answers, Axis } from "@/types/question";
 import { QUESTIONS_BY_ID } from "@/config/questions";
+import { EVENT3_CHALLENGE_CLOSED } from "@/config/event";
 
 /**
  * Funnel flows, one per quiz variant. The full quiz (served at /) asks the
@@ -216,8 +217,28 @@ const EVENT3_FLOW: FunnelStep[] = EVENT2_FLOW.filter(
  * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
  * so the split-tick treatment of the partner consents (one box per clause) can
  * still be walked through and compared against the single tick that v3 ships.
+ * It walks the whole arc whether or not the live challenge is closed - closing
+ * an event should not take the consent preview down with it.
  */
 const EVENT6_FLOW: FunnelStep[] = EVENT3_FLOW;
+
+/**
+ * The v3 arc while the challenge is closed: the landing and the partner
+ * consent page still run, then the "That's a wrap!" screen ends the session.
+ * Everything behind it - instructions, game, questionnaire, report - is simply
+ * unreachable.
+ *
+ * Expressed as a transformation of the full flow rather than as a flow of its
+ * own, and applied when the flow is RESOLVED rather than in FLOWS itself, so
+ * closing the challenge cannot touch what the variant is made of: the question
+ * set, achievableAxisMax and therefore the comparability of every score
+ * already recorded all still read the full arc.
+ */
+function closeAfterConsent(flow: FunnelStep[]): FunnelStep[] {
+  const consent = flow.findIndex((step) => step.kind === "consent");
+  if (consent < 0) return [{ kind: "wrap" }];
+  return [...flow.slice(0, consent + 1), { kind: "wrap" }];
+}
 
 const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   full: FULL_FLOW,
@@ -280,9 +301,12 @@ export function resolveFlow(
   answers: Answers,
   variant: QuizVariant,
 ): FunnelStep[] {
-  return FLOWS[variant].filter((step) =>
+  const flow = FLOWS[variant].filter((step) =>
     step.kind === "question" ? questionVisible(step.questionId, answers) : true,
   );
+  return variant === "event3" && EVENT3_CHALLENGE_CLOSED
+    ? closeAfterConsent(flow)
+    : flow;
 }
 
 // A question page is either a single question or a grouped page; both count as

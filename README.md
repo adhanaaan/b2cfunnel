@@ -98,6 +98,34 @@ The partner logo is not in the repo: drop it at `public/ihh-logo.png` (the
 design uses roughly 60x40) and it appears beside the GMS lockup. Until then
 that slot renders nothing rather than a broken image.
 
+## Closing the v3 challenge temporarily
+
+`EVENT3_CHALLENGE_CLOSED` (`src/config/event.ts`, currently **on**) closes the
+Reaction Time Challenge and the leaderboard it feeds without taking `/event-v3`
+down. While it is on, the funnel runs the landing and the partner consent page
+as usual and then ends on the "That's a wrap!" screen (Figma
+`Event3Wrap.tsx`) - so a printed QR code or poster still lands somewhere
+deliberate. The instructions, game, questionnaire and report sit behind it and
+are simply unreachable, so no new score can be posted and the board's standings
+stop moving.
+
+It is not `EVENT3_PAUSED`, which takes the whole route down to the generic
+"challenge has ended" holding screen instead. Use that to close the route; use
+this to close the challenge.
+
+**To reopen:** set it to `false` and redeploy. The full arc comes straight
+back. Closing is applied when the flow is *resolved*, not to the variant's flow
+itself, so the question set, `achievableAxisMax` and the comparability of every
+score already recorded are untouched by the switch either way (pinned by
+`tests/config/event3Flow.test.ts` and `tests/config/event3Closed.test.ts`).
+`/event-v6` ignores the switch and keeps walking the whole flow.
+
+**Nothing is recorded from a closed session.** The lead is written when the
+report is built and the score after the game, and neither is reachable - so the
+name, email and consents taken on the way to the wrap screen are not stored
+anywhere. That is deliberate: the landing's required consent is about results
+and a prize, and while the challenge is closed there are neither.
+
 ## /event-v6 (preview)
 
 `/event-v6` walks exactly the v3 flow, and exists only to compare consent

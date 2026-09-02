@@ -252,6 +252,15 @@ export interface Event3Copy {
     withdrawal: { text: string; link?: { label: string; href: string } };
     cta: string;
   };
+  // Terminal screen while the challenge is closed (EVENT3_CHALLENGE_CLOSED).
+  wrap: {
+    heading: string;
+    body: string;
+    // The one way onward: a link out to the GMS site.
+    linkIntro: string;
+    linkLabel: string;
+    linkHref: string;
+  };
   instructions: {
     heading: string;
     // Rendered with the {count} bolded inline.

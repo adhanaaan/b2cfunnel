@@ -31,6 +31,7 @@ import { Event2GameResult } from "@/components/screens/event2/Event2GameResult";
 import { Event2Closing } from "@/components/screens/event2/Event2Closing";
 import { Event3Splash } from "@/components/screens/event3/Event3Splash";
 import { Event3Consent } from "@/components/screens/event3/Event3Consent";
+import { Event3Wrap } from "@/components/screens/event3/Event3Wrap";
 import { Event6Consent } from "@/components/screens/event6/Event6Consent";
 import { Event3Instructions } from "@/components/screens/event3/Event3Instructions";
 import { Event3GameResult } from "@/components/screens/event3/Event3GameResult";
@@ -203,6 +204,11 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       ) : (
         <Event3Consent onSubmit={submitConsent} />
       );
+
+    case "wrap":
+      // Challenge closed (EVENT3_CHALLENGE_CLOSED): the last step of the v3
+      // flow. Terminal - there is nothing behind it to advance to.
+      return <Event3Wrap />;
 
     case "instructions": {
       const InstructionsScreen = usesDaylightScreens(state.variant)
