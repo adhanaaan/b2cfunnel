@@ -1,7 +1,18 @@
-import { describe, expect, it } from "vitest";
-import { resolveFlow } from "@/config/funnelFlow";
+import { describe, expect, it, vi } from "vitest";
 import type { FunnelStep } from "@/types/funnel";
 import type { Answers } from "@/types/question";
+
+/**
+ * These are the invariants of the FULL v3 arc, so they are asserted with the
+ * challenge open regardless of what the live switch is set to - closing it is a
+ * temporary state, and its own behaviour is pinned in event3Closed.test.ts.
+ */
+vi.mock("@/config/event", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/config/event")>()),
+  EVENT3_CHALLENGE_CLOSED: false,
+}));
+
+const { resolveFlow, achievableAxisMax } = await import("@/config/funnelFlow");
 
 const idsIn = (flow: FunnelStep[]): string[] =>
   flow.flatMap((s) =>
@@ -52,5 +63,38 @@ describe("event3 flow", () => {
   it("shows the consent page exactly once", () => {
     expect(kindsIn(resolveFlow({}, "event3")).filter((k) => k === "consent"))
       .toHaveLength(1);
+  });
+});
+
+/**
+ * The scoring maxima are summed over what a variant's flow is MADE of, not
+ * what a given session walks - which is what keeps a v3 score comparable with
+ * a v2 score and with every score already in the database. Asserted against
+ * the real switch (not the mock above): closing the challenge must not move
+ * these, or reopening would rescale everyone.
+ */
+describe("event3 scoring maxima", () => {
+  it("are unmoved by the challenge switch", async () => {
+    vi.doUnmock("@/config/event");
+    vi.resetModules();
+    const live = await import("@/config/funnelFlow");
+    const { EVENT3_CHALLENGE_CLOSED } = await import("@/config/event");
+
+    // Proof the unmock took, whichever way the live switch is set: this copy
+    // of the flow resolves against the real one.
+    expect(live.resolveFlow({}, "event3").some((s) => s.kind === "wrap")).toBe(
+      EVENT3_CHALLENGE_CLOSED,
+    );
+
+    for (const axis of ["risk", "symptom"] as const) {
+      expect(live.achievableAxisMax("event3", axis)).toBe(
+        live.achievableAxisMax("event2", axis),
+      );
+      expect(live.achievableAxisMax("event3", axis)).toBeGreaterThan(0);
+      // The same number the open flow gives, so the switch is provably inert.
+      expect(achievableAxisMax("event3", axis)).toBe(
+        live.achievableAxisMax("event3", axis),
+      );
+    }
   });
 });

@@ -17,6 +17,7 @@ export type FunnelStep =
   | { kind: "hook" }
   | { kind: "nameGate" }
   | { kind: "consent" } // event3/event6: partner consent page between landing and game
+  | { kind: "wrap" } // event3: terminal screen while the challenge is closed
   | { kind: "question"; questionId: string }
   | { kind: "questionGroup"; title: string; questionIds: string[] }
   | { kind: "statCard"; cardId: string }

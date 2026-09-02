@@ -23,6 +23,24 @@ export const EVENT2_PAUSED = false;
 export const EVENT3_PAUSED = false;
 
 /**
+ * Temporarily closes the v3 Reaction Time Challenge, and with it the
+ * leaderboard it feeds.
+ *
+ * Different from EVENT3_PAUSED, which takes the whole route down: this keeps
+ * /event-v3 walkable as far as the partner consent page and then ends the
+ * session on the "That's a wrap!" screen, so a poster or a QR code already in
+ * the wild lands somewhere deliberate instead of on a game nobody is ranking.
+ * The game, the questionnaire and the report are simply unreachable while it is
+ * on, so no new score can be posted and the board's standings stop moving.
+ *
+ * Flip to `false` (and redeploy) to reopen: the full arc comes straight back -
+ * the question set, the scoring maxima and every score already on the board are
+ * untouched by this switch. The /event-v6 consent preview ignores it and keeps
+ * walking the whole flow.
+ */
+export const EVENT3_CHALLENGE_CLOSED = true;
+
+/**
  * Leaderboard buckets for the v3 funnel, one per event day. Every /event-v3
  * score is tagged with the active bucket, and the v3 board only shows rows
  * that match it - which is what keeps each day's standings clear of every

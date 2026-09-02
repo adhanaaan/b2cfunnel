@@ -404,6 +404,13 @@ export const COPY: CopyConfig = {
         },
         cta: "I'm ready!",
       },
+      wrap: {
+        heading: "That's a wrap!",
+        body: "The Reaction Time Challenge has closed. Thanks to everyone who took part.",
+        linkIntro: "Learn more about brain health",
+        linkLabel: "Gray Matter Solutions",
+        linkHref: "https://www.graymattercognition.com/",
+      },
       instructions: {
         heading: "Reaction Time Challenge",
         subheading: "Match {count} symbols to its number as fast as you can.",

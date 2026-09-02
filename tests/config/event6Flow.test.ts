@@ -1,6 +1,15 @@
-import { describe, expect, it } from "vitest";
-import { resolveFlow } from "@/config/funnelFlow";
+import { describe, expect, it, vi } from "vitest";
 import type { FunnelStep } from "@/types/funnel";
+
+// The preview is compared against the full v3 arc, so pin the challenge open.
+// That v6 keeps walking while the LIVE challenge is closed is pinned in
+// event3Closed.test.ts.
+vi.mock("@/config/event", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/config/event")>()),
+  EVENT3_CHALLENGE_CLOSED: false,
+}));
+
+const { resolveFlow } = await import("@/config/funnelFlow");
 
 const kindsIn = (flow: FunnelStep[]) => flow.map((s) => s.kind);
 
