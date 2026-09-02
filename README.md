@@ -160,9 +160,10 @@ it was played at (`"event"`, `"event2"`, or `EVENT3_SOURCE` from
 board and the v3 in-funnel standings pass `EVENT3_SOURCE`; the v1 and v2 boards
 send no `source` and so keep ranking every row, history included.
 
-The DBS buckets are `dbs-day1` (1 Sep) and `dbs-day2` (2 Sep); flip
-`EVENT3_SOURCE` in `src/config/event.ts` from `DBS_DAY1_SOURCE` to
-`DBS_DAY2_SOURCE` between the days to open day 2 on an empty board.
+**DBS (1-2 Sep) runs both days on `dbs-day1`** - one leaderboard carrying
+across the two days, so day 2 opens on day 1's standings. `DBS_DAY2_SOURCE`
+exists for the next event that wants a fresh board; point `EVENT3_SOURCE`
+(`src/config/event.ts`) at it and redeploy to start one.
 
 To start a **fresh board** at any later v3 event, change `EVENT3_SOURCE` to a new
 string. Older scores keep their old tag and stay in the table - they just stop
