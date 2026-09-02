@@ -7,6 +7,7 @@ import {
   IHH_DPO_EMAIL,
   IHH_NOTICE_URL,
   IHH_RECONCILED,
+  IHH_SPLIT,
   IHH_VERBATIM,
 } from "@/config/ihhConsent";
 import { springs, stagger } from "@/lib/motion";
@@ -23,8 +24,8 @@ const item = {
 
 /**
  * verbatim   - IHH's text as supplied, all on the landing.
- * twoPage    - the same text, moved to a page of its own after the capture.
- * reconciled - required/optional split, all on the landing.
+ * twoPage    - IHH's text split into separate optional ticks, on its own page.
+ * reconciled - the same purposes reworded, all on the landing.
  */
 type Mode = "verbatim" | "twoPage" | "reconciled";
 
@@ -119,9 +120,9 @@ function ModeBar({ mode, onChange }: { mode: Mode; onChange: (m: Mode) => void }
         Preview only · nothing is saved
       </p>
       <div className="flex flex-wrap justify-center gap-1.5">
-        {tab("verbatim", "IHH · 1 page")}
-        {tab("twoPage", "IHH · 2 pages")}
-        {tab("reconciled", "Reconciled · 1 page")}
+        {tab("verbatim", "IHH bundled (1 pg)")}
+        {tab("twoPage", "IHH split · page 2")}
+        {tab("reconciled", "Reworded (1 pg)")}
       </div>
     </div>
   );
@@ -142,7 +143,6 @@ export function Event5Splash() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [agreeAll, setAgreeAll] = useState(false);
-  const [required, setRequired] = useState(false);
   const [optional, setOptional] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState<string | null>(null);
@@ -187,14 +187,17 @@ export function Event5Splash() {
 
     if (mode !== "twoPage" && !validCapture()) return;
 
-    if (mode === "reconciled") {
-      if (!required) return setError(c.consentRequiredError);
+    if (mode !== "verbatim") {
+      // Every tick is optional, so nothing here can block play.
       setError(null);
-      const picked = IHH_RECONCILED.optional
-        .filter((o) => optional[o.id])
-        .map((o) => o.id);
+      const set = mode === "twoPage" ? IHH_SPLIT : IHH_RECONCILED;
+      const picked = set.ticks.filter((t) => optional[t.id]).map((t) => t.id);
+      const missingService = !optional.service;
       return setSubmitted(
-        `Consent captured as: required = yes; optional = ${picked.length ? picked.join(", ") : "none"}.`,
+        `Consent captured: ${picked.length ? picked.join(", ") : "none ticked"}.` +
+          (missingService
+            ? " No contact consent — result shown on screen only, no email, no prize contact."
+            : ""),
       );
     }
 
@@ -255,7 +258,7 @@ export function Event5Splash() {
         >
           {showCapture
             ? c.body
-            : "Please read and agree to the following to get your results."}
+            : "Tick whatever you're happy with. You can play either way."}
         </motion.p>
 
         <motion.form variants={item} onSubmit={handleSubmit} className="mt-4 space-y-2.5 text-left">
@@ -283,7 +286,7 @@ export function Event5Splash() {
             </>
           )}
 
-          {!consentOnThisPage ? null : mode !== "reconciled" ? (
+          {!consentOnThisPage ? null : mode === "verbatim" ? (
             <div className="space-y-2 pt-0.5">
               <ul className="space-y-2 rounded-xl bg-white/70 p-3">
                 {IHH_VERBATIM.clauses.map((clause, i) => (
@@ -306,34 +309,35 @@ export function Event5Splash() {
               </ConsentCheckbox>
             </div>
           ) : (
-            <div className="space-y-2 pt-0.5">
-              <ConsentCheckbox
-                checked={required}
-                onChange={(v) => {
-                  setRequired(v);
-                  if (v) setError(null);
-                }}
-              >
-                {withLinks(IHH_RECONCILED.required.label)}
-              </ConsentCheckbox>
-              {IHH_RECONCILED.optional.map((o) => (
-                <ConsentCheckbox
-                  key={o.id}
-                  checked={Boolean(optional[o.id])}
-                  onChange={(v) => setOptional((prev) => ({ ...prev, [o.id]: v }))}
-                >
-                  {o.label}
-                  {"note" in o && o.note ? (
-                    <em className="mt-0.5 block text-[10.5px] not-italic text-ember-core">
-                      ⚠ {o.note}
-                    </em>
-                  ) : null}
-                </ConsentCheckbox>
-              ))}
-              <p className="text-[11px] leading-[1.4] text-secondary">
-                {withLinks(IHH_RECONCILED.withdrawal)}
-              </p>
-            </div>
+            (() => {
+              // twoPage keeps IHH's exact words and only splits the ticks;
+              // reconciled also rewords them. Every tick is optional in both.
+              const set = mode === "twoPage" ? IHH_SPLIT : IHH_RECONCILED;
+              return (
+                <div className="space-y-2 pt-0.5">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-ember-core">
+                    All optional — tick what you are happy with
+                  </p>
+                  {set.ticks.map((t) => (
+                    <ConsentCheckbox
+                      key={t.id}
+                      checked={Boolean(optional[t.id])}
+                      onChange={(v) => setOptional((prev) => ({ ...prev, [t.id]: v }))}
+                    >
+                      {withLinks(t.label)}
+                      {t.note ? (
+                        <em className="mt-0.5 block text-[10.5px] not-italic text-ember-core">
+                          {t.note}
+                        </em>
+                      ) : null}
+                    </ConsentCheckbox>
+                  ))}
+                  <p className="text-[11px] leading-[1.4] text-secondary">
+                    {withLinks(set.withdrawal)}
+                  </p>
+                </div>
+              );
+            })()
           )}
 
           {error && (
