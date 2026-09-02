@@ -77,24 +77,39 @@ Elevated · `76–100` High.
 **higher = healthier** (low risk → high score). Bands still classify risk, so a
 high score maps to the Low band.
 
+## /event-v3 partner consent page
+
+`/event-v3` asks for the partner's (IHH Healthcare Singapore) consent on its
+own page, from Figma "Option 2", between the landing and the instructions - so
+it is answered before the demo round and the game. The landing keeps its own
+two consents (contact, which still gates the challenge, and the brain-health
+tips opt-in); the partner's wording is not a tickbox on the landing.
+
+IHH supplied its three clauses as one all-or-nothing agreement, so the page
+carries **one tick** covering all three (`Event3Consent.tsx`), with the
+withdrawal right stated below it as text rather than as something to agree to.
+
+**The tick does not gate the CTA.** Play is never blocked by a marketing
+consent, so "I'm ready!" always continues; what the player chose is recorded
+either way in `partner_consent` (see Supabase below), which is what makes a
+decline a stored decline rather than an abandoned session.
+
+The partner logo is not in the repo: drop it at `public/ihh-logo.png` (the
+design uses roughly 60x40) and it appears beside the GMS lockup. Until then
+that slot renders nothing rather than a broken image.
+
 ## /event-v6 (preview)
 
-`/event-v6` is the v3 experience with the partner consent page from Figma
-"Option 2" between the landing and the instructions: the landing keeps its own
-two consents, and the partner's three get a page of their own.
+`/event-v6` walks exactly the v3 flow, and exists only to compare consent
+treatments: it splits the partner's clauses into one tickbox each (the first of
+which gates its CTA), against the single tick that v3 ships. `/event-v5`
+previews the same wording on the landing instead of on a page of its own.
 
 **It is a walkthrough and writes nothing.** The variant is listed in
 `PREVIEW_VARIANTS` (`src/config/variants.ts`), which is the single switch every
 write path checks - lead, score, newsletter opt-in, and `lib/analytics` itself,
 so not even an anonymous step event is sent. The route is `noindex`, and a small
 "Preview · not saved" badge sits on every screen.
-
-The partner logo is not in the repo: drop it at `public/ihh-logo.png` and it
-appears beside the GMS lockup on the consent page. Until then that slot renders
-nothing rather than a broken image.
-
-Only the first consent gates the CTA. The other two are marketing consents and
-are optional, matching how the landing treats its own marketing opt-in.
 
 ## Supabase
 Create a `leads` table:
@@ -112,6 +127,7 @@ create table public.leads (
   band         text,
   answers      jsonb,
   tips_consent boolean,             -- brain health tips consent, null = never asked
+  partner_consent boolean,          -- partner (IHH) consent, null = never asked
   source       text,                -- which event this report came from
   user_agent   text
 );
@@ -120,6 +136,9 @@ create table public.leads (
 alter table public.leads add column if not exists game_time_ms integer;
 -- brain-health-tips consent; nullable on purpose (see below):
 alter table public.leads add column if not exists tips_consent boolean;
+-- partner (IHH) consent from the /event-v3 consent page; nullable for the same
+-- reason as tips_consent:
+alter table public.leads add column if not exists partner_consent boolean;
 -- which event the report came from, matching game_scores.source:
 alter table public.leads add column if not exists source text;
 create index if not exists leads_source_idx on public.leads (source);
@@ -139,7 +158,8 @@ create table public.game_scores (
   email      text not null,
   time_ms    integer not null,
   source     text,                -- which event this score was played at
-  tips_consent boolean            -- brain health tips consent, null = never asked
+  tips_consent boolean,           -- brain health tips consent, null = never asked
+  partner_consent boolean         -- partner (IHH) consent, null = never asked
 );
 create index on public.game_scores (created_at);
 create index on public.game_scores (email);
@@ -149,6 +169,7 @@ create index on public.game_scores (source);
 alter table public.game_scores add column if not exists source text;
 create index if not exists game_scores_source_idx on public.game_scores (source);
 alter table public.game_scores add column if not exists tips_consent boolean;
+alter table public.game_scores add column if not exists partner_consent boolean;
 
 -- Reads/writes go only through the server API routes (service-role key).
 alter table public.game_scores enable row level security;
@@ -201,6 +222,19 @@ Where each value comes from:
 - **Report page**: ticking the tips opt-in inserts into `newsletter_optins` as
   before, and now also stamps `leads.tips_consent = true` on that email's rows.
   The opt-in can only turn consent on; there is no un-tick in the UI.
+
+**`partner_consent` records the partner (IHH) consent** from the `/event-v3`
+consent page, on the same three-state contract: `true` (ticked), `false` (left
+unticked), or `null` when we never asked - every row written before this column
+existed, and every variant with no consent page.
+
+The value is taken once, on the consent page between the landing and the
+instructions, and carried in funnel state for the rest of the session, so it is
+written twice: to `game_scores.partner_consent` with the score (which is the
+only row a player who stops after the game leaves behind) and to
+`leads.partner_consent` with the report. Nothing else can change it - there is
+no second opt-in for it anywhere in the funnel, and no path that turns a
+decline into a `true`.
 
 Both writes are tolerant of a database that does not have the column yet: the
 insert is retried without it, so a lead or a score is never lost to a pending

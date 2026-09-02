@@ -375,6 +375,35 @@ export const COPY: CopyConfig = {
         cta: "Start the challenge",
         poweredBy: "Powered by:",
       },
+      consent: {
+        heading: "Before we start",
+        body: "Gray Matter Solutions is partnering with IHH Healthcare Singapore in this event.",
+        eyebrow: "We need your consent on",
+        // The partner's wording, unchanged. {link} marks the inline link.
+        clauses: [
+          {
+            text: "By providing the information set out in this form, I consent to IHH Healthcare Singapore and their representatives and/or agents collecting, using and disclosing my personal data to provide me with medical treatment and other reasonably related purposes. Such purposes are set out in the {link}, or available on request.",
+            link: {
+              label: "IHH Healthcare Singapore Data Protection Notice",
+              href: "https://www.ihhhealthcare.com/singapore/data-protection-notice",
+            },
+          },
+          {
+            text: "I also consent to IHH Healthcare Singapore, their representatives, agents and/or business partners collecting, using and disclosing my personal data for marketing and promotional purposes.",
+          },
+          {
+            text: "I agree to receiving marketing messages via SMS, telephone call and other Singapore phone number-based messaging, regardless of my registration with the Do-Not-Call registry.",
+          },
+        ],
+        withdrawal: {
+          text: "I understand that I may withdraw such consent at any time via unsubscribe facilities OR forms available on request from our staff OR by email to IHH Healthcare Singapore DPO at {link}.",
+          link: {
+            label: "pdpo@ihhhealthcare.com",
+            href: "mailto:pdpo@ihhhealthcare.com",
+          },
+        },
+        cta: "I'm ready!",
+      },
       instructions: {
         heading: "Reaction Time Challenge",
         subheading: "Match {count} symbols to its number as fast as you can.",

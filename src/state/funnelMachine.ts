@@ -76,6 +76,14 @@ export function funnelReducer(
       };
     }
 
+    case "SUBMIT_CONSENT": {
+      // The consent page never blocks play, so a decline advances exactly like
+      // an agreement - only the recorded value differs.
+      const flow = resolveFlow(state.answers, state.variant);
+      const next = Math.min(state.cursor + 1, flow.length - 1);
+      return { ...state, partnerConsent: action.partnerConsent, cursor: next };
+    }
+
     case "GAME_DONE": {
       const flow = resolveFlow(state.answers, state.variant);
       const next = Math.min(state.cursor + 1, flow.length - 1);

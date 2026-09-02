@@ -30,6 +30,7 @@ import { Event2Instructions } from "@/components/screens/event2/Event2Instructio
 import { Event2GameResult } from "@/components/screens/event2/Event2GameResult";
 import { Event2Closing } from "@/components/screens/event2/Event2Closing";
 import { Event3Splash } from "@/components/screens/event3/Event3Splash";
+import { Event3Consent } from "@/components/screens/event3/Event3Consent";
 import { Event6Consent } from "@/components/screens/event6/Event6Consent";
 import { Event3Instructions } from "@/components/screens/event3/Event3Instructions";
 import { Event3GameResult } from "@/components/screens/event3/Event3GameResult";
@@ -61,6 +62,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     back,
     submitEmail,
     submitPersonalEmail,
+    submitConsent,
     analysisDone,
     gameDone,
     skipToKind,
@@ -109,6 +111,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       answers: state.answers,
       gameTimeMs: state.gameTimeMs,
       tipsConsent: state.tipsConsent,
+      // The partner consent from the consent page, ticked or not.
+      partnerConsent: state.partnerConsent,
       // Same tag as the score row, so the board's report rate can divide
       // reports by players for one event day.
       source: eventSource(state.variant) ?? undefined,
@@ -152,6 +156,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         email: state.email,
         timeMs,
         tipsConsent: state.tipsConsent,
+        partnerConsent: state.partnerConsent,
         source: eventSource(state.variant) ?? "event",
       }),
     }).catch(() => {});
@@ -189,9 +194,15 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "consent":
-      // Partner consents live on their own page in v6; the landing keeps its
-      // own two. Nothing is stored - this is a preview.
-      return <Event6Consent onSubmit={() => next()} />;
+      // The partner's consents live on their own page, before the instructions
+      // and their demo round; the landing keeps its own two. v3 asks for them
+      // as one tick and records the answer; the v6 preview keeps the split-tick
+      // treatment (one box per clause) for comparison and stores nothing.
+      return state.variant === "event6" ? (
+        <Event6Consent onSubmit={() => next()} />
+      ) : (
+        <Event3Consent onSubmit={submitConsent} />
+      );
 
     case "instructions": {
       const InstructionsScreen = usesDaylightScreens(state.variant)

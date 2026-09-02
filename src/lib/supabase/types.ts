@@ -19,6 +19,13 @@ export interface LeadRow {
    */
   tips_consent?: boolean | null;
   /**
+   * Whether the visitor ticked the partner (IHH) consent on the consent page
+   * that sits between the landing and the instructions. Three-state for the
+   * same reason as `tips_consent`: null means the funnel never asked, not that
+   * the person declined.
+   */
+  partner_consent?: boolean | null;
+  /**
    * Which event the report was generated at, matching `game_scores.source`
    * (see eventSource in config/event.ts). Null for the non-event funnels and
    * for leads captured before the column existed.
@@ -39,5 +46,6 @@ export interface LeadPayload {
   answers?: Answers;
   gameTimeMs?: number;
   tipsConsent?: boolean;
+  partnerConsent?: boolean;
   source?: string;
 }

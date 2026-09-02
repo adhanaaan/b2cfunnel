@@ -15,9 +15,10 @@ export interface LeaderboardEntry {
  * before the column existed carry null and simply never match a filter.
  *
  * `tipsConsent` is whether the player ticked the brain-health-tips box on the
- * landing page - `null` when we never asked (older events) or the column is not
- * in the database yet, so it is always a three-state value: true, false, or
- * unknown.
+ * landing page, and `partnerConsent` whether they ticked the partner's consent
+ * on the consent page - `null` for either when we never asked (older events) or
+ * the column is not in the database yet, so both are always three-state values:
+ * true, false, or unknown.
  */
 export async function submitScore(
   name: string,
@@ -25,6 +26,7 @@ export async function submitScore(
   timeMs: number,
   source?: string | null,
   tipsConsent?: boolean | null,
+  partnerConsent?: boolean | null,
 ): Promise<void> {
   if (!isSupabaseConfigured()) return;
   const sb = getServerSupabase();
@@ -35,7 +37,10 @@ export async function submitScore(
     source: source ?? null,
   };
   await insertWithOptionalColumns(
-    { tips_consent: tipsConsent ?? null },
+    {
+      tips_consent: tipsConsent ?? null,
+      partner_consent: partnerConsent ?? null,
+    },
     row,
     (values) => sb.from("game_scores").insert(values),
   );

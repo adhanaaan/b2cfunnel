@@ -26,6 +26,11 @@ interface ScorePayload {
    * Optional: omitted by variants that never asked, and stored as null there.
    */
   tipsConsent?: boolean;
+  /**
+   * Whether the player ticked the partner consent on the consent page. Same
+   * contract as tipsConsent: omitted by variants without that page.
+   */
+  partnerConsent?: boolean;
 }
 
 export async function POST(req: Request) {
@@ -63,6 +68,9 @@ export async function POST(req: Request) {
       timeMs,
       payload.source ?? null,
       typeof payload.tipsConsent === "boolean" ? payload.tipsConsent : null,
+      typeof payload.partnerConsent === "boolean"
+        ? payload.partnerConsent
+        : null,
     );
   } catch (err) {
     console.error("[score] insert failed:", err);

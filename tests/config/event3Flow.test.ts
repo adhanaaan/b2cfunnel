@@ -31,10 +31,26 @@ describe("event3 flow", () => {
     }
   });
 
-  it("is the event2 step sequence minus the statistics pages", () => {
-    expect(kindsIn(resolveFlow({}, "event3"))).toEqual(
+  it("is the event2 step sequence minus the statistics pages, plus the consent page", () => {
+    const v3 = kindsIn(resolveFlow({}, "event3"));
+    expect(v3.filter((k) => k !== "consent")).toEqual(
       kindsIn(resolveFlow({}, "event2")).filter((k) => k !== "statCard"),
     );
-    expect(kindsIn(resolveFlow({}, "event3"))).not.toContain("statCard");
+    expect(v3).not.toContain("statCard");
+  });
+
+  // The consent page has to be answered before anything is played, and the
+  // demo round lives on the instructions screen - so it sits between the
+  // landing and the instructions, not anywhere later.
+  it("asks for consent after the landing and before the instructions", () => {
+    const v3 = kindsIn(resolveFlow({}, "event3"));
+    expect(v3.indexOf("consent")).toBe(v3.indexOf("nameGate") + 1);
+    expect(v3.indexOf("consent")).toBeLessThan(v3.indexOf("instructions"));
+    expect(v3.indexOf("consent")).toBeLessThan(v3.indexOf("game"));
+  });
+
+  it("shows the consent page exactly once", () => {
+    expect(kindsIn(resolveFlow({}, "event3")).filter((k) => k === "consent"))
+      .toHaveLength(1);
   });
 });
