@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useFunnel } from "@/state/useFunnel";
-import { track, recordResponse } from "@/lib/analytics";
+import { track, recordResponse, setPreviewMode } from "@/lib/analytics";
 import { computeScore } from "@/engine/scoring";
 import type { FunnelStep } from "@/types/funnel";
 import { QUESTIONS_BY_ID } from "@/config/questions";
@@ -12,6 +12,7 @@ import type { LeadPayload } from "@/lib/supabase/types";
 import type { QuizVariant } from "@/types/funnel";
 import { VariantProvider } from "@/components/VariantContext";
 import { eventSource } from "@/config/event";
+import { isPreviewVariant, usesDaylightScreens } from "@/config/variants";
 
 import { HookScreen } from "@/components/screens/HookScreen";
 import { PostGameHook } from "@/components/screens/PostGameHook";
@@ -29,6 +30,7 @@ import { Event2Instructions } from "@/components/screens/event2/Event2Instructio
 import { Event2GameResult } from "@/components/screens/event2/Event2GameResult";
 import { Event2Closing } from "@/components/screens/event2/Event2Closing";
 import { Event3Splash } from "@/components/screens/event3/Event3Splash";
+import { Event6Consent } from "@/components/screens/event6/Event6Consent";
 import { Event3Instructions } from "@/components/screens/event3/Event3Instructions";
 import { Event3GameResult } from "@/components/screens/event3/Event3GameResult";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
@@ -64,6 +66,15 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     skipToKind,
     retakeGame,
   } = useFunnel(variant);
+
+  // Preview variants are walkthroughs: they render the whole experience but
+  // must not write anything, so every submit below is skipped and analytics is
+  // switched off for as long as this funnel is mounted.
+  const preview = isPreviewVariant(state.variant);
+  useEffect(() => {
+    setPreviewMode(preview);
+    return () => setPreviewMode(false);
+  }, [preview]);
 
   // Anonymous drop-off tracking: a step view fires whenever the step changes.
   // Also reset scroll to the top so a new screen never lands mid-page (e.g. on
@@ -102,11 +113,13 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       // reports by players for one event day.
       source: eventSource(state.variant) ?? undefined,
     };
-    void fetch("/api/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    }).catch(() => {});
+    if (!preview) {
+      void fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }).catch(() => {});
+    }
 
     // Anonymous audience profile (no name/email) for aggregate insights.
     recordResponse({
@@ -127,6 +140,10 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
   // Record the game result to the leaderboard, then advance.
   const handleGameDone = (timeMs: number) => {
+    if (preview) {
+      gameDone(timeMs);
+      return;
+    }
     void fetch("/api/score", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -163,17 +180,23 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "nameGate":
       // Event2/3: the single email capture (leaderboard key + results address).
-      return state.variant === "event3" ? (
-        <Event3Splash onSubmit={submitEmail} />
+      return usesDaylightScreens(state.variant) ? (
+        <Event3Splash onSubmit={submitEmail} preview={preview} />
       ) : state.variant === "event2" ? (
         <Event2Splash onSubmit={submitEmail} />
       ) : (
         <NameGateScreen onSubmit={submitEmail} />
       );
 
+    case "consent":
+      // Partner consents live on their own page in v6; the landing keeps its
+      // own two. Nothing is stored - this is a preview.
+      return <Event6Consent onSubmit={() => next()} />;
+
     case "instructions": {
-      const InstructionsScreen =
-        state.variant === "event3" ? Event3Instructions : Event2Instructions;
+      const InstructionsScreen = usesDaylightScreens(state.variant)
+        ? Event3Instructions
+        : Event2Instructions;
       return (
         <InstructionsScreen
           onDemo={() => {
@@ -259,7 +282,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       ) : null;
 
     case "game": {
-      const ember = state.variant === "event2" || state.variant === "event3";
+      const ember =
+        state.variant === "event2" || usesDaylightScreens(state.variant);
       return (
         <GameScreen
           onComplete={handleGameDone}
@@ -290,7 +314,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       return <ConsultScreen />;
 
     case "gameResult":
-      if (state.variant === "event3") {
+      if (usesDaylightScreens(state.variant)) {
         return (
           <Event3GameResult
             name={state.name}

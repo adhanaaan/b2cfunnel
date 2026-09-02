@@ -206,12 +206,22 @@ const EVENT3_FLOW: FunnelStep[] = EVENT2_FLOW.filter(
   (step) => step.kind !== "statCard",
 );
 
+/**
+ * Event v6 (/event-v6, preview): the v3 flow with the partner consent page
+ * between the landing and the instructions - consent on the landing stays as
+ * it is, and the partner's own consents get a page of their own.
+ */
+const EVENT6_FLOW: FunnelStep[] = EVENT3_FLOW.flatMap((step) =>
+  step.kind === "nameGate" ? [step, { kind: "consent" } as FunnelStep] : [step],
+);
+
 const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   full: FULL_FLOW,
   event: EVENT_FLOW,
   woman: WOMAN_FLOW,
   event2: EVENT2_FLOW,
   event3: EVENT3_FLOW,
+  event6: EVENT6_FLOW,
 };
 
 /** All question ids in a variant's flow (single questions + grouped pages). */

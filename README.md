@@ -77,6 +77,25 @@ Elevated · `76–100` High.
 **higher = healthier** (low risk → high score). Bands still classify risk, so a
 high score maps to the Low band.
 
+## /event-v6 (preview)
+
+`/event-v6` is the v3 experience with the partner consent page from Figma
+"Option 2" between the landing and the instructions: the landing keeps its own
+two consents, and the partner's three get a page of their own.
+
+**It is a walkthrough and writes nothing.** The variant is listed in
+`PREVIEW_VARIANTS` (`src/config/variants.ts`), which is the single switch every
+write path checks - lead, score, newsletter opt-in, and `lib/analytics` itself,
+so not even an anonymous step event is sent. The route is `noindex`, and a small
+"Preview · not saved" badge sits on every screen.
+
+The partner logo is not in the repo: drop it at `public/ihh-logo.png` and it
+appears beside the GMS lockup on the consent page. Until then that slot renders
+nothing rather than a broken image.
+
+Only the first consent gates the CTA. The other two are marketing consents and
+are optional, matching how the landing treats its own marketing opt-in.
+
 ## Supabase
 Create a `leads` table:
 

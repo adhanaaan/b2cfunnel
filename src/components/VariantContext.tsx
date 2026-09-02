@@ -2,6 +2,7 @@
 
 import { createContext, useContext } from "react";
 import type { QuizVariant } from "@/types/funnel";
+import { usesDaylightScreens } from "@/config/variants";
 
 /**
  * Variant context so screens can apply variant-specific styling (e.g. the
@@ -24,14 +25,16 @@ export const useIsEvent = () => useContext(VariantContext) === "event";
  */
 export const useIsEvent2 = () => {
   const variant = useContext(VariantContext);
-  return variant === "event2" || variant === "event3";
+  return variant === "event2" || usesDaylightScreens(variant);
 };
 
 /** Convenience flag for the v3 event ("Daylight Ember") arena screens. */
-export const useIsEvent3 = () => useContext(VariantContext) === "event3";
+export const useIsEvent3 = () => usesDaylightScreens(useContext(VariantContext));
 
 /** True for any event variant - shared booth behaviour (no paywall etc.). */
 export const useIsEventFamily = () => {
   const variant = useContext(VariantContext);
-  return variant === "event" || variant === "event2" || variant === "event3";
+  return (
+    variant === "event" || variant === "event2" || usesDaylightScreens(variant)
+  );
 };

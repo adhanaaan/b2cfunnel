@@ -14,6 +14,8 @@ interface Event3SplashProps {
    * the score and lead rows record what the player chose, ticked or not.
    */
   onSubmit: (name: string, email: string, tipsConsent: boolean) => void;
+  /** Preview variants walk the screen without recording the opt-in anywhere. */
+  preview?: boolean;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -74,7 +76,7 @@ function ConsentCheckbox({
  * it holds the designed proportions on any phone - a height breakpoint would
  * miss real mobile viewports (~700px once the browser chrome is showing).
  */
-export function Event3Splash({ onSubmit }: Event3SplashProps) {
+export function Event3Splash({ onSubmit, preview = false }: Event3SplashProps) {
   const c = COPY.screens.event3.splash;
   const reduced = useReducedMotion();
   const [name, setName] = useState("");
@@ -101,7 +103,7 @@ export function Event3Splash({ onSubmit }: Event3SplashProps) {
     }
     // The marketing opt-in is separate and never blocks play. Fire-and-forget
     // so a slow write can't hold up the challenge.
-    if (marketingConsent) {
+    if (marketingConsent && !preview) {
       void fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

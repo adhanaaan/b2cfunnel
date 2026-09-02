@@ -8,6 +8,18 @@
 
 const SID_KEY = "gms_sid";
 
+/**
+ * Preview mode: a variant that exists to be shown, not to collect. When it is
+ * on, every analytics call becomes a no-op - the funnel still behaves
+ * identically, but nothing leaves the browser. Set by the Funnel host for
+ * PREVIEW_VARIANTS (config/variants.ts).
+ */
+let previewMode = false;
+
+export function setPreviewMode(on: boolean): void {
+  previewMode = on;
+}
+
 /** Stable random id for this browser tab/session (sessionStorage). */
 function sessionId(): string {
   if (typeof window === "undefined") return "";
@@ -33,7 +45,7 @@ export interface TrackProps {
 
 /** POST a JSON body to an analytics endpoint. Fire-and-forget; never blocks. */
 function send(url: string, payload: Record<string, unknown>): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || previewMode) return;
   const body = JSON.stringify({ sessionId: sessionId(), ...payload });
   try {
     if (navigator.sendBeacon) {
