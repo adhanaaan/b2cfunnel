@@ -2,12 +2,21 @@ import type { Answers, AnswerValue } from "@/types/question";
 import type { ScoreResult } from "@/types/engine";
 
 /** Which quiz variant is being served. */
-export type QuizVariant = "full" | "event" | "woman" | "event2" | "event3";
+export type QuizVariant =
+  | "full"
+  | "event"
+  | "woman"
+  | "event2"
+  | "event3"
+  // Preview-only: the daylight arc with a partner consent page. Submits nothing
+  // (see PREVIEW_VARIANTS in config/variants.ts).
+  | "event6";
 
 /** A single step in the funnel flow. */
 export type FunnelStep =
   | { kind: "hook" }
   | { kind: "nameGate" }
+  | { kind: "consent" } // event6: partner consent page between landing and game
   | { kind: "question"; questionId: string }
   | { kind: "questionGroup"; title: string; questionIds: string[] }
   | { kind: "statCard"; cardId: string }

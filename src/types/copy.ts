@@ -349,6 +349,26 @@ export interface ScreenCopy {
   consult: ConsultCopy;
   event2: Event2Copy;
   event3: Event3Copy;
+  event6: Event6Copy;
+}
+
+// Event v6 (/event-v6, preview): the daylight arc with a partner consent page
+// after the landing. Every other screen reuses the v3/v2 copy.
+export interface Event6Copy {
+  consent: {
+    heading: string;
+    body: string;
+    eyebrow: string;
+    /** One checkbox each. `required` gates the CTA. */
+    items: {
+      text: string;
+      required: boolean;
+      /** Optional inline link rendered in place of {link} in `text`. */
+      link?: { label: string; href: string };
+    }[];
+    requiredError: string;
+    cta: string;
+  };
 }
 
 // What changes per persona on the result screen: the score blurb (per band) and

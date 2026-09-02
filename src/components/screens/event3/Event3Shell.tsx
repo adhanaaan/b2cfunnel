@@ -23,6 +23,11 @@ interface Event3ShellProps {
    * content such as the /event-v5 consent preview.
    */
   scroll?: boolean;
+  /**
+   * Adds the partner's navy pill to the corners (event6 consent page, where
+   * the backdrop carries both brands).
+   */
+  navyPills?: boolean;
 }
 
 // One solid + one soft gradient pill per corner cluster, as designed.
@@ -56,6 +61,16 @@ const PILL_CLUSTERS = [
   },
 ];
 
+/**
+ * The partner's navy pills (event6 consent page). Kept clear of the content
+ * column: the copy on that page runs nearly the full height, so these sit in
+ * the top-right and bottom-left corners only.
+ */
+const NAVY_PILLS = [
+  { pos: "right-[-165px] top-[-14px]", duration: 12, delay: 0.6 },
+  { pos: "left-[-215px] bottom-[24px]", duration: 14, delay: 2 },
+];
+
 const SPARKLES = [
   { pos: "left-[8px] top-[83px]", size: "text-[44px]", min: 0.35, max: 0.7, duration: 5, delay: 0 },
   { pos: "right-[-14px] top-[231px]", size: "text-[44px]", min: 0.3, max: 0.6, duration: 6, delay: 1.4 },
@@ -69,6 +84,7 @@ export function Event3Shell({
   sparkles = false,
   blobs = false,
   scroll = false,
+  navyPills = false,
 }: Event3ShellProps) {
   // The arena screens are hard-locked to one viewport. h-dvh alone is not
   // enough on mobile: the document keeps the taller large-viewport height
@@ -121,6 +137,22 @@ export function Event3Shell({
                   ["--pill-delay" as string]: `${p.delay}s`,
                   ["--pill-from" as string]: "-18px",
                   ["--pill-to" as string]: "18px",
+                }}
+              />
+            </div>
+          ))}
+
+        {pills &&
+          navyPills &&
+          NAVY_PILLS.map((p, i) => (
+            <div key={`navy-${i}`} className={`absolute ${p.pos} rotate-[24deg]`}>
+              <div
+                className="animate-pill-drift h-[38px] w-[340px] rounded-full bg-[#302d77]"
+                style={{
+                  ["--pill-duration" as string]: `${p.duration}s`,
+                  ["--pill-delay" as string]: `${p.delay}s`,
+                  ["--pill-from" as string]: "-14px",
+                  ["--pill-to" as string]: "14px",
                 }}
               />
             </div>
