@@ -431,7 +431,9 @@ export const COPY: CopyConfig = {
         // sits inside each line.
         items: [
           {
-            text: "By providing the information set out in this form, I consent to IHH Healthcare Singapore and their representatives and/or agents collecting, using and disclosing my personal data to provide me with medical treatment and other reasonably related purposes. Such purposes are set out in the {link}, or available on request.",
+            // The asterisk is the partner's own convention for a mandatory
+            // tick, explained in the footnote below the rows.
+            text: "*By providing the information set out in this form, I consent to IHH Healthcare Singapore and their representatives and/or agents collecting, using and disclosing my personal data to provide me with medical treatment and other reasonably related purposes. Such purposes are set out in the {link}, or available on request.",
             required: true,
             link: {
               label: "IHH Healthcare Singapore Data Protection Notice",
@@ -443,14 +445,18 @@ export const COPY: CopyConfig = {
             required: false,
           },
           {
-            text: "I agree to receiving marketing messages via SMS, telephone call and other Singapore phone number-based messaging, regardless of my registration with the Do-Not-Call registry. I understand that I may withdraw such consent at any time via unsubscribe facilities OR forms available on request from our staff OR by email to IHH Healthcare Singapore DPO at {link}.",
+            text: "I agree to receiving marketing messages via SMS, telephone call and other Singapore phone number-based messaging, regardless of my registration with the Do-Not-Call registry.",
             required: false,
-            link: { label: "pdpo@ihhhealthcare.com", href: "mailto:pdpo@ihhhealthcare.com" },
           },
         ],
+        // Sits under the rows, without a tick of its own.
+        footnote: {
+          text: "I understand that I may withdraw such consent at any time via unsubscribe facilities OR forms available on request from our staff OR by email to IHH Healthcare Singapore DPO at {link}. All fields marked with an asterisk (*) are mandatory.",
+          link: { label: "pdpo@ihhhealthcare.com", href: "mailto:pdpo@ihhhealthcare.com" },
+        },
         requiredError:
           "Please agree to the first consent so we can go ahead.",
-        cta: "I'm Ready!",
+        cta: "I'm ready!",
       },
     },
   },

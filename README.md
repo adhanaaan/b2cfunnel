@@ -89,10 +89,6 @@ write path checks - lead, score, newsletter opt-in, and `lib/analytics` itself,
 so not even an anonymous step event is sent. The route is `noindex`, and a small
 "Preview · not saved" badge sits on every screen.
 
-The partner logo is not in the repo: drop it at `public/ihh-logo.png` and it
-appears beside the GMS lockup on the consent page. Until then that slot renders
-nothing rather than a broken image.
-
 Only the first consent gates the CTA. The other two are marketing consents and
 are optional, matching how the landing treats its own marketing opt-in.
 

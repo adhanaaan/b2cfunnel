@@ -6,7 +6,6 @@ import { COPY } from "@/config/copy";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "@/components/screens/event3/Event3Shell";
 import { ctaPrimaryClass } from "@/components/screens/event3/ui";
-import { PartnerLogo } from "@/components/screens/event6/PartnerLogo";
 
 interface Event6ConsentProps {
   onSubmit: (accepted: boolean[]) => void;
@@ -145,9 +144,14 @@ export function Event6Consent({ onSubmit }: Event6ConsentProps) {
           <img
             src="/gms-ntu-logo.png"
             alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
-            className="h-[clamp(24px,3.5dvh,30px)] w-auto"
+            className="h-[clamp(24px,3.5dvh,29px)] w-auto"
           />
-          <PartnerLogo />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/ihh-logo.png"
+            alt="IHH Healthcare"
+            className="h-[clamp(32px,4.7dvh,40px)] w-auto"
+          />
         </motion.div>
 
         <div aria-hidden className="h-[2.4dvh] min-h-0 shrink" />
@@ -192,6 +196,10 @@ export function Event6Consent({ onSubmit }: Event6ConsentProps) {
                 <ConsentText text={entry.text} link={entry.link} />
               </ConsentCheckbox>
             ))}
+
+            <p className="pt-[0.6dvh] text-[10px] leading-[1.7] text-secondary">
+              <ConsentText text={c.footnote.text} link={c.footnote.link} />
+            </p>
           </motion.div>
 
           {error && (

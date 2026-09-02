@@ -366,6 +366,8 @@ export interface Event6Copy {
       /** Optional inline link rendered in place of {link} in `text`. */
       link?: { label: string; href: string };
     }[];
+    /** Withdrawal wording, shown under the rows without a checkbox. */
+    footnote: { text: string; link?: { label: string; href: string } };
     requiredError: string;
     cta: string;
   };
