@@ -8,6 +8,9 @@ export type QuizVariant =
   | "woman"
   | "event2"
   | "event3"
+  // Rotary KL-WAM (/rotaryklwam): the daylight arc with no partner consent
+  // page - the landing leads straight into the instructions and their demo.
+  | "rotary"
   // Preview-only: the daylight arc with a partner consent page. Submits nothing
   // (see PREVIEW_VARIANTS in config/variants.ts).
   | "event6";

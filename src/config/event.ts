@@ -35,8 +35,9 @@ export const EVENT3_PAUSED = false;
  *
  * Flip to `false` (and redeploy) to reopen: the full arc comes straight back -
  * the question set, the scoring maxima and every score already on the board are
- * untouched by this switch. The /event-v6 consent preview ignores it and keeps
- * walking the whole flow.
+ * untouched by this switch. It closes the DBS challenge and nothing else: the
+ * /event-v6 consent preview and /rotaryklwam ignore it and keep walking their
+ * whole flow, because the close is applied per variant in resolveFlow.
  */
 export const EVENT3_CHALLENGE_CLOSED = true;
 
@@ -67,6 +68,20 @@ export const DBS_DAY2_SOURCE = "dbs-day2";
 export const EVENT3_SOURCE: string = DBS_DAY1_SOURCE;
 
 /**
+ * Independent pause switch for the Rotary KL-WAM event (/rotaryklwam and its
+ * TV board). Same contract as EVENT3_PAUSED, and deliberately its own switch
+ * so closing one event never takes another down with it.
+ */
+export const ROTARY_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the Rotary KL-WAM funnel. Every /rotaryklwam score
+ * and report is tagged with it, and the Rotary board filters to it - which is
+ * what keeps its standings clear of every other event's history.
+ */
+export const ROTARY_SOURCE = "rotaryklwam";
+
+/**
  * The bucket a variant's rows are tagged with, for both `game_scores.source`
  * and `leads.source`. Shared so a score and the report that follows it always
  * carry the same tag - the report rate on the board divides one by the other,
@@ -79,6 +94,8 @@ export function eventSource(variant: QuizVariant): string | null {
   switch (variant) {
     case "event3":
       return EVENT3_SOURCE;
+    case "rotary":
+      return ROTARY_SOURCE;
     case "event2":
       return "event2";
     case "event":

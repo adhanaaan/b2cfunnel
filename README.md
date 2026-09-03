@@ -81,7 +81,8 @@ high score maps to the Low band.
 
 `/event-v3` asks for the partner's (IHH Healthcare Singapore) consent on its
 own page, from Figma "Option 2", between the landing and the instructions - so
-it is answered before the demo round and the game. The landing keeps its own
+it is answered before the demo round and the game. An event with no partner in
+it, like `/rotaryklwam`, has no such page. The landing keeps its own
 two consents (contact, which still gates the challenge, and the brain-health
 tips opt-in); the partner's wording is not a tickbox on the landing.
 
@@ -118,13 +119,45 @@ back. Closing is applied when the flow is *resolved*, not to the variant's flow
 itself, so the question set, `achievableAxisMax` and the comparability of every
 score already recorded are untouched by the switch either way (pinned by
 `tests/config/event3Flow.test.ts` and `tests/config/event3Closed.test.ts`).
-`/event-v6` ignores the switch and keeps walking the whole flow.
+`/event-v6` and `/rotaryklwam` ignore the switch and keep walking the whole
+flow.
 
 **Nothing is recorded from a closed session.** The lead is written when the
 report is built and the score after the game, and neither is reachable - so the
 name, email and consents taken on the way to the wrap screen are not stored
 anywhere. That is deliberate: the landing's required consent is about results
 and a prize, and while the challenge is closed there are neither.
+
+## /rotaryklwam (Rotary KL-WAM)
+
+`/rotaryklwam` runs the same Daylight Ember arc as `/event-v3`, for an event
+with no partner in it. Three differences, and nothing else:
+
+- **No partner consent page.** The landing leads straight into the instructions
+  and their demo round. Nothing asks for a partner consent, so
+  `partner_consent` is written as `null` on both the score and the lead - "we
+  never asked", the same three-state contract as everywhere else.
+- **No "That's a wrap!" screen.** `EVENT3_CHALLENGE_CLOSED` closes the DBS
+  challenge only: the close is applied per variant in `resolveFlow`, so it
+  cannot reach across into this event (pinned by
+  `tests/config/rotaryFlow.test.ts`).
+- **The landing's required consent** leads with a bold "Required." instead of
+  the parenthetical "(Required)", and keeps the privacy link in body colour.
+  That is the only copy that differs; `COPY.screens.rotary.splash` spreads
+  `DAYLIGHT_SPLASH` and overrides the one line.
+
+Its **question set is exactly event2's**, like v3's, which is what keeps a
+Rotary score comparable with every score already recorded (`achievableAxisMax`
+sums a variant's question steps - see the note in `config/funnelFlow.ts`).
+
+**The board is at `/rotaryklwam/leaderboard`**, and is the v3 board with the
+prize card dropped: two columns instead of three, with the standings taking the
+width the prize card had, so long names sit unclipped. The scan rail keeps its
+width, and so its QR size. `ROTARY_PAUSED` (`src/config/event.ts`) is its own
+pause switch, independent of every other event's.
+
+Scores and reports are tagged `rotaryklwam` (`ROTARY_SOURCE`), so the board
+ranks only this event - see **Supabase** below.
 
 ## /event-v6 (preview)
 
@@ -204,10 +237,16 @@ alter table public.game_scores enable row level security;
 ```
 
 **`source` scopes a board to one event.** Every score is tagged with the event
-it was played at (`"event"`, `"event2"`, or `EVENT3_SOURCE` from
-`src/config/event.ts`), and `/api/leaderboard?source=...` filters to it. The v3
-board and the v3 in-funnel standings pass `EVENT3_SOURCE`; the v1 and v2 boards
-send no `source` and so keep ranking every row, history included.
+it was played at (`"event"`, `"event2"`, `EVENT3_SOURCE` or `ROTARY_SOURCE`
+from `src/config/event.ts`), and `/api/leaderboard?source=...` filters to it.
+The v3 and Rotary boards, and the in-funnel rank chip on each, pass their own
+tag; the v1 and v2 boards send no `source` and so keep ranking every row,
+history included.
+
+**Rotary KL-WAM uses `rotaryklwam`** (`ROTARY_SOURCE`), so `/rotaryklwam` rows
+never mix with a DBS board's and vice versa. The tag is pinned by
+`tests/config/leaderboardSource.test.ts`, since a collision would be silent -
+no error, just the wrong standings on a TV at an event.
 
 **DBS (1-2 Sep) runs both days on `dbs-day1`** - one leaderboard carrying
 across the two days, so day 2 opens on day 1's standings. `DBS_DAY2_SOURCE`
@@ -243,8 +282,9 @@ not silently read as a decline.
 
 Where each value comes from:
 
-- **Landing page** (`/event-v3`): the "Send me occasional brain health tips and
-  updates" checkbox rides along with the name + email capture and is written to
+- **Landing page** (`/event-v3`, `/rotaryklwam`): the "Send me occasional brain
+  health tips and updates" checkbox rides along with the name + email capture
+  and is written to
   both `game_scores.tips_consent` (with the score) and `leads.tips_consent`
   (with the lead).
 - **Report page**: ticking the tips opt-in inserts into `newsletter_optins` as

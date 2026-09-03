@@ -16,9 +16,9 @@ export function isPreviewVariant(variant: QuizVariant): boolean {
 
 /**
  * Variants served by the event3 "Daylight Ember" screens (landing,
- * instructions, post-game result). v6 is v3 plus a partner consent page, so it
- * shares every one of those screens.
+ * instructions, post-game result). v6 is v3 plus a partner consent page and
+ * rotary is v3 without one, so all three share every one of those screens.
  */
 export function usesDaylightScreens(variant: QuizVariant): boolean {
-  return variant === "event3" || variant === "event6";
+  return variant === "event3" || variant === "event6" || variant === "rotary";
 }
