@@ -187,7 +187,11 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     case "nameGate":
       // Event2/3: the single email capture (leaderboard key + results address).
       return usesDaylightScreens(state.variant) ? (
-        <Event3Splash onSubmit={submitEmail} preview={preview} />
+        <Event3Splash
+          onSubmit={submitEmail}
+          preview={preview}
+          design={state.variant === "rotary" ? "rotary" : "v3"}
+        />
       ) : state.variant === "event2" ? (
         <Event2Splash onSubmit={submitEmail} />
       ) : (

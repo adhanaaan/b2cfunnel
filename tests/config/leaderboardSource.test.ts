@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { DBS_DAY1_SOURCE, DBS_DAY2_SOURCE, EVENT3_SOURCE } from "@/config/event";
+import {
+  DBS_DAY1_SOURCE,
+  DBS_DAY2_SOURCE,
+  EVENT3_SOURCE,
+  ROTARY_SOURCE,
+  eventSource,
+} from "@/config/event";
+import type { QuizVariant } from "@/types/funnel";
 
 /**
  * The v3 board is kept clear of other events' history purely by the `source`
@@ -25,5 +32,41 @@ describe("event3 leaderboard source", () => {
   it("keeps the two DBS days in separate buckets", () => {
     expect(DBS_DAY1_SOURCE).not.toBe(DBS_DAY2_SOURCE);
     expect([DBS_DAY1_SOURCE, DBS_DAY2_SOURCE]).toContain(EVENT3_SOURCE);
+  });
+});
+
+/**
+ * The Rotary board is scoped the same way, and shares the table with every
+ * other event - so the same failure is possible, and just as silent.
+ */
+describe("rotary leaderboard source", () => {
+  it("is the tag the database column expects", () => {
+    expect(ROTARY_SOURCE).toBe("rotaryklwam");
+  });
+
+  it("never collides with another event's bucket", () => {
+    for (const other of [
+      "event",
+      "event2",
+      "event3",
+      EVENT3_SOURCE,
+      DBS_DAY1_SOURCE,
+      DBS_DAY2_SOURCE,
+    ]) {
+      expect(ROTARY_SOURCE).not.toBe(other);
+    }
+  });
+
+  // A score and the report that follows it must carry the SAME tag, or the
+  // board's completion rate divides one event's reports by another's players.
+  it("tags both the score and the lead from the rotary funnel", () => {
+    expect(eventSource("rotary")).toBe(ROTARY_SOURCE);
+  });
+
+  it("leaves every other variant's tag alone", () => {
+    const others: QuizVariant[] = ["full", "woman", "event", "event2", "event3"];
+    for (const variant of others) {
+      expect(eventSource(variant)).not.toBe(ROTARY_SOURCE);
+    }
   });
 });

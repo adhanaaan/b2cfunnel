@@ -196,6 +196,17 @@ const WOMAN_FLOW: FunnelStep[] = [
 ];
 
 /**
+ * The shared daylight arc: the event2 flow with the statistics interstitials
+ * dropped. v3 inserts a partner consent page into it, rotary runs it as-is.
+ * Kept as one base on purpose - achievableAxisMax sums max option scores over
+ * a variant's question steps, so an identical question set is what keeps
+ * normalised scores and bands comparable across all of them.
+ */
+const DAYLIGHT_FLOW: FunnelStep[] = EVENT2_FLOW.filter(
+  (step) => step.kind !== "statCard",
+);
+
+/**
  * Event v3 ("Daylight Ember", served at /event-v3). The redesign touches the
  * arena screens (splash, instructions, post-game result) and drops the
  * statistics interstitials from the quiz arc; the question set is exactly
@@ -207,11 +218,18 @@ const WOMAN_FLOW: FunnelStep[] = [
  * before the instructions and their demo round - nothing is played until the
  * partner's consent has been put to the player.
  */
-const EVENT3_FLOW: FunnelStep[] = EVENT2_FLOW.filter(
-  (step) => step.kind !== "statCard",
-).flatMap((step) =>
+const EVENT3_FLOW: FunnelStep[] = DAYLIGHT_FLOW.flatMap((step) =>
   step.kind === "nameGate" ? [step, { kind: "consent" } as FunnelStep] : [step],
 );
+
+/**
+ * Rotary KL-WAM (/rotaryklwam): the daylight arc with no partner in it, so no
+ * consent page - the landing leads straight into the instructions and their
+ * demo round. No "That's a wrap!" screen either: closing the v3 challenge is
+ * about the DBS event, and must not reach across to this one (which is why the
+ * close is applied per variant in resolveFlow, not here).
+ */
+const ROTARY_FLOW: FunnelStep[] = DAYLIGHT_FLOW;
 
 /**
  * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
@@ -246,6 +264,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   woman: WOMAN_FLOW,
   event2: EVENT2_FLOW,
   event3: EVENT3_FLOW,
+  rotary: ROTARY_FLOW,
   event6: EVENT6_FLOW,
 };
 

@@ -28,6 +28,28 @@ export const FACTOR_LABELS: Record<string, string> = {
   alcohol: "Alcohol",
 };
 
+/**
+ * The Daylight Ember landing copy, shared by /event-v3, the /event-v6 preview
+ * and /rotaryklwam. Words wrapped in *asterisks* are emphasised where the
+ * screen renders them (the ember gradient in the hero, weight in a consent
+ * row), so the markers are part of the copy rather than the component.
+ */
+const DAYLIGHT_SPLASH: CopyConfig["screens"]["event3"]["splash"] = {
+  eyebrow: "Reaction Time Challenge",
+  heading: "How *fast* does your *brain* process?",
+  body: "Take a quick symbol-matching test to find out your brain processing speed.",
+  namePlaceholder: "Name",
+  emailPlaceholder: "Your email",
+  consentRequired:
+    "(Required) I agree to be contacted about my results and prize.",
+  consentRequiredError:
+    "Please agree to be contacted so we can send you your results.",
+  consentMarketing: "Send me occasional brain health tips and updates.",
+  privacyLinkLabel: "Privacy Policy",
+  cta: "Start the challenge",
+  poweredBy: "Powered by:",
+};
+
 export const COPY: CopyConfig = {
   screens: {
     hook: {
@@ -359,22 +381,7 @@ export const COPY: CopyConfig = {
       },
     },
     event3: {
-      splash: {
-        eyebrow: "Reaction Time Challenge",
-        heading: "How *fast* does your *brain* process?",
-        body: "Take a quick symbol-matching test to find out your brain processing speed.",
-        namePlaceholder: "Name",
-        emailPlaceholder: "Your email",
-        consentRequired:
-          "(Required) I agree to be contacted about my results and prize.",
-        consentRequiredError:
-          "Please agree to be contacted so we can send you your results.",
-        consentMarketing:
-          "Send me occasional brain health tips and updates.",
-        privacyLinkLabel: "Privacy Policy",
-        cta: "Start the challenge",
-        poweredBy: "Powered by:",
-      },
+      splash: DAYLIGHT_SPLASH,
       consent: {
         heading: "Before we start",
         body: "Gray Matter Solutions is partnering with IHH Healthcare Singapore in this event.",
@@ -487,6 +494,16 @@ export const COPY: CopyConfig = {
         requiredError:
           "Please agree to the first consent so we can go ahead.",
         cta: "I'm Ready!",
+      },
+    },
+    rotary: {
+      // The Rotary KL-WAM landing is the daylight landing, with the required
+      // consent led by a bold "Required." instead of a parenthetical - the
+      // only copy that differs. Every other screen reuses the v3/v2 copy.
+      splash: {
+        ...DAYLIGHT_SPLASH,
+        consentRequired:
+          "*Required.* I agree to be contacted about my results and prize.",
       },
     },
   },

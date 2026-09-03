@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { animate, motion, useReducedMotion } from "framer-motion";
 import { QRCodeCanvas } from "qrcode.react";
 import { COPY } from "@/config/copy";
-import { EVENT3_SOURCE } from "@/config/event";
+import { eventSource } from "@/config/event";
+import { useVariant } from "@/components/VariantContext";
+import { playUrlFor } from "@/config/eventLinks";
 import { formatTime } from "@/lib/format";
 import { generateResultCard, shareBlob } from "@/lib/shareCard";
 import { springs, stagger } from "@/lib/motion";
@@ -13,13 +15,6 @@ import { BrainHero } from "./BrainHero";
 import { ProcessingSpeedPopup } from "./ProcessingSpeedPopup";
 import { QuestionCircleIcon, RetryIcon, ShareIcon } from "./icons";
 import { ctaInverseClass, emberLabelGradient, emberTextGradient } from "./ui";
-
-/**
- * Where the share card's QR and caption send people. Absolute on purpose
- * (same reasoning as the TV board): the screen may run from localhost or a
- * preview deploy, but a scanned phone must always land on production.
- */
-const PLAY_URL = "https://brainhealthcheck.vercel.app/event-v3";
 
 interface Event3GameResultProps {
   name?: string;
@@ -58,6 +53,13 @@ export function Event3GameResult({
 }: Event3GameResultProps) {
   const c = COPY.screens.event3.gameResult;
   const reduced = useReducedMotion();
+  // The daylight result screen serves several events. Both the standings it
+  // reads and the link its share card carries have to follow the one being
+  // played, or a Rotary player would be ranked against - and send friends to -
+  // another event's board.
+  const variant = useVariant();
+  const source = eventSource(variant);
+  const playUrl = playUrlFor(variant);
   const [standing, setStanding] = useState<Standing>({
     top: null,
     rank: null,
@@ -77,7 +79,8 @@ export function Event3GameResult({
     (async () => {
       try {
         const res = await fetch(
-          `/api/leaderboard?limit=1&source=${encodeURIComponent(EVENT3_SOURCE)}` +
+          `/api/leaderboard?limit=1` +
+            (source ? `&source=${encodeURIComponent(source)}` : "") +
             (email ? `&email=${encodeURIComponent(email)}` : ""),
           { cache: "no-store" },
         );
@@ -98,7 +101,7 @@ export function Event3GameResult({
     return () => {
       cancelled = true;
     };
-  }, [email]);
+  }, [email, source]);
 
   // The hero count-up: 0 -> the real time over 900ms, tap-skippable.
   useEffect(() => {
@@ -134,7 +137,7 @@ export function Event3GameResult({
         timeMs,
         rank: standing.rank ?? undefined,
         total: standing.total ?? undefined,
-        url: PLAY_URL,
+        url: playUrl,
         qrCanvas,
         theme: "daylight",
       });
@@ -166,7 +169,7 @@ export function Event3GameResult({
       const outcome = await shareBlob(
         cardRef.current,
         text,
-        PLAY_URL,
+        playUrl,
         "brain-speed.png",
       );
       setShareNote(
@@ -190,7 +193,7 @@ export function Event3GameResult({
     <Event3Shell pills sparkles>
       {/* Hidden QR used by the canvas share card. */}
       <div ref={qrHostRef} className="hidden" aria-hidden>
-        <QRCodeCanvas value={PLAY_URL} size={190} marginSize={0} />
+        <QRCodeCanvas value={playUrl} size={190} marginSize={0} />
       </div>
 
       <motion.div

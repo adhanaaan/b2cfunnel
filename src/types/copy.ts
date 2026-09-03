@@ -374,6 +374,14 @@ export interface ScreenCopy {
   event2: Event2Copy;
   event3: Event3Copy;
   event6: Event6Copy;
+  rotary: RotaryCopy;
+}
+
+// Rotary KL-WAM (/rotaryklwam): the daylight arc with no partner in it, so no
+// consent page. Only the landing's required-consent line differs from v3;
+// every other screen reuses the v3/v2 copy.
+export interface RotaryCopy {
+  splash: Event3Copy["splash"];
 }
 
 // Event v6 (/event-v6, preview): the daylight arc with a partner consent page

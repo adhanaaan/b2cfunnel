@@ -1,21 +1,23 @@
 "use client";
 
 /**
- * The attract screen for /event-v3 (designed against a 1920x1080 55" panel,
+ * The attract screen for /rotaryklwam (designed against a 1920x1080 55" panel,
  * read from 2-5m away, but laid out to reflow down to a phone).
  *
- * Three columns on a wide screen - scan card, live standings, prize card -
- * collapsing to standings-over-cards on tablet and a single column on mobile.
- * Type is clamped between a mobile floor and the panel size so the same markup
- * serves both. Self-contained: polls /api/leaderboard every 8s and keeps the
- * last good standings on error.
+ * Two columns on a wide screen - the scan rail and the live standings, which
+ * take the width the v3 board gives its prize card. There is no prize on this
+ * one, and the space buys what it is worth more: full names on every row.
+ * Collapses to standings-over-scan on tablet and mobile. Type is clamped
+ * between a mobile floor and the panel size so the same markup serves both.
+ * Self-contained: polls /api/leaderboard every 8s and keeps the last good
+ * standings on error.
  */
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 import { formatTime } from "@/lib/format";
-import { EVENT3_PAUSED, EVENT3_SOURCE } from "@/config/event";
+import { ROTARY_PAUSED, ROTARY_SOURCE } from "@/config/event";
 import { playUrlFor } from "@/config/eventLinks";
 import { BRAIN_FACTS } from "@/config/tips";
 import { springs } from "@/lib/motion";
@@ -30,7 +32,7 @@ const POLL_MS = 8000;
 const FACT_MS = 8000;
 
 /** Where the QR sends players (absolute - see config/eventLinks.ts). */
-const PLAY_URL = playUrlFor("event3");
+const PLAY_URL = playUrlFor("rotary");
 
 /**
  * How often the completion stat is refreshed. Slower than the standings: the
@@ -53,7 +55,8 @@ const INK_FAINT = "#a98d80";
 const EMPTY_TIME = "#dcc4b6";
 const RANK_SILVER = "#c3cad6";
 const RANK_BRONZE = "#d99058";
-const PRIZE_WARM = "#ffe4cf";
+// Warm cream for the leader row's "time to beat" label.
+const LEADER_LABEL = "#ffe4cf";
 // Scan-rail headline: deep ember for the emphasised words, and the highlighter
 // yellow behind "< 60 SECONDS" (the Processing Speed domain's light tone).
 const SCAN_ACCENT = "#993c1d";
@@ -62,8 +65,6 @@ const SCAN_HIGHLIGHT = "#fde68a";
 const CANVAS =
   "linear-gradient(150deg, #fff8f6 15%, #fdeee4 46%, #fbe3d3 85%)";
 const LEADER_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
-const PRIZE_GRADIENT =
-  "linear-gradient(147deg, #ff6002 3%, #f77528 46%, rgba(255,199,156,0.87) 99%)";
 
 /**
  * Clamped type sizes. The middle term is `min(vh, vw)` on purpose: the board is
@@ -82,9 +83,6 @@ const T = {
   rowName: "text-[clamp(0.9375rem,min(3.25vh,4.4vw),2.1875rem)]",
   rowTime: "text-[clamp(1rem,min(3.6vh,4.8vw),2.4375rem)]",
   rowEmpty: "text-[clamp(0.8125rem,min(2.4vh,3.6vw),1.625rem)]",
-  prizeChip: "text-[clamp(0.5625rem,min(1.75vh,2.6vw),1.1875rem)]",
-  prizeTitle: "text-[clamp(1.375rem,min(5.5vh,7.5vw),3.75rem)]",
-  prizeWorth: "text-[clamp(0.8125rem,min(2.6vh,3.6vw),1.75rem)]",
   scanTitle: "text-[clamp(1rem,min(3vh,4.4vw),2rem)]",
   // The scan headline is the loudest type on the board: sized off the 48.6px
   // base of the design, with the emphasised words stepped up in em from there.
@@ -233,7 +231,7 @@ function StandingRow({
             <span className="flex shrink-0 flex-col items-end leading-none">
               <span
                 className={`${T.micro} font-bold uppercase tracking-[0.25em]`}
-                style={{ color: PRIZE_WARM }}
+                style={{ color: LEADER_LABEL }}
               >
                 Time to beat
               </span>
@@ -366,56 +364,9 @@ function ScanRail() {
   );
 }
 
-/* ------------------------------ Prize card ------------------------------ */
-
-function PrizeCard() {
-  return (
-    <div
-      className="flex h-full flex-col rounded-2xl px-4 pb-4 sm:px-5 sm:pb-5"
-      style={{ background: PRIZE_GRADIENT }}
-    >
-      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[2vh] px-2 pb-1 pt-4 text-center sm:gap-[3.2vh] sm:px-5 sm:pt-6 lg:px-1.5">
-        <div className="flex shrink-0 flex-col items-center gap-[1.8vh]">
-          <p
-            className={`${T.prizeChip} rounded-full bg-white px-[1.05em] py-[0.5em] font-extrabold uppercase tracking-[0.18em]`}
-            style={{ color: ORANGE_DEEP }}
-          >
-            Today&apos;s prize
-          </p>
-          <div className="flex flex-col items-center gap-[1.2vh]">
-            <p
-              className={`${T.prizeTitle} font-extrabold leading-none tracking-tight text-white`}
-            >
-              Win a Google
-              <br />
-              Fitbit Air
-            </p>
-            <p className={`${T.prizeWorth} font-bold leading-[1.1] text-cream`}>
-              Worth $189 · Fastest mind gets it!
-            </p>
-          </div>
-        </div>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/fitbit-air.webp"
-          alt="Google Fitbit Air fitness band"
-          className="animate-symbol-drift min-h-0 w-auto max-w-full flex-1 object-contain drop-shadow-[0_18px_28px_rgba(74,26,0,0.45)] max-h-[40vh] lg:max-h-none"
-          style={{
-            ["--drift-y" as string]: "-12px",
-            ["--drift-x" as string]: "0px",
-            ["--drift-tilt" as string]: "0deg",
-            ["--drift-tilt-to" as string]: "0deg",
-            ["--drift-duration" as string]: "5s",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
 /* --------------------------------- Board -------------------------------- */
 
-export default function LeaderboardV3Board() {
+export default function RotaryLeaderboardBoard() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [total, setTotal] = useState(0);
   const [factIdx, setFactIdx] = useState(0);
@@ -449,7 +400,7 @@ export default function LeaderboardV3Board() {
     const load = async () => {
       try {
         const res = await fetch(
-          `/api/leaderboard?limit=${TOP_N}&source=${encodeURIComponent(EVENT3_SOURCE)}`,
+          `/api/leaderboard?limit=${TOP_N}&source=${encodeURIComponent(ROTARY_SOURCE)}`,
           { cache: "no-store" },
         );
         const data = await res.json();
@@ -460,7 +411,7 @@ export default function LeaderboardV3Board() {
 
         // New podium entrants (skip the very first load: nothing is "new").
         const podium = next.slice(0, 3);
-        if (!firstLoadRef.current && !EVENT3_PAUSED) {
+        if (!firstLoadRef.current && !ROTARY_PAUSED) {
           for (const e of podium) {
             if (!prevTopRef.current.has(keyOf(e))) queueRef.current.push(e);
           }
@@ -488,7 +439,7 @@ export default function LeaderboardV3Board() {
     const load = async () => {
       try {
         const res = await fetch(
-          `/api/report-rate?source=${encodeURIComponent(EVENT3_SOURCE)}`,
+          `/api/report-rate?source=${encodeURIComponent(ROTARY_SOURCE)}`,
           { cache: "no-store" },
         );
         const data = await res.json();
@@ -561,13 +512,16 @@ export default function LeaderboardV3Board() {
         className="relative z-10 shrink-0 px-[4vw] pb-3 pt-4 sm:pb-3.5 sm:pt-5 lg:px-[3vw]"
         style={{ borderBottom: `1px solid ${CARD_LINE}` }}
       >
-        <Masthead live={!EVENT3_PAUSED} />
+        <Masthead live={!ROTARY_PAUSED} />
       </header>
 
-      {/* Body: scan | standings | prize. Reflows to 1 col, then 2, then 3. */}
-      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 md:grid-cols-2 lg:grid-cols-[588fr_640fr_499fr] lg:gap-[1.6vw] lg:px-[3vw] lg:py-[2vh]">
-        <div className="order-2 md:order-2 lg:order-1 lg:min-h-0">
-          {EVENT3_PAUSED ? (
+      {/* Body: scan | standings. The standings take the column the v3 board
+          spends on its prize card, so long names have room to sit unclipped;
+          the scan rail keeps the width (and so the QR size) it has there.
+          Reflows to a single column - standings first - below lg. */}
+      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 lg:grid-cols-[588fr_1155fr] lg:gap-[1.6vw] lg:px-[3vw] lg:py-[2vh]">
+        <div className="order-2 lg:order-1 lg:min-h-0">
+          {ROTARY_PAUSED ? (
             <div
               className="flex h-full flex-col items-center justify-center rounded-2xl bg-white p-6 text-center shadow-card"
               style={{ border: `1px solid ${CARD_LINE}` }}
@@ -593,7 +547,7 @@ export default function LeaderboardV3Board() {
           )}
         </div>
 
-        <ol className="order-1 flex min-h-0 flex-col gap-2 md:order-1 md:col-span-2 lg:order-2 lg:col-span-1 lg:gap-[1.2vh]">
+        <ol className="order-1 flex min-h-0 flex-col gap-2 lg:order-2 lg:gap-[1.2vh]">
           {rows.map((e, i) => (
             <StandingRow
               key={e ? keyOf(e) : `empty-${i}`}
@@ -604,9 +558,6 @@ export default function LeaderboardV3Board() {
           ))}
         </ol>
 
-        <div className="order-3 md:order-3 lg:min-h-0">
-          <PrizeCard />
-        </div>
       </div>
 
       {/* Brain-facts strip */}

@@ -15,7 +15,14 @@ describe("preview variants", () => {
   });
 
   it("never covers a variant that runs at an event", () => {
-    const live: QuizVariant[] = ["full", "event", "woman", "event2", "event3"];
+    const live: QuizVariant[] = [
+      "full",
+      "event",
+      "woman",
+      "event2",
+      "event3",
+      "rotary",
+    ];
     for (const variant of live) {
       expect(isPreviewVariant(variant), `${variant} must keep recording`).toBe(
         false,

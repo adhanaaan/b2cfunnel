@@ -6,7 +6,7 @@ import { COPY } from "@/config/copy";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "./Event3Shell";
 import { BrainHero } from "./BrainHero";
-import { GradientWords, ctaPrimaryClass } from "./ui";
+import { GradientWords, StrongWords, ctaPrimaryClass } from "./ui";
 
 interface Event3SplashProps {
   /**
@@ -16,6 +16,13 @@ interface Event3SplashProps {
   onSubmit: (name: string, email: string, tipsConsent: boolean) => void;
   /** Preview variants walk the screen without recording the opt-in anywhere. */
   preview?: boolean;
+  /**
+   * Which event's landing this is. The screen is the same either way; the two
+   * designs differ only in the consent row - "v3" (shared with the /event-v6
+   * preview) keeps the parenthetical "(Required)" and the ember privacy link,
+   * "rotary" leads with a bold "Required." and keeps the link in body colour.
+   */
+  design?: "v3" | "rotary";
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -76,8 +83,13 @@ function ConsentCheckbox({
  * it holds the designed proportions on any phone - a height breakpoint would
  * miss real mobile viewports (~700px once the browser chrome is showing).
  */
-export function Event3Splash({ onSubmit, preview = false }: Event3SplashProps) {
-  const c = COPY.screens.event3.splash;
+export function Event3Splash({
+  onSubmit,
+  preview = false,
+  design = "v3",
+}: Event3SplashProps) {
+  const rotary = design === "rotary";
+  const c = rotary ? COPY.screens.rotary.splash : COPY.screens.event3.splash;
   const reduced = useReducedMotion();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -110,7 +122,7 @@ export function Event3Splash({ onSubmit, preview = false }: Event3SplashProps) {
         body: JSON.stringify({
           email: email.trim(),
           name: name.trim(),
-          variant: "event3",
+          variant: design === "rotary" ? "rotary" : "event3",
         }),
       }).catch(() => {});
     }
@@ -193,12 +205,16 @@ export function Event3Splash({ onSubmit, preview = false }: Event3SplashProps) {
                 if (v) setError(null);
               }}
             >
-              {c.consentRequired}{" "}
+              <StrongWords text={c.consentRequired} />{" "}
               <a
                 href="/privacy-policy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-ember-core underline underline-offset-2"
+                className={
+                  rotary
+                    ? "underline underline-offset-2"
+                    : "font-semibold text-ember-core underline underline-offset-2"
+                }
               >
                 {c.privacyLinkLabel}
               </a>

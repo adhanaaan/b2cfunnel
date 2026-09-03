@@ -35,3 +35,24 @@ export function GradientWords({ text }: { text: string }) {
     </>
   );
 }
+
+/**
+ * Same *asterisk* marker as GradientWords, drawn as weight rather than colour
+ * and in the ink of whatever it sits in - for the consent rows' "*Required.*"
+ * lead-in, where an ember gradient would read as a link.
+ */
+export function StrongWords({ text }: { text: string }) {
+  return (
+    <>
+      {text.split("*").map((part, i) =>
+        i % 2 === 1 ? (
+          <strong key={i} className="font-bold text-charcoal">
+            {part}
+          </strong>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </>
+  );
+}
