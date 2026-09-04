@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * The attract screen for /ihhsearegatta (Figma node 627:23212, designed
+ * The attract screen for /ihhsearegatta (Figma node 638:5063, designed
  * against a 1920x1080 55" panel read from 2-5m away).
  *
  * The design puts the pitch on the left - the brain, the headline, the scan
@@ -91,12 +91,12 @@ const keyOf = (e: Entry) => `${e.name}·${Math.round(e.timeMs)}`;
 /**
  * The brain and the question, side by side. The brain asset carries its own
  * "Frontal Lobe" label and sparkle, exactly as the design places it. The row
- * is the design's 241px tall so the line under it lands where the frame puts
+ * is the design's 251px tall so the line under it lands where the frame puts
  * it; the brain (347px wide, and shorter than that box) centres in it.
  */
 function Masthead() {
   return (
-    <div className="flex items-center gap-[calc(var(--u)*20)] board:min-h-[calc(var(--u)*241)] board:gap-[calc(var(--u)*45)]">
+    <div className="flex items-center gap-[calc(var(--u)*20)] board:min-h-[calc(var(--u)*251)] board:gap-[calc(var(--u)*45)]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/images/event3/brain.webp"
@@ -116,9 +116,10 @@ function Masthead() {
 /* ------------------------------ Standings ------------------------------- */
 
 /**
- * The standings label, centred on its column over the soft highlight the
- * design lays behind it (which runs off the right edge of the frame). Stacked,
- * the label simply heads the list.
+ * The standings label, centred on its column over the soft glow the design
+ * lays behind it: a 722.5x86.5 rectangle (running off the right edge of the
+ * frame) filled with the Processing Speed domain's warm radial gradient,
+ * centred left of the text. Stacked, the label simply heads the list.
  */
 function BoardLabel({ live }: { live: boolean }) {
   return (
@@ -129,9 +130,7 @@ function BoardLabel({ live }: { live: boolean }) {
         style={{
           left: u(-69),
           width: u(722.5),
-          background:
-            "linear-gradient(90deg, rgba(251, 220, 189, 0) 0%, #fbdcbd 14%, #fde6cf 55%, rgba(253, 236, 225, 0) 100%)",
-          clipPath: "polygon(0 0, 100% 0, 100% 100%, 9% 100%)",
+          background: `radial-gradient(${u(451.6)} ${u(54.1)} at ${u(180.6)} ${u(21.6)}, rgba(245, 158, 10, 0.25) 0%, rgba(255, 235, 87, 0.06) 100%)`,
         }}
       />
       <p
@@ -486,7 +485,9 @@ function PrizePanel() {
  * The band of event photography along the bottom edge. Three frames, in the
  * widths the design shows of each (its frames overlap; these are the visible
  * parts, 482:681:757); each is optional, so the band simply thins out (and
- * finally disappears) until the photos are dropped in.
+ * finally disappears) until the photos are dropped in. In the frame the band
+ * starts 12px under the strip's bottom edge, which is why the strip stacks
+ * above it.
  */
 const BAND = [
   { src: "/regatta-band-1.jpg", grow: 482 },
@@ -498,7 +499,7 @@ function PhotoBand() {
   return (
     <div
       aria-hidden
-      className="relative z-10 flex h-[calc(var(--u)*60)] w-full shrink-0 overflow-hidden empty:hidden board:h-[calc(var(--u)*77)]"
+      className="relative z-10 flex h-[calc(var(--u)*60)] w-full shrink-0 overflow-hidden empty:hidden board:-mt-[calc(var(--u)*12)] board:h-[calc(var(--u)*53)]"
     >
       {BAND.map((frame) => (
         <OptionalImage
@@ -644,24 +645,17 @@ export default function LeaderboardIhhSeaRegattaBoard() {
           height a taller screen adds is shared above and below. */}
       <div className="relative z-10 mx-auto flex w-full flex-1 flex-col board:min-h-0 board:max-w-[calc(var(--u)*1920)] board:flex-row">
         {/* Left: the pitch. */}
-        <div className="flex min-w-0 flex-col px-[calc(var(--u)*24)] pt-[calc(var(--u)*36)] board:w-[calc(var(--u)*1274)] board:shrink-0 board:justify-center board:pb-[calc(var(--u)*58)] board:pl-[calc(var(--u)*26)] board:pr-0 board:pt-[calc(var(--u)*46)]">
+        <div className="flex min-w-0 flex-col px-[calc(var(--u)*24)] pt-[calc(var(--u)*36)] board:w-[calc(var(--u)*1274)] board:shrink-0 board:justify-center board:pb-[calc(var(--u)*54)] board:pl-[calc(var(--u)*26)] board:pr-0 board:pt-[calc(var(--u)*46)]">
           <Masthead />
-          {/* The emphasised words step up in size but keep the line box at the
-              base size's 1.28, as the frame has it - otherwise they push
-              everything below by their extra leading. */}
-          <p className="mt-[calc(var(--u)*16)] text-[length:calc(var(--u)*24)] font-medium leading-[1.28] tracking-[-0.01em] text-charcoal board:mt-0 board:text-[length:calc(var(--u)*39.36)]">
-            Measure your{" "}
-            <strong className="text-[1.14em] font-bold leading-none">speed</strong>{" "}
-            and gain free{" "}
-            <strong className="text-[1.14em] font-bold leading-none">
-              personalised
-            </strong>{" "}
-            insights.
+          <p className="mt-[calc(var(--u)*16)] text-[length:calc(var(--u)*24)] font-medium leading-[1.28] tracking-[-0.01em] text-charcoal board:mt-0 board:text-[length:calc(var(--u)*33.36)]">
+            Play the <strong className="font-bold">speed</strong> game to see
+            your <strong className="font-bold">rank</strong> and get free{" "}
+            <strong className="font-bold">personalised</strong> insights.
           </p>
 
           {IHHSEA_PAUSED ? (
             <div
-              className="mt-[calc(var(--u)*28)] flex flex-col items-center justify-center bg-white text-center shadow-card board:mt-[calc(var(--u)*55)] board:h-[calc(var(--u)*454)] board:w-[calc(var(--u)*1201)]"
+              className="mt-[calc(var(--u)*28)] flex flex-col items-center justify-center bg-white text-center shadow-card board:mt-[calc(var(--u)*52)] board:h-[calc(var(--u)*454)] board:w-[calc(var(--u)*1201)]"
               style={{
                 border: `1px solid ${CARD_LINE}`,
                 borderRadius: u(26.5),
@@ -688,7 +682,7 @@ export default function LeaderboardIhhSeaRegattaBoard() {
               </p>
             </div>
           ) : (
-            <div className="mt-[calc(var(--u)*28)] flex flex-col gap-[calc(var(--u)*24)] board:mt-[calc(var(--u)*55)] board:flex-row board:items-start board:gap-[calc(var(--u)*38)]">
+            <div className="mt-[calc(var(--u)*28)] flex flex-col gap-[calc(var(--u)*24)] board:mt-[calc(var(--u)*52)] board:flex-row board:items-start board:gap-[calc(var(--u)*38)]">
               <ScanBlock />
               <PrizePanel />
             </div>
@@ -696,7 +690,7 @@ export default function LeaderboardIhhSeaRegattaBoard() {
         </div>
 
         {/* Right: the live standings. */}
-        <div className="flex min-w-0 flex-col px-[calc(var(--u)*24)] pt-[calc(var(--u)*40)] board:w-[calc(var(--u)*646)] board:shrink-0 board:justify-center board:pb-[calc(var(--u)*80)] board:pl-0 board:pr-[calc(var(--u)*20)] board:pt-[calc(var(--u)*46)]">
+        <div className="flex min-w-0 flex-col px-[calc(var(--u)*24)] pt-[calc(var(--u)*40)] board:w-[calc(var(--u)*646)] board:shrink-0 board:justify-center board:pb-[calc(var(--u)*76)] board:pl-0 board:pr-[calc(var(--u)*20)] board:pt-[calc(var(--u)*46)]">
           <BoardLabel live={!IHHSEA_PAUSED} />
           <ol
             className="mt-[calc(var(--u)*16)] flex min-w-0 flex-col board:mt-[calc(var(--u)*41.5)]"
@@ -714,20 +708,27 @@ export default function LeaderboardIhhSeaRegattaBoard() {
         </div>
       </div>
 
-      {/* Fact strip, with the institutional lockup sitting inside it at the
-          left. The fact is centred on the whole strip, as the design has it,
-          inside a margin that keeps it clear of the lockup on either side. */}
+      {/* Fact strip: the institutional lockup at the left, then the fact,
+          running left to right inside the strip's 48px side margins so a long
+          one has the whole width to the right edge before it wraps. */}
       <div
-        className="relative z-10 mt-[calc(var(--u)*36)] flex shrink-0 flex-col items-center gap-[calc(var(--u)*10)] overflow-hidden px-[calc(var(--u)*24)] py-[calc(var(--u)*16)] board:mt-0 board:h-[calc(var(--u)*76)] board:flex-row board:justify-center board:gap-0 board:px-[calc(var(--u)*367)] board:py-0"
-        style={{ background: STRIP_BG, marginBottom: u(23) }}
+        className="relative z-20 mt-[calc(var(--u)*36)] flex shrink-0 flex-col items-center gap-[calc(var(--u)*12)] overflow-hidden px-[calc(var(--u)*24)] py-[calc(var(--u)*16)] board:mt-0 board:h-[calc(var(--u)*139)] board:flex-row board:justify-start board:gap-[calc(var(--u)*80)] board:px-[calc(var(--u)*48)] board:py-0"
+        style={{ background: STRIP_BG }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/gms-ntu-logo.png"
-          alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
-          className="h-[calc(var(--u)*40)] w-auto shrink-0 board:absolute board:left-[calc(var(--u)*35)] board:top-1/2 board:h-[calc(var(--u)*54.6)] board:-translate-y-1/2"
-        />
-        <div className="flex min-w-0 items-center justify-center">
+        {/* The frame shows the lockup in a 436.5x86.3 box; the artwork is a
+            touch wider than that box and the frame crops the excess, which is
+            the empty right margin of the file. */}
+        <div
+          className="flex h-[calc(var(--u)*56)] w-auto shrink-0 items-center overflow-hidden board:h-[calc(var(--u)*86.3)] board:w-[calc(var(--u)*436.5)]"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/gms-ntu-logo.png"
+            alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
+            className="h-full w-auto max-w-none"
+          />
+        </div>
+        <div className="flex min-w-0 items-center justify-center board:justify-start">
           <AnimatePresence mode="wait">
             <motion.p
               key={factIdx}
@@ -735,7 +736,7 @@ export default function LeaderboardIhhSeaRegattaBoard() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.45 }}
-              className="text-center text-[length:calc(var(--u)*22)] leading-[1.3] board:text-[length:calc(var(--u)*27)]"
+              className="text-center text-[length:calc(var(--u)*22)] leading-[1.3] board:text-left board:text-[length:calc(var(--u)*27)]"
             >
               {showRate ? (
                 <>
