@@ -17,12 +17,14 @@ interface Event3SplashProps {
   /** Preview variants walk the screen without recording the opt-in anywhere. */
   preview?: boolean;
   /**
-   * Which event's landing this is. The screen is the same either way; the two
+   * Which event's landing this is. The screen is the same for all of them; the
    * designs differ only in the consent row - "v3" (shared with the /event-v6
    * preview) keeps the parenthetical "(Required)" and the ember privacy link,
-   * "rotary" leads with a bold "Required." and keeps the link in body colour.
+   * while the no-partner events lead with a bold "Required." and keep the link
+   * in body colour. Each one reads its own copy block and tags its own
+   * newsletter opt-ins, so their wording can move independently.
    */
-  design?: "v3" | "rotary";
+  design?: "v3" | "rotary" | "ntuhomecoming";
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -88,8 +90,12 @@ export function Event3Splash({
   preview = false,
   design = "v3",
 }: Event3SplashProps) {
-  const rotary = design === "rotary";
-  const c = rotary ? COPY.screens.rotary.splash : COPY.screens.event3.splash;
+  // Every design but v3 is a no-partner event, and they share the consent-row
+  // treatment while keeping copy blocks of their own.
+  const noPartner = design !== "v3";
+  const c = noPartner
+    ? COPY.screens[design].splash
+    : COPY.screens.event3.splash;
   const reduced = useReducedMotion();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -122,7 +128,7 @@ export function Event3Splash({
         body: JSON.stringify({
           email: email.trim(),
           name: name.trim(),
-          variant: design === "rotary" ? "rotary" : "event3",
+          variant: noPartner ? design : "event3",
         }),
       }).catch(() => {});
     }
@@ -211,7 +217,7 @@ export function Event3Splash({
                 target="_blank"
                 rel="noopener noreferrer"
                 className={
-                  rotary
+                  noPartner
                     ? "underline underline-offset-2"
                     : "font-semibold text-ember-core underline underline-offset-2"
                 }

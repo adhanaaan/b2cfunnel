@@ -22,6 +22,7 @@ describe("preview variants", () => {
       "event2",
       "event3",
       "rotary",
+      "ntuhomecoming",
       "ihhsearegatta",
     ];
     for (const variant of live) {

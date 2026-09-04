@@ -11,6 +11,9 @@ export type QuizVariant =
   // Rotary KL-WAM (/rotaryklwam): the daylight arc with no partner consent
   // page - the landing leads straight into the instructions and their demo.
   | "rotary"
+  // NTU Homecoming (/ntuhomecoming): the same arc as rotary - the daylight
+  // flow with no partner consent page - on its own `ntuhomecoming` bucket.
+  | "ntuhomecoming"
   // IHH SEA Regatta (/ihhsearegatta): the v3 arc, open (no "wrap" screen),
   // with a redesigned bridge card and a questionnaire invite before the quiz.
   | "ihhsearegatta"

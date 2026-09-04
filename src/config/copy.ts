@@ -51,8 +51,19 @@ const DAYLIGHT_SPLASH: CopyConfig["screens"]["event3"]["splash"] = {
 };
 
 /**
- * The daylight post-game result copy, shared by /event-v3, /rotaryklwam and
- * the /event-v6 preview. The regatta spreads it and overrides the bridge card
+ * The daylight landing for the events with no partner in them (/rotaryklwam,
+ * /ntuhomecoming): the shared landing with the required consent led by a bold
+ * "Required." instead of a parenthetical. The only line that differs from v3.
+ */
+const NO_PARTNER_SPLASH: CopyConfig["screens"]["event3"]["splash"] = {
+  ...DAYLIGHT_SPLASH,
+  consentRequired:
+    "*Required.* I agree to be contacted about my results and prize.",
+};
+
+/**
+ * The daylight post-game result copy, shared by /event-v3, /rotaryklwam,
+ * /ntuhomecoming and the /event-v6 preview. The regatta spreads it and overrides the bridge card
  * (see COPY.screens.ihhsearegatta).
  */
 const DAYLIGHT_GAME_RESULT: CopyConfig["screens"]["event3"]["gameResult"] = {
@@ -507,11 +518,12 @@ export const COPY: CopyConfig = {
       // The Rotary KL-WAM landing is the daylight landing, with the required
       // consent led by a bold "Required." instead of a parenthetical - the
       // only copy that differs. Every other screen reuses the v3/v2 copy.
-      splash: {
-        ...DAYLIGHT_SPLASH,
-        consentRequired:
-          "*Required.* I agree to be contacted about my results and prize.",
-      },
+      splash: NO_PARTNER_SPLASH,
+    },
+    ntuhomecoming: {
+      // NTU Homecoming ships the same landing as Rotary, word for word. Its
+      // own block so this event's wording can be changed on its own.
+      splash: NO_PARTNER_SPLASH,
     },
     ihhsearegatta: {
       // The regatta bridge card leads with the player's own wish, then turns
