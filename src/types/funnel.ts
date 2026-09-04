@@ -15,7 +15,8 @@ export type QuizVariant =
   // flow with no partner consent page - on its own `ntuhomecoming` bucket.
   | "ntuhomecoming"
   // IHH SEA Regatta (/ihhsearegatta): the v3 arc, open (no "wrap" screen),
-  // with a redesigned bridge card and a questionnaire invite before the quiz.
+  // with every consent on the landing (no partner consent page), a redesigned
+  // bridge card and a questionnaire invite before the quiz.
   | "ihhsearegatta"
   // Preview-only: the daylight arc with a partner consent page. Submits nothing
   // (see PREVIEW_VARIANTS in config/variants.ts).
@@ -60,9 +61,9 @@ export interface FunnelState {
   // Brain-health-tips consent from the landing page. Undefined when the variant
   // never asked, which is stored as null rather than false.
   tipsConsent?: boolean;
-  // The partner (IHH) consent from the consent page. Same three states as
-  // tipsConsent: ticked, left unticked, or undefined when the variant has no
-  // consent page at all.
+  // The partner (IHH) consent - from the consent page on /event-v3, from the
+  // landing on /ihhsearegatta. Same three states as tipsConsent: ticked, left
+  // unticked, or undefined when the variant never asks for it.
   partnerConsent?: boolean;
 }
 
@@ -71,7 +72,15 @@ export type FunnelAction =
   | { type: "NEXT" }
   | { type: "BACK" }
   | { type: "SUBMIT_NAME"; name: string }
-  | { type: "SUBMIT_EMAIL"; name: string; email: string; tipsConsent?: boolean }
+  // Landing capture. The consents ride along with it when the landing asks
+  // for them: tips on every daylight landing, the partner's on the regatta's.
+  | {
+      type: "SUBMIT_EMAIL";
+      name: string;
+      email: string;
+      tipsConsent?: boolean;
+      partnerConsent?: boolean;
+    }
   | { type: "SUBMIT_PERSONAL_EMAIL"; name: string; email: string }
   // Consent page: records the partner consent, ticked or not, and moves on.
   | { type: "SUBMIT_CONSENT"; partnerConsent: boolean }

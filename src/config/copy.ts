@@ -1,4 +1,4 @@
-import type { CopyConfig } from "@/types/copy";
+import type { ConsentClause, CopyConfig } from "@/types/copy";
 
 /**
  * ALL user-facing copy lives here. British English. Working titles per build
@@ -29,8 +29,9 @@ export const FACTOR_LABELS: Record<string, string> = {
 };
 
 /**
- * The Daylight Ember landing copy, shared by /event-v3, the /event-v6 preview
- * and /rotaryklwam. Words wrapped in *asterisks* are emphasised where the
+ * The Daylight Ember landing copy, shared by /event-v3, the /event-v6 preview,
+ * /rotaryklwam, /ntuhomecoming and /ihhsearegatta. Words wrapped in
+ * *asterisks* are emphasised where the
  * screen renders them (the ember gradient in the hero, weight in a consent
  * row), so the markers are part of the copy rather than the component.
  */
@@ -46,6 +47,7 @@ const DAYLIGHT_SPLASH: CopyConfig["screens"]["event3"]["splash"] = {
     "Please agree to be contacted so we can send you your results.",
   consentMarketing: "Send me occasional brain health tips and updates.",
   privacyLinkLabel: "Privacy Policy",
+  privacyHref: "/privacy-policy",
   cta: "Start the challenge",
   poweredBy: "Powered by:",
 };
@@ -59,6 +61,37 @@ const NO_PARTNER_SPLASH: CopyConfig["screens"]["event3"]["splash"] = {
   ...DAYLIGHT_SPLASH,
   consentRequired:
     "*Required.* I agree to be contacted about my results and prize.",
+};
+
+/**
+ * IHH Healthcare Singapore's consent wording, unchanged, as one all-or-nothing
+ * agreement: three clauses under a single tick, with the withdrawal right
+ * stated after them. One source for every screen that puts it to the player -
+ * the /event-v3 consent page and the /ihhsearegatta landing - so the partner's
+ * words cannot drift between events. {link} marks the inline link.
+ */
+const IHH_CONSENT_CLAUSES: ConsentClause[] = [
+  {
+    text: "By providing the information set out in this form, I consent to IHH Healthcare Singapore and their representatives and/or agents collecting, using and disclosing my personal data to provide me with medical treatment and other reasonably related purposes. Such purposes are set out in the {link}, or available on request.",
+    link: {
+      label: "IHH Healthcare Singapore Data Protection Notice",
+      href: "https://www.ihhhealthcare.com/singapore/data-protection-notice",
+    },
+  },
+  {
+    text: "I also consent to IHH Healthcare Singapore, their representatives, agents and/or business partners collecting, using and disclosing my personal data for marketing and promotional purposes.",
+  },
+  {
+    text: "I agree to receiving marketing messages via SMS, telephone call and other Singapore phone number-based messaging, regardless of my registration with the Do-Not-Call registry.",
+  },
+];
+
+const IHH_CONSENT_WITHDRAWAL: ConsentClause = {
+  text: "I understand that I may withdraw such consent at any time via unsubscribe facilities OR forms available on request from our staff OR by email to IHH Healthcare Singapore DPO at {link}.",
+  link: {
+    label: "pdpo@ihhhealthcare.com",
+    href: "mailto:pdpo@ihhhealthcare.com",
+  },
 };
 
 /**
@@ -416,29 +449,9 @@ export const COPY: CopyConfig = {
         heading: "Before we start",
         body: "Gray Matter Solutions is partnering with IHH Healthcare Singapore in this event.",
         eyebrow: "We need your consent on",
-        // The partner's wording, unchanged. {link} marks the inline link.
-        clauses: [
-          {
-            text: "By providing the information set out in this form, I consent to IHH Healthcare Singapore and their representatives and/or agents collecting, using and disclosing my personal data to provide me with medical treatment and other reasonably related purposes. Such purposes are set out in the {link}, or available on request.",
-            link: {
-              label: "IHH Healthcare Singapore Data Protection Notice",
-              href: "https://www.ihhhealthcare.com/singapore/data-protection-notice",
-            },
-          },
-          {
-            text: "I also consent to IHH Healthcare Singapore, their representatives, agents and/or business partners collecting, using and disclosing my personal data for marketing and promotional purposes.",
-          },
-          {
-            text: "I agree to receiving marketing messages via SMS, telephone call and other Singapore phone number-based messaging, regardless of my registration with the Do-Not-Call registry.",
-          },
-        ],
-        withdrawal: {
-          text: "I understand that I may withdraw such consent at any time via unsubscribe facilities OR forms available on request from our staff OR by email to IHH Healthcare Singapore DPO at {link}.",
-          link: {
-            label: "pdpo@ihhhealthcare.com",
-            href: "mailto:pdpo@ihhhealthcare.com",
-          },
-        },
+        // The partner's wording, unchanged (see IHH_CONSENT_CLAUSES).
+        clauses: IHH_CONSENT_CLAUSES,
+        withdrawal: IHH_CONSENT_WITHDRAWAL,
         cta: "I'm ready!",
       },
       wrap: {
@@ -526,6 +539,17 @@ export const COPY: CopyConfig = {
       splash: NO_PARTNER_SPLASH,
     },
     ihhsearegatta: {
+      // The regatta landing (Figma 638:7729) is the daylight landing with the
+      // bold "Required." row, its own privacy policy behind that row's link,
+      // and the partner's consent as a third row: IHH's three clauses and the
+      // withdrawal right under one tick, in place of the v3 consent page.
+      splash: {
+        ...NO_PARTNER_SPLASH,
+        privacyHref: "/ihhsearegatta/privacy-policy",
+        partnerConsent: {
+          clauses: [...IHH_CONSENT_CLAUSES, IHH_CONSENT_WITHDRAWAL],
+        },
+      },
       // The regatta bridge card leads with the player's own wish, then turns
       // it on the organ nobody tracks. Only the card differs on this screen -
       // the share, retry, rank and time copy is v3's.

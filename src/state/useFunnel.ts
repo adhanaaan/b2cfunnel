@@ -29,8 +29,19 @@ export function useFunnel(variant: QuizVariant) {
     [],
   );
   const submitEmail = useCallback(
-    (name: string, email: string, tipsConsent?: boolean) =>
-      dispatch({ type: "SUBMIT_EMAIL", name, email, tipsConsent }),
+    (
+      name: string,
+      email: string,
+      tipsConsent?: boolean,
+      partnerConsent?: boolean,
+    ) =>
+      dispatch({
+        type: "SUBMIT_EMAIL",
+        name,
+        email,
+        tipsConsent,
+        partnerConsent,
+      }),
     [],
   );
   const submitPersonalEmail = useCallback(

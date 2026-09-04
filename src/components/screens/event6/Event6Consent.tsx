@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { COPY } from "@/config/copy";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "@/components/screens/event3/Event3Shell";
-import { ctaPrimaryClass } from "@/components/screens/event3/ui";
+import { ConsentText, ctaPrimaryClass } from "@/components/screens/event3/ui";
 import { PartnerLogo } from "@/components/screens/event3/PartnerLogo";
 
 interface Event6ConsentProps {
@@ -67,32 +67,6 @@ function ConsentCheckbox({
         {children}
       </span>
     </label>
-  );
-}
-
-/** Splits copy on {link} so the partner's link renders inline where designed. */
-function ConsentText({
-  text,
-  link,
-}: {
-  text: string;
-  link?: { label: string; href: string };
-}) {
-  if (!link) return <>{text}</>;
-  const [before, after = ""] = text.split("{link}");
-  return (
-    <>
-      {before}
-      <a
-        href={link.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline decoration-from-font underline-offset-2 hover:opacity-75"
-      >
-        {link.label}
-      </a>
-      {after}
-    </>
   );
 }
 

@@ -198,7 +198,7 @@ const WOMAN_FLOW: FunnelStep[] = [
 /**
  * The shared daylight arc: the event2 flow with the statistics interstitials
  * dropped. v3 inserts a partner consent page into it; rotary and NTU
- * Homecoming run it as-is.
+ * Homecoming run it as-is; the regatta adds its questionnaire invite to it.
  * Kept as one base on purpose - achievableAxisMax sums max option scores over
  * a variant's question steps, so an identical question set is what keeps
  * normalised scores and bands comparable across all of them.
@@ -242,21 +242,25 @@ const ROTARY_FLOW: FunnelStep[] = DAYLIGHT_FLOW;
 const NTU_HOMECOMING_FLOW: FunnelStep[] = ROTARY_FLOW;
 
 /**
- * IHH SEA Regatta (/ihhsearegatta): the v3 arc - landing, partner consent,
- * instructions, game - with one page added and one taken away.
+ * IHH SEA Regatta (/ihhsearegatta): the daylight arc - landing, instructions,
+ * game - with one page added and two kept out.
  *
  * Added: the questionnaire invite, between the post-game result and the first
  * question. "Tell me more" on the result card leads here, and the invite is
  * where the quiz is actually accepted ("Sure!") or declined ("Not now").
  *
- * Taken away: nothing closes this arc. EVENT3_CHALLENGE_CLOSED is about the
- * DBS challenge, and is applied per variant in resolveFlow, so the "That's a
- * wrap!" screen cannot reach across into this event - the link is open.
+ * Kept out: the partner consent page. IHH is the partner at this event too,
+ * but its consent is taken on the landing itself, as a third row under the
+ * two the daylight landing already has (Event3Splash, design="ihhsearegatta"),
+ * so the arc goes straight from the landing into the instructions. And nothing
+ * closes this arc: EVENT3_CHALLENGE_CLOSED is about the DBS challenge, and is
+ * applied per variant in resolveFlow, so the "That's a wrap!" screen cannot
+ * reach across into this event - the link is open.
  *
  * The question set is untouched (the invite is not a question step), so a
  * regatta score stays comparable with every score already recorded.
  */
-const IHHSEA_FLOW: FunnelStep[] = EVENT3_FLOW.flatMap((step) =>
+const IHHSEA_FLOW: FunnelStep[] = DAYLIGHT_FLOW.flatMap((step) =>
   step.kind === "gameResult"
     ? [step, { kind: "quizInvite" } as FunnelStep]
     : [step],

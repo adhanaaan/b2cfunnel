@@ -218,6 +218,15 @@ export interface Event2Copy {
   };
 }
 
+/**
+ * One clause of a partner's consent wording. {link} in `text` marks where the
+ * inline link sits; a clause with no link renders its text as-is.
+ */
+export interface ConsentClause {
+  text: string;
+  link?: { label: string; href: string };
+}
+
 // Event v3 ("Daylight Ember", /event-v3). Redesigned arena screens only;
 // the game, quiz arc, report and closing reuse the event2 copy.
 export interface Event3Copy {
@@ -234,6 +243,10 @@ export interface Event3Copy {
     consentRequiredError: string;
     consentMarketing: string;
     privacyLinkLabel: string;
+    // Where the privacy link goes. Each event links the policy written for it:
+    // the regatta has its own, because its policy names the partner it shares
+    // data with, and the no-partner events must not carry that wording.
+    privacyHref: string;
     cta: string;
     poweredBy: string;
   };
@@ -244,12 +257,11 @@ export interface Event3Copy {
     heading: string;
     body: string;
     eyebrow: string;
-    // The clauses the single tick covers, in the partner's own words. {link}
-    // marks where the inline link sits inside a clause.
-    clauses: { text: string; link?: { label: string; href: string } }[];
+    // The clauses the single tick covers, in the partner's own words.
+    clauses: ConsentClause[];
     // Sits below the tick, unticked: a statement of the withdrawal right, not
     // something to agree to.
-    withdrawal: { text: string; link?: { label: string; href: string } };
+    withdrawal: ConsentClause;
     cta: string;
   };
   // Terminal screen while the challenge is closed (EVENT3_CHALLENGE_CLOSED).
@@ -379,10 +391,19 @@ export interface ScreenCopy {
   ihhsearegatta: IhhseaCopy;
 }
 
-// IHH SEA Regatta (/ihhsearegatta): the v3 arc with a redesigned bridge card
-// on the post-game result and a questionnaire invite behind its CTA. Every
-// other screen reuses the v3/v2 copy.
+// IHH SEA Regatta (/ihhsearegatta): the v3 arc with every consent on the
+// landing (so no partner consent page), a redesigned bridge card on the
+// post-game result and a questionnaire invite behind its CTA. Every other
+// screen reuses the v3/v2 copy.
 export interface IhhseaCopy {
+  // The landing carries the partner's consent as a third row under the two
+  // the daylight landing already has: one tick over the whole block, in the
+  // partner's own words, optional like the marketing opt-in above it.
+  splash: Event3Copy["splash"] & {
+    partnerConsent: {
+      clauses: ConsentClause[];
+    };
+  };
   // The bridge card opens on the player's wish rather than on their reflexes,
   // so it carries two lines the v3 card has no place for; everything else on
   // the result screen is the v3 copy.

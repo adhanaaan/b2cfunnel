@@ -1,5 +1,7 @@
 /** Shared visual vocabulary for the event3 ("Daylight Ember") screens. */
 
+import type { ConsentClause } from "@/types/copy";
+
 /** Warm vertical gradient used on emphasised hero words. */
 export const emberTextGradient =
   "bg-gradient-to-b from-[#e8782e] via-[#f09452] to-[#ffbb88] bg-clip-text text-transparent";
@@ -53,6 +55,30 @@ export function StrongWords({ text }: { text: string }) {
           <span key={i}>{part}</span>
         ),
       )}
+    </>
+  );
+}
+
+/**
+ * A partner's consent clause with its inline link rendered where {link} sits
+ * in the copy, so the link lands mid-sentence exactly as designed. A clause
+ * with no link renders its text as-is.
+ */
+export function ConsentText({ text, link }: ConsentClause) {
+  if (!link) return <>{text}</>;
+  const [before, after = ""] = text.split("{link}");
+  return (
+    <>
+      {before}
+      <a
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline decoration-from-font underline-offset-2 hover:opacity-75"
+      >
+        {link.label}
+      </a>
+      {after}
     </>
   );
 }

@@ -3,8 +3,9 @@ import type { FunnelStep } from "@/types/funnel";
 import type { Answers } from "@/types/question";
 
 /**
- * IHH SEA Regatta (/ihhsearegatta) is the v3 arc, open, with the
- * questionnaire invite added between the post-game result and the quiz.
+ * IHH SEA Regatta (/ihhsearegatta) is the v3 arc, open, with the partner
+ * consent moved from its own page onto the landing and the questionnaire
+ * invite added between the post-game result and the quiz.
  *
  * The v3 challenge switch is pinned OPEN here so the two arcs are compared
  * like for like; that closing v3 leaves the regatta alone whichever way the
@@ -42,12 +43,13 @@ describe("ihhsearegatta flow", () => {
     }
   });
 
-  // IHH is the partner at this event too, so the consent page stays exactly
-  // where v3 puts it: answered before anything is played.
-  it("keeps the partner consent page between the landing and the instructions", () => {
+  // IHH is the partner at this event too, but its consent is a row on the
+  // landing (Event3Splash, design="ihhsearegatta") rather than a page of its
+  // own - so the landing leads straight into the instructions.
+  it("goes from the landing to the instructions with no consent page", () => {
     const flow = kindsIn(resolveFlow({}, "ihhsearegatta"));
-    expect(flow.indexOf("consent")).toBe(flow.indexOf("nameGate") + 1);
-    expect(flow.indexOf("consent")).toBeLessThan(flow.indexOf("instructions"));
+    expect(flow).not.toContain("consent");
+    expect(flow.indexOf("instructions")).toBe(flow.indexOf("nameGate") + 1);
   });
 
   it("puts the questionnaire invite between the result card and the first question", () => {
@@ -64,12 +66,14 @@ describe("ihhsearegatta flow", () => {
     expect(flow.indexOf("closing")).toBeGreaterThan(flow.indexOf("quizInvite"));
   });
 
-  it("is the v3 step sequence plus the invite", () => {
+  it("is the v3 step sequence minus the consent page, plus the invite", () => {
     expect(
       kindsIn(resolveFlow({}, "ihhsearegatta")).filter(
         (k) => k !== "quizInvite",
       ),
-    ).toEqual(kindsIn(resolveFlow({}, "event3")));
+    ).toEqual(
+      kindsIn(resolveFlow({}, "event3")).filter((k) => k !== "consent"),
+    );
   });
 
   // The link is open: nothing in this arc ends on the "That's a wrap!" screen.

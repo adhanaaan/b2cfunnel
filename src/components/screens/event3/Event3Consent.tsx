@@ -6,7 +6,7 @@ import { COPY } from "@/config/copy";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "./Event3Shell";
 import { PartnerLogo } from "./PartnerLogo";
-import { ctaPrimaryClass } from "./ui";
+import { ConsentText, ctaPrimaryClass } from "./ui";
 
 interface Event3ConsentProps {
   /** Whether the partner-consent box was ticked. Recorded either way. */
@@ -18,32 +18,6 @@ const item = {
   show: { opacity: 1, y: 0, transition: springs.enter },
 };
 
-/** Splits copy on {link} so the partner's link renders inline where designed. */
-function ConsentText({
-  text,
-  link,
-}: {
-  text: string;
-  link?: { label: string; href: string };
-}) {
-  if (!link) return <>{text}</>;
-  const [before, after = ""] = text.split("{link}");
-  return (
-    <>
-      {before}
-      <a
-        href={link.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline decoration-from-font underline-offset-2 hover:opacity-75"
-      >
-        {link.label}
-      </a>
-      {after}
-    </>
-  );
-}
-
 /**
  * Partner consent page for /event-v3 (Figma "Option 2" / Consent): sits
  * between the landing and the instructions, so it is answered before the demo
@@ -51,7 +25,9 @@ function ConsentText({
  *
  * IHH's wording is one all-or-nothing agreement, so it is ONE tick over the
  * whole block rather than a tick per clause - the split-tick treatment lives
- * on in the /event-v5 and /event-v6 previews for comparison.
+ * on in the /event-v5 and /event-v6 previews for comparison. /ihhsearegatta
+ * puts the same block, under the same single tick, on its landing instead
+ * (Event3Splash with design="ihhsearegatta"), so it has no page of this kind.
  *
  * The tick does not gate the CTA. Play is never blocked by a marketing
  * consent; what the player chose is recorded either way (`partner_consent` on
