@@ -113,7 +113,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       answers: state.answers,
       gameTimeMs: state.gameTimeMs,
       tipsConsent: state.tipsConsent,
-      // The partner consent from the consent page, ticked or not.
+      // The partner consent, ticked or not - from the consent page on v3,
+      // from the landing on the regatta.
       partnerConsent: state.partnerConsent,
       // Same tag as the score row, so the board's report rate can divide
       // reports by players for one event day.
@@ -187,12 +188,16 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "nameGate":
       // Event2/3: the single email capture (leaderboard key + results address).
+      // The regatta's landing also carries the partner consent, which rides
+      // along with the capture the same way the tips consent does.
       return usesDaylightScreens(state.variant) ? (
         <Event3Splash
           onSubmit={submitEmail}
           preview={preview}
           design={
-            state.variant === "rotary" || state.variant === "ntuhomecoming"
+            state.variant === "rotary" ||
+            state.variant === "ntuhomecoming" ||
+            state.variant === "ihhsearegatta"
               ? state.variant
               : "v3"
           }
@@ -204,10 +209,12 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "consent":
-      // The partner's consents live on their own page, before the instructions
-      // and their demo round; the landing keeps its own two. v3 asks for them
-      // as one tick and records the answer; the v6 preview keeps the split-tick
-      // treatment (one box per clause) for comparison and stores nothing.
+      // v3 and v6 only: the partner's consents live on their own page, before
+      // the instructions and their demo round; the landing keeps its own two.
+      // v3 asks for them as one tick and records the answer; the v6 preview
+      // keeps the split-tick treatment (one box per clause) for comparison and
+      // stores nothing. The regatta has no such step - its landing carries the
+      // partner's tick.
       return state.variant === "event6" ? (
         <Event6Consent onSubmit={() => next()} />
       ) : (

@@ -81,15 +81,18 @@ high score maps to the Low band.
 
 `/event-v3` asks for the partner's (IHH Healthcare Singapore) consent on its
 own page, from Figma "Option 2", between the landing and the instructions - so
-it is answered before the demo round and the game. `/ihhsearegatta` carries the
-same page, in the same place. An event with no partner in it - `/rotaryklwam`,
-`/ntuhomecoming` - has no such page. The landing keeps its own
-two consents (contact, which still gates the challenge, and the brain-health
-tips opt-in); the partner's wording is not a tickbox on the landing.
+it is answered before the demo round and the game. `/ihhsearegatta` asks for
+the same consent on its **landing** instead, as a third row under the landing's
+own two (see below), so it has no consent page. An event with no partner in
+it - `/rotaryklwam`, `/ntuhomecoming` - has neither. The landing keeps its own
+two consents everywhere (contact, which still gates the challenge, and the
+brain-health tips opt-in).
 
 IHH supplied its three clauses as one all-or-nothing agreement, so the page
 carries **one tick** covering all three (`Event3Consent.tsx`), with the
 withdrawal right stated below it as text rather than as something to agree to.
+The wording is defined once, in `IHH_CONSENT_CLAUSES` / `IHH_CONSENT_WITHDRAWAL`
+(`src/config/copy.ts`), and read by both the v3 page and the regatta landing.
 
 **The tick does not gate the CTA.** Play is never blocked by a marketing
 consent, so "I'm ready!" always continues; what the player chose is recorded
@@ -190,9 +193,28 @@ code lands on this event's link rather than another's.
 
 ## /ihhsearegatta (IHH SEA Regatta)
 
-`/ihhsearegatta` runs the `/event-v3` arc, partner consent page included (IHH
-is the partner at this event too). Three differences, and nothing else:
+`/ihhsearegatta` runs the `/event-v3` arc (IHH is the partner at this event
+too), with these differences and nothing else:
 
+- **Every consent is on the landing** (Figma 638:7729; `Event3Splash.tsx` with
+  `design="ihhsearegatta"`). Under the two rows every daylight landing has -
+  the required contact consent, led by a bold "Required.", and the tips
+  opt-in - sits a third: IHH's three clauses and the withdrawal right under
+  **one tick**, the same block the v3 consent page shows. It is optional, like
+  the tips opt-in; what the player chose rides along with the name + email
+  capture into `partner_consent`. There is **no consent page** in this arc, so
+  the landing leads straight into the instructions - the page is taller than a
+  phone screen and scrolls (`Event3Shell` in `scroll` mode) rather than
+  squeezing the hero.
+- **Its own privacy policy** at `/ihhsearegatta/privacy-policy`, behind the
+  "Privacy Policy" link in the required row. The general `/privacy-policy`
+  cannot serve this event: the regatta shares name, email, results, quiz
+  answers and score with IHH under the consent above, and its policy says so -
+  what GMS's policy covers and what IHH's notice does, the sharing itself, and
+  whose retention and deletion apply to which copy. Both policies are data in
+  `src/config/privacyPolicy.ts` (the sections they share are defined once) and
+  rendered by `PrivacyPolicyDocument.tsx`. `COPY.screens.*.splash.privacyHref`
+  is where each landing's link goes.
 - **The link is open.** There is no "That's a wrap!" screen:
   `EVENT3_CHALLENGE_CLOSED` closes the DBS challenge only, and is applied per
   variant in `resolveFlow`, so it cannot reach across into this event (pinned
@@ -380,18 +402,19 @@ Where each value comes from:
   before, and now also stamps `leads.tips_consent = true` on that email's rows.
   The opt-in can only turn consent on; there is no un-tick in the UI.
 
-**`partner_consent` records the partner (IHH) consent** from the `/event-v3`
-and `/ihhsearegatta` consent page, on the same three-state contract: `true`
-(ticked), `false` (left unticked), or `null` when we never asked - every row
-written before this column existed, and every variant with no consent page.
+**`partner_consent` records the partner (IHH) consent** - from the `/event-v3`
+consent page, or from the `/ihhsearegatta` landing - on the same three-state
+contract: `true` (ticked), `false` (left unticked), or `null` when we never
+asked - every row written before this column existed, and every variant that
+never puts the partner's consent to the player.
 
-The value is taken once, on the consent page between the landing and the
-instructions, and carried in funnel state for the rest of the session, so it is
-written twice: to `game_scores.partner_consent` with the score (which is the
-only row a player who stops after the game leaves behind) and to
-`leads.partner_consent` with the report. Nothing else can change it - there is
-no second opt-in for it anywhere in the funnel, and no path that turns a
-decline into a `true`.
+The value is taken once - on the consent page between the landing and the
+instructions (v3), or with the name + email capture on the landing (regatta) -
+and carried in funnel state for the rest of the session, so it is written
+twice: to `game_scores.partner_consent` with the score (which is the only row a
+player who stops after the game leaves behind) and to `leads.partner_consent`
+with the report. Nothing else can change it - there is no second opt-in for it
+anywhere in the funnel, and no path that turns a decline into a `true`.
 
 Both writes are tolerant of a database that does not have the column yet: the
 insert is retried without it, so a lead or a score is never lost to a pending
