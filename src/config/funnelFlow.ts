@@ -243,13 +243,20 @@ const NTU_HOMECOMING_FLOW: FunnelStep[] = ROTARY_FLOW;
 
 /**
  * IHH SEA Regatta (/ihhsearegatta): the daylight arc - landing, instructions,
- * game - with one page added and two kept out.
+ * game - with one page added and three kept out.
  *
  * Added: the questionnaire invite, between the post-game result and the first
  * question. "Tell me more" on the result card leads here, and the invite is
- * where the quiz is actually accepted ("Sure!") or declined ("Not now").
+ * where the quiz is actually accepted ("Sure!") or declined ("Not now" simply
+ * returns to the result card - see Funnel.tsx).
  *
- * Kept out: the partner consent page. IHH is the partner at this event too,
+ * Kept out: the standalone ReCOGnAIze closing page that ends the other
+ * daylight arcs. The report already carries that offer in its NextStepsCard,
+ * and with the decline path going back to the result card instead of forward,
+ * nothing was left that could reach the page - so the report is the end of
+ * this arc.
+ *
+ * Kept out too: the partner consent page. IHH is the partner at this event,
  * but its consent is taken on the landing itself, as a third row under the
  * two the daylight landing already has (Event3Splash, design="ihhsearegatta"),
  * so the arc goes straight from the landing into the instructions. And nothing
@@ -257,10 +264,13 @@ const NTU_HOMECOMING_FLOW: FunnelStep[] = ROTARY_FLOW;
  * applied per variant in resolveFlow, so the "That's a wrap!" screen cannot
  * reach across into this event - the link is open.
  *
- * The question set is untouched (the invite is not a question step), so a
- * regatta score stays comparable with every score already recorded.
+ * The question set is untouched (neither the invite nor the dropped closing is
+ * a question step), so a regatta score stays comparable with every score
+ * already recorded.
  */
-const IHHSEA_FLOW: FunnelStep[] = DAYLIGHT_FLOW.flatMap((step) =>
+const IHHSEA_FLOW: FunnelStep[] = DAYLIGHT_FLOW.filter(
+  (step) => step.kind !== "closing",
+).flatMap((step) =>
   step.kind === "gameResult"
     ? [step, { kind: "quizInvite" } as FunnelStep]
     : [step],
