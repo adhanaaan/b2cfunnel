@@ -34,10 +34,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, stored: false });
   }
 
-  // PDPA-safe default: only persist raw (sensitive) answers when explicitly
-  // enabled via the STORE_ANSWERS flag (see .env.example).
-  const storeAnswers = process.env.STORE_ANSWERS === "true";
-
   const row: LeadRow = {
     email,
     name: typeof payload.name === "string" ? payload.name.trim() : null,
@@ -46,7 +42,14 @@ export async function POST(req: Request) {
     symptom_score: payload.symptomScore ?? null,
     total_score: payload.totalScore ?? null,
     band: payload.band ?? null,
-    answers: storeAnswers ? (payload.answers ?? null) : null,
+    // The answers as given, so a lead can be read back against the score it
+    // produced. Written as null rather than {} when the funnel never asked a
+    // question (the game-only event flows), so an empty cell means "no quiz",
+    // not "quiz with nothing in it".
+    answers:
+      payload.answers && Object.keys(payload.answers).length > 0
+        ? payload.answers
+        : null,
     game_time_ms: payload.gameTimeMs ?? null,
     // Three-state on purpose: true, false, or null when we never asked.
     tips_consent:
@@ -61,12 +64,14 @@ export async function POST(req: Request) {
 
   try {
     const supabase = getServerSupabase();
-    // tips_consent, partner_consent and source are optional in the database, so
-    // a database that predates any of them must never cost us the lead.
+    // tips_consent, partner_consent, source and answers are optional in the
+    // database, so a database that predates any of them must never cost us the
+    // lead.
     const {
       tips_consent: tipsConsent,
       partner_consent: partnerConsent,
       source,
+      answers,
       ...rest
     } = row;
     const { error } = await insertWithOptionalColumns(
@@ -74,6 +79,7 @@ export async function POST(req: Request) {
         tips_consent: tipsConsent ?? null,
         partner_consent: partnerConsent ?? null,
         source: source ?? null,
+        answers: answers ?? null,
       },
       rest,
       (values) => supabase.from("leads").insert(values),

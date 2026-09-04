@@ -499,10 +499,13 @@ reset). Every phone feeds this one table and the board polls every 5s, so a
 tablet/TV left on `/party` shows the live leaderboard. A join QR on the board
 points guests at `/party`.
 
-Env vars (see `.env.example`): `NEXT_PUBLIC_SUPABASE_URL`,
-`SUPABASE_SERVICE_ROLE_KEY` (server only - never `NEXT_PUBLIC`), and
-`STORE_ANSWERS` (PDPA-safe default: raw answers are **not** persisted unless this
-is `"true"`).
+Env vars (see `.env.example`): `NEXT_PUBLIC_SUPABASE_URL` and
+`SUPABASE_SERVICE_ROLE_KEY` (server only - never `NEXT_PUBLIC`).
+
+`/api/lead` writes the quiz answers to `leads.answers` alongside the score they
+produced, which is what the privacy policy says we keep ("Your name, email and
+quiz answers"). The same answers also land, without name or email, in
+`quiz_responses` via `/api/response` for aggregate reporting.
 
 ## Working defaults flagged for sign-off (build brief §12)
 
