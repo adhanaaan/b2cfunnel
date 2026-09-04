@@ -1,18 +1,22 @@
 "use client";
 
 /**
- * The attract screen for /ihhsearegatta (Figma node 629:4815, designed against
- * a 1920x1080 55" panel read from 2-5m away, but laid out to reflow down to a
- * phone).
+ * The attract screen for /ihhsearegatta (Figma node 627:23212, designed
+ * against a 1920x1080 55" panel read from 2-5m away).
  *
  * The design puts the pitch on the left - the brain, the headline, the scan
  * block and the prize panel - and the live standings on the right, over a
- * rotating fact strip and a band of event photography.
+ * fact strip and a band of event photography.
  *
- * The Figma frame is absolutely positioned at 1920x1080; here it is a fluid
- * two-column grid whose type is clamped between a mobile floor and the panel
- * size, so the same markup serves the panel, a laptop and a phone. Every size
- * in T below is the design's px at its ceiling.
+ * The Figma frame is absolutely positioned at 1920x1080, so the board draws in
+ * its pixels. One design unit, `--u` (set on <main>), is the frame scaled to
+ * fit the viewport - min(100vw / 1920, 100vh / 1080) - and every size below is
+ * the design's px times it, via `u()`. On a 16:9 screen of any resolution the
+ * result is the Figma frame exactly; on a 16:10 laptop or a 4:3 projector the
+ * composition holds and only the vertical gaps give. Below 1024px, or in
+ * portrait, the unit comes from the width instead (100vw / 640, capped at 1px)
+ * and the two columns stack - there is no phone frame in the design, so the
+ * stacked sizes are chosen to read on one.
  *
  * Self-contained: polls /api/leaderboard every 8s, scoped to the
  * `ihhsearegatta` bucket, and keeps the last good standings on error.
@@ -52,6 +56,14 @@ const HOW_TO = [
   "Get your brain health report",
 ];
 
+/**
+ * `n` design pixels, in the board's unit. Sizes that are the same in both
+ * layouts go through this as inline styles; the ones that differ between the
+ * two-column board and the stacked phone layout are Tailwind classes on the
+ * `board:` breakpoint, spelled out in full so the compiler sees them.
+ */
+const u = (n: number) => `calc(var(--u) * ${n})`;
+
 // Board palette (kept local: the board is its own full-bleed canvas).
 const ORANGE_DEEP = "#e35d0e";
 const CARD_LINE = "#f3ddd2";
@@ -70,43 +82,7 @@ const CANVAS =
   "linear-gradient(150deg, #fff8f6 15%, #fdeee4 46%, #fbe3d3 85%)";
 const LEADER_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
 const PRIZE_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
-
-/**
- * Clamped type sizes, ceilings straight off the design. The middle term is
- * `min(vh, vw)` on purpose: the board is sized off viewport height for the 55"
- * panel, but on a tall narrow phone a height-only clamp produces TV-sized text
- * that overflows the width.
- */
-const T = {
-  // Masthead: "Is your brain at its peak performance?" (82.9px) and the line
-  // under it (39.4px, its emphasised words stepped up in em).
-  h1: "text-[clamp(1.5rem,min(7.7vh,4.32vw),5.18rem)]",
-  sub: "text-[clamp(0.875rem,min(3.65vh,2.05vw),2.4625rem)]",
-  // Scan block (28.4px) and the standings label (31.4px).
-  scanLabel: "text-[clamp(0.75rem,min(2.63vh,1.48vw),1.775rem)]",
-  boardLabel: "text-[clamp(0.75rem,min(2.9vh,1.63vw),1.9625rem)]",
-  // Prize panel: eyebrow 20.4px, title 60.8px, the two lines under it 33.1px.
-  prizeEyebrow: "text-[clamp(0.625rem,min(1.89vh,1.06vw),1.275rem)]",
-  prizeTitle: "text-[clamp(1.25rem,min(5.63vh,3.17vw),3.8rem)]",
-  prizeSub: "text-[clamp(0.8125rem,min(3.06vh,1.72vw),2.0625rem)]",
-  // Standings: leader 53/71.8px over rows at 38.7/43.1px, badges 35.4/26.5px.
-  //
-  // The leader name is the one size held BELOW the design. At the design's own
-  // 53px even "Jamie Tan" truncates in a 626px column - the Figma render shows
-  // it as "Jamie T..." - so the mock is over-scaled for real data. This is
-  // sized so the longest name displayName can hand back ("Michelle W.") still
-  // fits whole, since a cut name is the thing a player notices.
-  leaderName: "text-[clamp(1.125rem,min(4vh,2vw),3.3125rem)]",
-  leaderTime: "text-[clamp(1.375rem,min(6.2vh,3.5vw),4.4875rem)]",
-  micro: "text-[clamp(0.5rem,min(1.54vh,0.86vw),1.0375rem)]",
-  rowName: "text-[clamp(0.9375rem,min(3.58vh,2.01vw),2.4125rem)]",
-  rowTime: "text-[clamp(1rem,min(3.99vh,2.24vw),2.6875rem)]",
-  rowEmpty: "text-[clamp(0.8125rem,min(2.6vh,1.7vw),1.625rem)]",
-  rankL: "text-[clamp(0.9375rem,min(3.28vh,1.84vw),2.2125rem)]",
-  rank: "text-[clamp(0.75rem,min(2.45vh,1.38vw),1.65rem)]",
-  // Fact strip (27px).
-  fact: "text-[clamp(0.75rem,min(2.5vh,1.4vw),1.6875rem)]",
-};
+const STRIP_BG = "rgba(255, 255, 255, 0.72)";
 
 const keyOf = (e: Entry) => `${e.name}·${Math.round(e.timeMs)}`;
 
@@ -114,21 +90,21 @@ const keyOf = (e: Entry) => `${e.name}·${Math.round(e.timeMs)}`;
 
 /**
  * The brain and the question, side by side. The brain asset carries its own
- * "Frontal Lobe" label and sparkle, exactly as the design places it.
+ * "Frontal Lobe" label and sparkle, exactly as the design places it. The row
+ * is the design's 241px tall so the line under it lands where the frame puts
+ * it; the brain (347px wide, and shorter than that box) centres in it.
  */
 function Masthead() {
   return (
-    <div className="flex items-center gap-[2.3vw]">
+    <div className="flex items-center gap-[calc(var(--u)*20)] board:min-h-[calc(var(--u)*241)] board:gap-[calc(var(--u)*45)]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/images/event3/brain.webp"
         alt=""
         aria-hidden
-        className="hidden w-[clamp(6rem,18vw,21.7rem)] shrink-0 select-none sm:block"
+        className="w-[calc(var(--u)*120)] shrink-0 select-none board:w-[calc(var(--u)*347)]"
       />
-      <h1
-        className={`${T.h1} min-w-0 font-extrabold leading-none tracking-tight text-charcoal`}
-      >
+      <h1 className="min-w-0 text-[length:calc(var(--u)*44)] font-extrabold leading-none tracking-[-0.015em] text-charcoal board:text-[length:calc(var(--u)*82.88)]">
         Is your brain at its
         <br />
         peak performance?
@@ -139,14 +115,32 @@ function Masthead() {
 
 /* ------------------------------ Standings ------------------------------- */
 
+/**
+ * The standings label, centred on its column over the soft highlight the
+ * design lays behind it (which runs off the right edge of the frame). Stacked,
+ * the label simply heads the list.
+ */
 function BoardLabel({ live }: { live: boolean }) {
   return (
-    <p
-      className={`${T.boardLabel} shrink-0 font-bold uppercase tracking-[0.09em]`}
-      style={{ color: ON_EMBER }}
-    >
-      {live ? "Speed game leaderboard" : "Final standings"}
-    </p>
+    <div className="relative flex shrink-0 items-center board:h-[calc(var(--u)*86.5)] board:justify-center">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 hidden board:block"
+        style={{
+          left: u(-69),
+          width: u(722.5),
+          background:
+            "linear-gradient(90deg, rgba(251, 220, 189, 0) 0%, #fbdcbd 14%, #fde6cf 55%, rgba(253, 236, 225, 0) 100%)",
+          clipPath: "polygon(0 0, 100% 0, 100% 100%, 9% 100%)",
+        }}
+      />
+      <p
+        className="relative whitespace-nowrap font-bold uppercase leading-[1.04] tracking-[0.09em]"
+        style={{ color: ON_EMBER, fontSize: u(31.37) }}
+      >
+        {live ? "Speed game leaderboard" : "Final standings"}
+      </p>
+    </div>
   );
 }
 
@@ -168,39 +162,42 @@ function StandingRow({
         : RANK_CHIP_BG;
   const badgeColor = leader
     ? ORANGE_DEEP
-    : rank === 2 || rank === 3
-      ? "#2d2d2d"
-      : entry
-        ? "#7d5747"
-        : INK_FAINT;
+    : !entry
+      ? INK_FAINT
+      : rank === 2 || rank === 3
+        ? "#2d2d2d"
+        : "#7d5747";
 
   return (
     <motion.li
       layout
       transition={springs.shuffle}
-      className="flex min-h-0 items-center gap-[clamp(0.5rem,1.2vw,1.45rem)] rounded-[1.65rem] px-[0.7em] py-[0.4em] sm:px-[1.1em] xl:py-0"
+      className={`flex shrink-0 items-center ${
+        leader ? "h-[calc(var(--u)*144)]" : "h-[calc(var(--u)*88)]"
+      }`}
       style={{
-        // 144px against 88px in the design.
-        flex: leader ? 1.64 : 1,
+        borderRadius: u(26.5),
+        paddingInline: u(25.4),
+        gap: u(23.2),
         background: leader
           ? LEADER_GRADIENT
           : entry
             ? "#ffffff"
-            : "rgba(255,255,255,0.55)",
-        border: entry ? "none" : `2px dashed ${CARD_LINE}`,
+            : "rgba(255, 255, 255, 0.55)",
+        border: entry ? "none" : `${u(2)} dashed ${CARD_LINE}`,
         boxShadow: leader
-          ? "0 18px 22px -12px rgba(51,18,0,0.18)"
+          ? `0 ${u(17.7)} ${u(22.1)} rgba(51, 18, 0, 0.18)`
           : entry
-            ? "0 9px 13px -6px rgba(51,18,0,0.12), 0 2px 4px -2px rgba(51,18,0,0.08)"
+            ? `0 ${u(2.2)} ${u(4.4)} rgba(51, 18, 0, 0.08), 0 ${u(8.8)} ${u(13.3)} rgba(51, 18, 0, 0.12)`
             : "none",
       }}
     >
       <span
-        className={`${leader ? T.rankL : T.rank} flex aspect-square shrink-0 items-center justify-center rounded-full font-extrabold leading-none`}
+        className="flex shrink-0 items-center justify-center rounded-full font-extrabold leading-none"
         style={{
-          height: leader
-            ? "clamp(1.625rem,min(6.65vh,3.74vw),4.4875rem)"
-            : "clamp(1.25rem,min(5.11vh,2.88vw),3.45rem)",
+          width: u(leader ? 71.8 : 55.2),
+          height: u(leader ? 71.8 : 55.2),
+          fontSize: u(leader ? 35.35 : 26.51),
           background: badgeBg,
           color: badgeColor,
         }}
@@ -210,29 +207,42 @@ function StandingRow({
 
       {entry ? (
         <>
+          {/* The leader name is the one size held below the design's 53px:
+              at that size even "Jamie Tan" truncates beside the time (the
+              Figma render shows "Jamie T..."), so this is sized for the
+              longest name displayName can hand back to fit whole. */}
           <span
-            className={`${leader ? T.leaderName : T.rowName} min-w-0 flex-1 truncate font-extrabold ${leader ? "text-white" : "text-charcoal"}`}
+            className={`min-w-0 flex-1 truncate font-extrabold ${
+              leader
+                ? "leading-[1.05] tracking-[-0.01em] text-white"
+                : "leading-[1.1] tracking-[-0.005em] text-charcoal"
+            }`}
+            style={{ fontSize: u(leader ? 40 : 38.66) }}
           >
             {displayName(entry.name)}
           </span>
           {leader ? (
-            <span className="flex shrink-0 flex-col items-end leading-none">
+            <span
+              className="flex shrink-0 flex-col items-end"
+              style={{ gap: u(4.4) }}
+            >
               <span
-                className={`${T.micro} font-bold uppercase tracking-[0.25em]`}
-                style={{ color: PRIZE_WARM }}
+                className="font-bold uppercase leading-[1.3] tracking-[0.25em]"
+                style={{ color: PRIZE_WARM, fontSize: u(16.57) }}
               >
                 Time to beat
               </span>
               <span
-                className={`${T.leaderTime} mt-[0.1em] font-extrabold tabular-nums text-white`}
+                className="font-extrabold leading-none tracking-[-0.01em] text-white tabular-nums"
+                style={{ fontSize: u(71.8) }}
               >
                 {formatTime(entry.timeMs)}
               </span>
             </span>
           ) : (
             <span
-              className={`${T.rowTime} shrink-0 font-extrabold tabular-nums`}
-              style={{ color: ORANGE_DEEP }}
+              className="shrink-0 font-extrabold leading-[1.05] tracking-[-0.005em] tabular-nums"
+              style={{ color: ORANGE_DEEP, fontSize: u(43.08) }}
             >
               {formatTime(entry.timeMs)}
             </span>
@@ -241,14 +251,14 @@ function StandingRow({
       ) : (
         <>
           <span
-            className={`${T.rowEmpty} min-w-0 flex-1 truncate font-semibold`}
-            style={{ color: INK_FAINT }}
+            className="min-w-0 flex-1 truncate font-semibold leading-[1.3]"
+            style={{ color: INK_FAINT, fontSize: u(28.7) }}
           >
-            Play to claim this spot
+            Scan to claim this spot
           </span>
           <span
-            className={`${T.rowTime} shrink-0 font-extrabold tabular-nums`}
-            style={{ color: EMPTY_TIME }}
+            className="shrink-0 font-extrabold leading-[1.05] tracking-[-0.005em] tabular-nums"
+            style={{ color: EMPTY_TIME, fontSize: u(43.08) }}
           >
             -:-.-
           </span>
@@ -262,10 +272,6 @@ function StandingRow({
 
 /** Artwork for the code, if it has been uploaded (see ScanCode). */
 const QR_IMAGE = "/regatta-qr.png";
-
-/** The code's box, as large as the column and the leftover height allow. */
-const CODE_BOX =
-  "aspect-square w-full max-w-[min(70vw,40vh)] xl:max-w-[min(21vw,37vh)]";
 
 /**
  * The code: the uploaded artwork when there is one, a generated code when
@@ -309,7 +315,7 @@ function ScanCode() {
         src={QR_IMAGE}
         alt="Scan to play the Reaction Time Challenge"
         onError={() => setArtwork(false)}
-        className={`${CODE_BOX} object-contain`}
+        className="aspect-square w-full object-contain"
       />
     );
   }
@@ -322,8 +328,8 @@ function ScanCode() {
   // is indistinguishable across a room.
   return (
     <div
-      className={`${CODE_BOX} flex items-center justify-center bg-white p-[0.25rem]`}
-      style={{ border: "0.6rem solid #111111" }}
+      className="flex aspect-square w-full items-center justify-center bg-white"
+      style={{ padding: u(4), border: `${u(10)} solid #111111` }}
     >
       <QRCodeSVG
         value={PLAY_URL}
@@ -339,14 +345,23 @@ function ScanCode() {
 
 /**
  * The yellow "scan to play" label sitting directly on top of the code, as one
- * block - the design aligns their left and right edges.
+ * block - the design aligns their left and right edges. The design's 388px
+ * square, capped at the column when a phone is narrower than that.
  */
 function ScanBlock() {
   return (
-    <div className="flex w-full min-w-0 flex-col items-start">
+    <div
+      className="flex w-full max-w-full shrink-0 flex-col"
+      style={{ width: u(388) }}
+    >
       <p
-        className={`${T.scanLabel} w-full px-[0.5em] py-[0.35em] text-center font-extrabold tracking-[0.12em]`}
-        style={{ background: SCAN_HIGHLIGHT, color: ON_EMBER }}
+        className="flex w-full items-center justify-center whitespace-nowrap font-extrabold tracking-[0.12em]"
+        style={{
+          height: u(66),
+          fontSize: u(28.37),
+          background: SCAN_HIGHLIGHT,
+          color: ON_EMBER,
+        }}
       >
         SCAN TO PLAY &lt; 60s
       </p>
@@ -417,35 +432,42 @@ function OptionalImage({
 
 /**
  * The prize: an ember panel with the offer, and the watch breaking out of its
- * right edge the way the design has it (which is why the panel does not clip).
+ * right edge, its top and its bottom the way the design has it (which is why
+ * the panel does not clip). The offer runs from 41px in to where the watch
+ * starts (408px), so the title breaks "Win a Garmin / Forerunner / 165" as
+ * drawn. The panel sits 5px above the code's bottom edge, as in the frame.
  */
 function PrizePanel() {
   return (
     <div
-      className="relative flex flex-1 items-center rounded-[20px] px-[1.4em] py-[1.2em] sm:px-[2em] xl:min-h-0"
-      style={{ background: PRIZE_GRADIENT }}
+      className="relative flex w-full items-center py-[calc(var(--u)*28)] pl-[calc(var(--u)*28)] pr-[40%] board:mb-[calc(var(--u)*5)] board:h-[calc(var(--u)*422)] board:w-[calc(var(--u)*775)] board:shrink-0 board:self-end board:py-0 board:pl-[calc(var(--u)*41)] board:pr-0"
+      style={{ background: PRIZE_GRADIENT, borderRadius: u(20) }}
     >
-      <div className="relative z-10 flex min-w-0 flex-col gap-[1.6vh] text-cream sm:max-w-[58%]">
-        <p
-          className={`${T.prizeEyebrow} font-bold uppercase tracking-[0.23em]`}
-        >
-          Fastest mind
-        </p>
-        <p className={`${T.prizeTitle} font-extrabold leading-[1.04] tracking-tight`}>
-          Win a Garmin Forerunner 165
-        </p>
-        <div className={`${T.prizeSub} flex flex-col gap-[0.25em] font-bold leading-[1.1]`}>
+      <div className="relative z-10 flex min-w-0 flex-col gap-[calc(var(--u)*10)] text-cream board:w-[calc(var(--u)*408)] board:gap-[calc(var(--u)*15.9)]">
+        <div className="flex flex-col gap-[calc(var(--u)*6)] board:gap-[calc(var(--u)*10.6)]">
+          <p className="text-[length:calc(var(--u)*16)] font-bold uppercase leading-[1.1] tracking-[0.23em] board:text-[length:calc(var(--u)*20.38)]">
+            Fastest mind
+          </p>
+          <p className="text-[length:calc(var(--u)*38)] font-extrabold leading-[1.04] tracking-[-0.015em] board:text-[length:calc(var(--u)*60.77)]">
+            Win a Garmin Forerunner 165
+          </p>
+        </div>
+        {/* The design sets these two lines in Roboto; in the board's own face
+            they run a touch wider, so they are held a size down to stay on
+            one line each beside the watch. */}
+        <div className="flex flex-col gap-[calc(var(--u)*4)] text-[length:calc(var(--u)*22)] font-bold leading-[1.1] board:gap-[calc(var(--u)*8.5)] board:whitespace-nowrap board:text-[length:calc(var(--u)*31)]">
           <p>GPS Running Smartwatch</p>
           <p>Worth $379</p>
         </div>
       </div>
 
       {/* The render sits over the panel's right edge, taller than the panel
-          itself - hence the negative insets rather than a flow child. */}
+          itself - hence the offsets rather than a flow child. In the frame it
+          is 373x478 at 449px in from the panel's left, 16px above its top. */}
       <OptionalImage
         src="/garmin-forerunner-165-white.png"
         alt="Garmin Forerunner 165 GPS running smartwatch"
-        className="animate-symbol-drift pointer-events-none absolute -bottom-[9%] -top-[4%] right-[-2%] hidden w-[42%] object-contain drop-shadow-[0_18px_28px_rgba(74,26,0,0.45)] sm:block"
+        className="animate-symbol-drift pointer-events-none absolute right-[-3%] top-[-6%] h-[112%] w-auto object-contain drop-shadow-[0_18px_28px_rgba(74,26,0,0.45)] board:left-[calc(var(--u)*449)] board:right-auto board:top-[calc(var(--u)*-16)] board:h-[calc(var(--u)*478)]"
         style={{
           ["--drift-y" as string]: "-12px",
           ["--drift-x" as string]: "0px",
@@ -461,28 +483,29 @@ function PrizePanel() {
 /* ------------------------------ Photo band ------------------------------ */
 
 /**
- * The band of event photography along the bottom edge. Three frames in the
- * design's 491:833:833 widths; each is optional, so the band simply thins out
- * (and finally disappears) until the photos are dropped in.
+ * The band of event photography along the bottom edge. Three frames, in the
+ * widths the design shows of each (its frames overlap; these are the visible
+ * parts, 482:681:757); each is optional, so the band simply thins out (and
+ * finally disappears) until the photos are dropped in.
  */
 const BAND = [
-  { src: "/regatta-band-1.jpg", grow: 491 },
-  { src: "/regatta-band-2.png", grow: 833 },
-  { src: "/regatta-band-3.jpg", grow: 833 },
+  { src: "/regatta-band-1.jpg", grow: 482 },
+  { src: "/regatta-band-2.png", grow: 681 },
+  { src: "/regatta-band-3.jpg", grow: 757 },
 ];
 
 function PhotoBand() {
   return (
     <div
       aria-hidden
-      className="relative z-10 flex w-full shrink-0 gap-px overflow-hidden empty:hidden"
+      className="relative z-10 flex h-[calc(var(--u)*60)] w-full shrink-0 overflow-hidden empty:hidden board:h-[calc(var(--u)*77)]"
     >
       {BAND.map((frame) => (
         <OptionalImage
           key={frame.src}
           src={frame.src}
           alt=""
-          className="h-[clamp(1.5rem,4.9vh,3.3125rem)] min-w-0 object-cover"
+          className="h-full min-w-0 object-cover"
           style={{ flex: `${frame.grow} 1 0` }}
         />
       ))}
@@ -600,75 +623,85 @@ export default function LeaderboardIhhSeaRegattaBoard() {
 
   return (
     <main
-      className="relative flex min-h-screen w-full flex-col overflow-x-hidden font-sans text-charcoal xl:h-screen xl:overflow-hidden"
+      className="relative flex min-h-screen w-full flex-col overflow-x-hidden font-sans text-charcoal [--u:min(100vw/640,1px)] board:h-screen board:overflow-hidden board:[--u:min(100vw/1920,100vh/1080)]"
       style={{ background: CANVAS }}
     >
-      {/* Soft capsule shapes from the funnel's splash art, tilted off-canvas. */}
+      {/* The soft yellow capsule from the funnel's splash art, tilted off the
+          top-right corner (a 650x150 pill centred at 2091,-61 in the frame). */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
         <div
-          className="absolute -right-[8vw] -top-[18vh] h-[14vh] w-[34vw] rotate-[-32deg] rounded-full"
-          style={{
-            background: "linear-gradient(90deg, #ffd75e, #ffe9a8)",
-            opacity: 0.5,
-          }}
-        />
-        <div
-          className="absolute -bottom-[14vh] -left-[12vw] h-[14vh] w-[38vw] rotate-[38deg] rounded-full"
-          style={{
-            background: "linear-gradient(90deg, #ffe382, #ffd75e)",
-            opacity: 0.55,
-          }}
+          className="absolute right-[-38%] top-[-5%] h-[calc(var(--u)*110)] w-[calc(var(--u)*420)] rotate-[-32deg] rounded-full opacity-50 board:right-[calc(var(--u)*-496)] board:top-[calc(var(--u)*-136)] board:h-[calc(var(--u)*150)] board:w-[calc(var(--u)*650)]"
+          style={{ background: "linear-gradient(90deg, #ffd75e, #ffe9a8)" }}
         />
       </div>
 
-      {/* Pitch on the left, standings on the right - the design's 1215:626. */}
-      <div className="relative z-10 grid flex-1 gap-[3vh] px-[4vw] py-[3vh] xl:min-h-0 xl:grid-cols-[minmax(0,1215fr)_minmax(0,626fr)] xl:gap-[2vw] xl:px-[1.8vw] xl:py-[3.2vh]">
+      {/* Pitch on the left, standings on the right - the frame's 1274:646
+          split, centred should the screen be wider than 16:9. Each column is
+          padded to the frame's own offsets and centres its content, so any
+          height a taller screen adds is shared above and below. */}
+      <div className="relative z-10 mx-auto flex w-full flex-1 flex-col board:min-h-0 board:max-w-[calc(var(--u)*1920)] board:flex-row">
         {/* Left: the pitch. */}
-        <div className="flex min-w-0 flex-col gap-[2.5vh] xl:min-h-0">
-          <div className="shrink-0">
-            <Masthead />
-            <p className={`${T.sub} mt-[1.5vh] leading-[1.28] text-charcoal`}>
-              Measure your <strong className="font-bold text-[1.14em]">speed</strong> and
-              gain free{" "}
-              <strong className="font-bold text-[1.14em]">personalised</strong>{" "}
-              insights.
-            </p>
-          </div>
+        <div className="flex min-w-0 flex-col px-[calc(var(--u)*24)] pt-[calc(var(--u)*36)] board:w-[calc(var(--u)*1274)] board:shrink-0 board:justify-center board:pb-[calc(var(--u)*58)] board:pl-[calc(var(--u)*26)] board:pr-0 board:pt-[calc(var(--u)*46)]">
+          <Masthead />
+          {/* The emphasised words step up in size but keep the line box at the
+              base size's 1.28, as the frame has it - otherwise they push
+              everything below by their extra leading. */}
+          <p className="mt-[calc(var(--u)*16)] text-[length:calc(var(--u)*24)] font-medium leading-[1.28] tracking-[-0.01em] text-charcoal board:mt-0 board:text-[length:calc(var(--u)*39.36)]">
+            Measure your{" "}
+            <strong className="text-[1.14em] font-bold leading-none">speed</strong>{" "}
+            and gain free{" "}
+            <strong className="text-[1.14em] font-bold leading-none">
+              personalised
+            </strong>{" "}
+            insights.
+          </p>
 
           {IHHSEA_PAUSED ? (
             <div
-              className="flex min-h-0 flex-1 flex-col items-center justify-center rounded-2xl bg-white p-6 text-center shadow-card"
-              style={{ border: `1px solid ${CARD_LINE}` }}
+              className="mt-[calc(var(--u)*28)] flex flex-col items-center justify-center bg-white text-center shadow-card board:mt-[calc(var(--u)*55)] board:h-[calc(var(--u)*454)] board:w-[calc(var(--u)*1201)]"
+              style={{
+                border: `1px solid ${CARD_LINE}`,
+                borderRadius: u(26.5),
+                padding: u(40),
+              }}
             >
               <p
-                className={`${T.scanLabel} font-bold uppercase tracking-[0.3em] text-primary`}
+                className="font-bold uppercase tracking-[0.3em] text-primary"
+                style={{ fontSize: u(28.37) }}
               >
                 That&apos;s a wrap
               </p>
-              <p className={`${T.prizeSub} mt-3 font-extrabold leading-tight`}>
+              <p
+                className="font-extrabold leading-tight"
+                style={{ fontSize: u(60.77), marginTop: u(16) }}
+              >
                 The challenge has ended
               </p>
-              <p className={`${T.rowEmpty} mt-3 font-semibold text-secondary`}>
+              <p
+                className="font-semibold text-secondary"
+                style={{ fontSize: u(33.09), marginTop: u(16) }}
+              >
                 {total > 0 ? `${total} minds tested today` : "Thanks for playing"}
               </p>
             </div>
           ) : (
-            <div className="flex flex-1 flex-col gap-[3vh] sm:flex-row sm:items-stretch sm:gap-[2vw] xl:min-h-0">
-              <div className="flex shrink-0 items-stretch xl:min-h-0 sm:w-[clamp(11rem,33%,24.25rem)]">
-                <ScanBlock />
-              </div>
+            <div className="mt-[calc(var(--u)*28)] flex flex-col gap-[calc(var(--u)*24)] board:mt-[calc(var(--u)*55)] board:flex-row board:items-start board:gap-[calc(var(--u)*38)]">
+              <ScanBlock />
               <PrizePanel />
             </div>
           )}
         </div>
 
         {/* Right: the live standings. */}
-        <div className="flex min-w-0 flex-col gap-[1.6vh] xl:min-h-0">
+        <div className="flex min-w-0 flex-col px-[calc(var(--u)*24)] pt-[calc(var(--u)*40)] board:w-[calc(var(--u)*646)] board:shrink-0 board:justify-center board:pb-[calc(var(--u)*80)] board:pl-0 board:pr-[calc(var(--u)*20)] board:pt-[calc(var(--u)*46)]">
           <BoardLabel live={!IHHSEA_PAUSED} />
-          <ol className="flex min-w-0 flex-1 flex-col gap-2 xl:min-h-0 xl:gap-[1.2vh]">
+          <ol
+            className="mt-[calc(var(--u)*16)] flex min-w-0 flex-col board:mt-[calc(var(--u)*41.5)]"
+            style={{ gap: u(13.26) }}
+          >
             {rows.map((e, i) => (
               <StandingRow
                 key={e ? keyOf(e) : `empty-${i}`}
@@ -681,18 +714,20 @@ export default function LeaderboardIhhSeaRegattaBoard() {
         </div>
       </div>
 
-      {/* Fact strip, with the institutional lockup sitting inside it. */}
+      {/* Fact strip, with the institutional lockup sitting inside it at the
+          left. The fact is centred on the whole strip, as the design has it,
+          inside a margin that keeps it clear of the lockup on either side. */}
       <div
-        className="relative z-10 flex shrink-0 flex-col items-center gap-2 overflow-hidden px-[4vw] py-3 sm:flex-row sm:gap-[3vw] xl:h-[9.5vh] xl:px-[1.8vw] xl:py-0"
-        style={{ borderTop: `1px solid ${CARD_LINE}`, background: "#ffffffb8" }}
+        className="relative z-10 mt-[calc(var(--u)*36)] flex shrink-0 flex-col items-center gap-[calc(var(--u)*10)] overflow-hidden px-[calc(var(--u)*24)] py-[calc(var(--u)*16)] board:mt-0 board:h-[calc(var(--u)*76)] board:flex-row board:justify-center board:gap-0 board:px-[calc(var(--u)*367)] board:py-0"
+        style={{ background: STRIP_BG, marginBottom: u(23) }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/gms-ntu-logo.png"
           alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
-          className="h-[clamp(1.5rem,min(5vh,3.5vw),3.4rem)] w-auto shrink-0"
+          className="h-[calc(var(--u)*40)] w-auto shrink-0 board:absolute board:left-[calc(var(--u)*35)] board:top-1/2 board:h-[calc(var(--u)*54.6)] board:-translate-y-1/2"
         />
-        <div className="flex min-w-0 flex-1 items-center justify-center">
+        <div className="flex min-w-0 items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.p
               key={factIdx}
@@ -700,7 +735,7 @@ export default function LeaderboardIhhSeaRegattaBoard() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.45 }}
-              className={`${T.fact} text-center`}
+              className="text-center text-[length:calc(var(--u)*22)] leading-[1.3] board:text-[length:calc(var(--u)*27)]"
             >
               {showRate ? (
                 <>
@@ -726,8 +761,13 @@ export default function LeaderboardIhhSeaRegattaBoard() {
               ) : (
                 <>
                   <span className="font-bold uppercase tracking-[0.2em] text-primary">
-                    Brain fact&nbsp;&nbsp;
+                    Brain fact
                   </span>
+                  <span
+                    aria-hidden
+                    className="inline-block"
+                    style={{ width: u(16) }}
+                  />
                   <span className="font-semibold">{BRAIN_FACTS[slot]}</span>
                 </>
               )}
@@ -753,7 +793,8 @@ export default function LeaderboardIhhSeaRegattaBoard() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: -30 }}
               transition={springs.soft}
-              className="relative px-[4vw] py-[6vh] text-center"
+              className="relative text-center"
+              style={{ padding: `${u(64)} ${u(76)}` }}
             >
               {/* One-shot confetti burst. */}
               <span
@@ -763,8 +804,10 @@ export default function LeaderboardIhhSeaRegattaBoard() {
                 {Array.from({ length: 18 }, (_, i) => (
                   <span
                     key={i}
-                    className="animate-ember-burst absolute h-[1.2vh] w-[1.2vh] rounded-full"
+                    className="animate-ember-burst absolute rounded-full"
                     style={{
+                      width: u(13),
+                      height: u(13),
                       background: i % 3 === 0 ? "#f7b731" : "#f77528",
                       ["--burst-x" as string]: `${Math.round(Math.sin(i * 1.7) * 180)}px`,
                       ["--burst-y" as string]: `${-80 - Math.round(Math.abs(Math.cos(i * 2.3)) * 160)}px`,
@@ -775,17 +818,20 @@ export default function LeaderboardIhhSeaRegattaBoard() {
                 ))}
               </span>
               <p
-                className={`${T.prizeEyebrow} font-bold uppercase tracking-[0.34em] text-primary`}
+                className="font-bold uppercase tracking-[0.34em] text-primary"
+                style={{ fontSize: u(20.38) }}
               >
                 New top 3
               </p>
               <p
-                className={`${T.h1} mt-[1.5vh] font-extrabold leading-none tracking-tight`}
+                className="font-extrabold leading-none tracking-[-0.015em]"
+                style={{ fontSize: u(82.88), marginTop: u(16) }}
               >
                 {displayName(celebration.name)}
               </p>
               <p
-                className={`${T.leaderTime} mt-[1.5vh] font-extrabold tabular-nums leading-none text-primary`}
+                className="font-extrabold leading-none text-primary tabular-nums"
+                style={{ fontSize: u(71.8), marginTop: u(16) }}
               >
                 {formatTime(celebration.timeMs)}
               </p>

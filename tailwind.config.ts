@@ -16,6 +16,9 @@ const config: Config = {
         // Height-based variants used by the ported symbol-matching game.
         tall: { raw: "(min-height: 720px)" },
         "tall-lg": { raw: "(min-height: 786px)" },
+        // The TV boards' two-column layout: a landscape screen wide enough to
+        // hold the 1920x1080 design scaled down and still be read.
+        board: { raw: "(min-width: 1024px) and (orientation: landscape)" },
       },
       colors: {
         // Brand & interactive
