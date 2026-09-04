@@ -34,11 +34,21 @@ const SAMPLE_SCORE = 52;
 /**
  * The card stage, in Figma's own coordinates: the two report cards overlap and
  * tilt against each other on a 358x287 board. The board is drawn at that fixed
- * size and scaled to whatever width it is given (container-query units), so the
- * overlap and the tilts hold at every screen width instead of reflowing.
+ * size and scaled to whatever box it is given, so the overlap and the tilts
+ * hold everywhere instead of reflowing.
+ *
+ * The scale is the smaller of the width and height ratios, in container-query
+ * units, which is what keeps the stage inside its box in BOTH directions - a
+ * width-only scale overflows a landscape phone, where the height is what runs
+ * out, and the cards then paint over the heading and the CTA.
+ *
+ * Both ratios are written as length/length divisions on purpose: `calc(100cqw
+ * / 358)` yields a length, which is invalid inside scale() and is dropped
+ * silently, leaving the stage at full size and cropped.
  */
 const STAGE_W = 358;
 const STAGE_H = 287;
+const STAGE_SCALE = `min(calc(100cqw / ${STAGE_W}px), calc(100cqh / ${STAGE_H}px))`;
 
 /**
  * Cards are authored at 2.5x their placed size and scaled back down, which is
@@ -214,23 +224,18 @@ export function Event3QuizInvite({
         <motion.div
           variants={item}
           aria-hidden
-          className="flex min-h-0 flex-1 items-center justify-center"
+          className="flex min-h-0 flex-1 items-center justify-center py-2"
         >
           <div
-            className="relative w-full max-w-[min(358px,56dvh)] overflow-hidden"
-            style={
-              {
-                aspectRatio: `${STAGE_W} / ${STAGE_H}`,
-                containerType: "inline-size",
-              } as CSSProperties
-            }
+            className="relative h-full max-h-[287px] min-h-[140px] w-full max-w-[358px] overflow-hidden"
+            style={{ containerType: "size" } as CSSProperties}
           >
             <div
-              className="absolute left-0 top-0 origin-top-left"
+              className="absolute left-1/2 top-1/2"
               style={{
                 width: STAGE_W,
                 height: STAGE_H,
-                transform: `scale(calc(100cqw / ${STAGE_W}))`,
+                transform: `translate(-50%, -50%) scale(${STAGE_SCALE})`,
               }}
             >
               <PlacedCard placement={DOMAIN_CARD}>

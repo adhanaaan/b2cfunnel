@@ -108,7 +108,13 @@ export function Event3Shell({
       className={`variant-event2 isolate flex flex-col items-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] text-charcoal ${
         scroll
           ? "relative min-h-dvh w-full overflow-x-hidden"
-          : "fixed inset-0 overflow-hidden"
+          : // Locked, but not clipped: a small or landscape phone can leave a
+            // CTA below the fold, and `overflow-hidden` made it unreachable
+            // rather than merely off-screen. `auto` scrolls only when the
+            // content genuinely does not fit - a screen that fits behaves
+            // exactly as before, and the document itself stays pinned either
+            // way, which is what the lock is for.
+            "fixed inset-0 overflow-y-auto overflow-x-hidden overscroll-contain"
       }`}
     >
       <div
