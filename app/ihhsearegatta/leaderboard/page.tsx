@@ -372,6 +372,58 @@ function ScanRail() {
 
 /* ------------------------------ Prize card ------------------------------ */
 
+/**
+ * The prize cutout, which is allowed not to exist.
+ *
+ * `onError` alone is not enough: this page is prerendered, so the browser
+ * starts (and often finishes) loading the image from the server HTML before
+ * React hydrates and attaches the handler - a 404 that lands in that window
+ * fires into nothing and leaves the browser's broken-image icon on the card.
+ * `decode()` closes that gap from the other end: it settles on the element's
+ * real outcome whether the fetch already finished or is still in flight, so a
+ * missing file is simply an absent photo. (`complete` is no use here - it
+ * reads `true` in the moment between the src being set and the fetch
+ * starting, which would hide a picture that was about to load perfectly.)
+ */
+function PrizeImage() {
+  const ref = useRef<HTMLImageElement>(null);
+  const [broken, setBroken] = useState(false);
+
+  useEffect(() => {
+    const img = ref.current;
+    if (!img) return;
+    let cancelled = false;
+    void img.decode().catch(() => {
+      // naturalWidth guards against a decode rejection on an image that did
+      // in fact arrive (an aborted decode, a detached element).
+      if (!cancelled && img.naturalWidth === 0) setBroken(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (broken) return null;
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      ref={ref}
+      src="/garmin-forerunner-165.png"
+      alt="Garmin Forerunner 165 GPS running smartwatch"
+      onError={() => setBroken(true)}
+      className="animate-symbol-drift min-h-0 w-auto max-w-full flex-1 object-contain drop-shadow-[0_18px_28px_rgba(74,26,0,0.45)] max-h-[40vh] lg:max-h-none"
+      style={{
+        ["--drift-y" as string]: "-12px",
+        ["--drift-x" as string]: "0px",
+        ["--drift-tilt" as string]: "0deg",
+        ["--drift-tilt-to" as string]: "0deg",
+        ["--drift-duration" as string]: "5s",
+      }}
+    />
+  );
+}
+
 function PrizeCard() {
   return (
     <div
@@ -402,24 +454,7 @@ function PrizeCard() {
             Worth $379 · Fastest mind gets it!
           </p>
         </div>
-        {/* The cutout is optional on purpose: until the file lands the card
-            still reads, and the photo appears the moment it does. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/garmin-forerunner-165.png"
-          alt="Garmin Forerunner 165 GPS running smartwatch"
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
-          className="animate-symbol-drift min-h-0 w-auto max-w-full flex-1 object-contain drop-shadow-[0_18px_28px_rgba(74,26,0,0.45)] max-h-[40vh] lg:max-h-none"
-          style={{
-            ["--drift-y" as string]: "-12px",
-            ["--drift-x" as string]: "0px",
-            ["--drift-tilt" as string]: "0deg",
-            ["--drift-tilt-to" as string]: "0deg",
-            ["--drift-duration" as string]: "5s",
-          }}
-        />
+        <PrizeImage />
       </div>
     </div>
   );
