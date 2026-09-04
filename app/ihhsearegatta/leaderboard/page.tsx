@@ -263,6 +263,10 @@ function StandingRow({
 /** Artwork for the code, if it has been uploaded (see ScanCode). */
 const QR_IMAGE = "/regatta-qr.png";
 
+/** The code's box, as large as the column and the leftover height allow. */
+const CODE_BOX =
+  "aspect-square w-full max-w-[min(70vw,40vh)] xl:max-w-[min(21vw,37vh)]";
+
 /**
  * The code: the uploaded artwork when there is one, a generated code when
  * there is not.
@@ -296,14 +300,16 @@ function ScanCode() {
   }, []);
 
   if (artwork) {
+    // No frame around the artwork: the uploaded code carries its own, and the
+    // board's would sit as a second border around it.
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         ref={ref}
         src={QR_IMAGE}
-        alt={`Scan to play the Reaction Time Challenge at ${PLAY_URL}`}
+        alt="Scan to play the Reaction Time Challenge"
         onError={() => setArtwork(false)}
-        className="h-full w-full object-contain"
+        className={`${CODE_BOX} object-contain`}
       />
     );
   }
@@ -315,14 +321,19 @@ function ScanCode() {
   // black thresholds better than the brand brown on a washed-out projector and
   // is indistinguishable across a room.
   return (
-    <QRCodeSVG
-      value={PLAY_URL}
-      className="h-full w-full"
-      level="L"
-      marginSize={4}
-      fgColor="#000000"
-      bgColor="#ffffff"
-    />
+    <div
+      className={`${CODE_BOX} flex items-center justify-center bg-white p-[0.25rem]`}
+      style={{ border: "0.6rem solid #111111" }}
+    >
+      <QRCodeSVG
+        value={PLAY_URL}
+        className="h-full w-full"
+        level="L"
+        marginSize={4}
+        fgColor="#000000"
+        bgColor="#ffffff"
+      />
+    </div>
   );
 }
 
@@ -340,12 +351,7 @@ function ScanBlock() {
         SCAN TO PLAY &lt; 60s
       </p>
 
-      <div
-        className="flex aspect-square w-full max-w-[min(70vw,40vh)] items-center justify-center bg-white p-[0.25rem] xl:max-w-[min(21vw,37vh)]"
-        style={{ border: "0.6rem solid #111111" }}
-      >
-        <ScanCode />
-      </div>
+      <ScanCode />
     </div>
   );
 }
@@ -437,7 +443,7 @@ function PrizePanel() {
       {/* The render sits over the panel's right edge, taller than the panel
           itself - hence the negative insets rather than a flow child. */}
       <OptionalImage
-        src="/garmin-forerunner-165.png"
+        src="/garmin-forerunner-165-white.png"
         alt="Garmin Forerunner 165 GPS running smartwatch"
         className="animate-symbol-drift pointer-events-none absolute -bottom-[9%] -top-[4%] right-[-2%] hidden w-[42%] object-contain drop-shadow-[0_18px_28px_rgba(74,26,0,0.45)] sm:block"
         style={{
@@ -461,7 +467,7 @@ function PrizePanel() {
  */
 const BAND = [
   { src: "/regatta-band-1.jpg", grow: 491 },
-  { src: "/regatta-band-2.jpg", grow: 833 },
+  { src: "/regatta-band-2.png", grow: 833 },
   { src: "/regatta-band-3.jpg", grow: 833 },
 ];
 

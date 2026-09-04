@@ -193,11 +193,26 @@ question step, so a regatta score stays comparable with every score already
 recorded (`achievableAxisMax` sums a variant's question steps - see the note in
 `config/funnelFlow.ts`).
 
-**The board is at `/ihhsearegatta/leaderboard`**, and is the v3 board with the
-regatta's prize: **Garmin Forerunner 165** (GPS Running Smartwatch, worth
-$379) in place of the DBS Fitbit. The prize photo is not in the repo: drop it
-at `public/garmin-forerunner-165.png` and it appears on the card. Until then
-that slot renders nothing rather than a broken image, and the card still reads.
+**The board is at `/ihhsearegatta/leaderboard`**, rebuilt to Figma 629:4815:
+the pitch on the left - brain, headline, the scan block and an ember prize
+panel for the **Garmin Forerunner 165** (GPS Running Smartwatch, worth $379) -
+against the live standings on the right, over the fact strip and a band of
+event photography.
+
+Its uploaded assets live at the root of `public/`, and every one of them is
+optional: each is settled through `decode()` (see `OptionalImage` and
+`ScanCode`), so a file that is missing or misnamed is an absent photo rather
+than a broken-image icon, and appears the moment it lands.
+
+| file | what it is |
+| --- | --- |
+| `regatta-qr.png` | the scan code. Drawn from `PLAY_URL` instead when absent, so the board always has a way in. Carries its own frame, so the board adds none. |
+| `garmin-forerunner-165-white.png` | the prize render on the panel |
+| `garmin-forerunner-165-black.png` | the earlier black colourway, kept |
+| `regatta-band-1.jpg`, `regatta-band-2.png`, `regatta-band-3.jpg` | the photo band along the bottom, in the design's 491:833:833 widths |
+
+A code that is uploaded is trusted as-is: nothing here can check what it
+encodes, so a code for the wrong URL is a wrong code.
 
 Scores and reports are tagged `ihhsearegatta` (`IHHSEA_SOURCE`), so the board
 ranks only this event - see **Supabase** below.
