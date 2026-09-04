@@ -5,6 +5,8 @@ import {
   EVENT2_PAUSED,
   EVENT3_PAUSED,
   EVENT3_SOURCE,
+  IHHSEA_PAUSED,
+  IHHSEA_SOURCE,
   ROTARY_PAUSED,
   ROTARY_SOURCE,
 } from "@/config/event";
@@ -18,8 +20,8 @@ interface ScorePayload {
   email?: string;
   timeMs?: number;
   /**
-   * Which event the score was played at - "event", "event2", EVENT3_SOURCE or
-   * ROTARY_SOURCE.
+   * Which event the score was played at - "event", "event2", EVENT3_SOURCE,
+   * ROTARY_SOURCE or IHHSEA_SOURCE.
    * Selects the pause switch, and is stored so each board can filter to its
    * own standings.
    */
@@ -51,9 +53,11 @@ export async function POST(req: Request) {
       ? EVENT3_PAUSED
       : payload.source === ROTARY_SOURCE
         ? ROTARY_PAUSED
-        : payload.source === "event2"
-          ? EVENT2_PAUSED
-          : EVENT_PAUSED;
+        : payload.source === IHHSEA_SOURCE
+          ? IHHSEA_PAUSED
+          : payload.source === "event2"
+            ? EVENT2_PAUSED
+            : EVENT_PAUSED;
   if (paused) {
     return NextResponse.json({ ok: true, stored: false });
   }

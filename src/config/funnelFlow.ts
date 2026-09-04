@@ -232,6 +232,27 @@ const EVENT3_FLOW: FunnelStep[] = DAYLIGHT_FLOW.flatMap((step) =>
 const ROTARY_FLOW: FunnelStep[] = DAYLIGHT_FLOW;
 
 /**
+ * IHH SEA Regatta (/ihhsearegatta): the v3 arc - landing, partner consent,
+ * instructions, game - with one page added and one taken away.
+ *
+ * Added: the questionnaire invite, between the post-game result and the first
+ * question. "Tell me more" on the result card leads here, and the invite is
+ * where the quiz is actually accepted ("Sure!") or declined ("Not now").
+ *
+ * Taken away: nothing closes this arc. EVENT3_CHALLENGE_CLOSED is about the
+ * DBS challenge, and is applied per variant in resolveFlow, so the "That's a
+ * wrap!" screen cannot reach across into this event - the link is open.
+ *
+ * The question set is untouched (the invite is not a question step), so a
+ * regatta score stays comparable with every score already recorded.
+ */
+const IHHSEA_FLOW: FunnelStep[] = EVENT3_FLOW.flatMap((step) =>
+  step.kind === "gameResult"
+    ? [step, { kind: "quizInvite" } as FunnelStep]
+    : [step],
+);
+
+/**
  * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
  * so the split-tick treatment of the partner consents (one box per clause) can
  * still be walked through and compared against the single tick that v3 ships.
@@ -265,6 +286,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   event2: EVENT2_FLOW,
   event3: EVENT3_FLOW,
   rotary: ROTARY_FLOW,
+  ihhsearegatta: IHHSEA_FLOW,
   event6: EVENT6_FLOW,
 };
 

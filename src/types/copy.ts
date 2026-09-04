@@ -375,6 +375,45 @@ export interface ScreenCopy {
   event3: Event3Copy;
   event6: Event6Copy;
   rotary: RotaryCopy;
+  ihhsearegatta: IhhseaCopy;
+}
+
+// IHH SEA Regatta (/ihhsearegatta): the v3 arc with a redesigned bridge card
+// on the post-game result and a questionnaire invite behind its CTA. Every
+// other screen reuses the v3/v2 copy.
+export interface IhhseaCopy {
+  // The bridge card opens on the player's wish rather than on their reflexes,
+  // so it carries two lines the v3 card has no place for; everything else on
+  // the result screen is the v3 copy.
+  gameResult: Event3Copy["gameResult"] & {
+    /** Italic opening line of the card. */
+    bridgeWish: string;
+    /** The lighter line under it. */
+    bridgeWishNote: string;
+  };
+  // The page behind "Tell me more": what the questionnaire gives them, over a
+  // sample of the report it produces.
+  quizInvite: {
+    heading: string;
+    cta: string; // walks on into the questionnaire
+    decline: string; // ends the session on the closing screen
+    /** The domain page in the sample report. */
+    domainCard: {
+      title: string;
+      body: string;
+      whyLabel: string;
+      whyHeading: string;
+      whyPoints: string[];
+      scienceLabel: string;
+      /** One paragraph per entry. */
+      science: string[];
+    };
+    /** The score card in the sample report (its strap, eyebrow, gauge labels
+     * and band label are the report's own copy - only the blurb differs). */
+    reportCard: {
+      blurb: string;
+    };
+  };
 }
 
 // Rotary KL-WAM (/rotaryklwam): the daylight arc with no partner in it, so no
