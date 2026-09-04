@@ -326,17 +326,23 @@ export function Event3GameResult({
             {regatta ? (
               // The regatta card opens on the player's own wish, then turns it
               // on the one thing they have not been tracking.
+              // Four lines where v3 has three, so the card steps down a size
+              // on a short screen to keep its CTA above the fold.
               <>
-                <p className="text-[19px] font-bold italic leading-[1.4] text-cream">
+                <p className="text-[17px] font-bold italic leading-[1.35] text-cream tall:text-[19px] tall:leading-[1.4]">
                   {regattaCopy.bridgeWish}
                 </p>
-                <p className="text-[15px] font-normal leading-[1.4] text-cream">
+                <p className="text-[13.5px] font-normal leading-[1.35] text-cream tall:text-[15px] tall:leading-[1.4]">
                   {regattaCopy.bridgeWishNote}
                 </p>
-                <p className="mt-5 font-bold leading-[1.3] text-cream">
-                  <span className="text-[15px]">{c.bridgeQuestion}</span>
+                <p className="mt-3.5 font-bold leading-[1.25] text-cream tall:mt-5 tall:leading-[1.3]">
+                  <span className="text-[14px] tall:text-[15px]">
+                    {c.bridgeQuestion}
+                  </span>
                   <br />
-                  <span className="text-[22px]">{c.bridgeHighlight}</span>
+                  <span className="text-[19px] tall:text-[22px]">
+                    {c.bridgeHighlight}
+                  </span>
                 </p>
               </>
             ) : (
@@ -356,7 +362,7 @@ export function Event3GameResult({
               onClick={onContinue}
               whileTap={reduced ? undefined : { scale: 0.97 }}
               transition={springs.pop}
-              className={`${ctaInverseClass} relative mt-6 overflow-hidden`}
+              className={`${ctaInverseClass} relative mt-4 overflow-hidden tall:mt-6`}
             >
               <span className={`relative z-10 ${emberLabelGradient}`}>
                 {regatta ? c.cta : `${c.cta} →`}
