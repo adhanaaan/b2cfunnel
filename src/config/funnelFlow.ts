@@ -197,7 +197,8 @@ const WOMAN_FLOW: FunnelStep[] = [
 
 /**
  * The shared daylight arc: the event2 flow with the statistics interstitials
- * dropped. v3 inserts a partner consent page into it, rotary runs it as-is.
+ * dropped. v3 inserts a partner consent page into it; rotary and NTU
+ * Homecoming run it as-is.
  * Kept as one base on purpose - achievableAxisMax sums max option scores over
  * a variant's question steps, so an identical question set is what keeps
  * normalised scores and bands comparable across all of them.
@@ -230,6 +231,15 @@ const EVENT3_FLOW: FunnelStep[] = DAYLIGHT_FLOW.flatMap((step) =>
  * close is applied per variant in resolveFlow, not here).
  */
 const ROTARY_FLOW: FunnelStep[] = DAYLIGHT_FLOW;
+
+/**
+ * NTU Homecoming (/ntuhomecoming): the same arc as Rotary - the daylight flow
+ * as-is, so no partner consent page and no "That's a wrap!" screen. Shared
+ * rather than rebuilt, so a later change to that arc reaches this event too and
+ * its question set cannot drift off the one every other score was recorded
+ * against.
+ */
+const NTU_HOMECOMING_FLOW: FunnelStep[] = ROTARY_FLOW;
 
 /**
  * IHH SEA Regatta (/ihhsearegatta): the v3 arc - landing, partner consent,
@@ -286,6 +296,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   event2: EVENT2_FLOW,
   event3: EVENT3_FLOW,
   rotary: ROTARY_FLOW,
+  ntuhomecoming: NTU_HOMECOMING_FLOW,
   ihhsearegatta: IHHSEA_FLOW,
   event6: EVENT6_FLOW,
 };

@@ -36,8 +36,9 @@ export const EVENT3_PAUSED = false;
  * Flip to `false` (and redeploy) to reopen: the full arc comes straight back -
  * the question set, the scoring maxima and every score already on the board are
  * untouched by this switch. It closes the DBS challenge and nothing else: the
- * /event-v6 consent preview and /rotaryklwam ignore it and keep walking their
- * whole flow, because the close is applied per variant in resolveFlow.
+ * /event-v6 consent preview, /rotaryklwam and /ntuhomecoming ignore it and keep
+ * walking their whole flow, because the close is applied per variant in
+ * resolveFlow.
  */
 export const EVENT3_CHALLENGE_CLOSED = true;
 
@@ -82,6 +83,22 @@ export const ROTARY_PAUSED = false;
 export const ROTARY_SOURCE = "rotaryklwam";
 
 /**
+ * Independent pause switch for NTU Homecoming (/ntuhomecoming and its TV
+ * board). Its own switch, like every other event's: closing one must never
+ * take another down with it.
+ */
+export const NTU_HOMECOMING_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the NTU Homecoming funnel. Every /ntuhomecoming score
+ * and report is tagged with it, and the NTU board filters to it - which is what
+ * keeps its standings clear of every other event's history.
+ *
+ * This is the value written to the `source` column for this event.
+ */
+export const NTU_HOMECOMING_SOURCE = "ntuhomecoming";
+
+/**
  * Independent pause switch for the IHH SEA Regatta event (/ihhsearegatta and
  * its TV board). Its own switch, like every other event's: closing one must
  * never take another down with it.
@@ -112,6 +129,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return EVENT3_SOURCE;
     case "rotary":
       return ROTARY_SOURCE;
+    case "ntuhomecoming":
+      return NTU_HOMECOMING_SOURCE;
     case "ihhsearegatta":
       return IHHSEA_SOURCE;
     case "event2":

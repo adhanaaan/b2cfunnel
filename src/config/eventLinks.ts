@@ -14,6 +14,7 @@ const PRODUCTION_ORIGIN = "https://brainhealthcheck.vercel.app";
 export const EVENT_PATHS: Partial<Record<QuizVariant, string>> = {
   event3: "/event-v3",
   rotary: "/rotaryklwam",
+  ntuhomecoming: "/ntuhomecoming",
   ihhsearegatta: "/ihhsearegatta",
 };
 

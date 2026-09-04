@@ -4,6 +4,7 @@ import {
   DBS_DAY2_SOURCE,
   EVENT3_SOURCE,
   IHHSEA_SOURCE,
+  NTU_HOMECOMING_SOURCE,
   ROTARY_SOURCE,
   eventSource,
 } from "@/config/event";
@@ -53,6 +54,7 @@ describe("rotary leaderboard source", () => {
       EVENT3_SOURCE,
       DBS_DAY1_SOURCE,
       DBS_DAY2_SOURCE,
+      NTU_HOMECOMING_SOURCE,
     ]) {
       expect(ROTARY_SOURCE).not.toBe(other);
     }
@@ -91,6 +93,7 @@ describe("ihhsearegatta leaderboard source", () => {
       DBS_DAY1_SOURCE,
       DBS_DAY2_SOURCE,
       ROTARY_SOURCE,
+      NTU_HOMECOMING_SOURCE,
     ]) {
       expect(IHHSEA_SOURCE).not.toBe(other);
     }
@@ -110,9 +113,58 @@ describe("ihhsearegatta leaderboard source", () => {
       "event2",
       "event3",
       "rotary",
+      "ntuhomecoming",
     ];
     for (const variant of others) {
       expect(eventSource(variant)).not.toBe(IHHSEA_SOURCE);
+    }
+  });
+});
+
+/**
+ * The NTU Homecoming board is scoped the same way again, and `ntuhomecoming`
+ * is the value the database's `source` column carries for this event - so it
+ * is pinned to the literal, not just to "something non-empty". Changing it
+ * strands every row already written under it.
+ */
+describe("ntuhomecoming leaderboard source", () => {
+  it("is the tag the database column expects", () => {
+    expect(NTU_HOMECOMING_SOURCE).toBe("ntuhomecoming");
+  });
+
+  it("never collides with another event's bucket", () => {
+    for (const other of [
+      "event",
+      "event2",
+      "event3",
+      EVENT3_SOURCE,
+      DBS_DAY1_SOURCE,
+      DBS_DAY2_SOURCE,
+      ROTARY_SOURCE,
+      IHHSEA_SOURCE,
+    ]) {
+      expect(NTU_HOMECOMING_SOURCE).not.toBe(other);
+    }
+  });
+
+  // A score and the report that follows it must carry the SAME tag, or the
+  // board's completion rate divides one event's reports by another's players.
+  it("tags both the score and the lead from the NTU funnel", () => {
+    expect(eventSource("ntuhomecoming")).toBe(NTU_HOMECOMING_SOURCE);
+  });
+
+  it("leaves every other variant's tag alone", () => {
+    const others: QuizVariant[] = [
+      "full",
+      "woman",
+      "event",
+      "event2",
+      "event3",
+      "rotary",
+      "ihhsearegatta",
+    ];
+    for (const variant of others) {
+      expect(eventSource(variant)).not.toBe(NTU_HOMECOMING_SOURCE);
     }
   });
 });

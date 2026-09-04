@@ -82,8 +82,8 @@ high score maps to the Low band.
 `/event-v3` asks for the partner's (IHH Healthcare Singapore) consent on its
 own page, from Figma "Option 2", between the landing and the instructions - so
 it is answered before the demo round and the game. `/ihhsearegatta` carries the
-same page, in the same place. An event with no partner in it, like
-`/rotaryklwam`, has no such page. The landing keeps its own
+same page, in the same place. An event with no partner in it - `/rotaryklwam`,
+`/ntuhomecoming` - has no such page. The landing keeps its own
 two consents (contact, which still gates the challenge, and the brain-health
 tips opt-in); the partner's wording is not a tickbox on the landing.
 
@@ -120,8 +120,8 @@ back. Closing is applied when the flow is *resolved*, not to the variant's flow
 itself, so the question set, `achievableAxisMax` and the comparability of every
 score already recorded are untouched by the switch either way (pinned by
 `tests/config/event3Flow.test.ts` and `tests/config/event3Closed.test.ts`).
-`/event-v6`, `/rotaryklwam` and `/ihhsearegatta` ignore the switch and keep
-walking the whole flow.
+`/event-v6`, `/rotaryklwam`, `/ntuhomecoming` and `/ihhsearegatta` ignore the
+switch and keep walking the whole flow.
 
 **Nothing is recorded from a closed session.** The lead is written when the
 report is built and the score after the game, and neither is reachable - so the
@@ -159,6 +159,34 @@ pause switch, independent of every other event's.
 
 Scores and reports are tagged `rotaryklwam` (`ROTARY_SOURCE`), so the board
 ranks only this event - see **Supabase** below.
+
+## /ntuhomecoming (NTU Homecoming)
+
+`/ntuhomecoming` is `/rotaryklwam` under a different name and a different
+leaderboard bucket. Same Daylight Ember arc, same three differences from
+`/event-v3` (no partner consent page, no "That's a wrap!" screen, the bold
+"Required." consent row), same question set - so an NTU score stays comparable
+with every score already recorded.
+
+It is shared rather than copied, wherever sharing is what keeps the two arcs
+from drifting apart: `NTU_HOMECOMING_FLOW` *is* `ROTARY_FLOW`, so a later change
+to that arc reaches this event too, and both landings read the same
+`NO_PARTNER_SPLASH` copy. What each event holds of its own is the part that must
+not be shared - its bucket, its pause switch, its route, and a copy block
+(`COPY.screens.ntuhomecoming.splash`) so this event's wording can be changed
+without touching Rotary's (pinned by `tests/config/ntuHomecomingFlow.test.ts`).
+
+**Its bucket is the point of the route.** `NTU_HOMECOMING_SOURCE` is the literal
+`ntuhomecoming` - the value written to the `source` column on both
+`game_scores` and `leads` - so its board ranks only this event and nothing
+played here can move a board another route is still showing. Changing the
+literal strands every row already written under it, so it is pinned to the
+string, not just to "something non-empty". `NTU_HOMECOMING_PAUSED` is likewise
+its own switch.
+
+**The board is at `/ntuhomecoming/leaderboard`**: the Rotary board pointed at
+this bucket, with its QR built from `playUrlFor("ntuhomecoming")` so a scanned
+code lands on this event's link rather than another's.
 
 ## /ihhsearegatta (IHH SEA Regatta)
 
@@ -295,15 +323,17 @@ alter table public.game_scores enable row level security;
 ```
 
 **`source` scopes a board to one event.** Every score is tagged with the event
-it was played at (`"event"`, `"event2"`, `EVENT3_SOURCE`, `ROTARY_SOURCE` or
-`IHHSEA_SOURCE` from `src/config/event.ts`), and `/api/leaderboard?source=...`
-filters to it. The v3, Rotary and regatta boards, and the in-funnel rank chip on
-each, pass their own tag; the v1 and v2 boards send no `source` and so keep
-ranking every row, history included.
+it was played at (`"event"`, `"event2"`, `EVENT3_SOURCE`, `ROTARY_SOURCE`,
+`NTU_HOMECOMING_SOURCE` or `IHHSEA_SOURCE` from `src/config/event.ts` -
+`eventSource(variant)` is the single place that mapping lives), and
+`/api/leaderboard?source=...` filters to it. The v3, Rotary, NTU and regatta
+boards, and the in-funnel rank chip on each, pass their own tag; the v1 and v2
+boards send no `source` and so keep ranking every row, history included.
 
-**Rotary KL-WAM uses `rotaryklwam`** (`ROTARY_SOURCE`) and **the IHH SEA
-Regatta uses `ihhsearegatta`** (`IHHSEA_SOURCE`), so neither event's rows ever
-mix with a DBS board's or with each other's. Both tags are pinned by
+**Rotary KL-WAM uses `rotaryklwam`** (`ROTARY_SOURCE`), **NTU Homecoming uses
+`ntuhomecoming`** (`NTU_HOMECOMING_SOURCE`) and **the IHH SEA Regatta uses
+`ihhsearegatta`** (`IHHSEA_SOURCE`), so no event's rows ever mix with a DBS
+board's or with each other's. All three tags are pinned by
 `tests/config/leaderboardSource.test.ts`, since a collision would be silent -
 no error, just the wrong standings on a TV at an event.
 
@@ -341,8 +371,9 @@ not silently read as a decline.
 
 Where each value comes from:
 
-- **Landing page** (`/event-v3`, `/rotaryklwam`, `/ihhsearegatta`): the "Send
-  me occasional brain health tips and updates" checkbox rides along with the
+- **Landing page** (`/event-v3`, `/rotaryklwam`, `/ntuhomecoming`,
+  `/ihhsearegatta`): the "Send me occasional brain health tips and updates"
+  checkbox rides along with the
   name + email capture and is written to both `game_scores.tips_consent` (with
   the score) and `leads.tips_consent` (with the lead).
 - **Report page**: ticking the tips opt-in inserts into `newsletter_optins` as

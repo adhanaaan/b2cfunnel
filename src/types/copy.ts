@@ -374,7 +374,8 @@ export interface ScreenCopy {
   event2: Event2Copy;
   event3: Event3Copy;
   event6: Event6Copy;
-  rotary: RotaryCopy;
+  rotary: NoPartnerSplashCopy;
+  ntuhomecoming: NoPartnerSplashCopy;
   ihhsearegatta: IhhseaCopy;
 }
 
@@ -416,10 +417,11 @@ export interface IhhseaCopy {
   };
 }
 
-// Rotary KL-WAM (/rotaryklwam): the daylight arc with no partner in it, so no
-// consent page. Only the landing's required-consent line differs from v3;
-// every other screen reuses the v3/v2 copy.
-export interface RotaryCopy {
+// The events with no partner in them (/rotaryklwam, /ntuhomecoming): the
+// daylight arc with no consent page. Only the landing's required-consent line
+// differs from v3; every other screen reuses the v3/v2 copy. One block per
+// event, so either one's wording can be changed on its own.
+export interface NoPartnerSplashCopy {
   splash: Event3Copy["splash"];
 }
 

@@ -191,7 +191,11 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         <Event3Splash
           onSubmit={submitEmail}
           preview={preview}
-          design={state.variant === "rotary" ? "rotary" : "v3"}
+          design={
+            state.variant === "rotary" || state.variant === "ntuhomecoming"
+              ? state.variant
+              : "v3"
+          }
         />
       ) : state.variant === "event2" ? (
         <Event2Splash onSubmit={submitEmail} />
