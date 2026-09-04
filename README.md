@@ -81,8 +81,9 @@ high score maps to the Low band.
 
 `/event-v3` asks for the partner's (IHH Healthcare Singapore) consent on its
 own page, from Figma "Option 2", between the landing and the instructions - so
-it is answered before the demo round and the game. An event with no partner in
-it, like `/rotaryklwam`, has no such page. The landing keeps its own
+it is answered before the demo round and the game. `/ihhsearegatta` carries the
+same page, in the same place. An event with no partner in it, like
+`/rotaryklwam`, has no such page. The landing keeps its own
 two consents (contact, which still gates the challenge, and the brain-health
 tips opt-in); the partner's wording is not a tickbox on the landing.
 
@@ -119,8 +120,8 @@ back. Closing is applied when the flow is *resolved*, not to the variant's flow
 itself, so the question set, `achievableAxisMax` and the comparability of every
 score already recorded are untouched by the switch either way (pinned by
 `tests/config/event3Flow.test.ts` and `tests/config/event3Closed.test.ts`).
-`/event-v6` and `/rotaryklwam` ignore the switch and keep walking the whole
-flow.
+`/event-v6`, `/rotaryklwam` and `/ihhsearegatta` ignore the switch and keep
+walking the whole flow.
 
 **Nothing is recorded from a closed session.** The lead is written when the
 report is built and the score after the game, and neither is reachable - so the
@@ -157,6 +158,48 @@ width, and so its QR size. `ROTARY_PAUSED` (`src/config/event.ts`) is its own
 pause switch, independent of every other event's.
 
 Scores and reports are tagged `rotaryklwam` (`ROTARY_SOURCE`), so the board
+ranks only this event - see **Supabase** below.
+
+## /ihhsearegatta (IHH SEA Regatta)
+
+`/ihhsearegatta` runs the `/event-v3` arc, partner consent page included (IHH
+is the partner at this event too). Three differences, and nothing else:
+
+- **The link is open.** There is no "That's a wrap!" screen:
+  `EVENT3_CHALLENGE_CLOSED` closes the DBS challenge only, and is applied per
+  variant in `resolveFlow`, so it cannot reach across into this event (pinned
+  by `tests/config/ihhseaFlow.test.ts`). `IHHSEA_PAUSED`
+  (`src/config/event.ts`) is its own pause switch.
+- **A redesigned bridge card** on the post-game result: it opens on the
+  player's own wish ("I want to be faster…"), turns it on the organ nobody
+  tracks, and ends on **"Tell me more"** instead of "Continue to report".
+  `COPY.screens.ihhsearegatta.gameResult` spreads `DAYLIGHT_GAME_RESULT` and
+  overrides that card, so `/event-v3`, `/rotaryklwam` and the `/event-v6`
+  preview keep the card they had.
+- **A questionnaire invite behind that CTA** (`Event3QuizInvite.tsx`), between
+  the post-game result and the first question: the offer - two free minutes for
+  a personalised report - over a sample of that report. The quiz is accepted or
+  declined here rather than on the result card: **"Sure!"** walks into the
+  questionnaire, **"Not now"** ends the session on the closing screen (the same
+  path `/event-v2` declines onto).
+
+The sample report on the invite is drawn from the real report's own components
+(`ScoreHeader`, `BigScore`, `Gauge`) at 0.4 scale, which is the factor the
+design itself uses, and its band is derived from the sample score by the
+engine - so the picture can never contradict the report it is a picture of.
+
+Its **question set is exactly event2's**, like v3's: the invite is not a
+question step, so a regatta score stays comparable with every score already
+recorded (`achievableAxisMax` sums a variant's question steps - see the note in
+`config/funnelFlow.ts`).
+
+**The board is at `/ihhsearegatta/leaderboard`**, and is the v3 board with the
+regatta's prize: **Garmin Forerunner 165** (GPS Running Smartwatch, worth
+$379) in place of the DBS Fitbit. The prize photo is not in the repo: drop it
+at `public/garmin-forerunner-165.png` and it appears on the card. Until then
+that slot renders nothing rather than a broken image, and the card still reads.
+
+Scores and reports are tagged `ihhsearegatta` (`IHHSEA_SOURCE`), so the board
 ranks only this event - see **Supabase** below.
 
 ## /event-v6 (preview)
@@ -237,14 +280,15 @@ alter table public.game_scores enable row level security;
 ```
 
 **`source` scopes a board to one event.** Every score is tagged with the event
-it was played at (`"event"`, `"event2"`, `EVENT3_SOURCE` or `ROTARY_SOURCE`
-from `src/config/event.ts`), and `/api/leaderboard?source=...` filters to it.
-The v3 and Rotary boards, and the in-funnel rank chip on each, pass their own
-tag; the v1 and v2 boards send no `source` and so keep ranking every row,
-history included.
+it was played at (`"event"`, `"event2"`, `EVENT3_SOURCE`, `ROTARY_SOURCE` or
+`IHHSEA_SOURCE` from `src/config/event.ts`), and `/api/leaderboard?source=...`
+filters to it. The v3, Rotary and regatta boards, and the in-funnel rank chip on
+each, pass their own tag; the v1 and v2 boards send no `source` and so keep
+ranking every row, history included.
 
-**Rotary KL-WAM uses `rotaryklwam`** (`ROTARY_SOURCE`), so `/rotaryklwam` rows
-never mix with a DBS board's and vice versa. The tag is pinned by
+**Rotary KL-WAM uses `rotaryklwam`** (`ROTARY_SOURCE`) and **the IHH SEA
+Regatta uses `ihhsearegatta`** (`IHHSEA_SOURCE`), so neither event's rows ever
+mix with a DBS board's or with each other's. Both tags are pinned by
 `tests/config/leaderboardSource.test.ts`, since a collision would be silent -
 no error, just the wrong standings on a TV at an event.
 
@@ -282,19 +326,18 @@ not silently read as a decline.
 
 Where each value comes from:
 
-- **Landing page** (`/event-v3`, `/rotaryklwam`): the "Send me occasional brain
-  health tips and updates" checkbox rides along with the name + email capture
-  and is written to
-  both `game_scores.tips_consent` (with the score) and `leads.tips_consent`
-  (with the lead).
+- **Landing page** (`/event-v3`, `/rotaryklwam`, `/ihhsearegatta`): the "Send
+  me occasional brain health tips and updates" checkbox rides along with the
+  name + email capture and is written to both `game_scores.tips_consent` (with
+  the score) and `leads.tips_consent` (with the lead).
 - **Report page**: ticking the tips opt-in inserts into `newsletter_optins` as
   before, and now also stamps `leads.tips_consent = true` on that email's rows.
   The opt-in can only turn consent on; there is no un-tick in the UI.
 
 **`partner_consent` records the partner (IHH) consent** from the `/event-v3`
-consent page, on the same three-state contract: `true` (ticked), `false` (left
-unticked), or `null` when we never asked - every row written before this column
-existed, and every variant with no consent page.
+and `/ihhsearegatta` consent page, on the same three-state contract: `true`
+(ticked), `false` (left unticked), or `null` when we never asked - every row
+written before this column existed, and every variant with no consent page.
 
 The value is taken once, on the consent page between the landing and the
 instructions, and carried in funnel state for the rest of the session, so it is

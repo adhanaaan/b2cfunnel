@@ -50,6 +50,25 @@ const DAYLIGHT_SPLASH: CopyConfig["screens"]["event3"]["splash"] = {
   poweredBy: "Powered by:",
 };
 
+/**
+ * The daylight post-game result copy, shared by /event-v3, /rotaryklwam and
+ * the /event-v6 preview. The regatta spreads it and overrides the bridge card
+ * (see COPY.screens.ihhsearegatta).
+ */
+const DAYLIGHT_GAME_RESULT: CopyConfig["screens"]["event3"]["gameResult"] = {
+  shareLabel: "Share",
+  retryLabel: "Retry",
+  headingPrefix: "You just tested your",
+  headingHighlight: "processing speed",
+  youLabel: "Your time",
+  rankLabel: "Your rank",
+  fastestLabel: "Fastest so far",
+  bridgeIntro: "Fast reflexes.",
+  bridgeQuestion: "Continue filling out a questionnaire for",
+  bridgeHighlight: "your brain health report",
+  cta: "Continue to report",
+};
+
 export const COPY: CopyConfig = {
   screens: {
     hook: {
@@ -427,19 +446,7 @@ export const COPY: CopyConfig = {
         demoCta: "Demo round",
         playCta: "Play",
       },
-      gameResult: {
-        shareLabel: "Share",
-        retryLabel: "Retry",
-        headingPrefix: "You just tested your",
-        headingHighlight: "processing speed",
-        youLabel: "Your time",
-        rankLabel: "Your rank",
-        fastestLabel: "Fastest so far",
-        bridgeIntro: "Fast reflexes.",
-        bridgeQuestion: "Continue filling out a questionnaire for",
-        bridgeHighlight: "your brain health report",
-        cta: "Continue to report",
-      },
+      gameResult: DAYLIGHT_GAME_RESULT,
       share: {
         text: "I scored {time} on the Brain Health Reaction Challenge",
         rankLine: "Rank {rank}/{total}",
@@ -504,6 +511,46 @@ export const COPY: CopyConfig = {
         ...DAYLIGHT_SPLASH,
         consentRequired:
           "*Required.* I agree to be contacted about my results and prize.",
+      },
+    },
+    ihhsearegatta: {
+      // The regatta bridge card leads with the player's own wish, then turns
+      // it on the organ nobody tracks. Only the card differs on this screen -
+      // the share, retry, rank and time copy is v3's.
+      gameResult: {
+        ...DAYLIGHT_GAME_RESULT,
+        bridgeWish: "I want to be faster\u2026",
+        bridgeWishNote: "in conversations and decision making",
+        bridgeQuestion: "You tracked everything,",
+        bridgeHighlight: "What about your brain?",
+        cta: "Tell me more",
+      },
+      quizInvite: {
+        heading:
+          "Fill a free 2-min questionnaire to get personalised brain health results",
+        cta: "Sure!",
+        decline: "Not now",
+        domainCard: {
+          title: "Processing Speed",
+          body: "How fast your brain connects the dots, from reading speed to reaction time to quick mental math.",
+          whyLabel: "Why it matters",
+          whyHeading: "Processing speed in everyday life",
+          whyPoints: [
+            "Scanning a menu and deciding what to order",
+            "Keeping up in fast-paced group conversations",
+            "Doing mental math at the checkout",
+            "Taking in new instructions without slowing down",
+          ],
+          scienceLabel: "Neuroscience",
+          science: [
+            "Located right behind your forehead, this area acts as your brain's \u201cCEO\u201d. It handles planning, decision-making and personality.",
+            "When you make choices or control your behaviour, this area is hard at work.",
+          ],
+        },
+        reportCard: {
+          blurb:
+            "A handful of modifiable factors are affecting your brain health performance.",
+        },
       },
     },
   },

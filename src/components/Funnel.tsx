@@ -32,6 +32,7 @@ import { Event2Closing } from "@/components/screens/event2/Event2Closing";
 import { Event3Splash } from "@/components/screens/event3/Event3Splash";
 import { Event3Consent } from "@/components/screens/event3/Event3Consent";
 import { Event3Wrap } from "@/components/screens/event3/Event3Wrap";
+import { Event3QuizInvite } from "@/components/screens/event3/Event3QuizInvite";
 import { Event6Consent } from "@/components/screens/event6/Event6Consent";
 import { Event3Instructions } from "@/components/screens/event3/Event3Instructions";
 import { Event3GameResult } from "@/components/screens/event3/Event3GameResult";
@@ -207,6 +208,20 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         <Event6Consent onSubmit={() => next()} />
       ) : (
         <Event3Consent onSubmit={submitConsent} />
+      );
+
+    case "quizInvite":
+      // ihhsearegatta: "Tell me more" on the result card lands here, and the
+      // quiz is accepted or declined on this page. Declining ends the session
+      // on the closing screen rather than backing into the game.
+      return (
+        <Event3QuizInvite
+          onAccept={next}
+          onDecline={() => {
+            track("hook_declined", { variant: state.variant });
+            skipToKind("closing");
+          }}
+        />
       );
 
     case "wrap":

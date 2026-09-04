@@ -11,6 +11,9 @@ export type QuizVariant =
   // Rotary KL-WAM (/rotaryklwam): the daylight arc with no partner consent
   // page - the landing leads straight into the instructions and their demo.
   | "rotary"
+  // IHH SEA Regatta (/ihhsearegatta): the v3 arc, open (no "wrap" screen),
+  // with a redesigned bridge card and a questionnaire invite before the quiz.
+  | "ihhsearegatta"
   // Preview-only: the daylight arc with a partner consent page. Submits nothing
   // (see PREVIEW_VARIANTS in config/variants.ts).
   | "event6";
@@ -21,6 +24,9 @@ export type FunnelStep =
   | { kind: "nameGate" }
   | { kind: "consent" } // event3/event6: partner consent page between landing and game
   | { kind: "wrap" } // event3: terminal screen while the challenge is closed
+  // ihhsearegatta: the questionnaire invite between the post-game result and
+  // the quiz - "Sure!" walks on, "Not now" ends on the closing screen.
+  | { kind: "quizInvite" }
   | { kind: "question"; questionId: string }
   | { kind: "questionGroup"; title: string; questionIds: string[] }
   | { kind: "statCard"; cardId: string }

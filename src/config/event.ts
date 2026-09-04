@@ -82,6 +82,22 @@ export const ROTARY_PAUSED = false;
 export const ROTARY_SOURCE = "rotaryklwam";
 
 /**
+ * Independent pause switch for the IHH SEA Regatta event (/ihhsearegatta and
+ * its TV board). Its own switch, like every other event's: closing one must
+ * never take another down with it.
+ */
+export const IHHSEA_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the IHH SEA Regatta funnel. Every /ihhsearegatta
+ * score and report is tagged with it, and the regatta board filters to it -
+ * which is what keeps its standings clear of every other event's history.
+ *
+ * This is the value written to the `source` column for this event.
+ */
+export const IHHSEA_SOURCE = "ihhsearegatta";
+
+/**
  * The bucket a variant's rows are tagged with, for both `game_scores.source`
  * and `leads.source`. Shared so a score and the report that follows it always
  * carry the same tag - the report rate on the board divides one by the other,
@@ -96,6 +112,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return EVENT3_SOURCE;
     case "rotary":
       return ROTARY_SOURCE;
+    case "ihhsearegatta":
+      return IHHSEA_SOURCE;
     case "event2":
       return "event2";
     case "event":

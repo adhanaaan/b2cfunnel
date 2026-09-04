@@ -43,6 +43,10 @@ const item = {
  * under the "processing speed" headline (whose "?" opens the explainer
  * popup), the rank/fastest chips settle in, and the ember bridge card with
  * the brain peeking over it carries the one CTA into the quiz.
+ *
+ * Serves every daylight event. The regatta (/ihhsearegatta) rewrites the
+ * bridge card - the player's wish, then "Tell me more" into the questionnaire
+ * invite - and nothing else on the screen.
  */
 export function Event3GameResult({
   name,
@@ -51,13 +55,17 @@ export function Event3GameResult({
   onContinue,
   onRetake,
 }: Event3GameResultProps) {
-  const c = COPY.screens.event3.gameResult;
   const reduced = useReducedMotion();
   // The daylight result screen serves several events. Both the standings it
   // reads and the link its share card carries have to follow the one being
   // played, or a Rotary player would be ranked against - and send friends to -
   // another event's board.
   const variant = useVariant();
+  // The regatta rewrites the bridge card only (its own copy block spreads the
+  // v3 copy, so everything above the card is identical either way).
+  const regatta = variant === "ihhsearegatta";
+  const regattaCopy = COPY.screens.ihhsearegatta.gameResult;
+  const c = regatta ? regattaCopy : COPY.screens.event3.gameResult;
   const source = eventSource(variant);
   const playUrl = playUrlFor(variant);
   const [standing, setStanding] = useState<Standing>({
@@ -315,14 +323,34 @@ export function Event3GameResult({
           </div>
 
           <div className="relative z-10 overflow-hidden rounded-2xl bg-gradient-to-b from-[#e8782e] via-[#f09452] to-[#ffbb88] px-5 pb-5 pt-6 shadow-[0_20px_50px_-20px_rgba(232,120,46,0.55)]">
-            <p className="text-[14px] font-semibold leading-[1.5] text-cream">
-              {c.bridgeIntro}
-            </p>
-            <p className="mt-0.5 font-semibold leading-[1.2] text-cream">
-              <span className="text-[16px]">{c.bridgeQuestion}</span>
-              <br />
-              <span className="text-[28px]">{c.bridgeHighlight}</span>
-            </p>
+            {regatta ? (
+              // The regatta card opens on the player's own wish, then turns it
+              // on the one thing they have not been tracking.
+              <>
+                <p className="text-[19px] font-bold italic leading-[1.4] text-cream">
+                  {regattaCopy.bridgeWish}
+                </p>
+                <p className="text-[15px] font-normal leading-[1.4] text-cream">
+                  {regattaCopy.bridgeWishNote}
+                </p>
+                <p className="mt-5 font-bold leading-[1.3] text-cream">
+                  <span className="text-[15px]">{c.bridgeQuestion}</span>
+                  <br />
+                  <span className="text-[22px]">{c.bridgeHighlight}</span>
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-[14px] font-semibold leading-[1.5] text-cream">
+                  {c.bridgeIntro}
+                </p>
+                <p className="mt-0.5 font-semibold leading-[1.2] text-cream">
+                  <span className="text-[16px]">{c.bridgeQuestion}</span>
+                  <br />
+                  <span className="text-[28px]">{c.bridgeHighlight}</span>
+                </p>
+              </>
+            )}
             <motion.button
               type="button"
               onClick={onContinue}
@@ -331,7 +359,7 @@ export function Event3GameResult({
               className={`${ctaInverseClass} relative mt-6 overflow-hidden`}
             >
               <span className={`relative z-10 ${emberLabelGradient}`}>
-                {c.cta} →
+                {regatta ? c.cta : `${c.cta} →`}
               </span>
               {/* Shimmer sweep: a warm glint gliding across every ~2.6s. */}
               <span
