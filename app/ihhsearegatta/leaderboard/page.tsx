@@ -18,7 +18,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
-import { formatTime } from "@/lib/format";
+import { displayName, formatTime } from "@/lib/format";
 import { IHHSEA_PAUSED, IHHSEA_SOURCE } from "@/config/event";
 import { playUrlFor } from "@/config/eventLinks";
 import { BRAIN_FACTS } from "@/config/tips";
@@ -173,7 +173,7 @@ function StandingRow({
     <motion.li
       layout
       transition={springs.shuffle}
-      className="flex min-h-0 items-center gap-[0.9em] rounded-2xl px-[0.7em] py-[0.4em] sm:px-[1.1em] lg:py-0"
+      className="flex min-h-0 items-center gap-[0.9em] rounded-2xl px-[0.7em] py-[0.4em] sm:px-[1.1em] xl:py-0"
       style={{
         flex: leader ? 1.6 : 1,
         background: leader
@@ -207,7 +207,7 @@ function StandingRow({
           <span
             className={`${leader ? T.leaderName : T.rowName} min-w-0 flex-1 truncate font-extrabold ${leader ? "text-white" : "text-charcoal"}`}
           >
-            {entry.name}
+            {displayName(entry.name)}
           </span>
           {leader ? (
             <span className="flex shrink-0 flex-col items-end leading-none">
@@ -262,7 +262,7 @@ function StandingRow({
  */
 function ScanRail() {
   return (
-    <div className="flex h-full min-h-0 flex-col justify-center gap-[2vh] lg:gap-[3vh]">
+    <div className="flex h-full min-h-0 flex-col justify-center gap-[2vh] xl:gap-[3vh]">
       <p
         className={`${T.scanHead} shrink-0 font-extrabold leading-[1.28] tracking-tight text-charcoal`}
       >
@@ -296,7 +296,7 @@ function ScanRail() {
           Chromium and collapsed the code to a fraction of its intended size on
           a 13" laptop. min(vw, vh) keeps it as large as the column and the
           leftover height allow, in every engine. */}
-      <div className="relative flex min-h-0 flex-1 items-center justify-center lg:justify-start">
+      <div className="relative flex min-h-0 flex-1 items-center justify-center xl:justify-start">
         <div className="relative flex max-w-full items-center">
           {/* Scannability settings measured at a live event (#46), kept
               through the redesign: no size cap, so the code grows until the
@@ -307,7 +307,7 @@ function ScanRail() {
               black thresholds better than the brand brown on a washed-out
               projector and is indistinguishable across a room. */}
           <div
-            className="flex size-[min(70vw,40vh)] max-w-full items-center justify-center rounded-[1.4rem] bg-white p-[0.25rem] lg:size-[min(29vw,46vh)]"
+            className="flex size-[min(70vw,40vh)] max-w-full items-center justify-center rounded-[1.4rem] bg-white p-[0.25rem] xl:size-[min(29vw,46vh)]"
             style={{ border: "0.5rem solid #111111" }}
           >
             <QRCodeSVG
@@ -381,7 +381,7 @@ function PrizeImage() {
       src="/garmin-forerunner-165.png"
       alt="Garmin Forerunner 165 GPS running smartwatch"
       onError={() => setBroken(true)}
-      className="animate-symbol-drift min-h-0 w-auto max-w-full flex-1 object-contain drop-shadow-[0_18px_28px_rgba(74,26,0,0.45)] max-h-[40vh] lg:max-h-none"
+      className="animate-symbol-drift min-h-0 w-auto max-w-full flex-1 object-contain drop-shadow-[0_18px_28px_rgba(74,26,0,0.45)] max-h-[40vh] xl:max-h-none"
       style={{
         ["--drift-y" as string]: "-12px",
         ["--drift-x" as string]: "0px",
@@ -399,7 +399,7 @@ function PrizeCard() {
       className="flex h-full flex-col rounded-2xl px-4 pb-4 sm:px-5 sm:pb-5"
       style={{ background: PRIZE_GRADIENT }}
     >
-      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[2vh] px-2 pb-1 pt-4 text-center sm:gap-[3.2vh] sm:px-5 sm:pt-6 lg:px-1.5">
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[2vh] px-2 pb-1 pt-4 text-center sm:gap-[3.2vh] sm:px-5 sm:pt-6 xl:px-1.5">
         <div className="flex shrink-0 flex-col items-center gap-[1.8vh]">
           <p
             className={`${T.prizeChip} rounded-full bg-white px-[1.05em] py-[0.5em] font-extrabold uppercase tracking-[0.18em]`}
@@ -541,7 +541,7 @@ export default function LeaderboardIhhSeaRegattaBoard() {
 
   return (
     <main
-      className="relative flex min-h-screen w-full flex-col overflow-x-hidden font-sans text-charcoal lg:h-screen lg:overflow-hidden"
+      className="relative flex min-h-screen w-full flex-col overflow-x-hidden font-sans text-charcoal xl:h-screen xl:overflow-hidden"
       style={{ background: CANVAS }}
     >
       {/* Soft capsule shapes from the funnel's splash art, tilted off-canvas. */}
@@ -574,15 +574,24 @@ export default function LeaderboardIhhSeaRegattaBoard() {
 
       {/* Masthead */}
       <header
-        className="relative z-10 shrink-0 px-[4vw] pb-3 pt-4 sm:pb-3.5 sm:pt-5 lg:px-[3vw]"
+        className="relative z-10 shrink-0 px-[4vw] pb-3 pt-4 sm:pb-3.5 sm:pt-5 xl:px-[3vw]"
         style={{ borderBottom: `1px solid ${CARD_LINE}` }}
       >
         <Masthead live={!IHHSEA_PAUSED} />
       </header>
 
       {/* Body: scan | standings | prize. Reflows to 1 col, then 2, then 3. */}
-      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 md:grid-cols-2 lg:grid-cols-[588fr_640fr_499fr] lg:gap-[1.6vw] lg:px-[3vw] lg:py-[2vh]">
-        <div className="order-2 md:order-2 lg:order-1 lg:min-h-0">
+      {/* Body: scan | standings | prize, in the design's 588:640:499 ratio.
+          The three-column panel layout starts at xl, not lg: at 1024 each
+          column is barely 330px, which truncates names and folds the scan
+          headline into the QR. Below xl the board runs the two-column tablet
+          layout instead, which has room to read.
+          Each track is minmax(0,Nfr), not a bare Nfr: a bare fr track keeps an
+          automatic minimum of its content, so one long player name widened the
+          standings column and pushed the prize card off the canvas. At 0 the
+          ratio holds and the name truncates instead. */}
+      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 md:grid-cols-2 xl:grid-cols-[minmax(0,588fr)_minmax(0,640fr)_minmax(0,499fr)] xl:gap-[1.6vw] xl:px-[3vw] xl:py-[2vh]">
+        <div className="order-2 md:order-2 xl:order-1 xl:min-h-0">
           {IHHSEA_PAUSED ? (
             <div
               className="flex h-full flex-col items-center justify-center rounded-2xl bg-white p-6 text-center shadow-card"
@@ -609,7 +618,7 @@ export default function LeaderboardIhhSeaRegattaBoard() {
           )}
         </div>
 
-        <ol className="order-1 flex min-h-0 flex-col gap-2 md:order-1 md:col-span-2 lg:order-2 lg:col-span-1 lg:gap-[1.2vh]">
+        <ol className="order-1 flex min-h-0 min-w-0 flex-col gap-2 md:order-1 md:col-span-2 xl:order-2 xl:col-span-1 xl:gap-[1.2vh]">
           {rows.map((e, i) => (
             <StandingRow
               key={e ? keyOf(e) : `empty-${i}`}
@@ -620,14 +629,14 @@ export default function LeaderboardIhhSeaRegattaBoard() {
           ))}
         </ol>
 
-        <div className="order-3 md:order-3 lg:min-h-0">
+        <div className="order-3 md:order-3 xl:min-h-0">
           <PrizeCard />
         </div>
       </div>
 
       {/* Brain-facts strip */}
       <div
-        className="relative z-10 flex shrink-0 items-center justify-center overflow-hidden px-[4vw] py-3 lg:h-[7vh] lg:px-[3vw] lg:py-0"
+        className="relative z-10 flex shrink-0 items-center justify-center overflow-hidden px-[4vw] py-3 xl:h-[7vh] xl:px-[3vw] xl:py-0"
         style={{ borderTop: `1px solid ${CARD_LINE}`, background: "#ffffffb8" }}
       >
         <AnimatePresence mode="wait">
@@ -674,7 +683,7 @@ export default function LeaderboardIhhSeaRegattaBoard() {
 
       {/* Footer */}
       <footer
-        className={`${T.footer} relative z-10 shrink-0 px-[4vw] py-2.5 text-center lg:px-[3vw]`}
+        className={`${T.footer} relative z-10 shrink-0 px-[4vw] py-2.5 text-center xl:px-[3vw]`}
         style={{ color: INK_FAINT, borderTop: `1px solid ${CARD_LINE}` }}
       >
         Gray Matter Solutions · A Spin-off from Nanyang Technological
