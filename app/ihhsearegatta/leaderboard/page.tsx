@@ -260,6 +260,72 @@ function StandingRow({
 
 /* ------------------------------ Scan block ------------------------------ */
 
+/** Artwork for the code, if it has been uploaded (see ScanCode). */
+const QR_IMAGE = "/regatta-qr.png";
+
+/**
+ * The code: the uploaded artwork when there is one, a generated code when
+ * there is not.
+ *
+ * The generated code is the safety net rather than the default - it always
+ * encodes PLAY_URL, so a board whose artwork has not landed yet, or whose file
+ * is misnamed, still has a way in rather than a blank frame. Artwork wins
+ * because it can carry the brand mark the design puts in the middle of the
+ * code, which a generated one cannot without raising the error correction and
+ * shrinking every module.
+ *
+ * Whatever the artwork encodes is what players get - nothing here can check
+ * that, so a code for the wrong URL is a wrong code.
+ */
+function ScanCode() {
+  const ref = useRef<HTMLImageElement>(null);
+  const [artwork, setArtwork] = useState(true);
+
+  useEffect(() => {
+    const img = ref.current;
+    if (!img) return;
+    let cancelled = false;
+    // decode() rather than onError alone: this page is prerendered, so a 404
+    // can land before React hydrates and fire its error event into nothing.
+    void img.decode().catch(() => {
+      if (!cancelled && img.naturalWidth === 0) setArtwork(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (artwork) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        ref={ref}
+        src={QR_IMAGE}
+        alt={`Scan to play the Reaction Time Challenge at ${PLAY_URL}`}
+        onError={() => setArtwork(false)}
+        className="h-full w-full object-contain"
+      />
+    );
+  }
+
+  // Scannability settings measured at a live event (#46), kept through the
+  // redesign: level L needs 29 modules against M's 33, making each ~14% larger
+  // in the same box; and marginSize={4} puts the spec'd four-module quiet zone
+  // inside the SVG, where the design's black frame cannot eat into it. Pure
+  // black thresholds better than the brand brown on a washed-out projector and
+  // is indistinguishable across a room.
+  return (
+    <QRCodeSVG
+      value={PLAY_URL}
+      className="h-full w-full"
+      level="L"
+      marginSize={4}
+      fgColor="#000000"
+      bgColor="#ffffff"
+    />
+  );
+}
+
 /**
  * The yellow "scan to play" label sitting directly on top of the code, as one
  * block - the design aligns their left and right edges.
@@ -274,26 +340,11 @@ function ScanBlock() {
         SCAN TO PLAY &lt; 60s
       </p>
 
-      {/* Scannability settings measured at a live event (#46), kept through
-          the redesign: no size cap, so the code grows until the column or the
-          leftover height stops it; level L needs 29 modules against M's 33,
-          making each ~14% larger in the same box; and marginSize={4} puts the
-          spec'd four-module quiet zone inside the SVG, where the design's
-          black frame cannot eat into it. Pure black thresholds better than the
-          brand brown on a washed-out projector and is indistinguishable across
-          a room. */}
       <div
         className="flex aspect-square w-full max-w-[min(70vw,40vh)] items-center justify-center bg-white p-[0.25rem] xl:max-w-[min(21vw,37vh)]"
         style={{ border: "0.6rem solid #111111" }}
       >
-        <QRCodeSVG
-          value={PLAY_URL}
-          className="h-full w-full"
-          level="L"
-          marginSize={4}
-          fgColor="#000000"
-          bgColor="#ffffff"
-        />
+        <ScanCode />
       </div>
     </div>
   );
