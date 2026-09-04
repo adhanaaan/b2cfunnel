@@ -1,18 +1,21 @@
 "use client";
 
 /**
- * The attract screen for /ihhsearegatta (designed against a 1920x1080 55"
- * panel, read from 2-5m away, but laid out to reflow down to a phone).
+ * The attract screen for /ihhsearegatta (Figma node 629:4815, designed against
+ * a 1920x1080 55" panel read from 2-5m away, but laid out to reflow down to a
+ * phone).
  *
- * The /event-v3 board, scoped to this event: it polls the `ihhsearegatta`
- * bucket, its QR opens /ihhsearegatta, and the prize card carries the
- * regatta's Garmin rather than the DBS Fitbit.
+ * The design puts the pitch on the left - the brain, the headline, the scan
+ * block and the prize panel - and the live standings on the right, over a
+ * rotating fact strip and a band of event photography.
  *
- * Three columns on a wide screen - scan card, live standings, prize card -
- * collapsing to standings-over-cards on tablet and a single column on mobile.
- * Type is clamped between a mobile floor and the panel size so the same markup
- * serves both. Self-contained: polls /api/leaderboard every 8s and keeps the
- * last good standings on error.
+ * The Figma frame is absolutely positioned at 1920x1080; here it is a fluid
+ * two-column grid whose type is clamped between a mobile floor and the panel
+ * size, so the same markup serves the panel, a laptop and a phone. Every size
+ * in T below is the design's px at its ceiling.
+ *
+ * Self-contained: polls /api/leaderboard every 8s, scoped to the
+ * `ihhsearegatta` bucket, and keeps the last good standings on error.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -29,7 +32,8 @@ interface Entry {
   timeMs: number;
 }
 
-const TOP_N = 8;
+/** Six rows, as the design lays out. */
+const TOP_N = 6;
 const POLL_MS = 8000;
 const FACT_MS = 8000;
 
@@ -57,93 +61,94 @@ const EMPTY_TIME = "#dcc4b6";
 const RANK_SILVER = "#c3cad6";
 const RANK_BRONZE = "#d99058";
 const PRIZE_WARM = "#ffe4cf";
-// Scan-rail headline: deep ember for the emphasised words, and the highlighter
-// yellow behind "< 60 SECONDS" (the Processing Speed domain's light tone).
-const SCAN_ACCENT = "#993c1d";
+/** The Processing Speed domain's light tone, behind the scan label. */
 const SCAN_HIGHLIGHT = "#fde68a";
+/** Ember-on-core: the ink the design puts on that yellow. */
+const ON_EMBER = "#2a1006";
 
 const CANVAS =
   "linear-gradient(150deg, #fff8f6 15%, #fdeee4 46%, #fbe3d3 85%)";
 const LEADER_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
-const PRIZE_GRADIENT =
-  "linear-gradient(147deg, #ff6002 3%, #f77528 46%, rgba(255,199,156,0.87) 99%)";
+const PRIZE_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
 
 /**
- * Clamped type sizes. The middle term is `min(vh, vw)` on purpose: the board is
- * sized off viewport height for the 55" panel, but on a tall narrow phone a
- * height-only clamp produces TV-sized text that overflows the width.
+ * Clamped type sizes, ceilings straight off the design. The middle term is
+ * `min(vh, vw)` on purpose: the board is sized off viewport height for the 55"
+ * panel, but on a tall narrow phone a height-only clamp produces TV-sized text
+ * that overflows the width.
  */
 const T = {
-  eyebrow: "text-[clamp(0.625rem,min(1.75vh,2.6vw),1.1875rem)]",
-  chip: "text-[clamp(0.625rem,min(2vh,3vw),1.375rem)]",
-  h1: "text-[clamp(1.375rem,min(5.4vh,7vw),3.625rem)]",
-  rankL: "text-[clamp(0.9375rem,min(3vh,4.2vw),2rem)]",
-  rank: "text-[clamp(0.75rem,min(2.2vh,3.2vw),1.5rem)]",
-  leaderName: "text-[clamp(1.125rem,min(4.4vh,5.5vw),3rem)]",
-  leaderTime: "text-[clamp(1.375rem,min(6vh,8vw),4.0625rem)]",
-  micro: "text-[clamp(0.5rem,min(1.4vh,2.2vw),0.9375rem)]",
-  rowName: "text-[clamp(0.9375rem,min(3.25vh,4.4vw),2.1875rem)]",
-  rowTime: "text-[clamp(1rem,min(3.6vh,4.8vw),2.4375rem)]",
-  rowEmpty: "text-[clamp(0.8125rem,min(2.4vh,3.6vw),1.625rem)]",
-  prizeChip: "text-[clamp(0.5625rem,min(1.75vh,2.6vw),1.1875rem)]",
-  prizeTitle: "text-[clamp(1.375rem,min(5.5vh,7.5vw),3.75rem)]",
-  prizeWorth: "text-[clamp(0.8125rem,min(2.6vh,3.6vw),1.75rem)]",
-  scanTitle: "text-[clamp(1rem,min(3vh,4.4vw),2rem)]",
-  // The scan headline is the loudest type on the board: sized off the 48.6px
-  // base of the design, with the emphasised words stepped up in em from there.
-  scanHead: "text-[clamp(1.375rem,min(4.5vh,4.8vw),3.0375rem)]",
-  fact: "text-[clamp(0.75rem,min(2.5vh,3.4vw),1.6875rem)]",
-  footer: "text-[clamp(0.5625rem,min(1.5vh,2.2vw),1rem)]",
+  // Masthead: "Is your brain at its peak performance?" (82.9px) and the line
+  // under it (39.4px, its emphasised words stepped up in em).
+  h1: "text-[clamp(1.5rem,min(7.7vh,4.32vw),5.18rem)]",
+  sub: "text-[clamp(0.875rem,min(3.65vh,2.05vw),2.4625rem)]",
+  // Scan block (28.4px) and the standings label (31.4px).
+  scanLabel: "text-[clamp(0.75rem,min(2.63vh,1.48vw),1.775rem)]",
+  boardLabel: "text-[clamp(0.75rem,min(2.9vh,1.63vw),1.9625rem)]",
+  // Prize panel: eyebrow 20.4px, title 60.8px, the two lines under it 33.1px.
+  prizeEyebrow: "text-[clamp(0.625rem,min(1.89vh,1.06vw),1.275rem)]",
+  prizeTitle: "text-[clamp(1.25rem,min(5.63vh,3.17vw),3.8rem)]",
+  prizeSub: "text-[clamp(0.8125rem,min(3.06vh,1.72vw),2.0625rem)]",
+  // Standings: leader 53/71.8px over rows at 38.7/43.1px, badges 35.4/26.5px.
+  //
+  // The leader name is the one size held BELOW the design. At the design's own
+  // 53px even "Jamie Tan" truncates in a 626px column - the Figma render shows
+  // it as "Jamie T..." - so the mock is over-scaled for real data. This is
+  // sized so the longest name displayName can hand back ("Michelle W.") still
+  // fits whole, since a cut name is the thing a player notices.
+  leaderName: "text-[clamp(1.125rem,min(4vh,2vw),3.3125rem)]",
+  leaderTime: "text-[clamp(1.375rem,min(6.2vh,3.5vw),4.4875rem)]",
+  micro: "text-[clamp(0.5rem,min(1.54vh,0.86vw),1.0375rem)]",
+  rowName: "text-[clamp(0.9375rem,min(3.58vh,2.01vw),2.4125rem)]",
+  rowTime: "text-[clamp(1rem,min(3.99vh,2.24vw),2.6875rem)]",
+  rowEmpty: "text-[clamp(0.8125rem,min(2.6vh,1.7vw),1.625rem)]",
+  rankL: "text-[clamp(0.9375rem,min(3.28vh,1.84vw),2.2125rem)]",
+  rank: "text-[clamp(0.75rem,min(2.45vh,1.38vw),1.65rem)]",
+  // Fact strip (27px).
+  fact: "text-[clamp(0.75rem,min(2.5vh,1.4vw),1.6875rem)]",
 };
 
 const keyOf = (e: Entry) => `${e.name}·${Math.round(e.timeMs)}`;
 
 /* ------------------------------- Masthead ------------------------------- */
 
-function Masthead({ live }: { live: boolean }) {
+/**
+ * The brain and the question, side by side. The brain asset carries its own
+ * "Frontal Lobe" label and sparkle, exactly as the design places it.
+ */
+function Masthead() {
   return (
-    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-      <div className="min-w-0 sm:flex-1">
-        <div className="flex items-center gap-4">
-          <p
-            className={`${T.eyebrow} font-bold uppercase tracking-[0.3em] text-primary`}
-          >
-            Reaction Time Challenge
-          </p>
-          <p
-            className={`${T.chip} flex shrink-0 items-center gap-2 rounded-full bg-white px-[1.1em] py-[0.5em] font-bold text-secondary shadow-card`}
-            style={{ border: `1px solid ${CARD_LINE}` }}
-          >
-            {live ? (
-              <>
-                <span
-                  aria-hidden
-                  className="animate-live-pulse inline-block h-[0.6em] w-[0.6em] rounded-full bg-primary"
-                />
-                LIVE
-              </>
-            ) : (
-              "Final standings"
-            )}
-          </p>
-        </div>
-        <h1
-          className={`${T.h1} mt-2 font-extrabold leading-none tracking-tight text-charcoal`}
-        >
-          How <span className="text-primary">fast</span> is the room today?
-        </h1>
-      </div>
+    <div className="flex items-center gap-[2.3vw]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/gms-ntu-logo.png"
-        alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
-        className="h-[clamp(1.5rem,min(4.3vh,6vw),2.875rem)] w-auto shrink-0 self-start sm:self-auto"
+        src="/images/event3/brain.webp"
+        alt=""
+        aria-hidden
+        className="hidden w-[clamp(6rem,18vw,21.7rem)] shrink-0 select-none sm:block"
       />
+      <h1
+        className={`${T.h1} min-w-0 font-extrabold leading-none tracking-tight text-charcoal`}
+      >
+        Is your brain at its
+        <br />
+        peak performance?
+      </h1>
     </div>
   );
 }
 
 /* ------------------------------ Standings ------------------------------- */
+
+function BoardLabel({ live }: { live: boolean }) {
+  return (
+    <p
+      className={`${T.boardLabel} shrink-0 font-bold uppercase tracking-[0.09em]`}
+      style={{ color: ON_EMBER }}
+    >
+      {live ? "Speed game leaderboard" : "Final standings"}
+    </p>
+  );
+}
 
 function StandingRow({
   rank,
@@ -173,9 +178,10 @@ function StandingRow({
     <motion.li
       layout
       transition={springs.shuffle}
-      className="flex min-h-0 items-center gap-[0.9em] rounded-2xl px-[0.7em] py-[0.4em] sm:px-[1.1em] xl:py-0"
+      className="flex min-h-0 items-center gap-[clamp(0.5rem,1.2vw,1.45rem)] rounded-[1.65rem] px-[0.7em] py-[0.4em] sm:px-[1.1em] xl:py-0"
       style={{
-        flex: leader ? 1.6 : 1,
+        // 144px against 88px in the design.
+        flex: leader ? 1.64 : 1,
         background: leader
           ? LEADER_GRADIENT
           : entry
@@ -183,9 +189,9 @@ function StandingRow({
             : "rgba(255,255,255,0.55)",
         border: entry ? "none" : `2px dashed ${CARD_LINE}`,
         boxShadow: leader
-          ? "0 16px 40px -12px rgba(51,18,0,0.18)"
+          ? "0 18px 22px -12px rgba(51,18,0,0.18)"
           : entry
-            ? "0 8px 24px -8px rgba(51,18,0,0.12), 0 2px 8px -2px rgba(51,18,0,0.08)"
+            ? "0 9px 13px -6px rgba(51,18,0,0.12), 0 2px 4px -2px rgba(51,18,0,0.08)"
             : "none",
       }}
     >
@@ -193,8 +199,8 @@ function StandingRow({
         className={`${leader ? T.rankL : T.rank} flex aspect-square shrink-0 items-center justify-center rounded-full font-extrabold leading-none`}
         style={{
           height: leader
-            ? "clamp(1.625rem,min(6vh,8vw),4.0625rem)"
-            : "clamp(1.25rem,min(4.6vh,6vw),3.125rem)",
+            ? "clamp(1.625rem,min(6.65vh,3.74vw),4.4875rem)"
+            : "clamp(1.25rem,min(5.11vh,2.88vw),3.45rem)",
           background: badgeBg,
           color: badgeColor,
         }}
@@ -218,7 +224,7 @@ function StandingRow({
                 Time to beat
               </span>
               <span
-                className={`${T.leaderTime} mt-[0.15em] font-extrabold tabular-nums text-white`}
+                className={`${T.leaderTime} mt-[0.1em] font-extrabold tabular-nums text-white`}
               >
                 {formatTime(entry.timeMs)}
               </span>
@@ -252,97 +258,103 @@ function StandingRow({
   );
 }
 
-/* ------------------------------ Scan rail ------------------------------- */
+/* ------------------------------ Scan block ------------------------------ */
+
+/** Artwork for the code, if it has been uploaded (see ScanCode). */
+const QR_IMAGE = "/regatta-qr.png";
 
 /**
- * The left rail: the call to action, then the QR as large as the column allows.
- * Deliberately card-less - the headline sits straight on the canvas so it reads
- * from across a room, with the game's own lightning symbol tucked beside the
- * code the way the design has it.
+ * The code: the uploaded artwork when there is one, a generated code when
+ * there is not.
+ *
+ * The generated code is the safety net rather than the default - it always
+ * encodes PLAY_URL, so a board whose artwork has not landed yet, or whose file
+ * is misnamed, still has a way in rather than a blank frame. Artwork wins
+ * because it can carry the brand mark the design puts in the middle of the
+ * code, which a generated one cannot without raising the error correction and
+ * shrinking every module.
+ *
+ * Whatever the artwork encodes is what players get - nothing here can check
+ * that, so a code for the wrong URL is a wrong code.
  */
-function ScanRail() {
+function ScanCode() {
+  const ref = useRef<HTMLImageElement>(null);
+  const [artwork, setArtwork] = useState(true);
+
+  useEffect(() => {
+    const img = ref.current;
+    if (!img) return;
+    let cancelled = false;
+    // decode() rather than onError alone: this page is prerendered, so a 404
+    // can land before React hydrates and fire its error event into nothing.
+    void img.decode().catch(() => {
+      if (!cancelled && img.naturalWidth === 0) setArtwork(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (artwork) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        ref={ref}
+        src={QR_IMAGE}
+        alt={`Scan to play the Reaction Time Challenge at ${PLAY_URL}`}
+        onError={() => setArtwork(false)}
+        className="h-full w-full object-contain"
+      />
+    );
+  }
+
+  // Scannability settings measured at a live event (#46), kept through the
+  // redesign: level L needs 29 modules against M's 33, making each ~14% larger
+  // in the same box; and marginSize={4} puts the spec'd four-module quiet zone
+  // inside the SVG, where the design's black frame cannot eat into it. Pure
+  // black thresholds better than the brand brown on a washed-out projector and
+  // is indistinguishable across a room.
   return (
-    <div className="flex h-full min-h-0 flex-col justify-center gap-[2vh] xl:gap-[3vh]">
+    <QRCodeSVG
+      value={PLAY_URL}
+      className="h-full w-full"
+      level="L"
+      marginSize={4}
+      fgColor="#000000"
+      bgColor="#ffffff"
+    />
+  );
+}
+
+/**
+ * The yellow "scan to play" label sitting directly on top of the code, as one
+ * block - the design aligns their left and right edges.
+ */
+function ScanBlock() {
+  return (
+    <div className="flex w-full min-w-0 flex-col items-start">
       <p
-        className={`${T.scanHead} shrink-0 font-extrabold leading-[1.28] tracking-tight text-charcoal`}
+        className={`${T.scanLabel} w-full px-[0.5em] py-[0.35em] text-center font-extrabold tracking-[0.12em]`}
+        style={{ background: SCAN_HIGHLIGHT, color: ON_EMBER }}
       >
-        SCAN TO{" "}
-        <span className="text-[1.27em]" style={{ color: SCAN_ACCENT }}>
-          MEASURE
-        </span>
-        <br />
-        YOUR{" "}
-        <span className="text-[1.29em]" style={{ color: SCAN_ACCENT }}>
-          SPEED
-        </span>
-        <br />
-        <span className="text-[1.18em]">
-          in{" "}
-          {/* The vw term in T.scanHead is tuned so this phrase fits one line
-              at every width; box-decoration-clone keeps the highlight whole if
-              a future string ever does wrap. */}
-          <span
-            className="box-decoration-clone px-[0.14em] py-[0.02em] text-[1.11em]"
-            style={{ background: SCAN_HIGHLIGHT }}
-          >
-            &lt; 60 SECONDS
-          </span>
-        </span>
+        SCAN TO PLAY &lt; 60s
       </p>
 
-      {/* QR + bolt. The code is sized explicitly rather than by aspect-ratio
-          against a percentage height: Safari (which runs the board at events)
-          resolves `aspect-square h-full` inside nested flex differently from
-          Chromium and collapsed the code to a fraction of its intended size on
-          a 13" laptop. min(vw, vh) keeps it as large as the column and the
-          leftover height allow, in every engine. */}
-      <div className="relative flex min-h-0 flex-1 items-center justify-center xl:justify-start">
-        <div className="relative flex max-w-full items-center">
-          {/* Scannability settings measured at a live event (#46), kept
-              through the redesign: no size cap, so the code grows until the
-              column or the leftover height stops it; level L needs 29 modules
-              against M's 33, making each ~14% larger in the same box; and
-              marginSize={4} puts the spec'd four-module quiet zone inside the
-              SVG, where the design's black frame cannot eat into it. Pure
-              black thresholds better than the brand brown on a washed-out
-              projector and is indistinguishable across a room. */}
-          <div
-            className="flex size-[min(70vw,40vh)] max-w-full items-center justify-center rounded-[1.4rem] bg-white p-[0.25rem] xl:size-[min(29vw,46vh)]"
-            style={{ border: "0.5rem solid #111111" }}
-          >
-            <QRCodeSVG
-              value={PLAY_URL}
-              className="h-full w-full"
-              level="L"
-              marginSize={4}
-              fgColor="#000000"
-              bgColor="#ffffff"
-            />
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/task-2/flash.png"
-            alt=""
-            aria-hidden
-            className="animate-symbol-drift pointer-events-none absolute -bottom-[3%] -right-[9%] w-[clamp(3.5rem,min(18vh,14vw),11rem)] rotate-[17deg] drop-shadow-[0_18px_32px_rgba(0,0,0,0.25)]"
-            style={{
-              ["--drift-y" as string]: "-10px",
-              ["--drift-x" as string]: "0px",
-              ["--drift-tilt" as string]: "17deg",
-              ["--drift-tilt-to" as string]: "22deg",
-              ["--drift-duration" as string]: "6s",
-            }}
-          />
-        </div>
+      <div
+        className="flex aspect-square w-full max-w-[min(70vw,40vh)] items-center justify-center bg-white p-[0.25rem] xl:max-w-[min(21vw,37vh)]"
+        style={{ border: "0.6rem solid #111111" }}
+      >
+        <ScanCode />
       </div>
     </div>
   );
 }
 
-/* ------------------------------ Prize card ------------------------------ */
+/* ------------------------------ Prize panel ----------------------------- */
 
 /**
- * The prize cutout, which is allowed not to exist.
+ * An image that is allowed not to exist: the prize render and the photo band
+ * are dropped in as files, and the board has to read before they land.
  *
  * `onError` alone is not enough: this page is prerendered, so the browser
  * starts (and often finishes) loading the image from the server HTML before
@@ -354,7 +366,17 @@ function ScanRail() {
  * reads `true` in the moment between the src being set and the fetch
  * starting, which would hide a picture that was about to load perfectly.)
  */
-function PrizeImage() {
+function OptionalImage({
+  src,
+  alt,
+  className,
+  style,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   const ref = useRef<HTMLImageElement>(null);
   const [broken, setBroken] = useState(false);
 
@@ -378,53 +400,86 @@ function PrizeImage() {
     // eslint-disable-next-line @next/next/no-img-element
     <img
       ref={ref}
-      src="/garmin-forerunner-165.png"
-      alt="Garmin Forerunner 165 GPS running smartwatch"
+      src={src}
+      alt={alt}
       onError={() => setBroken(true)}
-      className="animate-symbol-drift min-h-0 w-auto max-w-full flex-1 object-contain drop-shadow-[0_18px_28px_rgba(74,26,0,0.45)] max-h-[40vh] xl:max-h-none"
-      style={{
-        ["--drift-y" as string]: "-12px",
-        ["--drift-x" as string]: "0px",
-        ["--drift-tilt" as string]: "0deg",
-        ["--drift-tilt-to" as string]: "0deg",
-        ["--drift-duration" as string]: "5s",
-      }}
+      className={className}
+      style={style}
     />
   );
 }
 
-function PrizeCard() {
+/**
+ * The prize: an ember panel with the offer, and the watch breaking out of its
+ * right edge the way the design has it (which is why the panel does not clip).
+ */
+function PrizePanel() {
   return (
     <div
-      className="flex h-full flex-col rounded-2xl px-4 pb-4 sm:px-5 sm:pb-5"
+      className="relative flex flex-1 items-center rounded-[20px] px-[1.4em] py-[1.2em] sm:px-[2em] xl:min-h-0"
       style={{ background: PRIZE_GRADIENT }}
     >
-      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[2vh] px-2 pb-1 pt-4 text-center sm:gap-[3.2vh] sm:px-5 sm:pt-6 xl:px-1.5">
-        <div className="flex shrink-0 flex-col items-center gap-[1.8vh]">
-          <p
-            className={`${T.prizeChip} rounded-full bg-white px-[1.05em] py-[0.5em] font-extrabold uppercase tracking-[0.18em]`}
-            style={{ color: ORANGE_DEEP }}
-          >
-            Today&apos;s prize
-          </p>
-          <div className="flex flex-col items-center gap-[1.2vh]">
-            <p
-              className={`${T.prizeTitle} font-extrabold leading-[1.04] tracking-tight text-white`}
-            >
-              Win a Garmin
-              <br />
-              Forerunner 165
-            </p>
-            <p className={`${T.prizeWorth} font-bold leading-[1.1] text-cream`}>
-              GPS Running Smartwatch
-            </p>
-          </div>
-          <p className={`${T.prizeWorth} font-bold leading-[1.1] text-cream`}>
-            Worth $379 · Fastest mind gets it!
-          </p>
+      <div className="relative z-10 flex min-w-0 flex-col gap-[1.6vh] text-cream sm:max-w-[58%]">
+        <p
+          className={`${T.prizeEyebrow} font-bold uppercase tracking-[0.23em]`}
+        >
+          Fastest mind
+        </p>
+        <p className={`${T.prizeTitle} font-extrabold leading-[1.04] tracking-tight`}>
+          Win a Garmin Forerunner 165
+        </p>
+        <div className={`${T.prizeSub} flex flex-col gap-[0.25em] font-bold leading-[1.1]`}>
+          <p>GPS Running Smartwatch</p>
+          <p>Worth $379</p>
         </div>
-        <PrizeImage />
       </div>
+
+      {/* The render sits over the panel's right edge, taller than the panel
+          itself - hence the negative insets rather than a flow child. */}
+      <OptionalImage
+        src="/garmin-forerunner-165.png"
+        alt="Garmin Forerunner 165 GPS running smartwatch"
+        className="animate-symbol-drift pointer-events-none absolute -bottom-[9%] -top-[4%] right-[-2%] hidden w-[42%] object-contain drop-shadow-[0_18px_28px_rgba(74,26,0,0.45)] sm:block"
+        style={{
+          ["--drift-y" as string]: "-12px",
+          ["--drift-x" as string]: "0px",
+          ["--drift-tilt" as string]: "0deg",
+          ["--drift-tilt-to" as string]: "0deg",
+          ["--drift-duration" as string]: "5s",
+        }}
+      />
+    </div>
+  );
+}
+
+/* ------------------------------ Photo band ------------------------------ */
+
+/**
+ * The band of event photography along the bottom edge. Three frames in the
+ * design's 491:833:833 widths; each is optional, so the band simply thins out
+ * (and finally disappears) until the photos are dropped in.
+ */
+const BAND = [
+  { src: "/regatta-band-1.jpg", grow: 491 },
+  { src: "/regatta-band-2.jpg", grow: 833 },
+  { src: "/regatta-band-3.jpg", grow: 833 },
+];
+
+function PhotoBand() {
+  return (
+    <div
+      aria-hidden
+      className="relative z-10 flex w-full shrink-0 gap-px overflow-hidden empty:hidden"
+    >
+      {BAND.map((frame) => (
+        <OptionalImage
+          key={frame.src}
+          src={frame.src}
+          alt=""
+          className="h-[clamp(1.5rem,4.9vh,3.3125rem)] min-w-0 object-cover"
+          style={{ flex: `${frame.grow} 1 0` }}
+        />
+      ))}
     </div>
   );
 }
@@ -497,8 +552,8 @@ export default function LeaderboardIhhSeaRegattaBoard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Completion rate for this event day: reports over players, from the same
-  // source tag the standings use. Keeps the last good value on error.
+  // Completion rate for this event: reports over players, from the same source
+  // tag the standings use. Keeps the last good value on error.
   useEffect(() => {
     let active = true;
     const load = async () => {
@@ -523,8 +578,7 @@ export default function LeaderboardIhhSeaRegattaBoard() {
   }, []);
 
   // Strip slots: every brain fact, the how-to, and - once there is one - the
-  // live completion rate. The rate lives here rather than in a tile of its own,
-  // so the scan rail stays the single call to action the design asks for.
+  // live completion rate.
   const slots = BRAIN_FACTS.length + 1 + (reportPct !== null ? 1 : 0);
 
   useEffect(() => {
@@ -533,7 +587,6 @@ export default function LeaderboardIhhSeaRegattaBoard() {
   }, [slots]);
 
   const rows = Array.from({ length: TOP_N }, (_, i) => entries[i] ?? null);
-  const leader = entries[0] ?? null;
   // Guarded modulo: the slot count shrinks again if the rate goes away.
   const slot = factIdx % slots;
   const showHowTo = slot === BRAIN_FACTS.length;
@@ -550,21 +603,14 @@ export default function LeaderboardIhhSeaRegattaBoard() {
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
         <div
-          className="absolute -left-[16vw] -top-[14vh] h-[14vh] w-[42vw] rotate-[-38deg] rounded-full"
-          style={{
-            background: "linear-gradient(90deg, #ffe382, #ffd75e)",
-            opacity: 0.62,
-          }}
-        />
-        <div
-          className="absolute -right-[10vw] top-[2vh] h-[13vh] w-[36vw] rotate-[32deg] rounded-full"
+          className="absolute -right-[8vw] -top-[18vh] h-[14vh] w-[34vw] rotate-[-32deg] rounded-full"
           style={{
             background: "linear-gradient(90deg, #ffd75e, #ffe9a8)",
             opacity: 0.5,
           }}
         />
         <div
-          className="absolute -bottom-[16vh] -left-[12vw] h-[14vh] w-[38vw] rotate-[38deg] rounded-full"
+          className="absolute -bottom-[14vh] -left-[12vw] h-[14vh] w-[38vw] rotate-[38deg] rounded-full"
           style={{
             background: "linear-gradient(90deg, #ffe382, #ffd75e)",
             opacity: 0.55,
@@ -572,123 +618,119 @@ export default function LeaderboardIhhSeaRegattaBoard() {
         />
       </div>
 
-      {/* Masthead */}
-      <header
-        className="relative z-10 shrink-0 px-[4vw] pb-3 pt-4 sm:pb-3.5 sm:pt-5 xl:px-[3vw]"
-        style={{ borderBottom: `1px solid ${CARD_LINE}` }}
-      >
-        <Masthead live={!IHHSEA_PAUSED} />
-      </header>
+      {/* Pitch on the left, standings on the right - the design's 1215:626. */}
+      <div className="relative z-10 grid flex-1 gap-[3vh] px-[4vw] py-[3vh] xl:min-h-0 xl:grid-cols-[minmax(0,1215fr)_minmax(0,626fr)] xl:gap-[2vw] xl:px-[1.8vw] xl:py-[3.2vh]">
+        {/* Left: the pitch. */}
+        <div className="flex min-w-0 flex-col gap-[2.5vh] xl:min-h-0">
+          <div className="shrink-0">
+            <Masthead />
+            <p className={`${T.sub} mt-[1.5vh] leading-[1.28] text-charcoal`}>
+              Measure your <strong className="font-bold text-[1.14em]">speed</strong> and
+              gain free{" "}
+              <strong className="font-bold text-[1.14em]">personalised</strong>{" "}
+              insights.
+            </p>
+          </div>
 
-      {/* Body: scan | standings | prize. Reflows to 1 col, then 2, then 3. */}
-      {/* Body: scan | standings | prize, in the design's 588:640:499 ratio.
-          The three-column panel layout starts at xl, not lg: at 1024 each
-          column is barely 330px, which truncates names and folds the scan
-          headline into the QR. Below xl the board runs the two-column tablet
-          layout instead, which has room to read.
-          Each track is minmax(0,Nfr), not a bare Nfr: a bare fr track keeps an
-          automatic minimum of its content, so one long player name widened the
-          standings column and pushed the prize card off the canvas. At 0 the
-          ratio holds and the name truncates instead. */}
-      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 md:grid-cols-2 xl:grid-cols-[minmax(0,588fr)_minmax(0,640fr)_minmax(0,499fr)] xl:gap-[1.6vw] xl:px-[3vw] xl:py-[2vh]">
-        <div className="order-2 md:order-2 xl:order-1 xl:min-h-0">
           {IHHSEA_PAUSED ? (
             <div
-              className="flex h-full flex-col items-center justify-center rounded-2xl bg-white p-6 text-center shadow-card"
+              className="flex min-h-0 flex-1 flex-col items-center justify-center rounded-2xl bg-white p-6 text-center shadow-card"
               style={{ border: `1px solid ${CARD_LINE}` }}
             >
               <p
-                className={`${T.eyebrow} font-bold uppercase tracking-[0.3em] text-primary`}
+                className={`${T.scanLabel} font-bold uppercase tracking-[0.3em] text-primary`}
               >
                 That&apos;s a wrap
               </p>
-              <p className={`${T.scanTitle} mt-3 font-extrabold leading-tight`}>
+              <p className={`${T.prizeSub} mt-3 font-extrabold leading-tight`}>
                 The challenge has ended
               </p>
-              <p
-                className={`${T.rowEmpty} mt-3 font-semibold text-secondary`}
-              >
-                {total > 0
-                  ? `${total} minds tested today`
-                  : "Thanks for playing"}
+              <p className={`${T.rowEmpty} mt-3 font-semibold text-secondary`}>
+                {total > 0 ? `${total} minds tested today` : "Thanks for playing"}
               </p>
             </div>
           ) : (
-            <ScanRail />
+            <div className="flex flex-1 flex-col gap-[3vh] sm:flex-row sm:items-stretch sm:gap-[2vw] xl:min-h-0">
+              <div className="flex shrink-0 items-stretch xl:min-h-0 sm:w-[clamp(11rem,33%,24.25rem)]">
+                <ScanBlock />
+              </div>
+              <PrizePanel />
+            </div>
           )}
         </div>
 
-        <ol className="order-1 flex min-h-0 min-w-0 flex-col gap-2 md:order-1 md:col-span-2 xl:order-2 xl:col-span-1 xl:gap-[1.2vh]">
-          {rows.map((e, i) => (
-            <StandingRow
-              key={e ? keyOf(e) : `empty-${i}`}
-              rank={i + 1}
-              entry={e}
-              leader={i === 0 && !!e}
-            />
-          ))}
-        </ol>
-
-        <div className="order-3 md:order-3 xl:min-h-0">
-          <PrizeCard />
+        {/* Right: the live standings. */}
+        <div className="flex min-w-0 flex-col gap-[1.6vh] xl:min-h-0">
+          <BoardLabel live={!IHHSEA_PAUSED} />
+          <ol className="flex min-w-0 flex-1 flex-col gap-2 xl:min-h-0 xl:gap-[1.2vh]">
+            {rows.map((e, i) => (
+              <StandingRow
+                key={e ? keyOf(e) : `empty-${i}`}
+                rank={i + 1}
+                entry={e}
+                leader={i === 0 && !!e}
+              />
+            ))}
+          </ol>
         </div>
       </div>
 
-      {/* Brain-facts strip */}
+      {/* Fact strip, with the institutional lockup sitting inside it. */}
       <div
-        className="relative z-10 flex shrink-0 items-center justify-center overflow-hidden px-[4vw] py-3 xl:h-[7vh] xl:px-[3vw] xl:py-0"
+        className="relative z-10 flex shrink-0 flex-col items-center gap-2 overflow-hidden px-[4vw] py-3 sm:flex-row sm:gap-[3vw] xl:h-[9.5vh] xl:px-[1.8vw] xl:py-0"
         style={{ borderTop: `1px solid ${CARD_LINE}`, background: "#ffffffb8" }}
       >
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={factIdx}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.45 }}
-            className={`${T.fact} text-center`}
-          >
-            {showRate ? (
-              <>
-                <span className="font-extrabold text-primary">
-                  {reportPct}%
-                </span>{" "}
-                <span className="font-semibold">
-                  folks got their brain health report
-                </span>{" "}
-                <span aria-hidden>🧠</span>
-              </>
-            ) : showHowTo ? (
-              <span className="font-bold">
-                {HOW_TO.map((t, i) => (
-                  <span key={t}>
-                    <span className="text-primary">{i + 1}</span> {t}
-                    {i < HOW_TO.length - 1 && (
-                      <span style={{ color: INK_FAINT }}> &nbsp;→&nbsp; </span>
-                    )}
-                  </span>
-                ))}
-              </span>
-            ) : (
-              <>
-                <span className="font-bold uppercase tracking-[0.2em] text-primary">
-                  Brain fact&nbsp;&nbsp;
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/gms-ntu-logo.png"
+          alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
+          className="h-[clamp(1.5rem,min(5vh,3.5vw),3.4rem)] w-auto shrink-0"
+        />
+        <div className="flex min-w-0 flex-1 items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={factIdx}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.45 }}
+              className={`${T.fact} text-center`}
+            >
+              {showRate ? (
+                <>
+                  <span className="font-extrabold text-primary">
+                    {reportPct}%
+                  </span>{" "}
+                  <span className="font-semibold">
+                    folks got their brain health report
+                  </span>{" "}
+                  <span aria-hidden>🧠</span>
+                </>
+              ) : showHowTo ? (
+                <span className="font-bold">
+                  {HOW_TO.map((t, i) => (
+                    <span key={t}>
+                      <span className="text-primary">{i + 1}</span> {t}
+                      {i < HOW_TO.length - 1 && (
+                        <span style={{ color: INK_FAINT }}> &nbsp;→&nbsp; </span>
+                      )}
+                    </span>
+                  ))}
                 </span>
-                <span className="font-semibold">{BRAIN_FACTS[slot]}</span>
-              </>
-            )}
-          </motion.p>
-        </AnimatePresence>
+              ) : (
+                <>
+                  <span className="font-bold uppercase tracking-[0.2em] text-primary">
+                    Brain fact&nbsp;&nbsp;
+                  </span>
+                  <span className="font-semibold">{BRAIN_FACTS[slot]}</span>
+                </>
+              )}
+            </motion.p>
+          </AnimatePresence>
+        </div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className={`${T.footer} relative z-10 shrink-0 px-[4vw] py-2.5 text-center xl:px-[3vw]`}
-        style={{ color: INK_FAINT, borderTop: `1px solid ${CARD_LINE}` }}
-      >
-        Gray Matter Solutions · A Spin-off from Nanyang Technological
-        University, Singapore
-      </footer>
+      <PhotoBand />
 
       {/* Podium celebration takeover (queued, one at a time). */}
       <AnimatePresence>
@@ -727,14 +769,14 @@ export default function LeaderboardIhhSeaRegattaBoard() {
                 ))}
               </span>
               <p
-                className={`${T.eyebrow} font-bold uppercase tracking-[0.34em] text-primary`}
+                className={`${T.prizeEyebrow} font-bold uppercase tracking-[0.34em] text-primary`}
               >
                 New top 3
               </p>
               <p
                 className={`${T.h1} mt-[1.5vh] font-extrabold leading-none tracking-tight`}
               >
-                {celebration.name}
+                {displayName(celebration.name)}
               </p>
               <p
                 className={`${T.leaderTime} mt-[1.5vh] font-extrabold tabular-nums leading-none text-primary`}
