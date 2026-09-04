@@ -59,20 +59,38 @@ describe("ihhsearegatta flow", () => {
     expect(invite).toBeLessThan(flow.indexOf("question"));
   });
 
-  // "Not now" on the invite skips forward to the closing screen, so that step
-  // has to be in the flow AND behind the invite for SKIP_TO_KIND to find it.
-  it("has a closing screen for the decline path to land on", () => {
+  // "Not now" on the invite steps BACK to the result card (Funnel.tsx), which
+  // is only one step because the invite sits directly behind it.
+  it("puts the invite one step ahead of the result card, for the decline to step back to", () => {
     const flow = kindsIn(resolveFlow({}, "ihhsearegatta"));
-    expect(flow.indexOf("closing")).toBeGreaterThan(flow.indexOf("quizInvite"));
+    expect(flow[flow.indexOf("quizInvite") - 1]).toBe("gameResult");
   });
 
-  it("is the v3 step sequence minus the consent page, plus the invite", () => {
+  // The standalone ReCOGnAIze closing page is gone from this arc: the report
+  // carries that offer itself, and with the decline going backwards there is
+  // nothing left that could reach the page.
+  it("ends on the report, with no closing screen", () => {
+    const flow = kindsIn(resolveFlow({}, "ihhsearegatta"));
+    expect(flow).not.toContain("closing");
+    expect(flow[flow.length - 1]).toBe("result");
+  });
+
+  // The closing page stays where it is for every other daylight arc.
+  it("leaves the closing screen in the other daylight variants", () => {
+    for (const variant of ["event2", "event3", "rotary", "ntuhomecoming"] as const) {
+      expect(kindsIn(resolveFlow({}, variant))).toContain("closing");
+    }
+  });
+
+  it("is the v3 step sequence minus the consent and closing pages, plus the invite", () => {
     expect(
       kindsIn(resolveFlow({}, "ihhsearegatta")).filter(
         (k) => k !== "quizInvite",
       ),
     ).toEqual(
-      kindsIn(resolveFlow({}, "event3")).filter((k) => k !== "consent"),
+      kindsIn(resolveFlow({}, "event3")).filter(
+        (k) => k !== "consent" && k !== "closing",
+      ),
     );
   });
 

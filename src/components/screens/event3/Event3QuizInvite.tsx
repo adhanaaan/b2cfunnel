@@ -15,7 +15,7 @@ import { ctaPrimaryClass, emberLabelGradient } from "./ui";
 interface Event3QuizInviteProps {
   /** Walk on into the questionnaire. */
   onAccept: () => void;
-  /** Leave it: the session ends on the closing screen. */
+  /** Leave it: back to the post-game result card. */
   onDecline: () => void;
 }
 
@@ -192,7 +192,7 @@ function SampleReportCard() {
  * page behind "Tell me more" on the post-game result. It puts the offer -
  * two free minutes for a personalised report - over a sample of that report,
  * and asks for the answer here rather than on the result card: "Sure!" walks
- * into the questionnaire, "Not now" ends the session on the closing screen.
+ * into the questionnaire, "Not now" goes back to the result card.
  */
 export function Event3QuizInvite({
   onAccept,

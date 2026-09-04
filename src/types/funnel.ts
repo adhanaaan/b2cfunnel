@@ -29,7 +29,7 @@ export type FunnelStep =
   | { kind: "consent" } // event3/event6: partner consent page between landing and game
   | { kind: "wrap" } // event3: terminal screen while the challenge is closed
   // ihhsearegatta: the questionnaire invite between the post-game result and
-  // the quiz - "Sure!" walks on, "Not now" ends on the closing screen.
+  // the quiz - "Sure!" walks on, "Not now" goes back to the result card.
   | { kind: "quizInvite" }
   | { kind: "question"; questionId: string }
   | { kind: "questionGroup"; title: string; questionIds: string[] }

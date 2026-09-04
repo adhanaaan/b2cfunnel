@@ -223,14 +223,16 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "quizInvite":
       // ihhsearegatta: "Tell me more" on the result card lands here, and the
-      // quiz is accepted or declined on this page. Declining ends the session
-      // on the closing screen rather than backing into the game.
+      // quiz is accepted or declined on this page. "Not now" hands the player
+      // back to that result card - their time, rank and share - rather than
+      // ending the session on a closing screen; the invite sits directly
+      // behind it in the flow, so stepping back is exactly one step.
       return (
         <Event3QuizInvite
           onAccept={next}
           onDecline={() => {
             track("hook_declined", { variant: state.variant });
-            skipToKind("closing");
+            back();
           }}
         />
       );
