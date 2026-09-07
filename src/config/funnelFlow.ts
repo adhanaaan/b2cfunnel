@@ -1,7 +1,10 @@
 import type { FunnelStep, QuizVariant } from "@/types/funnel";
 import type { Answers, Axis } from "@/types/question";
 import { QUESTIONS_BY_ID } from "@/config/questions";
-import { EVENT3_CHALLENGE_CLOSED } from "@/config/event";
+import {
+  EVENT3_CHALLENGE_CLOSED,
+  IHHSEA_CHALLENGE_CLOSED,
+} from "@/config/event";
 
 /**
  * Funnel flows, one per quiz variant. The full quiz (served at /) asks the
@@ -259,10 +262,13 @@ const NTU_HOMECOMING_FLOW: FunnelStep[] = ROTARY_FLOW;
  * Kept out too: the partner consent page. IHH is the partner at this event,
  * but its consent is taken on the landing itself, as a third row under the
  * two the daylight landing already has (Event3Splash, design="ihhsearegatta"),
- * so the arc goes straight from the landing into the instructions. And nothing
- * closes this arc: EVENT3_CHALLENGE_CLOSED is about the DBS challenge, and is
- * applied per variant in resolveFlow, so the "That's a wrap!" screen cannot
- * reach across into this event - the link is open.
+ * so the arc goes straight from the landing into the instructions.
+ *
+ * This is the arc while the regatta challenge is OPEN. IHHSEA_CHALLENGE_CLOSED
+ * closes it, and only it: the close is applied per variant in resolveFlow, so
+ * the regatta's switch and the DBS challenge's (EVENT3_CHALLENGE_CLOSED) never
+ * reach across into each other's event. While the regatta's is on, the landing
+ * is followed by the "That's a wrap!" screen and nothing else.
  *
  * The question set is untouched (neither the invite nor the dropped closing is
  * a question step), so a regatta score stays comparable with every score
@@ -286,21 +292,28 @@ const IHHSEA_FLOW: FunnelStep[] = DAYLIGHT_FLOW.filter(
 const EVENT6_FLOW: FunnelStep[] = EVENT3_FLOW;
 
 /**
- * The v3 arc while the challenge is closed: the landing and the partner
- * consent page still run, then the "That's a wrap!" screen ends the session.
- * Everything behind it - instructions, game, questionnaire, report - is simply
+ * An arc while its challenge is closed: everything up to and including `after`
+ * still runs, then the "That's a wrap!" screen ends the session. Everything
+ * behind it - instructions, game, questionnaire, report - is simply
  * unreachable.
+ *
+ * `after` is the last step a player should still see, and differs by event:
+ * v3 closes after its partner consent page, the regatta after its landing
+ * (which is where its consent is taken - it has no consent page of its own).
  *
  * Expressed as a transformation of the full flow rather than as a flow of its
  * own, and applied when the flow is RESOLVED rather than in FLOWS itself, so
- * closing the challenge cannot touch what the variant is made of: the question
+ * closing a challenge cannot touch what the variant is made of: the question
  * set, achievableAxisMax and therefore the comparability of every score
  * already recorded all still read the full arc.
  */
-function closeAfterConsent(flow: FunnelStep[]): FunnelStep[] {
-  const consent = flow.findIndex((step) => step.kind === "consent");
-  if (consent < 0) return [{ kind: "wrap" }];
-  return [...flow.slice(0, consent + 1), { kind: "wrap" }];
+function closeAfter(
+  flow: FunnelStep[],
+  after: FunnelStep["kind"],
+): FunnelStep[] {
+  const last = flow.findIndex((step) => step.kind === after);
+  if (last < 0) return [{ kind: "wrap" }];
+  return [...flow.slice(0, last + 1), { kind: "wrap" }];
 }
 
 const FLOWS: Record<QuizVariant, FunnelStep[]> = {
@@ -370,9 +383,16 @@ export function resolveFlow(
   const flow = FLOWS[variant].filter((step) =>
     step.kind === "question" ? questionVisible(step.questionId, answers) : true,
   );
-  return variant === "event3" && EVENT3_CHALLENGE_CLOSED
-    ? closeAfterConsent(flow)
-    : flow;
+  // Closed per variant, never across variants: each event owns its own switch.
+  if (variant === "event3" && EVENT3_CHALLENGE_CLOSED) {
+    return closeAfter(flow, "consent");
+  }
+  if (variant === "ihhsearegatta" && IHHSEA_CHALLENGE_CLOSED) {
+    // The regatta's partner consent lives on the landing, so the landing is
+    // the last step before the wrap.
+    return closeAfter(flow, "nameGate");
+  }
+  return flow;
 }
 
 // A question page is either a single question or a grouped page; both count as

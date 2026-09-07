@@ -21,8 +21,10 @@ export const metadata: Metadata = {
  * The Daylight Ember arc /event-v3 ships, with the partner consent page it
  * carries, and three differences:
  *
- * - Open. There is no "That's a wrap!" screen: EVENT3_CHALLENGE_CLOSED closes
- *   the DBS challenge only, and is applied per variant in resolveFlow.
+ * - Its own close switch. IHHSEA_CHALLENGE_CLOSED ends the session on the
+ *   "That's a wrap!" screen straight after the landing, so nothing behind it
+ *   can be played; EVENT3_CHALLENGE_CLOSED closes the DBS challenge only.
+ *   Both are applied per variant in resolveFlow.
  * - The post-game bridge card leads with the player's wish and ends on "Tell
  *   me more" instead of "Continue to report".
  * - "Tell me more" opens the questionnaire invite, where the quiz is accepted

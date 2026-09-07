@@ -264,7 +264,8 @@ export interface Event3Copy {
     withdrawal: ConsentClause;
     cta: string;
   };
-  // Terminal screen while the challenge is closed (EVENT3_CHALLENGE_CLOSED).
+  // Terminal screen while a challenge is closed (EVENT3_CHALLENGE_CLOSED on
+  // v3, IHHSEA_CHALLENGE_CLOSED on the regatta).
   wrap: {
     heading: string;
     body: string;

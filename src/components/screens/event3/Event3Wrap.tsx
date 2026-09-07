@@ -11,9 +11,11 @@ const item = {
 };
 
 /**
- * The end of the road while the challenge is closed (Figma "That's a wrap!"):
+ * The end of the road while a challenge is closed (Figma "That's a wrap!"):
  * the last step of the v3 flow when EVENT3_CHALLENGE_CLOSED is on, reached
- * straight after the partner consent page.
+ * straight after the partner consent page, and of the regatta flow when
+ * IHHSEA_CHALLENGE_CLOSED is on, reached straight after the landing (which is
+ * where that event takes its consent).
  *
  * Deliberately terminal - no CTA back into the funnel, because there is
  * nothing behind it to play. The only way onward is out to the GMS site.

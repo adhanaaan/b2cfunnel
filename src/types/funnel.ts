@@ -14,9 +14,10 @@ export type QuizVariant =
   // NTU Homecoming (/ntuhomecoming): the same arc as rotary - the daylight
   // flow with no partner consent page - on its own `ntuhomecoming` bucket.
   | "ntuhomecoming"
-  // IHH SEA Regatta (/ihhsearegatta): the v3 arc, open (no "wrap" screen),
-  // with every consent on the landing (no partner consent page), a redesigned
-  // bridge card and a questionnaire invite before the quiz.
+  // IHH SEA Regatta (/ihhsearegatta): the v3 arc with every consent on the
+  // landing (no partner consent page), a redesigned bridge card and a
+  // questionnaire invite before the quiz. Closed by its own switch
+  // (IHHSEA_CHALLENGE_CLOSED), which ends it on the "wrap" screen.
   | "ihhsearegatta"
   // Preview-only: the daylight arc with a partner consent page. Submits nothing
   // (see PREVIEW_VARIANTS in config/variants.ts).
@@ -27,7 +28,8 @@ export type FunnelStep =
   | { kind: "hook" }
   | { kind: "nameGate" }
   | { kind: "consent" } // event3/event6: partner consent page between landing and game
-  | { kind: "wrap" } // event3: terminal screen while the challenge is closed
+  // event3/ihhsearegatta: terminal screen while that challenge is closed
+  | { kind: "wrap" }
   // ihhsearegatta: the questionnaire invite between the post-game result and
   // the quiz - "Sure!" walks on, "Not now" goes back to the result card.
   | { kind: "quizInvite" }
