@@ -115,6 +115,30 @@ export const IHHSEA_PAUSED = false;
 export const IHHSEA_SOURCE = "ihhsearegatta";
 
 /**
+ * Temporarily closes the IHH SEA Regatta Reaction Time Challenge, and with it
+ * the leaderboard it feeds.
+ *
+ * The regatta sibling of EVENT3_CHALLENGE_CLOSED, and deliberately its own
+ * switch: closing one event's challenge must never close another's. Different
+ * from IHHSEA_PAUSED, which takes the whole route down: this keeps
+ * /ihhsearegatta walkable as far as the landing and then ends the session on
+ * the "That's a wrap!" screen, so a poster or a QR code already in the wild
+ * lands somewhere deliberate instead of on a game nobody is ranking. The
+ * regatta takes its partner consent on the landing rather than on a page of
+ * its own, so the landing is the last step before the wrap.
+ *
+ * The instructions, game, questionnaire and report are simply unreachable
+ * while it is on, so no new score can be posted and the board's standings stop
+ * moving.
+ *
+ * Flip to `false` (and redeploy) to reopen: the full arc comes straight back -
+ * the question set, the scoring maxima and every score already on the board are
+ * untouched by this switch, because the close is applied when the flow is
+ * resolved, per variant, in resolveFlow.
+ */
+export const IHHSEA_CHALLENGE_CLOSED = true;
+
+/**
  * The bucket a variant's rows are tagged with, for both `game_scores.source`
  * and `leads.source`. Shared so a score and the report that follows it always
  * carry the same tag - the report rate on the board divides one by the other,

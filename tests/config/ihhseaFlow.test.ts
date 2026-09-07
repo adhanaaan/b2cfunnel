@@ -3,17 +3,20 @@ import type { FunnelStep } from "@/types/funnel";
 import type { Answers } from "@/types/question";
 
 /**
- * IHH SEA Regatta (/ihhsearegatta) is the v3 arc, open, with the partner
- * consent moved from its own page onto the landing and the questionnaire
- * invite added between the post-game result and the quiz.
+ * IHH SEA Regatta (/ihhsearegatta) is the v3 arc with the partner consent
+ * moved from its own page onto the landing and the questionnaire invite added
+ * between the post-game result and the quiz.
  *
- * The v3 challenge switch is pinned OPEN here so the two arcs are compared
- * like for like; that closing v3 leaves the regatta alone whichever way the
- * live switch is set is asserted separately, against the real config, below.
+ * This file is the arc while the regatta is OPEN; ihhseaClosed.test.ts covers
+ * it while IHHSEA_CHALLENGE_CLOSED is on. Both challenge switches are pinned
+ * OPEN here so the two arcs are compared like for like; that neither event's
+ * switch reaches into the other's is asserted separately, against the real
+ * config, below.
  */
 vi.mock("@/config/event", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/config/event")>()),
   EVENT3_CHALLENGE_CLOSED: false,
+  IHHSEA_CHALLENGE_CLOSED: false,
 }));
 
 const { resolveFlow, achievableAxisMax } = await import("@/config/funnelFlow");
@@ -94,8 +97,9 @@ describe("ihhsearegatta flow", () => {
     );
   });
 
-  // The link is open: nothing in this arc ends on the "That's a wrap!" screen.
-  it("never ends on the wrap screen", () => {
+  // While the regatta is open, nothing in this arc reaches the "That's a
+  // wrap!" screen - only its own switch puts it there.
+  it("never ends on the wrap screen while it is open", () => {
     expect(kindsIn(resolveFlow({}, "ihhsearegatta"))).not.toContain("wrap");
   });
 
@@ -107,30 +111,36 @@ describe("ihhsearegatta flow", () => {
 });
 
 /**
- * The two things that would be silent if they broke: closing the DBS challenge
- * reaching across into this event (it must not - this link is open), and the
- * question set drifting off event2's, which is what keeps a regatta score
- * comparable with every score already recorded. Both asserted against the REAL
- * config, not the mock above.
+ * The two things that would be silent if they broke: one event's challenge
+ * switch reaching across into the other's (the regatta is closed by its own
+ * switch and nothing else), and the question set drifting off event2's, which
+ * is what keeps a regatta score comparable with every score already recorded.
+ * Both asserted against the REAL config, not the mock above.
  */
 describe("ihhsearegatta against the live config", () => {
-  it("is untouched by the v3 challenge switch", async () => {
+  it("is closed by its own switch only, never by the v3 one", async () => {
     vi.doUnmock("@/config/event");
     vi.resetModules();
     const live = await import("@/config/funnelFlow");
-    const { EVENT3_CHALLENGE_CLOSED } = await import("@/config/event");
+    const { EVENT3_CHALLENGE_CLOSED, IHHSEA_CHALLENGE_CLOSED } = await import(
+      "@/config/event"
+    );
 
-    // Proof the unmock took, whichever way the live switch is set.
+    // Proof the unmock took, whichever way the live switches are set.
     expect(live.resolveFlow({}, "event3").some((s) => s.kind === "wrap")).toBe(
       EVENT3_CHALLENGE_CLOSED,
     );
 
-    expect(kindsIn(live.resolveFlow({}, "ihhsearegatta"))).toEqual(
-      kindsIn(resolveFlow({}, "ihhsearegatta")),
-    );
+    // The regatta follows its own switch, and only its own.
     expect(
       live.resolveFlow({}, "ihhsearegatta").some((s) => s.kind === "wrap"),
-    ).toBe(false);
+    ).toBe(IHHSEA_CHALLENGE_CLOSED);
+
+    if (!IHHSEA_CHALLENGE_CLOSED) {
+      expect(kindsIn(live.resolveFlow({}, "ihhsearegatta"))).toEqual(
+        kindsIn(resolveFlow({}, "ihhsearegatta")),
+      );
+    }
 
     for (const axis of ["risk", "symptom"] as const) {
       expect(live.achievableAxisMax("ihhsearegatta", axis)).toBe(

@@ -238,8 +238,9 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "wrap":
-      // Challenge closed (EVENT3_CHALLENGE_CLOSED): the last step of the v3
-      // flow. Terminal - there is nothing behind it to advance to.
+      // Challenge closed (EVENT3_CHALLENGE_CLOSED on v3,
+      // IHHSEA_CHALLENGE_CLOSED on the regatta): the last step of that flow.
+      // Terminal - there is nothing behind it to advance to.
       return <Event3Wrap />;
 
     case "instructions": {
