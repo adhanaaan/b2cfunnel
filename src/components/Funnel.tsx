@@ -7,7 +7,11 @@ import { computeScore } from "@/engine/scoring";
 import type { FunnelStep } from "@/types/funnel";
 import { QUESTIONS_BY_ID } from "@/config/questions";
 import { STAT_CARDS_BY_ID } from "@/config/statCards";
-import { totalQuestions, questionNumber } from "@/config/funnelFlow";
+import {
+  AGE_SELECT_QUESTION_ID,
+  totalQuestions,
+  questionNumber,
+} from "@/config/funnelFlow";
 import type { LeadPayload } from "@/lib/supabase/types";
 import type { QuizVariant } from "@/types/funnel";
 import { VariantProvider } from "@/components/VariantContext";
@@ -39,6 +43,11 @@ import { Event3GameResult } from "@/components/screens/event3/Event3GameResult";
 import { PaywallScreen } from "@/components/screens/PaywallScreen";
 import { BookingScreen } from "@/components/screens/BookingScreen";
 import { ConsultScreen } from "@/components/screens/ConsultScreen";
+import { PhklSpeedIntro } from "@/components/screens/phkl/PhklSpeedIntro";
+import { PhklAgeSelect } from "@/components/screens/phkl/PhklAgeSelect";
+import { PhklGreatJob } from "@/components/screens/phkl/PhklGreatJob";
+import { PhklQuizIntro } from "@/components/screens/phkl/PhklQuizIntro";
+import { PhklResultScreen } from "@/components/screens/phkl/PhklResultScreen";
 
 /** A stable, human-readable name for a funnel step (for drop-off analytics). */
 function stepKey(step: FunnelStep): string {
@@ -161,10 +170,22 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         tipsConsent: state.tipsConsent,
         partnerConsent: state.partnerConsent,
         source: eventSource(state.variant) ?? "event",
+        // The age band, on the arcs that ask for it before the game (phkl);
+        // absent everywhere else and stored as null.
+        ageBand:
+          typeof state.answers[AGE_SELECT_QUESTION_ID] === "string"
+            ? state.answers[AGE_SELECT_QUESTION_ID]
+            : undefined,
       }),
     }).catch(() => {});
     gameDone(timeMs);
   };
+
+  // The age band the phkl arc asks for before the game, for the report.
+  const ageBand =
+    typeof state.answers[AGE_SELECT_QUESTION_ID] === "string"
+      ? (state.answers[AGE_SELECT_QUESTION_ID] as string)
+      : undefined;
 
   const screen = (() => {
     switch (step.kind) {
@@ -197,7 +218,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           design={
             state.variant === "rotary" ||
             state.variant === "ntuhomecoming" ||
-            state.variant === "ihhsearegatta"
+            state.variant === "ihhsearegatta" ||
+            state.variant === "phkl"
               ? state.variant
               : "v3"
           }
@@ -242,6 +264,32 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       // IHHSEA_CHALLENGE_CLOSED on the regatta): the last step of that flow.
       // Terminal - there is nothing behind it to advance to.
       return <Event3Wrap />;
+
+    case "speedIntro":
+      // phkl: what processing speed is, before the age question and the game.
+      return <PhklSpeedIntro onContinue={next} />;
+
+    case "ageSelect":
+      // phkl: the quiz's `age` question, asked before the game on a daylight
+      // screen. The answer lands in `answers.age` exactly as the quiz's own
+      // question would put it, so scoring reads it unchanged.
+      return (
+        <PhklAgeSelect
+          value={ageBand}
+          onAnswer={(id) => answer(AGE_SELECT_QUESTION_ID, id)}
+          onNext={next}
+          onBack={back}
+        />
+      );
+
+    case "greatJob":
+      // phkl: the beat after the 20th match. It moves on by itself (or on a
+      // tap) into the quiz primer; there is no result card in this arc.
+      return <PhklGreatJob onDone={next} />;
+
+    case "quizIntro":
+      // phkl: the quiz primer. No decline - the quiz is part of the arc.
+      return <PhklQuizIntro name={state.name} onContinue={next} />;
 
     case "instructions": {
       const InstructionsScreen = usesDaylightScreens(state.variant)
@@ -318,6 +366,25 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       return <AnalysingScreen name={state.name} onDone={handleAnalysisDone} />;
 
     case "result":
+      if (state.variant === "phkl") {
+        // The PHKL report carries the time and standing itself (there is no
+        // post-game card in this arc) and its own "Retry Game": the reducer
+        // brings a replay straight back here with the new time.
+        return state.result ? (
+          <PhklResultScreen
+            result={state.result}
+            name={state.name}
+            email={state.email}
+            gameTimeMs={state.gameTimeMs}
+            gameAttempts={state.gameAttempts}
+            ageBand={ageBand}
+            onRetake={() => {
+              track("game_retake", { variant: state.variant, step: "result" });
+              retakeGame();
+            }}
+          />
+        ) : null;
+      }
       return state.result ? (
         <ResultScreen
           result={state.result}
@@ -340,6 +407,9 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           theme={ember ? "warm" : "default"}
           hideBack={ember}
           music={ember}
+          // A replay from the phkl report goes straight to the countdown,
+          // whatever sessionStorage remembers about the guided tour.
+          skipDemo={state.result != null}
         />
       );
     }

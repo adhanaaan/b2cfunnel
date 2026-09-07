@@ -28,3 +28,20 @@ export function displayName(name: string): string {
   const short = `${parts[0]} ${parts[parts.length - 1][0].toUpperCase()}.`;
   return short.length < clean.length ? short : clean;
 }
+
+/** An ordinal for a count: 1 -> "1st", 2 -> "2nd", 3 -> "3rd", 11 -> "11th", 22 -> "22nd". */
+export function ordinal(n: number): string {
+  const whole = Math.max(1, Math.round(n));
+  const mod100 = whole % 100;
+  const suffix =
+    mod100 >= 11 && mod100 <= 13
+      ? "th"
+      : (["th", "st", "nd", "rd"][whole % 10] ?? "th");
+  return `${whole}${suffix}`;
+}
+
+/** The first word of a name, for a heading that speaks to the player. */
+export function firstName(name?: string): string | undefined {
+  const first = name?.trim().split(/\s+/)[0];
+  return first ? first : undefined;
+}

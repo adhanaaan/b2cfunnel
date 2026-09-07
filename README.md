@@ -267,6 +267,81 @@ encodes, so a code for the wrong URL is a wrong code.
 Scores and reports are tagged `ihhsearegatta` (`IHHSEA_SOURCE`), so the board
 ranks only this event - see **Supabase** below.
 
+## /phkl (Pantai Hospital Kuala Lumpur)
+
+`/phkl` is the `/ihhsearegatta` arc rebuilt for an IHH Healthcare Malaysia
+event, from Figma "New Flow" (`697:26004`), so that the quiz is no longer
+optional. The flow, in order:
+
+```
+landing -> speed primer -> select your age -> instructions -> game
+-> great job (auto) -> quiz primer -> the quiz (age already answered)
+-> analysing -> report
+```
+
+- **Every consent is on the landing**, as on the regatta (`Event3Splash.tsx`
+  with `design="phkl"`): the required contact consent, the tips opt-in, and
+  IHH Healthcare **Malaysia**'s three clauses plus the withdrawal right under
+  one tick (`PHKL_CONSENT_CLAUSES` in `src/config/copy.ts`, linking
+  `ihhhealthcare.com/my/data-protection-notice` and the Malaysian DPO). The
+  PHKL rows use a 20px box and 12.5px text; the design flags the older
+  18px/10px row as failing WCAG 2.5.5 and 1.4.3. The third clause still
+  refers to a "Do-Not-Call registry", a Singapore PDPA term, for the partner
+  to confirm.
+- **Its own privacy policy** at `/phkl/privacy-policy`: the regatta's policy
+  with the partner renamed, both built by `partnerPolicySections()` in
+  `src/config/privacyPolicy.ts`, so the only thing that can differ between
+  the two is the partner named in them.
+- **The age question moves before the game** (`ageSelect`, its own step
+  kind, rendered by `PhklAgeSelect.tsx` on the daylight backdrop). The
+  answer is `answers.age`, exactly as the quiz's own question would store
+  it, and `questionIdsIn()` counts the step as the age question, so
+  `achievableAxisMax("phkl")` equals event2's and a PHKL score stays
+  comparable with every score recorded (`tests/config/phklFlow.test.ts`).
+  The quiz progress bar does not count it: the first question after the
+  primer is "Question 1 of N". The band is also written to
+  `game_scores.age_band` with the score (see Supabase below).
+- **A primer either side of the game** under a GAME / BRAIN HEALTH QUIZ /
+  RESULTS rail (`PhklProgressRail.tsx`): what processing speed is
+  (`PhklSpeedIntro.tsx`) before the age question, and "your brain speed
+  isn't fixed" (`PhklQuizIntro.tsx`) before the first question.
+- **No post-game card and no invite.** After the 20th match, "Great job in
+  measuring your speed!" (`PhklGreatJob.tsx`) shows the symbols rocking in a
+  slow wave and walks itself into the quiz primer after 2.4 seconds (a tap
+  does it sooner; reduced motion shortens the hold and stops the loop).
+- **The report** (`PhklResultScreen.tsx` and `phkl/result/*`): the time,
+  rank and fastest-so-far header (the standing and share-card logic is
+  shared with the post-game card through `useStanding` and `useShareCard`),
+  then what processing speed is, "speed was not the only thing we looked
+  at" (the trend chart, a four-band risk meter, the factor chips, the Lancet
+  45% and the three actions), "you've only covered 2 out of 5" (a radar with
+  speed and risk filled from the player's standing and score), the Memory
+  Screening Package at Pantai Hospital KL, a testimonial and the close.
+  **"Retry game" and "Book memory screening" stay pinned to the bottom of
+  the screen** the whole way down. Retry replays the game and the reducer
+  brings the player straight back to the report with the new time
+  (`GAME_DONE` jumps to `result` once the report exists; the score does not
+  depend on the game, so it is kept), and the header reads "2nd record".
+  Every booking button opens `PHKL_BOOKING_URL` (`src/config/eventLinks.ts`),
+  **a placeholder** for Pantai KL's screening packages page until the real
+  booking link arrives, and fires a `booking_click` event with its placement.
+- `PHKL_PAUSED` (`src/config/event.ts`) is its own pause switch. There is no
+  challenge-closed switch: the arc is open for as long as the route is up.
+
+Scores and reports are tagged `phkl` (`PHKL_SOURCE`). **The board is at
+`/phkl/leaderboard`**: the Rotary/NTU board pointed at this bucket.
+
+Images under `public/images/phkl/`. Every one is optional: while a file is
+missing the page draws a fallback in its place (never a broken image) and
+picks the file up the moment it lands.
+
+| file | what it is | until it lands |
+| --- | --- | --- |
+| `memory-screening-package.png` | the Pantai Memory Screening Package poster (358x630, RM460); drop a 2x export, 716x1260 | the poster's content drawn in HTML |
+| `quiz-intro-sleep.jpg`, `quiz-intro-exercise.jpg`, `quiz-intro-diet.jpg` | the three factor photos on the quiz primer | warm gradient tiles under the captions |
+| `screening-devices.png` | the digital cognitive assessment on a phone, a tablet and a laptop | `/landing/woman-tablet.png` |
+| `report-1.png`, `report-2.png` | two pages of the full report | the frame is left out |
+
 ## /event-v6 (preview)
 
 `/event-v6` walks exactly the v3 flow, and exists only to compare consent
@@ -328,7 +403,8 @@ create table public.game_scores (
   time_ms    integer not null,
   source     text,                -- which event this score was played at
   tips_consent boolean,           -- brain health tips consent, null = never asked
-  partner_consent boolean         -- partner (IHH) consent, null = never asked
+  partner_consent boolean,        -- partner (IHH) consent, null = never asked
+  age_band     text               -- age band asked before the game (/phkl), null = never asked
 );
 create index on public.game_scores (created_at);
 create index on public.game_scores (email);
@@ -339,6 +415,9 @@ alter table public.game_scores add column if not exists source text;
 create index if not exists game_scores_source_idx on public.game_scores (source);
 alter table public.game_scores add column if not exists tips_consent boolean;
 alter table public.game_scores add column if not exists partner_consent boolean;
+-- the age band chosen before the game (/phkl), an option id of the `age`
+-- question such as "40-49"; null where the funnel never asked:
+alter table public.game_scores add column if not exists age_band text;
 
 -- Reads/writes go only through the server API routes (service-role key).
 alter table public.game_scores enable row level security;

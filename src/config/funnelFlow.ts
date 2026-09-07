@@ -283,6 +283,41 @@ const IHHSEA_FLOW: FunnelStep[] = DAYLIGHT_FLOW.filter(
 );
 
 /**
+ * Pantai Hospital KL (/phkl): the regatta arc rebuilt so that the quiz is no
+ * longer optional, from Figma "New Flow" (697:26004).
+ *
+ * Before the game: a processing-speed primer straight after the landing, then
+ * the quiz's own `age` question, asked early on a daylight screen (ageSelect)
+ * so the report can speak to the player's age band. After the 20th match: no
+ * result card and no invite - a "great job" beat that walks itself into the
+ * quiz primer, and the first question follows. The report is the end of the
+ * arc, as on the regatta.
+ *
+ * The question SET is untouched: `age` is moved, not removed, and
+ * questionIdsIn() counts an ageSelect step as the age question - so
+ * achievableAxisMax and every phkl score stay comparable with event2's. The
+ * quiz progress bar, which only counts question steps, starts at 1 on the
+ * first question after the primer, which is what the GAME / QUIZ / RESULTS
+ * rail promises.
+ */
+const PHKL_FLOW: FunnelStep[] = DAYLIGHT_FLOW.filter(
+  (step) => step.kind !== "closing",
+)
+  .filter((step) => !(step.kind === "question" && step.questionId === "age"))
+  .flatMap((step): FunnelStep[] => {
+    switch (step.kind) {
+      case "nameGate":
+        return [step, { kind: "speedIntro" }];
+      case "instructions":
+        return [{ kind: "ageSelect" }, step];
+      case "gameResult":
+        return [{ kind: "greatJob" }, { kind: "quizIntro" }];
+      default:
+        return [step];
+    }
+  });
+
+/**
  * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
  * so the split-tick treatment of the partner consents (one box per clause) can
  * still be walked through and compared against the single tick that v3 ships.
@@ -325,15 +360,25 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   rotary: ROTARY_FLOW,
   ntuhomecoming: NTU_HOMECOMING_FLOW,
   ihhsearegatta: IHHSEA_FLOW,
+  phkl: PHKL_FLOW,
   event6: EVENT6_FLOW,
 };
 
-/** All question ids in a variant's flow (single questions + grouped pages). */
+/** The question an ageSelect step asks (phkl asks it before the game). */
+export const AGE_SELECT_QUESTION_ID = "age";
+
+/**
+ * All question ids in a variant's flow (single questions + grouped pages). An
+ * ageSelect step is the age question on its own screen, and counts: leaving it
+ * out would drop age's weight from achievableAxisMax while scoreAxis still
+ * sums the answer, inflating every score on that variant.
+ */
 function questionIdsIn(variant: QuizVariant): string[] {
   const ids: string[] = [];
   for (const step of FLOWS[variant]) {
     if (step.kind === "question") ids.push(step.questionId);
     else if (step.kind === "questionGroup") ids.push(...step.questionIds);
+    else if (step.kind === "ageSelect") ids.push(AGE_SELECT_QUESTION_ID);
   }
   return ids;
 }

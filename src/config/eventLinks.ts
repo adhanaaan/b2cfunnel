@@ -16,7 +16,19 @@ export const EVENT_PATHS: Partial<Record<QuizVariant, string>> = {
   rotary: "/rotaryklwam",
   ntuhomecoming: "/ntuhomecoming",
   ihhsearegatta: "/ihhsearegatta",
+  phkl: "/phkl",
 };
+
+/**
+ * Where "Book memory screening" on the /phkl report sends people.
+ *
+ * PLACEHOLDER: Pantai Hospital Kuala Lumpur's health screening packages page,
+ * until the hospital supplies the booking link for the Memory Screening
+ * Package. Replace this one constant and every booking button on the report
+ * follows.
+ */
+export const PHKL_BOOKING_URL =
+  "https://www.pantai.com.my/kuala-lumpur/health-screening-packages";
 
 /**
  * The absolute play link for a variant - used by the TV boards' QR codes and

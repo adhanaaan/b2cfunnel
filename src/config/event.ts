@@ -139,6 +139,23 @@ export const IHHSEA_SOURCE = "ihhsearegatta";
 export const IHHSEA_CHALLENGE_CLOSED = true;
 
 /**
+ * Independent pause switch for the Pantai Hospital KL event (/phkl and its TV
+ * board). Its own switch, like every other event's: closing one must never
+ * take another down with it. There is no challenge-closed switch for this
+ * event; the arc is open for as long as the route is up.
+ */
+export const PHKL_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the Pantai Hospital KL funnel. Every /phkl score and
+ * report is tagged with it, and the PHKL board filters to it - which is what
+ * keeps its standings clear of every other event's history.
+ *
+ * This is the value written to the `source` column for this event.
+ */
+export const PHKL_SOURCE = "phkl";
+
+/**
  * The bucket a variant's rows are tagged with, for both `game_scores.source`
  * and `leads.source`. Shared so a score and the report that follows it always
  * carry the same tag - the report rate on the board divides one by the other,
@@ -157,6 +174,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return NTU_HOMECOMING_SOURCE;
     case "ihhsearegatta":
       return IHHSEA_SOURCE;
+    case "phkl":
+      return PHKL_SOURCE;
     case "event2":
       return "event2";
     case "event":

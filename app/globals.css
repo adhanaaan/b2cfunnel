@@ -424,6 +424,36 @@
     animation: cta-shimmer 2.6s ease-in-out infinite;
   }
 
+  /* PHKL "great job" beat: the five game symbols take a bow - a slow wave,
+     each one a beat behind the last (--wave-delay). Transform only. */
+  @keyframes symbol-wave {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-7px) rotate(3deg);
+    }
+  }
+  .animate-symbol-wave {
+    animation: symbol-wave 2.4s ease-in-out infinite;
+    animation-delay: var(--wave-delay, 0s);
+  }
+
+  /* PHKL primer: the 3D flash symbol hovers in place. */
+  @keyframes symbol-hover {
+    0%,
+    100% {
+      transform: translateY(0) rotate(4deg);
+    }
+    50% {
+      transform: translateY(-8px) rotate(6deg);
+    }
+  }
+  .animate-symbol-hover {
+    animation: symbol-hover 3.6s ease-in-out infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .animate-crumb,
     .animate-fade-up,
@@ -435,7 +465,9 @@
     .animate-live-pulse,
     .animate-pill-drift,
     .animate-sparkle-breathe,
-    .animate-cta-shimmer {
+    .animate-cta-shimmer,
+    .animate-symbol-wave,
+    .animate-symbol-hover {
       animation: none;
     }
     .gauge-needle {

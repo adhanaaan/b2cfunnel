@@ -41,6 +41,8 @@ function sessionId(): string {
 export interface TrackProps {
   variant?: string;
   step?: string;
+  /** Which of several same-named controls fired (the report's booking buttons). */
+  placement?: string;
 }
 
 /** POST a JSON body to an analytics endpoint. Fire-and-forget; never blocks. */

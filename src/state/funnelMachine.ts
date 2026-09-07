@@ -87,8 +87,22 @@ export function funnelReducer(
 
     case "GAME_DONE": {
       const flow = resolveFlow(state.answers, state.variant);
-      const next = Math.min(state.cursor + 1, flow.length - 1);
-      return { ...state, gameTimeMs: action.timeMs, cursor: next };
+      // Once the report exists, a replay (phkl's "Retry Game" on the report)
+      // returns straight to it with the new time. The score does not depend
+      // on the game, so the report is kept, and nothing between the game and
+      // the report - the great-job beat, the primer, the quiz - is walked
+      // again. Before the report exists this is the plain step forward.
+      const resultIndex = flow.findIndex((s) => s.kind === "result");
+      const next =
+        state.result && resultIndex > state.cursor
+          ? resultIndex
+          : Math.min(state.cursor + 1, flow.length - 1);
+      return {
+        ...state,
+        gameTimeMs: action.timeMs,
+        gameAttempts: (state.gameAttempts ?? 0) + 1,
+        cursor: next,
+      };
     }
 
     case "SKIP_TO_KIND": {

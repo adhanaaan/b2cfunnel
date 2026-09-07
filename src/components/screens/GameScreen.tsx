@@ -9,6 +9,11 @@ interface GameScreenProps {
   hideBack?: boolean;
   /** Music bed + finish sting (event2 only). */
   music?: boolean;
+  /**
+   * Straight to the countdown, whatever sessionStorage says: a replay from
+   * the phkl report must never re-run the guided tour.
+   */
+  skipDemo?: boolean;
 }
 
 /**
@@ -21,6 +26,7 @@ export function GameScreen({
   theme,
   hideBack,
   music,
+  skipDemo,
 }: GameScreenProps) {
   return (
     <SymbolMatchGame
@@ -28,6 +34,7 @@ export function GameScreen({
       theme={theme}
       hideBack={hideBack}
       music={music}
+      skipDemo={skipDemo}
     />
   );
 }
