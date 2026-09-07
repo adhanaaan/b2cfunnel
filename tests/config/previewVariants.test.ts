@@ -24,6 +24,7 @@ describe("preview variants", () => {
       "rotary",
       "ntuhomecoming",
       "ihhsearegatta",
+      "phkl",
     ];
     for (const variant of live) {
       expect(isPreviewVariant(variant), `${variant} must keep recording`).toBe(

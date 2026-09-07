@@ -2,15 +2,16 @@ import { PRIVACY } from "@/config/privacy";
 
 /**
  * The privacy policies, as data: one for the Reaction Time Challenge and Brain
- * Health Check in general (/privacy-policy), one for the IHH SEA Regatta
- * (/ihhsearegatta/privacy-policy), whose landing shares what it collects with
- * the event partner and whose policy therefore has to say so.
+ * Health Check in general (/privacy-policy), and one per partner event
+ * (/ihhsearegatta/privacy-policy, /phkl/privacy-policy), whose landing shares
+ * what it collects with the event partner and whose policy therefore has to
+ * say so.
  *
- * Both are written against Singapore's PDPA 2012 and against what the funnel
+ * All are written against Singapore's PDPA 2012 and against what the funnel
  * actually stores (see /api/lead, /api/score, /api/newsletter and
- * /api/response). The sections the two have in common are defined once, so a
- * correction to either reaches both; the sections that differ are written out
- * in full, because legal text has to be readable top to bottom.
+ * /api/response). The sections they have in common are defined once, so a
+ * correction to any reaches all; the sections that differ are written out in
+ * full, because legal text has to be readable top to bottom.
  */
 
 export type PolicyBlock =
@@ -230,92 +231,131 @@ export const PRIVACY_POLICY_SECTIONS: PolicySection[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// The IHH SEA Regatta policy (/ihhsearegatta/privacy-policy)
+// The partner policies (/ihhsearegatta/privacy-policy, /phkl/privacy-policy)
 // ---------------------------------------------------------------------------
 
-/** The partner named throughout the regatta policy. */
-const IHH = "IHH Healthcare Singapore";
-const IHH_NOTICE = "IHH Singapore Personal Data Protection Notice";
+/**
+ * An event partner the landing shares its data with, named throughout that
+ * event's policy: the entity, and the title of its own data protection notice.
+ */
+export interface PolicyPartner {
+  name: string;
+  notice: string;
+}
+
+/** IHH Healthcare Singapore, the regatta's partner. */
+export const IHH_SINGAPORE: PolicyPartner = {
+  name: "IHH Healthcare Singapore",
+  notice: "IHH Singapore Personal Data Protection Notice",
+};
+
+/** IHH Healthcare Malaysia, the Pantai Hospital KL event's partner. */
+export const IHH_MALAYSIA: PolicyPartner = {
+  name: "IHH Healthcare Malaysia",
+  notice: "IHH Healthcare Malaysia Data Protection Notice",
+};
 
 /**
- * The regatta's landing shares what it collects with IHH, under the partner's
- * own consent, so its policy differs from the general one wherever the partner
- * comes into it: what GMS's policy covers and what IHH's does, the sharing
- * itself, whose retention and deletion apply to which copy, and how a breach
- * is notified. Everything else is the general policy, word for word.
+ * A partner event's landing shares what it collects with that partner, under
+ * the partner's own consent, so its policy differs from the general one
+ * wherever the partner comes into it: what GMS's policy covers and what the
+ * partner's does, the sharing itself, whose retention and deletion apply to
+ * which copy, and how a breach is notified. Everything else is the general
+ * policy, word for word.
+ *
+ * One builder for every partner event, so a correction reaches all of them
+ * and the only thing that can differ between two partner policies is the
+ * partner named in them.
  */
-export const IHHSEA_PRIVACY_POLICY_SECTIONS: PolicySection[] = [
-  {
-    heading: "1. About this policy",
-    blocks: [
-      ABOUT_INTRO,
-      `This policy explains how ${PRIVACY.organisation} (“GMS”) handles personal data through ReCOGnAIze Lite. ${IHH} separately handles the personal data it receives in accordance with the ${IHH_NOTICE}.`,
-      ABOUT_SCOPE,
-      `The Brain Health Check is an educational tool. It is not a medical diagnosis. IHH may handle the information and results it receives as health information in accordance with the ${IHH_NOTICE}.`,
-    ],
-  },
-  WHAT_WE_COLLECT,
-  WHY_WE_USE_IT,
-  {
-    heading: "4. Consent, and how to withdraw it",
-    blocks: [
-      ...CONSENT_INTRO,
-      `You can withdraw either consent at any time by emailing ${PRIVACY.dpoEmail}, or by using the unsubscribe link in any email we send you. We will act on it within a reasonable time and tell you the likely consequences: if you withdraw consent to be contacted, we can no longer send you your results or notify you about the prize. Your GMS marketing choice applies only to communications from GMS; IHH manages its own communications and marketing preferences under its privacy notice.`,
-      ...CONSENT_OUTRO,
-    ],
-  },
-  {
-    heading: "5. Who we share it with",
-    blocks: [
-      "We do not sell your personal data, and we do not share it for anyone else's marketing.",
-      "We share personal data with service providers that process it on our behalf, as data intermediaries under the PDPA. These include our website hosting provider, managed database provider, and email-delivery or marketing platform. They may process personal data only as necessary to provide their services to us, are required to protect it, and must follow our instructions.",
-      `We share your name, email address, reaction-time results, leaderboard information, optional quiz answers, Brain Health Score and factor profile with ${IHH} for the administration of ReCOGnAIze Lite and participant follow-up. IHH handles the personal data and results it receives, including their use, disclosure, retention and related requests, in accordance with the ${IHH_NOTICE}.`,
-      DISCLOSURE_BY_LAW,
-      EVENT_PARTNER_NOTE,
-    ],
-  },
-  {
-    heading: "6. Your rights: access, correction and deletion",
-    blocks: [
-      ...RIGHTS_INTRO,
-      "You may also ask GMS to delete your personal data, including your leaderboard entry. We will assess the request and delete or anonymise the data where it is no longer required for a legal or business purpose. Requests made to GMS apply only to data under GMS’s possession or control. Requests regarding data held independently by IHH should be submitted directly to IHH.",
-    ],
-  },
-  {
-    heading: "7. How long we keep it",
-    blocks: [
-      {
-        table: [
-          [
-            "Leaderboard entries and game times",
-            "Kept for the run of the event and up to 6 months afterwards.",
+export function partnerPolicySections(partner: PolicyPartner): PolicySection[] {
+  const IHH = partner.name;
+  const IHH_NOTICE = partner.notice;
+  return [
+    {
+      heading: "1. About this policy",
+      blocks: [
+        ABOUT_INTRO,
+        `This policy explains how ${PRIVACY.organisation} (“GMS”) handles personal data through ReCOGnAIze Lite. ${IHH} separately handles the personal data it receives in accordance with the ${IHH_NOTICE}.`,
+        ABOUT_SCOPE,
+        `The Brain Health Check is an educational tool. It is not a medical diagnosis. ${IHH} may handle the information and results it receives as health information in accordance with the ${IHH_NOTICE}.`,
+      ],
+    },
+    WHAT_WE_COLLECT,
+    WHY_WE_USE_IT,
+    {
+      heading: "4. Consent, and how to withdraw it",
+      blocks: [
+        ...CONSENT_INTRO,
+        `You can withdraw either consent at any time by emailing ${PRIVACY.dpoEmail}, or by using the unsubscribe link in any email we send you. We will act on it within a reasonable time and tell you the likely consequences: if you withdraw consent to be contacted, we can no longer send you your results or notify you about the prize. Your GMS marketing choice applies only to communications from GMS; ${IHH} manages its own communications and marketing preferences under its privacy notice.`,
+        ...CONSENT_OUTRO,
+      ],
+    },
+    {
+      heading: "5. Who we share it with",
+      blocks: [
+        "We do not sell your personal data, and we do not share it for anyone else's marketing.",
+        "We share personal data with service providers that process it on our behalf, as data intermediaries under the PDPA. These include our website hosting provider, managed database provider, and email-delivery or marketing platform. They may process personal data only as necessary to provide their services to us, are required to protect it, and must follow our instructions.",
+        `We share your name, email address, reaction-time results, leaderboard information, optional quiz answers, Brain Health Score and factor profile with ${IHH} for the administration of ReCOGnAIze Lite and participant follow-up. ${IHH} handles the personal data and results it receives, including their use, disclosure, retention and related requests, in accordance with the ${IHH_NOTICE}.`,
+        DISCLOSURE_BY_LAW,
+        EVENT_PARTNER_NOTE,
+      ],
+    },
+    {
+      heading: "6. Your rights: access, correction and deletion",
+      blocks: [
+        ...RIGHTS_INTRO,
+        `You may also ask GMS to delete your personal data, including your leaderboard entry. We will assess the request and delete or anonymise the data where it is no longer required for a legal or business purpose. Requests made to GMS apply only to data under GMS’s possession or control. Requests regarding data held independently by ${IHH} should be submitted directly to ${IHH}.`,
+      ],
+    },
+    {
+      heading: "7. How long we keep it",
+      blocks: [
+        {
+          table: [
+            [
+              "Leaderboard entries and game times",
+              "Kept for the run of the event and up to 6 months afterwards.",
+            ],
+            [
+              "Your name, email and quiz answers",
+              `Kept for up to 24 months from your last interaction with GMS, unless deleted earlier following a request or retained longer where required for a legal or business purpose. These retention periods apply only to data held by GMS and its service providers; ${IHH} retains its copy in accordance with its own privacy notice.`,
+            ],
+            [
+              "Anonymised, aggregate statistics",
+              "Kept indefinitely, once they can no longer identify you.",
+            ],
           ],
-          [
-            "Your name, email and quiz answers",
-            "Kept for up to 24 months from your last interaction with GMS, unless deleted earlier following a request or retained longer where required for a legal or business purpose. These retention periods apply only to data held by GMS and its service providers; IHH retains its copy in accordance with its own privacy notice.",
-          ],
-          [
-            "Anonymised, aggregate statistics",
-            "Kept indefinitely, once they can no longer identify you.",
-          ],
-        ],
-      },
-      RETENTION_OUTRO,
-    ],
-  },
-  {
-    heading: "8. How we protect it",
-    blocks: [
-      PROTECT_INTRO,
-      // The supplied text left this sentence unfinished after "of a significant
-      // scale," and began a new one at "If a data breach is notifiable"; the two
-      // are joined here into one sentence, keeping both halves as written.
-      "No system is perfectly secure, but if a data breach occurs that is likely to result in significant harm to you, or that is of a significant scale, and is notifiable under the PDPA, we will notify the Personal Data Protection Commission and, where required, affected individuals within the applicable time limits.",
-    ],
-  },
-  TRANSFERS,
-  COOKIES,
-  CHILDREN,
-  CHANGES,
-  CONTACT,
-];
+        },
+        RETENTION_OUTRO,
+      ],
+    },
+    {
+      heading: "8. How we protect it",
+      blocks: [
+        PROTECT_INTRO,
+        // The supplied text left this sentence unfinished after "of a significant
+        // scale," and began a new one at "If a data breach is notifiable"; the two
+        // are joined here into one sentence, keeping both halves as written.
+        "No system is perfectly secure, but if a data breach occurs that is likely to result in significant harm to you, or that is of a significant scale, and is notifiable under the PDPA, we will notify the Personal Data Protection Commission and, where required, affected individuals within the applicable time limits.",
+      ],
+    },
+    TRANSFERS,
+    COOKIES,
+    CHILDREN,
+    CHANGES,
+    CONTACT,
+  ];
+}
+
+/** The IHH SEA Regatta policy (/ihhsearegatta/privacy-policy). */
+export const IHHSEA_PRIVACY_POLICY_SECTIONS: PolicySection[] =
+  partnerPolicySections(IHH_SINGAPORE);
+
+/**
+ * The Pantai Hospital KL policy (/phkl/privacy-policy): the regatta's, with
+ * IHH Healthcare Malaysia as the partner it names. GMS's own obligations are
+ * unchanged - GMS is the Singapore organisation collecting the data - and the
+ * partner handles its copy under its own Malaysian notice.
+ */
+export const PHKL_PRIVACY_POLICY_SECTIONS: PolicySection[] =
+  partnerPolicySections(IHH_MALAYSIA);

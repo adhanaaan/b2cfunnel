@@ -9,6 +9,8 @@ import {
   IHHSEA_SOURCE,
   NTU_HOMECOMING_PAUSED,
   NTU_HOMECOMING_SOURCE,
+  PHKL_PAUSED,
+  PHKL_SOURCE,
   ROTARY_PAUSED,
   ROTARY_SOURCE,
 } from "@/config/event";
@@ -23,11 +25,18 @@ interface ScorePayload {
   timeMs?: number;
   /**
    * Which event the score was played at - "event", "event2", EVENT3_SOURCE,
-   * ROTARY_SOURCE, NTU_HOMECOMING_SOURCE or IHHSEA_SOURCE.
+   * ROTARY_SOURCE, NTU_HOMECOMING_SOURCE, IHHSEA_SOURCE or PHKL_SOURCE.
    * Selects the pause switch, and is stored so each board can filter to its
    * own standings.
    */
   source?: string;
+  /**
+   * The player's age band (an option id of the `age` question, e.g. "40-49"),
+   * when the funnel asked for it before the game (/phkl). Optional, stored as
+   * null where it was not asked, so a score can later be read against its
+   * peers without a second lookup into the lead.
+   */
+  ageBand?: string;
   /**
    * Whether the player ticked the brain-health-tips box on the landing page.
    * Optional: omitted by variants that never asked, and stored as null there.
@@ -59,9 +68,11 @@ export async function POST(req: Request) {
           ? NTU_HOMECOMING_PAUSED
           : payload.source === IHHSEA_SOURCE
             ? IHHSEA_PAUSED
-            : payload.source === "event2"
-              ? EVENT2_PAUSED
-              : EVENT_PAUSED;
+            : payload.source === PHKL_SOURCE
+              ? PHKL_PAUSED
+              : payload.source === "event2"
+                ? EVENT2_PAUSED
+                : EVENT_PAUSED;
   if (paused) {
     return NextResponse.json({ ok: true, stored: false });
   }
@@ -83,6 +94,9 @@ export async function POST(req: Request) {
       typeof payload.tipsConsent === "boolean" ? payload.tipsConsent : null,
       typeof payload.partnerConsent === "boolean"
         ? payload.partnerConsent
+        : null,
+      typeof payload.ageBand === "string" && payload.ageBand.trim()
+        ? payload.ageBand.trim().slice(0, 16)
         : null,
     );
   } catch (err) {

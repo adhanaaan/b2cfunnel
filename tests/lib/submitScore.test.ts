@@ -34,7 +34,34 @@ describe("submitScore", () => {
       source: "dbs-day1",
       tips_consent: true,
       partner_consent: true,
+      age_band: null,
     });
+  });
+
+  // /phkl asks the age band before the game and writes it with the score.
+  it("writes the age band when the funnel asked for it", async () => {
+    await submitScore("Ada", "ada@example.com", 9000, "phkl", false, true, "40-49");
+
+    expect(insert).toHaveBeenCalledWith(
+      expect.objectContaining({ source: "phkl", age_band: "40-49" }),
+    );
+  });
+
+  it("still records the score when age_band is not in the database yet", async () => {
+    insert
+      .mockResolvedValueOnce({
+        error: {
+          message: "Could not find the 'age_band' column of 'game_scores'",
+        },
+      })
+      .mockResolvedValueOnce({ error: null });
+
+    await submitScore("Ada", "ada@example.com", 9000, "phkl", false, true, "40-49");
+
+    expect(insert).toHaveBeenCalledTimes(2);
+    const retry = insert.mock.calls[1][0] as Record<string, unknown>;
+    expect(retry).not.toHaveProperty("age_band");
+    expect(retry).toMatchObject({ time_ms: 9000, partner_consent: true });
   });
 
   it("records a declined partner consent as false, not null", async () => {
@@ -74,6 +101,7 @@ describe("submitScore", () => {
       time_ms: 9000,
       source: "dbs-day1",
       tips_consent: true,
+      age_band: null,
     });
   });
 });

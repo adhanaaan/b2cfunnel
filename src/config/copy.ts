@@ -95,6 +95,37 @@ const IHH_CONSENT_WITHDRAWAL: ConsentClause = {
 };
 
 /**
+ * IHH Healthcare Malaysia's wording for the Pantai Hospital KL event (/phkl),
+ * from Figma 697:24953: the Singapore block with the entity, the notice and
+ * the DPO changed to the Malaysian ones. One tick over the whole block, as on
+ * the regatta. The third clause still refers to a "Do-Not-Call registry",
+ * which is a Singapore PDPA term; it is the partner's wording to confirm.
+ */
+const PHKL_CONSENT_CLAUSES: ConsentClause[] = [
+  {
+    text: "By providing the information set out in this form, I consent to IHH Healthcare Malaysia and their representatives and/or agents collecting, using and disclosing my personal data to provide me with medical treatment and other reasonably related purposes. Such purposes are set out in the {link}, or available on request.",
+    link: {
+      label: "IHH Healthcare Malaysia Data Protection Notice",
+      href: "https://www.ihhhealthcare.com/my/data-protection-notice",
+    },
+  },
+  {
+    text: "I also consent to IHH Healthcare Malaysia, their representatives, agents and/or business partners collecting, using and disclosing my personal data for marketing and promotional purposes.",
+  },
+  {
+    text: "I agree to receiving marketing messages via SMS, telephone call and other Malaysia phone number-based messaging, regardless of my registration with the Do-Not-Call registry.",
+  },
+];
+
+const PHKL_CONSENT_WITHDRAWAL: ConsentClause = {
+  text: "I understand that I may withdraw such consent at any time via unsubscribe facilities OR forms available on request from our staff OR by email to IHH Healthcare Malaysia DPO at {link}.",
+  link: {
+    label: "my.ihh.dpo@ihhhealthcare.com",
+    href: "mailto:my.ihh.dpo@ihhhealthcare.com",
+  },
+};
+
+/**
  * The daylight post-game result copy, shared by /event-v3, /rotaryklwam,
  * /ntuhomecoming and the /event-v6 preview. The regatta spreads it and overrides the bridge card
  * (see COPY.screens.ihhsearegatta).
@@ -586,6 +617,169 @@ export const COPY: CopyConfig = {
         reportCard: {
           blurb:
             "A handful of modifiable factors are affecting your brain health performance.",
+        },
+      },
+    },
+    phkl: {
+      // The Pantai Hospital KL landing (Figma 697:24953) is the regatta's with
+      // the partner's Malaysian wording under the third tick and its own
+      // privacy policy behind the required row's link.
+      splash: {
+        ...NO_PARTNER_SPLASH,
+        privacyHref: "/phkl/privacy-policy",
+        partnerConsent: {
+          clauses: [...PHKL_CONSENT_CLAUSES, PHKL_CONSENT_WITHDRAWAL],
+        },
+      },
+      rail: {
+        gameLabel: "Game",
+        quizLabel: "Brain health quiz",
+        resultsLabel: "Results",
+      },
+      speedIntro: {
+        eyebrow: "You're about to measure",
+        heading: "Processing speed",
+        body: "How *fast* your brain takes in what it *sees* and *responds*.",
+        cta: "Got it",
+      },
+      ageSelect: {
+        heading: "Select your age",
+        body: "See how you compare with your peers.",
+      },
+      greatJob: {
+        heading: "Great job in measuring your speed!",
+        skipHint: "Tap to continue",
+      },
+      quizIntro: {
+        heading: "{name}, your brain speed isn't fixed",
+        headingAnonymous: "Your brain speed isn't fixed",
+        body: "It is driven by sleep, exercise, diet and other lifestyle factors.",
+        factors: ["Sleep", "Exercise", "Diet"],
+        lead: "Next, a few quick questions about yours.",
+        cta: "Continue",
+      },
+      report: {
+        header: {
+          eyebrow: "Reaction Time Challenge",
+          heading: "{name}'s {ordinal} record in",
+          headingAnonymous: "Your {ordinal} record in",
+          headingHighlight: "processing speed",
+          timeLabel: "Time",
+          rankLabel: "Rank",
+          fastestLabel: "Fastest so far",
+          fastestEmpty: "Be the first",
+          shareLabel: "Share",
+        },
+        sticky: {
+          retry: "Retry game",
+          book: "Book memory screening",
+        },
+        speed: {
+          headingParts: [
+            "Processing speed is ",
+            "how fast",
+            " your brain ",
+            "takes in",
+            " what it sees and ",
+            "responds",
+            ".",
+          ],
+          intro: "With high processing speed, you can:",
+        },
+        risk: {
+          eyebrow: "Also measured",
+          heading: "Speed was not the only thing we looked at.",
+          body: "We also looked at your risk factors. Health and lifestyle habits like high blood pressure, poor sleep or too little exercise can slow your brain down over time.",
+          riskLevelLabel: "Your risk level:",
+          factorsLead: "Some factors that affect your risk level, {name}:",
+          factorsLeadAnonymous: "Some factors that affect your risk level:",
+          noFactors:
+            "No notable lifestyle or biomedical factors stood out in your answers.",
+          goodNews: "The good news is",
+        },
+        baseline: {
+          eyebrow: "Your baseline so far",
+          heading: "You've only covered",
+          headingHighlight: "2 out of 5",
+          cardLabel: "Your baseline",
+          cardProgress: "2 of 5 done",
+          axes: ["Speed", "Memory", "Attention", "Executive", "Risk"],
+          paragraphs: [
+            "The speed game and your quiz answers gave us two axes, speed and risk.",
+            "But your brain doesn't work on two dimensions. Memory, attention and executive function each tell a different story, and you can score well on one while struggling with another.",
+            "The full test fills in the rest, so your recommendations match how your brain actually performs.",
+          ],
+        },
+        offer: {
+          eyebrow: "What to do now?",
+          heading: "Book your Memory Screening Package",
+          proofParts: [
+            "Validated against MRI scans, built on a five-year NTU study of 1,500 people and published in ",
+            "Alzheimer's & Dementia",
+            ".",
+          ],
+          includesEyebrow: "What your screening includes",
+          assessmentHeading: [
+            "Digital Cognitive Assessment",
+            "10 minute brain health game",
+          ],
+          assessmentBody:
+            "An online assessment with games that measure speed, attention, decision making and memory.",
+          reportHeading: "Get your full report",
+          reportBody:
+            "Review your brain performance with actionable ways to improve.",
+          cta: "Book my screening",
+          quote:
+            "Each of these games measures a specific brain function the same way I would assess it in clinic. We are not testing whether you can play, we are testing how well each part of your brain is doing the work it does for you every day.",
+          quoteName: "A/Prof Nagaendran Kandiah",
+          quoteRole: [
+            "Co-founder, Gray Matter Solutions",
+            "MBBS, FAMS (Neurology), FRCP (Edin)",
+          ],
+        },
+        nextStep: {
+          eyebrow: "Your next step",
+          heading: "Book your screening now",
+          body: "Your brain carries you through every part of life. Understand how it's doing today, and what you can do to protect it for the years ahead.",
+          cta: "Book my screening",
+          poster: {
+            hospital: "Pantai Hospital Kuala Lumpur",
+            hospitalNote: "By IHH Healthcare",
+            title: ["Memory", "Screening", "Package"],
+            price: "RM460",
+            includesHeading: "Package includes",
+            includes: [
+              "Specialist Consultation",
+              "Digital Cognitive Assessment",
+              "Laboratory Tests",
+            ],
+            whoHeading: "Who should consider screening?",
+            who: [
+              "Changes in mood or behaviour",
+              "Family history of Alzheimer's",
+              "Confusion with time or place",
+              "Difficulty concentrating",
+              "Age 40 and above",
+              "Frequent forgetfulness",
+            ],
+          },
+        },
+        wrapUp: {
+          quoteParts: [
+            "Tomorrow's meeting is a tough one, and if I don't have my attention covered, I can't perform well. Thanks to checking my brain, I'm aware of how to optimise it now. Glad I found ",
+            "ReCOGnAIze",
+            "!",
+          ],
+          attributionAgeBand: "30-39",
+          attribution: "Chelsea, aged 30 to 39",
+          attributionPeer: "Chelsea, aged 30 to 39 like you",
+          thinkingHeading: "Still need time to think?",
+          thinkingBody: [
+            "Your score is already in your inbox, along with a short set of strategies for pushing it up.",
+            "When you're ready to test the remaining three brain domains, you know where we are.",
+          ],
+          credit:
+            "Built on clinical research by Nanyang Technological University, LKC Medicine, Dementia Research Centre Singapore.",
         },
       },
     },

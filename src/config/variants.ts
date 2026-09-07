@@ -17,10 +17,11 @@ export function isPreviewVariant(variant: QuizVariant): boolean {
 /**
  * Variants served by the event3 "Daylight Ember" screens (landing,
  * instructions, post-game result). v6 is v3 with the partner consents split
- * one per tick, rotary and NTU Homecoming are v3 without a consent page, and
- * the regatta is v3 with the partner consent moved onto the landing and an
- * extra page after the post-game result - so all five share every one of those
- * screens.
+ * one per tick, rotary and NTU Homecoming are v3 without a consent page, the
+ * regatta is v3 with the partner consent moved onto the landing and an extra
+ * page after the post-game result, and PHKL is the regatta with its own
+ * screens either side of the game - so all six share the landing, the
+ * instructions and the warm game theme.
  */
 export function usesDaylightScreens(variant: QuizVariant): boolean {
   return (
@@ -28,6 +29,7 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
     variant === "event6" ||
     variant === "rotary" ||
     variant === "ntuhomecoming" ||
-    variant === "ihhsearegatta"
+    variant === "ihhsearegatta" ||
+    variant === "phkl"
   );
 }

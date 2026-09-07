@@ -19,6 +19,12 @@ export type QuizVariant =
   // questionnaire invite before the quiz. Closed by its own switch
   // (IHHSEA_CHALLENGE_CLOSED), which ends it on the "wrap" screen.
   | "ihhsearegatta"
+  // Pantai Hospital KL (/phkl): the regatta arc rebuilt for IHH Malaysia - a
+  // processing-speed primer and the age question before the game, a "great
+  // job" beat and a quiz primer instead of the post-game card (so the quiz is
+  // no longer optional), and a long report ending on the memory screening
+  // offer. Its own `phkl` bucket.
+  | "phkl"
   // Preview-only: the daylight arc with a partner consent page. Submits nothing
   // (see PREVIEW_VARIANTS in config/variants.ts).
   | "event6";
@@ -33,6 +39,19 @@ export type FunnelStep =
   // ihhsearegatta: the questionnaire invite between the post-game result and
   // the quiz - "Sure!" walks on, "Not now" goes back to the result card.
   | { kind: "quizInvite" }
+  // phkl: what processing speed is, with the GAME / QUIZ / RESULTS rail,
+  // between the landing and the age question.
+  | { kind: "speedIntro" }
+  // phkl: the quiz's `age` question, asked before the game on a daylight
+  // screen. Its own kind so the quiz progress bar does not count it; the
+  // answer is still `answers.age`, and questionIdsIn() counts it for scoring.
+  | { kind: "ageSelect" }
+  // phkl: the beat straight after the 20th match - the symbols take a bow and
+  // the screen walks itself into the quiz primer.
+  | { kind: "greatJob" }
+  // phkl: "your brain speed isn't fixed" - the primer before the first
+  // question, in place of the regatta's optional invite.
+  | { kind: "quizIntro" }
   | { kind: "question"; questionId: string }
   | { kind: "questionGroup"; title: string; questionIds: string[] }
   | { kind: "statCard"; cardId: string }
@@ -60,6 +79,9 @@ export interface FunnelState {
   emailCaptured: boolean;
   result?: ScoreResult;
   gameTimeMs?: number; // reaction-game result (event only)
+  // How many times the game has been completed this session. The phkl report
+  // reads it for "{name}'s 2nd record"; undefined until the first finish.
+  gameAttempts?: number;
   // Brain-health-tips consent from the landing page. Undefined when the variant
   // never asked, which is stored as null rather than false.
   tipsConsent?: boolean;

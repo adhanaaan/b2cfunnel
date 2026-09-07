@@ -390,6 +390,136 @@ export interface ScreenCopy {
   rotary: NoPartnerSplashCopy;
   ntuhomecoming: NoPartnerSplashCopy;
   ihhsearegatta: IhhseaCopy;
+  phkl: PhklCopy;
+}
+
+// Pantai Hospital KL (/phkl): the regatta arc rebuilt for IHH Malaysia. The
+// landing is the regatta's with the partner's Malaysian wording; the screens
+// either side of the game and the whole report are this event's own.
+export interface PhklCopy {
+  splash: IhhseaCopy["splash"];
+  // The GAME / BRAIN HEALTH QUIZ / RESULTS rail on the two primers.
+  rail: {
+    gameLabel: string;
+    quizLabel: string;
+    resultsLabel: string;
+  };
+  // "You're about to measure processing speed", before the age question.
+  speedIntro: {
+    eyebrow: string;
+    heading: string;
+    // Words wrapped in *asterisks* are bold.
+    body: string;
+    cta: string;
+  };
+  ageSelect: {
+    heading: string;
+    body: string;
+  };
+  // The beat after the 20th match; walks itself into the quiz primer.
+  greatJob: {
+    heading: string;
+    skipHint: string;
+  };
+  // "Your brain speed isn't fixed", before the first question. {name} is the
+  // player's first name; the heading falls back to `headingAnonymous`.
+  quizIntro: {
+    heading: string;
+    headingAnonymous: string;
+    body: string;
+    /** Captions on the three factor photos, in order. */
+    factors: [string, string, string];
+    lead: string;
+    cta: string;
+  };
+  report: {
+    header: {
+      eyebrow: string;
+      // "{name}'s {ordinal} record in" - the highlight follows on its own line.
+      heading: string;
+      headingAnonymous: string;
+      headingHighlight: string;
+      timeLabel: string;
+      rankLabel: string;
+      fastestLabel: string;
+      fastestEmpty: string;
+      shareLabel: string;
+    };
+    sticky: {
+      retry: string;
+      book: string;
+    };
+    speed: {
+      // Fragments alternate plain/serif-italic, starting plain.
+      headingParts: string[];
+      intro: string;
+      // The three perks are the event3 speed popup's.
+    };
+    risk: {
+      eyebrow: string;
+      heading: string;
+      body: string;
+      riskLevelLabel: string;
+      factorsLead: string; // contains {name}
+      factorsLeadAnonymous: string;
+      noFactors: string;
+      goodNews: string;
+    };
+    baseline: {
+      eyebrow: string;
+      // The highlight ("2 out of 5") takes the rank gradient.
+      heading: string;
+      headingHighlight: string;
+      cardLabel: string;
+      cardProgress: string;
+      axes: [string, string, string, string, string];
+      paragraphs: string[];
+    };
+    offer: {
+      eyebrow: string;
+      heading: string;
+      // Fragments alternate plain/serif-italic, starting plain.
+      proofParts: string[];
+      includesEyebrow: string;
+      assessmentHeading: string[];
+      assessmentBody: string;
+      reportHeading: string;
+      reportBody: string;
+      cta: string;
+      quote: string;
+      quoteName: string;
+      quoteRole: string[];
+    };
+    nextStep: {
+      eyebrow: string;
+      heading: string;
+      body: string;
+      cta: string;
+      /** The poster's content, drawn in HTML until the artwork lands. */
+      poster: {
+        hospital: string;
+        hospitalNote: string;
+        title: string[];
+        price: string;
+        includesHeading: string;
+        includes: string[];
+        whoHeading: string;
+        who: string[];
+      };
+    };
+    wrapUp: {
+      // Fragments alternate plain/serif-italic, starting plain.
+      quoteParts: string[];
+      // Chelsea's own age band, as an `age` option id, and the two ways of
+      // crediting her: the plain one, and "like you" for a player in that band.
+      attributionAgeBand: string;
+      attribution: string;
+      attributionPeer: string;
+      thinkingHeading: string;
+      thinkingBody: string[];
+      credit: string;
+    };
+  };
 }
 
 // IHH SEA Regatta (/ihhsearegatta): the v3 arc with every consent on the

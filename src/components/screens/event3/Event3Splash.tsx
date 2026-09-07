@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import type { ConsentClause } from "@/types/copy";
 import { COPY } from "@/config/copy";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "./Event3Shell";
@@ -29,12 +30,12 @@ interface Event3SplashProps {
    * designs differ in the consent rows - "v3" (shared with the /event-v6
    * preview) keeps the parenthetical "(Required)" and the ember privacy link,
    * while the others lead with a bold "Required." and keep the link in body
-   * colour. "ihhsearegatta" also carries the partner's consent as a third row
-   * (Figma 638:7729), which is what makes it taller than a screen and lets it
-   * scroll. Each one reads its own copy block and tags its own newsletter
-   * opt-ins, so their wording can move independently.
+   * colour. "ihhsearegatta" and "phkl" also carry the partner's consent as a
+   * third row (Figma 638:7729 and 697:24953), which is what makes them taller
+   * than a screen and lets them scroll. Each one reads its own copy block and
+   * tags its own newsletter opt-ins, so their wording can move independently.
    */
-  design?: "v3" | "rotary" | "ntuhomecoming" | "ihhsearegatta";
+  design?: "v3" | "rotary" | "ntuhomecoming" | "ihhsearegatta" | "phkl";
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -52,13 +53,20 @@ function ConsentCheckbox({
   checked,
   onChange,
   children,
+  roomy = false,
 }: {
   checked: boolean;
   onChange: (checked: boolean) => void;
   children: React.ReactNode;
+  /**
+   * A 20px box and 12.5px text instead of 18px and 11.5px. The design flags
+   * the smaller row as failing WCAG 2.5.5 and 1.4.3, so the newest landing
+   * (phkl) takes the roomier one; the earlier events keep the rows they shipped.
+   */
+  roomy?: boolean;
 }) {
   return (
-    <label className="flex cursor-pointer items-start gap-2.5">
+    <label className="flex cursor-pointer items-start gap-2.5 py-0.5">
       <input
         type="checkbox"
         checked={checked}
@@ -68,7 +76,8 @@ function ConsentCheckbox({
       <span
         aria-hidden
         className={[
-          "mt-px flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] border transition",
+          "flex shrink-0 items-center justify-center rounded-[5px] border transition",
+          roomy ? "mt-0 h-5 w-5" : "mt-px h-[18px] w-[18px]",
           "peer-focus-visible:ring-2 peer-focus-visible:ring-ember-core/40 peer-focus-visible:ring-offset-1",
           checked
             ? "border-transparent bg-gradient-to-br from-ember-core to-ember-bright"
@@ -81,7 +90,13 @@ function ConsentCheckbox({
           </svg>
         )}
       </span>
-      <span className="text-[11.5px] leading-[1.4] text-secondary">
+      <span
+        className={
+          roomy
+            ? "text-[12.5px] leading-[1.45] text-secondary"
+            : "text-[11.5px] leading-[1.4] text-secondary"
+        }
+      >
         {children}
       </span>
     </label>
@@ -95,10 +110,10 @@ function ConsentCheckbox({
  * it holds the designed proportions on any phone - a height breakpoint would
  * miss real mobile viewports (~700px once the browser chrome is showing).
  *
- * The regatta design adds the partner's consent under the landing's own two
- * rows, which makes the page longer than a phone screen: that one runs in the
- * shell's scrolling mode, so the hero keeps its size and the CTA is reached
- * by scrolling rather than by squeezing everything above it.
+ * The regatta and PHKL designs add the partner's consent under the landing's
+ * own two rows, which makes the page longer than a phone screen: those run in
+ * the shell's scrolling mode, so the hero keeps its size and the CTA is
+ * reached by scrolling rather than by squeezing everything above it.
  */
 export function Event3Splash({
   onSubmit,
@@ -110,11 +125,14 @@ export function Event3Splash({
   // while keeping a copy block of its own.
   const v3 = design === "v3";
   const c = v3 ? COPY.screens.event3.splash : COPY.screens[design].splash;
-  // The partner's block, on the landing that carries one.
-  const partner =
-    design === "ihhsearegatta"
-      ? COPY.screens.ihhsearegatta.splash.partnerConsent
+  // The partner's block, on the landings that carry one (the regatta's and
+  // PHKL's copy blocks are the only ones with it).
+  const partner: { clauses: ConsentClause[] } | null =
+    design === "ihhsearegatta" || design === "phkl"
+      ? COPY.screens[design].splash.partnerConsent
       : null;
+  // The newest landing takes the roomier consent rows (see ConsentCheckbox).
+  const roomy = design === "phkl";
   const reduced = useReducedMotion();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -233,6 +251,7 @@ export function Event3Splash({
           />
           <div className="space-y-1.5 pt-0.5">
             <ConsentCheckbox
+              roomy={roomy}
               checked={contactConsent}
               onChange={(v) => {
                 setContactConsent(v);
@@ -254,6 +273,7 @@ export function Event3Splash({
               </a>
             </ConsentCheckbox>
             <ConsentCheckbox
+              roomy={roomy}
               checked={marketingConsent}
               onChange={setMarketingConsent}
             >
@@ -264,6 +284,7 @@ export function Event3Splash({
               // ONE tick over the whole block - the clauses and the withdrawal
               // right under it - rather than a tick per clause.
               <ConsentCheckbox
+                roomy={roomy}
                 checked={partnerConsent}
                 onChange={setPartnerConsent}
               >

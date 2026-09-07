@@ -19,6 +19,10 @@ export interface LeaderboardEntry {
  * on the consent page - `null` for either when we never asked (older events) or
  * the column is not in the database yet, so both are always three-state values:
  * true, false, or unknown.
+ *
+ * `ageBand` is the age option the player chose before the game (/phkl asks it
+ * there), null where the funnel never asked. Optional column like the two
+ * consents: a database without it still records the score.
  */
 export async function submitScore(
   name: string,
@@ -27,6 +31,7 @@ export async function submitScore(
   source?: string | null,
   tipsConsent?: boolean | null,
   partnerConsent?: boolean | null,
+  ageBand?: string | null,
 ): Promise<void> {
   if (!isSupabaseConfigured()) return;
   const sb = getServerSupabase();
@@ -40,6 +45,7 @@ export async function submitScore(
     {
       tips_consent: tipsConsent ?? null,
       partner_consent: partnerConsent ?? null,
+      age_band: ageBand ?? null,
     },
     row,
     (values) => sb.from("game_scores").insert(values),

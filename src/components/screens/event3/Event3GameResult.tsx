@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { animate, motion, useReducedMotion } from "framer-motion";
-import { QRCodeCanvas } from "qrcode.react";
 import { COPY } from "@/config/copy";
 import { eventSource } from "@/config/event";
 import { useVariant } from "@/components/VariantContext";
 import { playUrlFor } from "@/config/eventLinks";
 import { formatTime } from "@/lib/format";
-import { generateResultCard, shareBlob } from "@/lib/shareCard";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "./Event3Shell";
 import { BrainHero } from "./BrainHero";
 import { ProcessingSpeedPopup } from "./ProcessingSpeedPopup";
 import { QuestionCircleIcon, RetryIcon, ShareIcon } from "./icons";
 import { ctaInverseClass, emberLabelGradient, emberTextGradient } from "./ui";
+import { useStanding } from "./useStanding";
+import { useShareCard } from "./useShareCard";
 
 interface Event3GameResultProps {
   name?: string;
@@ -24,12 +24,6 @@ interface Event3GameResultProps {
   onContinue: () => void;
   /** Play the reaction game again for a fresh time. */
   onRetake: () => void;
-}
-
-interface Standing {
-  top: { name: string; timeMs: number } | null;
-  rank: number | null;
-  total: number | null;
 }
 
 const item = {
@@ -68,48 +62,17 @@ export function Event3GameResult({
   const c = regatta ? regattaCopy : COPY.screens.event3.gameResult;
   const source = eventSource(variant);
   const playUrl = playUrlFor(variant);
-  const [standing, setStanding] = useState<Standing>({
-    top: null,
-    rank: null,
-    total: null,
+  // Live standings: the fastest so far and your rank.
+  const standing = useStanding(source, email, timeMs);
+  const { share, sharing, shareNote, qrHost } = useShareCard({
+    name,
+    timeMs,
+    standing,
+    playUrl,
   });
   const [display, setDisplay] = useState(reduced ? (timeMs ?? 0) : 0);
   const [countDone, setCountDone] = useState(!!reduced);
-  const [shareNote, setShareNote] = useState<string | null>(null);
-  const [sharing, setSharing] = useState(false);
   const [popupOpen, setPopupOpen] = useState(false);
-  const qrHostRef = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<Blob | null>(null);
-
-  // Live standings: the fastest so far and your rank.
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch(
-          `/api/leaderboard?limit=1` +
-            (source ? `&source=${encodeURIComponent(source)}` : "") +
-            (email ? `&email=${encodeURIComponent(email)}` : ""),
-          { cache: "no-store" },
-        );
-        const data = await res.json();
-        if (cancelled) return;
-        setStanding({
-          top:
-            Array.isArray(data.entries) && data.entries[0]
-              ? { name: data.entries[0].name, timeMs: data.entries[0].timeMs }
-              : null,
-          rank: data.you?.rank ?? null,
-          total: typeof data.total === "number" ? data.total : null,
-        });
-      } catch {
-        /* the result still shows the player's own time */
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [email, source]);
 
   // The hero count-up: 0 -> the real time over 900ms, tap-skippable.
   useEffect(() => {
@@ -134,75 +97,13 @@ export function Event3GameResult({
     }
   };
 
-  // Pre-generate the share card so the tap keeps its user gesture on iOS.
-  useEffect(() => {
-    if (timeMs == null) return;
-    let cancelled = false;
-    const t = setTimeout(async () => {
-      const qrCanvas = qrHostRef.current?.querySelector("canvas") ?? null;
-      const blob = await generateResultCard({
-        name: name ?? "",
-        timeMs,
-        rank: standing.rank ?? undefined,
-        total: standing.total ?? undefined,
-        url: playUrl,
-        qrCanvas,
-        theme: "daylight",
-      });
-      if (!cancelled) cardRef.current = blob;
-    }, 300);
-    return () => {
-      cancelled = true;
-      clearTimeout(t);
-    };
-  }, [name, timeMs, standing.rank, standing.total]);
-
-  const share = async () => {
-    if (sharing || timeMs == null) return;
-    setSharing(true);
-    try {
-      // "I scored 0:41.8 ... / Rank 63/181 / Can you beat my score? ..." -
-      // the share ladder appends the play URL under the closing colon.
-      const sc = COPY.screens.event3.share;
-      const lines = [sc.text.replace("{time}", formatTime(timeMs))];
-      if (standing.rank && standing.total) {
-        lines.push(
-          sc.rankLine
-            .replace("{rank}", String(standing.rank))
-            .replace("{total}", String(standing.total)),
-        );
-      }
-      lines.push(sc.cta);
-      const text = lines.join("\n");
-      const outcome = await shareBlob(
-        cardRef.current,
-        text,
-        playUrl,
-        "brain-speed.png",
-      );
-      setShareNote(
-        outcome === "shared"
-          ? "Shared."
-          : outcome === "downloaded"
-            ? "Card saved. The caption is on your clipboard."
-            : outcome === "copied"
-              ? "Copied to your clipboard."
-              : "Sharing is not available here.",
-      );
-    } finally {
-      setSharing(false);
-    }
-  };
-
   const cornerButton =
     "flex items-center gap-1.5 rounded-lg px-1 py-1 text-[12px] font-bold uppercase tracking-[0.22em] transition hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-core";
 
   return (
     <Event3Shell pills sparkles>
       {/* Hidden QR used by the canvas share card. */}
-      <div ref={qrHostRef} className="hidden" aria-hidden>
-        <QRCodeCanvas value={playUrl} size={190} marginSize={0} />
-      </div>
+      {qrHost}
 
       <motion.div
         className="flex h-full min-h-0 flex-col"
