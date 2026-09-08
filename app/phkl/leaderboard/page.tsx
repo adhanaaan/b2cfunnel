@@ -16,7 +16,8 @@
  *    invitation to play beside it.
  * 2. SCAN TO PLAY and the QR down the left; the standings - five rows, the
  *    leader as a gradient hero - filling the rest.
- * 3. The fact strip: the GMS lockup, then the rotating brain fact.
+ * 3. The fact strip: the GMS lockup, then the rotating brain fact, over the
+ *    band of event photography along the bottom edge.
  *
  * Self-contained: polls /api/leaderboard every 8s and keeps the last good
  * standings on error.
@@ -31,6 +32,7 @@ import { playUrlFor } from "@/config/eventLinks";
 import { BRAIN_FACTS } from "@/config/tips";
 import { springs } from "@/lib/motion";
 import { BrainHero } from "@/components/screens/event3/BrainHero";
+import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
 
 interface Entry {
   name: string;
@@ -103,6 +105,41 @@ const T = {
   fact: "text-[clamp(0.75rem,min(2.5vh,3.2vw),1.6875rem)]",
   eyebrow: "text-[clamp(0.625rem,min(1.75vh,2.6vw),1.1875rem)]",
 };
+
+/**
+ * The band of event photography along the bottom edge (693:22430-22432), in
+ * the widths the design shows of each frame - its frames overlap, so these are
+ * the visible parts, 491:681:748. The photos are the regatta board's: the same
+ * three frames, the same band, one event's crowd standing in for the next.
+ * Each is optional, so the band thins out (and finally disappears) rather than
+ * breaking if a file is ever missing.
+ */
+const BAND = [
+  { src: "/regatta-band-1.jpg", grow: 491 },
+  { src: "/regatta-band-2.png", grow: 681 },
+  { src: "/regatta-band-3.jpg", grow: 748 },
+];
+
+function PhotoBand() {
+  return (
+    <div
+      aria-hidden
+      // The design tucks the band 12px under the fact strip and shows 53px of
+      // its 84px height; below `lg` it is a plain 2.5rem strip.
+      className="relative z-10 flex h-10 w-full shrink-0 overflow-hidden empty:hidden lg:-mt-[1.11vh] lg:h-[4.9vh]"
+    >
+      {BAND.map((frame) => (
+        <OptionalImage
+          key={frame.src}
+          src={frame.src}
+          alt=""
+          className="h-full min-w-0 object-cover"
+          style={{ flex: `${frame.grow} 1 0` }}
+        />
+      ))}
+    </div>
+  );
+}
 
 /** The design's 21.8px corner, held down to a phone-sized row. */
 const ROW_RADIUS = "clamp(0.875rem,min(2vh,3vw),1.363rem)";
@@ -532,6 +569,8 @@ export default function PhklLeaderboardBoard() {
           </motion.p>
         </AnimatePresence>
       </div>
+
+      <PhotoBand />
 
       {/* Podium celebration takeover (queued, one at a time). */}
       <AnimatePresence>
