@@ -20,9 +20,9 @@ const item = {
  * tile is a warm gradient under its caption, never a broken image.
  */
 const PHOTOS = [
-  { src: "/images/phkl/quiz-intro-sleep.jpg", tone: "from-[#f9d2b8] to-[#f2ad86]" },
-  { src: "/images/phkl/quiz-intro-exercise.jpg", tone: "from-[#fde3a7] to-[#f6ad3c]" },
-  { src: "/images/phkl/quiz-intro-diet.jpg", tone: "from-[#f9d9c4] to-[#ef9f6f]" },
+  { src: "/images/phkl/quiz-intro-sleep.png", tone: "from-[#f9d2b8] to-[#f2ad86]" },
+  { src: "/images/phkl/quiz-intro-exercise.png", tone: "from-[#fde3a7] to-[#f6ad3c]" },
+  { src: "/images/phkl/quiz-intro-diet.png", tone: "from-[#f9d9c4] to-[#ef9f6f]" },
 ];
 
 function FactorTile({

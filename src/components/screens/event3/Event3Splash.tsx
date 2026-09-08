@@ -198,20 +198,27 @@ export function Event3Splash({
       >
         {design === "phkl" ? (
           <>
-            {/* The partner's logo above the eyebrow. The row keeps its height
-                whether or not the file has been uploaded yet, so the hero
-                sits where it does on every other daylight landing; the image
-                itself appears the moment public/images/phkl/partner-logo.png
-                lands. */}
+            {/* The partner's logo above the eyebrow, at the presence it has in
+                Figma 697:24953 - about a third of the column wide. The row
+                keeps its height whether or not the file has been uploaded
+                yet, so the hero sits where it does on every other daylight
+                landing; the image itself appears the moment
+                public/images/phkl/partner-logo.png lands.
+
+                Sized by height, so the lockup grows with the screen without
+                the row reflowing. That only reads at the intended size if the
+                artwork is cropped tight to the mark: a logo exported on a
+                square canvas is mostly padding, and `object-contain` then
+                renders the mark at a third of this height. */}
             <div aria-hidden className="h-[1dvh] min-h-0 shrink" />
             <motion.div
               variants={item}
-              className="mb-[1.5dvh] flex h-[clamp(34px,5dvh,44px)] shrink-0 items-center justify-center"
+              className="mb-[2.6dvh] flex h-[clamp(42px,5.7dvh,52px)] shrink-0 items-center justify-center"
             >
               <OptionalImage
                 src="/images/phkl/partner-logo.png"
                 alt="Pantai Hospital Kuala Lumpur"
-                className="h-full w-auto max-w-[70%] object-contain"
+                className="h-full w-auto max-w-[76%] object-contain"
               />
             </motion.div>
           </>
