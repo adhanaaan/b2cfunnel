@@ -725,6 +725,28 @@ export const COPY: CopyConfig = {
         offer: {
           eyebrow: "What to do now?",
           heading: "Book your Memory Screening Package",
+          body: "Your brain carries you through every part of life. Understand how it's doing today, and what you can do to protect it for the years ahead.",
+          poster: {
+            hospital: "Pantai Hospital Kuala Lumpur",
+            hospitalNote: "By IHH Healthcare",
+            title: ["Memory", "Screening", "Package"],
+            price: "RM460",
+            includesHeading: "Package includes",
+            includes: [
+              "Specialist Consultation",
+              "Digital Cognitive Assessment",
+              "Laboratory Tests",
+            ],
+            whoHeading: "Who should consider screening?",
+            who: [
+              "Changes in mood or behaviour",
+              "Family history of Alzheimer's",
+              "Confusion with time or place",
+              "Difficulty concentrating",
+              "Age 40 and above",
+              "Frequent forgetfulness",
+            ],
+          },
           proofParts: [
             "Validated against MRI scans, built on a five-year NTU study of 1,500 people and published in ",
             "Alzheimer's & Dementia",
@@ -748,33 +770,6 @@ export const COPY: CopyConfig = {
             "Co-founder, Gray Matter Solutions",
             "MBBS, FAMS (Neurology), FRCP (Edin)",
           ],
-        },
-        nextStep: {
-          eyebrow: "Your next step",
-          heading: "Book your screening now",
-          body: "Your brain carries you through every part of life. Understand how it's doing today, and what you can do to protect it for the years ahead.",
-          cta: "Book my screening",
-          poster: {
-            hospital: "Pantai Hospital Kuala Lumpur",
-            hospitalNote: "By IHH Healthcare",
-            title: ["Memory", "Screening", "Package"],
-            price: "RM460",
-            includesHeading: "Package includes",
-            includes: [
-              "Specialist Consultation",
-              "Digital Cognitive Assessment",
-              "Laboratory Tests",
-            ],
-            whoHeading: "Who should consider screening?",
-            who: [
-              "Changes in mood or behaviour",
-              "Family history of Alzheimer's",
-              "Confusion with time or place",
-              "Difficulty concentrating",
-              "Age 40 and above",
-              "Frequent forgetfulness",
-            ],
-          },
         },
         wrapUp: {
           quoteParts: [

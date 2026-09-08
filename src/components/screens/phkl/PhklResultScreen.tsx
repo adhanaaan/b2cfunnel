@@ -13,7 +13,6 @@ import { PhklSpeedExplainer } from "./result/PhklSpeedExplainer";
 import { PhklRiskSection } from "./result/PhklRiskSection";
 import { PhklBaselineCard } from "./result/PhklBaselineCard";
 import { PhklScreeningOffer } from "./result/PhklScreeningOffer";
-import { PhklNextStep } from "./result/PhklNextStep";
 import { PhklWrapUp } from "./result/PhklWrapUp";
 
 interface PhklResultScreenProps {
@@ -74,7 +73,6 @@ export function PhklResultScreen({
         <PhklRiskSection result={result} name={name} gameTimeMs={gameTimeMs} />
         <PhklBaselineCard result={result} standing={standing} />
         <PhklScreeningOffer />
-        <PhklNextStep />
         <PhklWrapUp ageBand={ageBand} />
       </div>
 
