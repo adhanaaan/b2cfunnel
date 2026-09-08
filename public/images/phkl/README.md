@@ -9,15 +9,26 @@ appears on the next deploy - no code change needed.
 
 Three photos in a row, cropped to fill (`object-cover`), roughly 80-96px tall
 on screen. Shoot or crop them portrait-ish/square; landscape works too.
-Suggested export: ~600x600px, JPEG.
+Suggested export: ~600x600px, PNG or JPEG (match the extension the code
+expects - see `PhklQuizIntro.tsx`).
 
 | File | Shows |
 | --- | --- |
-| `quiz-intro-sleep.jpg` | Sleep |
-| `quiz-intro-exercise.jpg` | Exercise |
-| `quiz-intro-diet.jpg` | Diet |
+| `quiz-intro-sleep.png` | Sleep |
+| `quiz-intro-exercise.png` | Exercise |
+| `quiz-intro-diet.png` | Diet |
 
 Until they land, each tile is a warm gradient with its caption on top.
+
+## Landing
+
+| File | Shows |
+| --- | --- |
+| `partner-logo.png` | The Pantai Hospital KL lockup above the eyebrow |
+
+Crop it tight to the mark. The landing sizes it by height, so a logo exported
+on a square canvas is mostly transparent padding and renders about a third of
+the size it should.
 
 ## Report
 
