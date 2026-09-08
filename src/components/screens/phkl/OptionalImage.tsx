@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 
 /**
@@ -18,12 +18,15 @@ export function OptionalImage({
   src,
   alt,
   className = "",
+  style,
   fallback = null,
   onMissing,
 }: {
   src: string;
   alt: string;
   className?: string;
+  /** For sizing a frame the class list cannot express (a flex ratio). */
+  style?: CSSProperties;
   fallback?: ReactNode;
   onMissing?: () => void;
 }) {
@@ -49,6 +52,7 @@ export function OptionalImage({
       ref={ref}
       src={src}
       alt={alt}
+      style={style}
       className={`${className} ${state === "loaded" ? "" : "invisible"}`.trim()}
       onLoad={() => setState("loaded")}
       onError={() => setState("missing")}
