@@ -1,6 +1,7 @@
 "use client";
 
 import { COPY } from "@/config/copy";
+import { PHKL_PACKAGE_SECTION_ID } from "@/config/eventLinks";
 import { OptionalImage } from "../OptionalImage";
 import { BookingLink, Reveal, rankPillCta, reportEyebrow } from "../ui";
 
@@ -75,7 +76,10 @@ function PosterCard() {
 export function PhklNextStep() {
   const c = COPY.screens.phkl.report.nextStep;
   return (
-    <section className="bg-[#fff8f3] px-6 pb-12 pt-4">
+    <section
+      id={PHKL_PACKAGE_SECTION_ID}
+      className="scroll-mt-4 bg-[#fff8f3] px-6 pb-12 pt-4"
+    >
       <Reveal>
         <p className={`${reportEyebrow} text-[14px] tracking-[0.24em]`}>{c.eyebrow}</p>
         <h2 className="mt-3 text-[clamp(1.75rem,7.6vw,1.875rem)] font-extrabold leading-[1.12] tracking-[-0.025em] text-[#1c110a]">
