@@ -795,7 +795,6 @@ export const COPY: CopyConfig = {
           ],
           credit:
             "Built on clinical research by Nanyang Technological University, LKC Medicine, Dementia Research Centre Singapore.",
-          doctorNote: "Speak to a doctor about any concerns.",
         },
       },
     },

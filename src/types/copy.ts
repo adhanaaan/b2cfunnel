@@ -525,9 +525,6 @@ export interface PhklCopy {
       thinkingHeading: string;
       thinkingBody: string[];
       credit: string;
-      // The line the report ends on. This event's report carries only the
-      // "speak to a doctor" line of the shared disclaimers.
-      doctorNote: string;
     };
   };
 }

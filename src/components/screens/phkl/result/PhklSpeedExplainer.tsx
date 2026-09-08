@@ -11,9 +11,9 @@ import { Reveal, SerifParts } from "../ui";
  *
  * Sits straight under the standing chips on the open backdrop, not in the
  * report's white sheet, so the brain and the start of "Processing speed" land
- * above the fold. Its ground is the brain's own light: a yellow glow behind
- * the frontal lobe, spilling into a wash that fades down into the cream
- * before the sheet begins.
+ * above the fold. The only colour of its own is an accent: a soft yellow halo
+ * behind the brain, the frontal lobe's light carried a little way into the
+ * cream, and nothing more.
  */
 export function PhklSpeedExplainer() {
   const c = COPY.screens.phkl.report.speed;
@@ -21,17 +21,13 @@ export function PhklSpeedExplainer() {
 
   return (
     <section className="relative -mx-4 mt-3 px-6 pb-10 pt-3">
-      {/* The wash: gathers to full yellow behind the brain, gone by the bottom. */}
+      {/* The halo, centred on the brain and gone well before the heading. Not
+          clipped to the section, so its top edge spills softly behind the
+          standing chips rather than stopping at a line; it sits under the
+          header's content. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgba(253,234,164,0)_0%,#fdeaa4_22%,#fff3cf_58%,rgba(255,248,243,0)_100%)]"
-      />
-      {/* The glow itself, centred on the brain. Not clipped to the section: it
-          spills up behind the standing chips, the way light would, rather than
-          stopping at a line. Both layers sit under the header's content. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[-110px] -z-10 h-[380px] w-[min(130vw,640px)] -translate-x-1/2 bg-[radial-gradient(closest-side,rgba(255,222,84,0.8)_0%,rgba(255,230,140,0.4)_45%,transparent_100%)]"
+        className="pointer-events-none absolute left-1/2 top-[-60px] -z-10 h-[290px] w-[min(105vw,480px)] -translate-x-1/2 bg-[radial-gradient(closest-side,rgba(255,226,110,0.6)_0%,rgba(255,232,150,0.28)_45%,transparent_100%)]"
       />
 
       <div className="relative">
