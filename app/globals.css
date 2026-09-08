@@ -338,6 +338,23 @@
     animation: glow-pulse var(--glow-duration, 2.8s) ease-in-out infinite;
   }
 
+  /* The step the loading screen is working on right now (PHKL report
+     workup): the empty tick ring breathes until it is ticked off. */
+  @keyframes step-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.09);
+      opacity: 0.62;
+    }
+  }
+  .animate-step-pulse {
+    animation: step-pulse 1.15s ease-in-out infinite;
+  }
+
   /* One-shot ember burst behind a celebrated result. */
   @keyframes ember-burst {
     0% {
@@ -461,6 +478,7 @@
     .animate-ember-float,
     .animate-symbol-drift,
     .animate-glow-pulse,
+    .animate-step-pulse,
     .animate-ember-burst,
     .animate-live-pulse,
     .animate-pill-drift,
