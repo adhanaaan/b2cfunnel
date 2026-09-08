@@ -379,7 +379,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     case "result":
       if (state.variant === "phkl") {
         // The PHKL report carries the time and standing itself (there is no
-        // post-game card in this arc) and its own "Retry Game": the reducer
+        // post-game card in this arc) and its own "Retry": the reducer
         // brings a replay straight back here with the new time.
         return state.result ? (
           <PhklResultScreen

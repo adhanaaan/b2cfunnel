@@ -1,13 +1,14 @@
 "use client";
 
 import { COPY } from "@/config/copy";
-import { ComplianceFooter } from "@/components/ui/ComplianceFooter";
 import { Reveal, SerifParts } from "../ui";
 
 /**
  * R7 (Figma 697:25241): a word from someone who went on to the full test,
- * a soft close for anyone not ready, the research credit, and the mandatory
- * disclaimers every report ends on.
+ * a soft close for anyone not ready, and the research credit. This report
+ * does not carry the shared ComplianceFooter: both disclaimer lines were
+ * dropped from the PHKL report at the client's request, so it ends on the
+ * credit.
  */
 export function PhklWrapUp({ ageBand }: { ageBand?: string }) {
   const c = COPY.screens.phkl.report.wrapUp;
@@ -41,7 +42,6 @@ export function PhklWrapUp({ ageBand }: { ageBand?: string }) {
 
       <Reveal className="mt-8">
         <p className="text-center text-[11px] leading-[1.6] text-[#c9b4a6]">{c.credit}</p>
-        <ComplianceFooter />
       </Reveal>
     </section>
   );

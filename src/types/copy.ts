@@ -453,10 +453,12 @@ export interface PhklCopy {
       rankLabel: string;
       fastestLabel: string;
       fastestEmpty: string;
+      // Share and retry sit in the header's top corners, as on the post-game card.
       shareLabel: string;
+      retryLabel: string;
     };
+    // The one button pinned to the bottom of the screen for the whole report.
     sticky: {
-      retry: string;
       book: string;
     };
     speed: {

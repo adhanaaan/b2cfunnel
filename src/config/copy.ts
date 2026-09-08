@@ -689,9 +689,9 @@ export const COPY: CopyConfig = {
           fastestLabel: "Fastest so far",
           fastestEmpty: "Be the first",
           shareLabel: "Share",
+          retryLabel: "Retry",
         },
         sticky: {
-          retry: "Retry game",
           book: "Book memory screening",
         },
         speed: {

@@ -5,7 +5,7 @@ import { animate, motion, useReducedMotion } from "framer-motion";
 import { COPY } from "@/config/copy";
 import { firstName, formatTime, ordinal } from "@/lib/format";
 import { springs, stagger } from "@/lib/motion";
-import { ShareIcon } from "@/components/screens/event3/icons";
+import { RetryIcon, ShareIcon } from "@/components/screens/event3/icons";
 import {
   emberLabelGradient,
   emberTextGradient,
@@ -19,6 +19,8 @@ interface PhklResultHeaderProps {
   attempts?: number;
   standing: Standing;
   share: { share: () => void; sharing: boolean; shareNote: string | null };
+  /** Play the reaction game again; the flow brings them straight back here. */
+  onRetry: () => void;
 }
 
 const item = {
@@ -26,11 +28,15 @@ const item = {
   show: { opacity: 1, y: 0, transition: springs.enter },
 };
 
+const cornerButton =
+  "flex items-center gap-1.5 rounded-lg px-1 py-1 text-[12px] font-bold uppercase tracking-[0.22em] text-[#ee743f] transition hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-core";
+
 /**
- * The top of the PHKL report (Figma "05 Result page"): the player's time,
- * counted up, under "{name}'s 1st record in processing speed", with their
- * rank and the fastest so far beneath. Share sits in the top corner; retry
- * lives in the sticky bar below, so the header stays about the result.
+ * The top of the PHKL report (Figma "05 Result page"): share and retry in the
+ * top corners, as on the post-game card, then the player's time, counted up,
+ * under "{name}'s 1st record in processing speed", with their rank and the
+ * fastest so far beneath. Kept tight, so the brain and the start of
+ * "Processing speed" below it land above the fold.
  */
 export function PhklResultHeader({
   name,
@@ -38,6 +44,7 @@ export function PhklResultHeader({
   attempts,
   standing,
   share,
+  onRetry,
 }: PhklResultHeaderProps) {
   const c = COPY.screens.phkl.report.header;
   const reduced = useReducedMotion();
@@ -85,28 +92,31 @@ export function PhklResultHeader({
       initial={reduced ? "show" : "hidden"}
       animate="show"
     >
+      {/* Top corners: share / retry */}
       <motion.div variants={item} className="relative flex items-center justify-between pt-1">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/gms-ntu-logo.png"
-          alt="Gray Matter Solutions - a spin-off from Nanyang Technological University, Singapore"
-          className="h-[26px] w-auto"
-        />
         <button
           type="button"
           onClick={share.share}
           disabled={share.sharing || timeMs == null}
-          className="-mr-1 flex items-center gap-1.5 rounded-lg px-1 py-1 text-[12px] font-bold uppercase tracking-[0.22em] text-[#ee743f] transition hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-core disabled:opacity-50"
+          className={`${cornerButton} -ml-1 disabled:opacity-50`}
         >
           <ShareIcon className="h-[22px] w-[22px]" />
           <span className={emberLabelGradient}>
             {share.sharing ? "…" : c.shareLabel}
           </span>
         </button>
+        <button
+          type="button"
+          onClick={onRetry}
+          className={`${cornerButton} -mr-1`}
+        >
+          <RetryIcon className="h-[20px] w-[20px]" />
+          <span className={emberLabelGradient}>{c.retryLabel}</span>
+        </button>
         {share.shareNote && (
           <p
             role="status"
-            className="absolute right-0 top-full mt-1 text-right text-[11px] text-outline"
+            className="absolute left-0 right-0 top-full mt-1 text-center text-[11px] text-outline"
           >
             {share.shareNote}
           </p>
@@ -115,7 +125,7 @@ export function PhklResultHeader({
 
       <motion.p
         variants={item}
-        className="mt-9 text-center text-xs font-bold uppercase tracking-[0.22em] text-ember-core"
+        className="mt-7 text-center text-xs font-bold uppercase tracking-[0.22em] text-ember-core"
       >
         {c.eyebrow}
       </motion.p>
@@ -125,7 +135,13 @@ export function PhklResultHeader({
         className="mx-auto mt-2 max-w-[330px] text-balance text-center font-bold leading-[1.15] text-[#171717]"
       >
         <span className="block text-[clamp(22px,6.2vw,25px)]">{heading}</span>
-        <span className={`block text-[clamp(29px,8.4vw,33px)] ${emberTextGradient}`}>
+        {/* The gradient fill is clipped to the line's box, and at this leading
+            the descenders of "processing speed" reach below it. Give the box
+            room underneath and take the same room back from the margin, so
+            the letters paint whole and nothing else moves. */}
+        <span
+          className={`-mb-[0.2em] block pb-[0.2em] text-[clamp(29px,8.4vw,33px)] ${emberTextGradient}`}
+        >
           {c.headingHighlight}
         </span>
       </motion.h1>
@@ -135,7 +151,7 @@ export function PhklResultHeader({
         variants={item}
         type="button"
         onClick={skipCountUp}
-        className="mx-auto mt-7 cursor-default text-center"
+        className="mx-auto mt-6 cursor-default text-center"
         aria-label={`${c.timeLabel}: ${timeMs != null ? formatTime(timeMs) : "unavailable"}`}
       >
         <span className="block text-xs font-bold uppercase tracking-[0.22em] text-ember-core">
@@ -153,7 +169,7 @@ export function PhklResultHeader({
       </motion.button>
 
       {/* Standing chips: your rank / fastest so far */}
-      <motion.div variants={item} className="mt-8 flex justify-between gap-3">
+      <motion.div variants={item} className="mt-6 flex justify-between gap-3">
         <div className="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl bg-white/45 px-2 py-3 text-center backdrop-blur-[2px]">
           <p className={`w-full text-[10px] font-bold uppercase tracking-[0.1em] ${emberLabelGradient}`}>
             {c.rankLabel}
