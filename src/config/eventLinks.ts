@@ -20,15 +20,19 @@ export const EVENT_PATHS: Partial<Record<QuizVariant, string>> = {
 };
 
 /**
- * Where "Book memory screening" on the /phkl report sends people.
- *
- * PLACEHOLDER: Pantai Hospital Kuala Lumpur's health screening packages page,
- * until the hospital supplies the booking link for the Memory Screening
- * Package. Replace this one constant and every booking button on the report
- * follows.
+ * The booking form for the Memory Screening Package, at the end of the /phkl
+ * report. Only the button under the poster goes straight here; the two
+ * earlier buttons walk the reader down to the poster first, so nobody books
+ * before they have seen what the package is (PHKL_PACKAGE_SECTION_ID).
  */
 export const PHKL_BOOKING_URL =
-  "https://www.pantai.com.my/kuala-lumpur/health-screening-packages";
+  "https://forms.cloud.microsoft/pages/responsepage.aspx?id=xGm28JghaE-QAx9GPEtCwEnjrv0_X-lGt6_EBwpuOgdURFpRVzVYUTVURERTTFU3NVkxMjhMQ0hXUC4u&route=shorturl";
+
+/**
+ * The id of the Memory Screening Package section on the /phkl report - what
+ * the sticky button and the button above the clinician's quote scroll to.
+ */
+export const PHKL_PACKAGE_SECTION_ID = "memory-screening-package";
 
 /**
  * The absolute play link for a variant - used by the TV boards' QR codes and

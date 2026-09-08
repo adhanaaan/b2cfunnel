@@ -1,8 +1,8 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { PHKL_BOOKING_URL } from "@/config/eventLinks";
+import { PHKL_BOOKING_URL, PHKL_PACKAGE_SECTION_ID } from "@/config/eventLinks";
 import { track } from "@/lib/analytics";
 import { ease } from "@/lib/motion";
 import { useVariant } from "@/components/VariantContext";
@@ -87,10 +87,12 @@ export function SerifParts({ parts }: { parts: string[] }) {
 }
 
 /**
- * Every "book" button on the report: one link, one destination
- * (PHKL_BOOKING_URL), one analytics event that says which of them was tapped.
- * A real anchor rather than a button, so it opens in a new tab, works without
- * JavaScript, and reads as a link to assistive tech.
+ * Every "book" button on the report, in two kinds. The button under the
+ * poster is the booking itself and opens the form (PHKL_BOOKING_URL); the
+ * sticky button and the one above the clinician's quote come earlier than the
+ * package does, so they walk the reader down to the Memory Screening Package
+ * section instead. Both are real anchors rather than buttons, so they work
+ * without JavaScript and read as links to assistive tech.
  */
 export function BookingLink({
   placement,
@@ -102,12 +104,28 @@ export function BookingLink({
   children: ReactNode;
 }) {
   const variant = useVariant();
+  const reduced = useReducedMotion();
+  const toForm = placement === "poster";
+
+  const scrollToPackage = (event: MouseEvent<HTMLAnchorElement>) => {
+    const section = document.getElementById(PHKL_PACKAGE_SECTION_ID);
+    if (!section) return; // Let the plain #hash jump handle it.
+    event.preventDefault();
+    section.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    });
+  };
+
   return (
     <a
-      href={PHKL_BOOKING_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={() => track("booking_click", { variant, placement })}
+      href={toForm ? PHKL_BOOKING_URL : `#${PHKL_PACKAGE_SECTION_ID}`}
+      target={toForm ? "_blank" : undefined}
+      rel={toForm ? "noopener noreferrer" : undefined}
+      onClick={(event) => {
+        track("booking_click", { variant, placement });
+        if (!toForm) scrollToPackage(event);
+      }}
       className={className}
     >
       {children}
