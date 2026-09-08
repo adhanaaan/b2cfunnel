@@ -486,23 +486,7 @@ export interface PhklCopy {
     offer: {
       eyebrow: string;
       heading: string;
-      // Fragments alternate plain/serif-italic, starting plain.
-      proofParts: string[];
-      includesEyebrow: string;
-      assessmentHeading: string[];
-      assessmentBody: string;
-      reportHeading: string;
-      reportBody: string;
-      cta: string;
-      quote: string;
-      quoteName: string;
-      quoteRole: string[];
-    };
-    nextStep: {
-      eyebrow: string;
-      heading: string;
       body: string;
-      cta: string;
       /** The poster's content, drawn in HTML until the artwork lands. */
       poster: {
         hospital: string;
@@ -514,6 +498,17 @@ export interface PhklCopy {
         whoHeading: string;
         who: string[];
       };
+      // Fragments alternate plain/serif-italic, starting plain.
+      proofParts: string[];
+      includesEyebrow: string;
+      assessmentHeading: string[];
+      assessmentBody: string;
+      reportHeading: string;
+      reportBody: string;
+      cta: string;
+      quote: string;
+      quoteName: string;
+      quoteRole: string[];
     };
     wrapUp: {
       // Fragments alternate plain/serif-italic, starting plain.

@@ -32,13 +32,24 @@ the size it should.
 
 ## Report
 
+All four sit in the "Book your Memory Screening Package" section
+(`PhklScreeningOffer.tsx`).
+
 | File | Shows | Fallback while missing |
 | --- | --- | --- |
-| `screening-devices.png` | The assessment on phone/tablet/laptop | `/landing/woman-tablet.png` |
+| `memory-screening-package.png` | The hospital's own package poster | An HTML rebuild of the poster |
+| `screening-devices.png` | The assessment on two phones and a laptop | `/landing/woman-tablet.png` |
 | `report-1.png` | A page of the full report | The pair of shots is hidden |
 | `report-2.png` | Another page of the full report | The pair of shots is hidden |
-| `memory-screening-package.png` | The hospital's own package poster | An HTML rebuild of the poster |
 
-`report-1.png` and `report-2.png` show side by side, so give them a matching
-shape. The poster renders full width of the section, so export it at least
-1000px wide.
+The poster renders full width of the section, so export it at least 1000px
+wide.
+
+`screening-devices.png` is a wide strip that renders about 326px across,
+centred in a 229px-tall white card: export it around 1000x320 (roughly 3:1)
+with the devices on a white or transparent ground.
+
+`report-1.png` and `report-2.png` show side by side, each about 145px across
+and cropped from the top, so give them a matching portrait shape - around
+660x980 each (roughly 2:3). Anything below the first two thirds of the page
+is cropped away, so put the heading and the chart up top.

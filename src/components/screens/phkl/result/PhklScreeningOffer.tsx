@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { COPY } from "@/config/copy";
+import { PHKL_PACKAGE_SECTION_ID } from "@/config/eventLinks";
 import { OptionalImage } from "../OptionalImage";
 import {
   BookingLink,
@@ -15,72 +16,181 @@ import {
 } from "../ui";
 
 /**
- * The two report screenshots (Figma 697:25176-25177). Optional files: while
- * neither has been uploaded the frame is left out altogether rather than
- * shown empty.
+ * The hospital's own package poster, drawn in HTML from its own words until
+ * the artwork lands at public/images/phkl/memory-screening-package.png. The
+ * hospital's blue and the package's green are approximated; the real poster
+ * replaces this the moment the file exists.
  */
-function ReportShots() {
-  const [missing, setMissing] = useState(0);
-  if (missing >= 2) return null;
+function PosterCard() {
+  const p = COPY.screens.phkl.report.offer.poster;
+  const [currency, amount] = [
+    p.price.replace(/[\d,]/g, ""),
+    p.price.replace(/[^\d,]/g, ""),
+  ];
   return (
-    <div className="mt-4 flex justify-center gap-3 overflow-hidden rounded-[20px] bg-white p-4">
-      <OptionalImage
-        src="/images/phkl/report-1.png"
-        alt="A page of the full ReCOGnAIze report"
-        className="max-h-[240px] w-auto max-w-[48%] rounded-lg object-contain shadow-card"
-        onMissing={() => setMissing((n) => n + 1)}
-      />
-      <OptionalImage
-        src="/images/phkl/report-2.png"
-        alt="Another page of the full ReCOGnAIze report"
-        className="max-h-[240px] w-auto max-w-[48%] rounded-lg object-contain shadow-card"
-        onMissing={() => setMissing((n) => n + 1)}
-      />
+    <div
+      className="overflow-hidden rounded-[19px] bg-gradient-to-br from-[#eef6fb] via-[#dbe9f4] to-[#9dbfd8] px-5 pb-6 pt-6 text-center shadow-[0_18px_46px_-28px_rgba(31,79,140,0.5)]"
+      role="img"
+      aria-label={`${p.hospital}. ${p.title.join(" ")}, ${p.price}. ${p.includesHeading}: ${p.includes.join(", ")}. ${p.whoHeading} ${p.who.join(", ")}.`}
+    >
+      <p className="text-[17px] font-extrabold uppercase tracking-[0.04em] text-[#1c4f9c]">
+        {p.hospital}
+      </p>
+      <p className="mt-0.5 text-[11px] font-bold text-[#1c4f9c]">{p.hospitalNote}</p>
+
+      <p className="mt-5 text-[clamp(2rem,10vw,2.5rem)] font-extrabold leading-[1.05] text-[#1c4f9c]">
+        {p.title.map((line) => (
+          <span key={line} className="block">
+            {line}
+          </span>
+        ))}
+      </p>
+
+      <div className="mt-6 overflow-hidden rounded-2xl bg-white text-left shadow-[0_10px_30px_-18px_rgba(31,79,140,0.5)]">
+        <div className="bg-[#4caf50] px-5 py-3 text-center text-white">
+          <span className="align-top text-sm font-bold">{currency}</span>
+          <span className="text-[34px] font-extrabold leading-none">{amount}</span>
+        </div>
+        <div className="px-5 py-4">
+          <p className="text-[13px] font-extrabold text-[#1c4f9c]">{p.includesHeading}</p>
+          <ul className="mt-2.5 space-y-2">
+            {p.includes.map((line) => (
+              <li key={line} className="flex items-center gap-2.5 text-[13px] text-[#1c110a]">
+                <span aria-hidden className="h-2 w-2 shrink-0 rounded-full bg-[#1c4f9c]" />
+                {line}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-4 overflow-hidden rounded-2xl bg-white text-left shadow-[0_10px_30px_-18px_rgba(31,79,140,0.5)]">
+        <p className="bg-[#1c4f9c] px-5 py-2.5 text-[14px] font-extrabold text-white">
+          {p.whoHeading}
+        </p>
+        <ul className="grid gap-2 px-5 py-4">
+          {p.who.map((line) => (
+            <li key={line} className="flex items-start gap-2 text-[12.5px] leading-snug text-[#1c110a]">
+              <svg viewBox="0 0 8 10" className="mt-1 h-2.5 w-2 shrink-0 text-[#1aa8a0]" aria-hidden>
+                <path d="M0 0 8 5 0 10z" fill="currentColor" />
+              </svg>
+              {line}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
 
 /**
- * R5 (Figma 697:25127): the Memory Screening Package - what it rests on, the
- * institutions behind it, what the screening includes, the report it ends in,
- * the booking button and the clinician's word.
+ * The white frame the two step images sit in (Figma 718:9506, 718:9512): the
+ * same 229px-tall card either way, so the section's rhythm holds whether the
+ * screenshots have been uploaded or not.
+ */
+function StepFrame({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex h-[229px] w-full items-center justify-center overflow-hidden rounded-[20px] bg-white px-2">
+      {children}
+    </div>
+  );
+}
+
+/**
+ * The two report screenshots (Figma 718:9514-9515) - a pair of report pages
+ * taller than the frame, so each is cropped from the top as designed. Optional
+ * files: while neither has been uploaded the frame is left out altogether
+ * rather than shown empty.
+ */
+function ReportShots() {
+  const [missing, setMissing] = useState(0);
+  if (missing >= 2) return null;
+  const shot =
+    "h-[244px] w-[calc(50%-6px)] shrink-0 rounded-md object-cover object-top";
+  return (
+    <Reveal className="mt-5">
+      <div className="flex h-[229px] w-full items-start justify-center gap-3 overflow-hidden rounded-[20px] bg-white px-5 pt-4">
+        <OptionalImage
+          src="/images/phkl/report-1.png"
+          alt="A page of the full report, showing a memory game result against the population curve"
+          className={shot}
+          onMissing={() => setMissing((n) => n + 1)}
+        />
+        <OptionalImage
+          src="/images/phkl/report-2.png"
+          alt="Another page of the full report, showing an executive-function result against the population curve"
+          className={shot}
+          onMissing={() => setMissing((n) => n + 1)}
+        />
+      </div>
+    </Reveal>
+  );
+}
+
+/**
+ * R5 (Figma 718:9490): the one ask, in the order the design puts it - the
+ * hospital's package poster, what the screening rests on and the institutions
+ * behind it, the two things it includes, the booking button and the
+ * clinician's word. Carries the package anchor the sticky button scrolls to.
  */
 export function PhklScreeningOffer() {
   const c = COPY.screens.phkl.report.offer;
   const heading3 =
     "text-[20px] font-extrabold leading-[1.3] tracking-[-0.01em] text-[#1c110a]";
-  const body = "mt-2 text-[14.5px] leading-[1.58] text-[#6b5245]";
+  const body = "text-[14.5px] leading-[1.58] text-[#6b5245]";
 
   return (
-    <section className="bg-[#fff8f3] px-6 pb-12 pt-4">
+    <section
+      id={PHKL_PACKAGE_SECTION_ID}
+      className="scroll-mt-4 bg-[#fff8f3] px-6 pb-12 pt-4"
+    >
       <Reveal>
         <p className={reportEyebrow}>{c.eyebrow}</p>
-        <h2 className={`mt-5 text-balance ${reportHeading}`}>{c.heading}</h2>
-        <p className="mt-5 text-[15.5px] leading-[1.6] text-[#6b5245]">
+        <h2 className={`mt-[22px] text-balance ${reportHeading}`}>{c.heading}</h2>
+        <p className="mt-[22px] text-[15.5px] leading-[1.6] text-[#6b5245]">
+          {c.body}
+        </p>
+      </Reveal>
+
+      <Reveal className="mt-[22px]">
+        <OptionalImage
+          src="/images/phkl/memory-screening-package.png"
+          alt={`${c.poster.hospital} ${c.poster.title.join(" ")}, ${c.poster.price}`}
+          className="w-full rounded-[19px]"
+          fallback={<PosterCard />}
+        />
+      </Reveal>
+
+      <Reveal className="mt-[22px]">
+        <p className="text-[15.5px] leading-[1.6] text-[#6b5245]">
           <SerifParts parts={c.proofParts} />
         </p>
       </Reveal>
 
-      <Reveal className="mt-6">
-        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 rounded-2xl border border-[#f2ddce] bg-white/70 px-4 py-4">
+      <Reveal className="mt-[22px]">
+        <div className="flex flex-wrap items-center justify-center gap-x-[5px] gap-y-3 rounded-2xl border border-[#f2ddce] bg-white/70 px-1 py-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/gms-ntu-logo.png"
             alt="Gray Matter Solutions, a spin-off from Nanyang Technological University"
-            className="h-[26px] w-auto"
+            className="h-[24px] w-auto"
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/LKCMedicine-Dementia-Research-Centre-2.png"
             alt="Lee Kong Chian School of Medicine, Dementia Research Centre"
-            className="h-9 w-auto"
+            className="h-[35px] w-auto"
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/pubmed-logo-blue.svg" alt="PubMed" className="h-7 w-auto" />
+          <img
+            src="/pubmed-logo-blue.svg"
+            alt="PubMed"
+            className="h-[28px] w-auto"
+          />
         </div>
       </Reveal>
 
-      <Reveal className="mt-9">
+      <Reveal className="mt-[22px]">
         <p className={reportOverline}>{c.includesEyebrow}</p>
         <h3 className={`mt-2 ${heading3}`}>
           {c.assessmentHeading.map((line) => (
@@ -89,39 +199,42 @@ export function PhklScreeningOffer() {
             </span>
           ))}
         </h3>
-        <p className={body}>{c.assessmentBody}</p>
-        <div className="mt-4 overflow-hidden rounded-[20px] bg-white p-3">
-          <OptionalImage
-            src="/images/phkl/screening-devices.png"
-            alt="The digital cognitive assessment on a phone, a tablet and a laptop"
-            className="mx-auto max-h-[230px] w-auto"
-            fallback={
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src="/landing/woman-tablet.png"
-                alt="A woman reading her ReCOGnAIze brain health results on a tablet"
-                className="w-full rounded-xl object-cover"
-              />
-            }
-          />
+        <p className={`mt-2 ${body}`}>{c.assessmentBody}</p>
+        <div className="mt-2">
+          <StepFrame>
+            <OptionalImage
+              src="/images/phkl/screening-devices.png"
+              alt="The digital cognitive assessment on two phones and a laptop"
+              className="h-auto w-full max-h-[180px] object-contain"
+              fallback={
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src="/landing/woman-tablet.png"
+                  alt="A woman reading her ReCOGnAIze brain health results on a tablet"
+                  className="h-auto max-h-[180px] w-full rounded-xl object-contain"
+                />
+              }
+            />
+          </StepFrame>
         </div>
       </Reveal>
 
-      <div className="my-7 h-px bg-[#f2ddce]" aria-hidden />
+      <div className="my-5 h-px bg-[#f2ddce]" aria-hidden />
 
       <Reveal>
         <h3 className={heading3}>{c.reportHeading}</h3>
-        <p className={body}>{c.reportBody}</p>
-        <ReportShots />
+        <p className={`mt-2 ${body}`}>{c.reportBody}</p>
       </Reveal>
 
-      <Reveal className="mt-7">
-        <BookingLink placement="offer" className={rankPillCta}>
+      <ReportShots />
+
+      <Reveal className="mt-[22px]">
+        <BookingLink placement="poster" className={rankPillCta}>
           {c.cta}
         </BookingLink>
       </Reveal>
 
-      <Reveal className="mt-7">
+      <Reveal className="mt-[22px]">
         <figure className={`${reportCard} px-6 pb-6 pt-4`}>
           <span aria-hidden className="block text-[40px] font-extrabold leading-none text-[#ffce9b]">
             “
