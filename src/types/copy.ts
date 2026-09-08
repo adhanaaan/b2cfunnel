@@ -430,6 +430,8 @@ export interface PhklCopy {
     /** Captions on the three factor photos, in order. */
     factors: [string, string, string];
     lead: string;
+    /** The evidence the quiz rests on, in a card above the CTA. */
+    citation: { heading: string; body: string };
     cta: string;
   };
   // The loading beat between the last question and the report: a progress ring

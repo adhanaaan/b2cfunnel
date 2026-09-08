@@ -56,6 +56,38 @@ function FactorTile({
 }
 
 /**
+ * The evidence the quiz rests on (Figma "08 Quiz Intro"), in a soft card above
+ * the CTA: the same two sources the landing's credibility list cites, so the
+ * reader sees what the coming questions are built on before answering any.
+ */
+function CitationCard({ heading, body }: { heading: string; body: string }) {
+  return (
+    <aside className="rounded-[18px] bg-white/55 px-4 py-3.5 shadow-[0_10px_30px_-22px_rgba(90,40,10,0.35)] backdrop-blur-[2px]">
+      <p className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#b4653c]">
+        <svg
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-[17px] w-[17px] flex-shrink-0"
+          aria-hidden
+        >
+          <path d="M10 5.6v9.7" />
+          <path d="M10 5.6C8.6 4.5 6.8 4 4.6 4.1a1 1 0 0 0-.95 1v8.2a1 1 0 0 0 1.03 1c1.97-.07 3.58.4 5.32 1.3" />
+          <path d="M10 5.6c1.4-1.1 3.2-1.6 5.4-1.5a1 1 0 0 1 .95 1v8.2a1 1 0 0 1-1.03 1c-1.97-.07-3.58.4-5.32 1.3" />
+        </svg>
+        {heading}
+      </p>
+      <p className="mt-2 text-[clamp(0.78rem,1.7dvh,0.875rem)] leading-[1.5] text-[#ab6a44]">
+        {body}
+      </p>
+    </aside>
+  );
+}
+
+/**
  * PHKL quiz primer (Figma "08 Quiz Intro"): the rail on its second stop, and
  * the one idea the quiz rests on - speed is not fixed, and what moves it is
  * about to be asked. Replaces the regatta's optional invite: there is no
@@ -127,6 +159,10 @@ export function PhklQuizIntro({
           >
             {c.lead}
           </motion.p>
+
+          <motion.div variants={item} className="mt-[2.6dvh]">
+            <CitationCard heading={c.citation.heading} body={c.citation.body} />
+          </motion.div>
         </div>
 
         <motion.div variants={item} className="mt-auto pt-6">
