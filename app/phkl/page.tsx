@@ -28,8 +28,8 @@ export const metadata: Metadata = {
  *   quiz primer, and the first question follows.
  * - A long report: time and rank, what processing speed is, what else was
  *   measured, how much of the brain is still uncovered, and the Memory
- *   Screening Package at Pantai Hospital KL, with "Retry Game" and "Book
- *   memory screening" pinned to the screen throughout.
+ *   Screening Package at Pantai Hospital KL, with "Book memory screening"
+ *   pinned to the screen throughout and share / retry in the top corners.
  *
  * Its scores and reports are tagged `phkl`, so its board ranks only this
  * event. PHKL_PAUSED is its own switch.

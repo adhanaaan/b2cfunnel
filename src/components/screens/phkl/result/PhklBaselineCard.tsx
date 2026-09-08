@@ -4,7 +4,6 @@ import { motion, useReducedMotion } from "framer-motion";
 import type { ScoreResult } from "@/types/engine";
 import { COPY } from "@/config/copy";
 import { ease } from "@/lib/motion";
-import type { Standing } from "@/components/screens/event3/useStanding";
 import { Reveal, rankGradientText, reportCard, reportEyebrow, reportHeading } from "../ui";
 
 // Radar geometry, in the figure's own coordinates. Five axes clockwise from
@@ -18,6 +17,12 @@ const RINGS = [1 / 3, 2 / 3, 1];
 const AXES = 5;
 /** Which axes the game and the quiz have filled in. */
 const MEASURED = new Set([0, 4]);
+/**
+ * Where the speed dot sits, whatever the player's time: the middle of its
+ * axis. The figure is about how much of the brain is covered so far, not a
+ * verdict on today's run, so a #1 and a last place draw the same shape.
+ */
+const SPEED = 0.5;
 
 const angleAt = (i: number) => -Math.PI / 2 + (i * 2 * Math.PI) / AXES;
 const pointAt = (i: number, v: number): [number, number] => [
@@ -31,29 +36,19 @@ const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v
 /**
  * R4 (Figma 697:25091): "you've only covered 2 out of 5". A five-axis radar
  * with only speed and risk filled in - the two the game and the quiz measured,
- * drawn from the player's actual standing and score - and the three the full
- * test would add left hollow at the rim. Illustrative of coverage, not a
- * clinical chart, and the figure says so in words for assistive tech.
+ * speed at a fixed middle and risk drawn from the player's score - and the
+ * three the full test would add left hollow at the rim. Illustrative of
+ * coverage, not a clinical chart, and the figure says so in words for
+ * assistive tech.
  */
-export function PhklBaselineCard({
-  result,
-  standing,
-}: {
-  result: ScoreResult;
-  standing: Standing;
-}) {
+export function PhklBaselineCard({ result }: { result: ScoreResult }) {
   const c = COPY.screens.phkl.report.baseline;
   const reduced = useReducedMotion();
 
-  // Speed: where the player sits on today's board, top = fastest. Risk: the
-  // Brain Health Score itself (high = healthy). Both kept off the centre so
-  // the shape always reads.
-  const speed =
-    standing.rank && standing.total && standing.total > 1
-      ? clamp(1 - (standing.rank - 1) / (standing.total - 1), 0.3, 1)
-      : 0.7;
+  // Risk: the Brain Health Score itself (high = healthy), kept off the centre
+  // so the shape always reads. Speed is the fixed SPEED above.
   const risk = clamp(result.total / result.maxTotal, 0.3, 1);
-  const filled: [number, number][] = [[CX, CY], pointAt(0, speed), pointAt(4, risk)];
+  const filled: [number, number][] = [[CX, CY], pointAt(0, SPEED), pointAt(4, risk)];
 
   return (
     <section className="bg-[#fff8f3] px-6 pb-12 pt-4">
@@ -126,7 +121,7 @@ export function PhklBaselineCard({
               {Array.from({ length: AXES }, (_, i) => {
                 const measured = MEASURED.has(i);
                 const [x, y] = measured
-                  ? pointAt(i, i === 0 ? speed : risk)
+                  ? pointAt(i, i === 0 ? SPEED : risk)
                   : pointAt(i, 1);
                 return (
                   <circle

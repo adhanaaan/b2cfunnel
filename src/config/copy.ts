@@ -689,9 +689,9 @@ export const COPY: CopyConfig = {
           fastestLabel: "Fastest so far",
           fastestEmpty: "Be the first",
           shareLabel: "Share",
+          retryLabel: "Retry",
         },
         sticky: {
-          retry: "Retry game",
           book: "Book memory screening",
         },
         speed: {
@@ -795,6 +795,7 @@ export const COPY: CopyConfig = {
           ],
           credit:
             "Built on clinical research by Nanyang Technological University, LKC Medicine, Dementia Research Centre Singapore.",
+          doctorNote: "Speak to a doctor about any concerns.",
         },
       },
     },

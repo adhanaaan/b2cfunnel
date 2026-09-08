@@ -453,10 +453,12 @@ export interface PhklCopy {
       rankLabel: string;
       fastestLabel: string;
       fastestEmpty: string;
+      // Share and retry sit in the header's top corners, as on the post-game card.
       shareLabel: string;
+      retryLabel: string;
     };
+    // The one button pinned to the bottom of the screen for the whole report.
     sticky: {
-      retry: string;
       book: string;
     };
     speed: {
@@ -523,6 +525,9 @@ export interface PhklCopy {
       thinkingHeading: string;
       thinkingBody: string[];
       credit: string;
+      // The line the report ends on. This event's report carries only the
+      // "speak to a doctor" line of the shared disclaimers.
+      doctorNote: string;
     };
   };
 }

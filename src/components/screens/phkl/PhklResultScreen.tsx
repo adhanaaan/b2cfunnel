@@ -28,12 +28,13 @@ interface PhklResultScreenProps {
 }
 
 /**
- * The PHKL report (Figma "10. Result (PHKL Customized)"): the player's time
- * and standing on the daylight backdrop, then the report proper on its warm
- * white ground - what processing speed is, what else was measured, how much
- * of the brain is still uncovered, the Memory Screening Package, and a close.
- * "Retry Game" and "Book memory screening" stay pinned to the bottom of the
- * screen the whole way down.
+ * The PHKL report (Figma "10. Result (PHKL Customized)"): share and retry in
+ * the top corners, the player's time and standing on the daylight backdrop,
+ * the brain in its own glow with what processing speed is, then the report
+ * proper on its warm white sheet - what else was measured, how much of the
+ * brain is still uncovered, the Memory Screening Package, and a close. "Book
+ * memory screening" stays pinned to the bottom of the screen the whole way
+ * down.
  */
 export function PhklResultScreen({
   result,
@@ -65,18 +66,20 @@ export function PhklResultScreen({
         attempts={gameAttempts}
         standing={standing}
         share={{ share, sharing, shareNote }}
+        onRetry={onRetake}
       />
 
-      {/* The report runs edge to edge under the daylight header. */}
-      <div className="-mx-4 mt-10 overflow-hidden rounded-t-[28px] shadow-[0_-18px_46px_-30px_rgba(90,40,10,0.35)]">
-        <PhklSpeedExplainer />
+      <PhklSpeedExplainer />
+
+      {/* The report proper runs edge to edge on its sheet. */}
+      <div className="-mx-4 overflow-hidden rounded-t-[28px] shadow-[0_-18px_46px_-30px_rgba(90,40,10,0.35)]">
         <PhklRiskSection result={result} name={name} gameTimeMs={gameTimeMs} />
-        <PhklBaselineCard result={result} standing={standing} />
+        <PhklBaselineCard result={result} />
         <PhklScreeningOffer />
         <PhklWrapUp ageBand={ageBand} />
       </div>
 
-      <PhklStickyCta onRetry={onRetake} />
+      <PhklStickyCta />
     </Event3Shell>
   );
 }
