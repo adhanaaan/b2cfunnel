@@ -1,14 +1,23 @@
 "use client";
 
 /**
- * The attract screen for /phkl (designed against a 1920x1080 55"
- * panel, read from 2-5m away, but laid out to reflow down to a phone).
+ * The attract screen for /phkl, built to Figma 693:22421 ("Leaderboard").
  *
- * Two columns on a wide screen - the scan rail and the live standings, which
- * take the width the v3 board gives its prize card. There is no prize on this
- * one, and the space buys what it is worth more: full names on every row.
- * Collapses to standings-over-scan on tablet and mobile. Type is clamped
- * between a mobile floor and the panel size so the same markup serves both.
+ * Designed against a 1920x1080 55" panel read from 2-5m away, but laid out to
+ * reflow down to a phone. The design is height-driven, so every size below is
+ * the design's pixel value expressed as a share of 1080 (the `vh` term), with
+ * a `vw` term that takes over on a narrow screen and a mobile floor under
+ * both - the same `min(vh, vw)` device the board has always used, now with
+ * the design's numbers in it.
+ *
+ * Three bands:
+ *
+ * 1. The brain and "Is your brain at its peak performance?", with the
+ *    invitation to play beside it.
+ * 2. SCAN TO PLAY and the QR down the left; the standings - five rows, the
+ *    leader as a gradient hero - filling the rest.
+ * 3. The fact strip: the GMS lockup, then the rotating brain fact.
+ *
  * Self-contained: polls /api/leaderboard every 8s and keeps the last good
  * standings on error.
  */
@@ -21,13 +30,15 @@ import { PHKL_PAUSED, PHKL_SOURCE } from "@/config/event";
 import { playUrlFor } from "@/config/eventLinks";
 import { BRAIN_FACTS } from "@/config/tips";
 import { springs } from "@/lib/motion";
+import { BrainHero } from "@/components/screens/event3/BrainHero";
 
 interface Entry {
   name: string;
   timeMs: number;
 }
 
-const TOP_N = 8;
+/** Five rows, as the design lays out (693:22446-693:22450). */
+const TOP_N = 5;
 const POLL_MS = 8000;
 const FACT_MS = 8000;
 
@@ -40,6 +51,10 @@ const PLAY_URL = playUrlFor("phkl");
  */
 const RATE_POLL_MS = 30000;
 
+const HEADLINE = ["Is your brain at its", "peak performance?"];
+const SCAN_LABEL = "SCAN TO PLAY";
+const BOARD_LABEL = "SPEED GAME LEADERBOARD";
+
 const HOW_TO = [
   "Play the speed game",
   "1-min quiz on what's slowing you",
@@ -50,101 +65,77 @@ const HOW_TO = [
 const ORANGE_DEEP = "#e35d0e";
 const CARD_LINE = "#f3ddd2";
 const RANK_CHIP_BG = "#f6e8e0";
-const INITIALS_BG = "#ffe9dc";
 const INK_FAINT = "#a98d80";
 const EMPTY_TIME = "#dcc4b6";
 const RANK_SILVER = "#c3cad6";
 const RANK_BRONZE = "#d99058";
 // Warm cream for the leader row's "time to beat" label.
 const LEADER_LABEL = "#ffe4cf";
-// Scan-rail headline: deep ember for the emphasised words, and the highlighter
-// yellow behind "< 60 SECONDS" (the Processing Speed domain's light tone).
-const SCAN_ACCENT = "#993c1d";
-const SCAN_HIGHLIGHT = "#fde68a";
+// The Processing Speed domain's light tone, behind SCAN TO PLAY and the
+// standings label, over the domain's dark ink.
+const HIGHLIGHT = "#fde68a";
+const HIGHLIGHT_INK = "#2a1006";
 
 const CANVAS =
   "linear-gradient(150deg, #fff8f6 15%, #fdeee4 46%, #fbe3d3 85%)";
 const LEADER_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
+/** The standings label sits on a band that fades out to the right (693:22451). */
+const LABEL_BAND =
+  "linear-gradient(90deg, rgba(253,230,138,0.95) 0%, rgba(253,230,138,0.55) 62%, rgba(253,230,138,0) 100%)";
 
 /**
- * Clamped type sizes. The middle term is `min(vh, vw)` on purpose: the board is
- * sized off viewport height for the 55" panel, but on a tall narrow phone a
- * height-only clamp produces TV-sized text that overflows the width.
+ * Clamped type sizes: `clamp(mobile floor, min(design vh, vw), design px)`.
+ * The `vh` term is the design's size over 1080, so a 1920x1080 panel renders
+ * the design's pixels exactly; the `vw` term only binds on a screen narrower
+ * than the panel's proportion, which is what keeps a phone readable.
  */
 const T = {
+  h1: "text-[clamp(1.5rem,min(7.07vh,3.96vw),4.77rem)]",
+  lede: "text-[clamp(0.9375rem,min(3.65vh,3.6vw),2.466rem)]",
+  scanLabel: "text-[clamp(0.75rem,min(2.6vh,2.8vw),1.754rem)]",
+  boardLabel: "text-[clamp(0.875rem,min(2.9vh,3vw),1.96rem)]",
+  leaderName: "text-[clamp(1.125rem,min(4.04vh,5vw),2.724rem)]",
+  leaderTime: "text-[clamp(1.375rem,min(5.47vh,6.4vw),3.69rem)]",
+  timeToBeat: "text-[clamp(0.5rem,min(1.26vh,1.9vw),0.851rem)]",
+  rowName: "text-[clamp(0.9375rem,min(2.94vh,4vw),1.987rem)]",
+  rowTime: "text-[clamp(1rem,min(3.28vh,4.4vw),2.214rem)]",
+  rowEmpty: "text-[clamp(0.8125rem,min(2.4vh,3.4vw),1.55rem)]",
+  fact: "text-[clamp(0.75rem,min(2.5vh,3.2vw),1.6875rem)]",
   eyebrow: "text-[clamp(0.625rem,min(1.75vh,2.6vw),1.1875rem)]",
-  chip: "text-[clamp(0.625rem,min(2vh,3vw),1.375rem)]",
-  h1: "text-[clamp(1.375rem,min(5.4vh,7vw),3.625rem)]",
-  rankL: "text-[clamp(0.9375rem,min(3vh,4.2vw),2rem)]",
-  rank: "text-[clamp(0.75rem,min(2.2vh,3.2vw),1.5rem)]",
-  leaderName: "text-[clamp(1.125rem,min(4.4vh,5.5vw),3rem)]",
-  leaderTime: "text-[clamp(1.375rem,min(6vh,8vw),4.0625rem)]",
-  micro: "text-[clamp(0.5rem,min(1.4vh,2.2vw),0.9375rem)]",
-  rowName: "text-[clamp(0.9375rem,min(3.25vh,4.4vw),2.1875rem)]",
-  rowTime: "text-[clamp(1rem,min(3.6vh,4.8vw),2.4375rem)]",
-  rowEmpty: "text-[clamp(0.8125rem,min(2.4vh,3.6vw),1.625rem)]",
-  scanTitle: "text-[clamp(1rem,min(3vh,4.4vw),2rem)]",
-  // The scan headline is the loudest type on the board: sized off the 48.6px
-  // base of the design, with the emphasised words stepped up in em from there.
-  scanHead: "text-[clamp(1.375rem,min(4.5vh,4.8vw),3.0375rem)]",
-  fact: "text-[clamp(0.75rem,min(2.5vh,3.4vw),1.6875rem)]",
-  footer: "text-[clamp(0.5625rem,min(1.5vh,2.2vw),1rem)]",
 };
 
-function initials(name: string) {
-  return (
-    name
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((w) => w[0]?.toUpperCase() ?? "")
-      .join("") || "?"
-  );
-}
+/** The design's 21.8px corner, held down to a phone-sized row. */
+const ROW_RADIUS = "clamp(0.875rem,min(2vh,3vw),1.363rem)";
 
 const keyOf = (e: Entry) => `${e.name}·${Math.round(e.timeMs)}`;
 
-/* ------------------------------- Masthead ------------------------------- */
+/* -------------------------------- Header -------------------------------- */
 
-function Masthead({ live }: { live: boolean }) {
+/**
+ * The brain, the headline, and the invitation beside them (693:22424-22429).
+ * Below `lg` the invitation drops under the headline rather than sharing the
+ * row, so neither has to shrink to fit a phone.
+ */
+function BoardHeader() {
   return (
-    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-      <div className="min-w-0 sm:flex-1">
-        <div className="flex items-center gap-4">
-          <p
-            className={`${T.eyebrow} font-bold uppercase tracking-[0.3em] text-primary`}
-          >
-            Reaction Time Challenge
-          </p>
-          <p
-            className={`${T.chip} flex shrink-0 items-center gap-2 rounded-full bg-white px-[1.1em] py-[0.5em] font-bold text-secondary shadow-card`}
-            style={{ border: `1px solid ${CARD_LINE}` }}
-          >
-            {live ? (
-              <>
-                <span
-                  aria-hidden
-                  className="animate-live-pulse inline-block h-[0.6em] w-[0.6em] rounded-full bg-primary"
-                />
-                LIVE
-              </>
-            ) : (
-              "Final standings"
-            )}
-          </p>
-        </div>
+    <div className="grid items-center gap-[2vh] lg:grid-cols-[1082fr_754fr] lg:gap-[2vw]">
+      <div className="flex items-center gap-[clamp(0.5rem,2.2vw,2.6rem)]">
+        <BrainHero className="w-[clamp(4.5rem,16.64vw,19.97rem)] shrink-0" />
         <h1
-          className={`${T.h1} mt-2 font-extrabold leading-none tracking-tight text-charcoal`}
+          className={`${T.h1} min-w-0 whitespace-nowrap font-extrabold leading-none tracking-[-0.015em] text-charcoal`}
         >
-          How <span className="text-primary">fast</span> is the room today?
+          {HEADLINE.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
         </h1>
       </div>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/gms-ntu-logo.png"
-        alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
-        className="h-[clamp(1.5rem,min(4.3vh,6vw),2.875rem)] w-auto shrink-0 self-start sm:self-auto"
-      />
+      <p className={`${T.lede} font-medium leading-[1.5] text-charcoal`}>
+        Play the <b className="font-bold">speed</b> game to see your{" "}
+        <b className="font-bold">rank</b> and get free{" "}
+        <b className="font-bold">personalised</b> insights.
+      </p>
     </div>
   );
 }
@@ -179,9 +170,13 @@ function StandingRow({
     <motion.li
       layout
       transition={springs.shuffle}
-      className="flex min-h-0 items-center gap-[0.9em] rounded-2xl px-[0.7em] py-[0.4em] sm:px-[1.1em] lg:py-0"
+      className="flex min-h-0 items-center gap-[clamp(0.6rem,min(1.77vh,2.4vw),1.192rem)] px-[clamp(0.7rem,min(1.93vh,2.6vw),1.306rem)] py-[0.4em] lg:py-0"
       style={{
-        flex: leader ? 1.6 : 1,
+        // The design's 118px hero row against 72.5px for the rest.
+        height: leader
+          ? "clamp(3.25rem,10.93vh,7.375rem)"
+          : "clamp(2.75rem,6.71vh,4.531rem)",
+        borderRadius: ROW_RADIUS,
         background: leader
           ? LEADER_GRADIENT
           : entry
@@ -189,18 +184,18 @@ function StandingRow({
             : "rgba(255,255,255,0.55)",
         border: entry ? "none" : `2px dashed ${CARD_LINE}`,
         boxShadow: leader
-          ? "0 16px 40px -12px rgba(51,18,0,0.18)"
+          ? "0 14.5px 18px -2px rgba(51,18,0,0.18)"
           : entry
-            ? "0 8px 24px -8px rgba(51,18,0,0.12), 0 2px 8px -2px rgba(51,18,0,0.08)"
+            ? "0 7.3px 10.9px rgba(51,18,0,0.12), 0 1.8px 3.6px rgba(51,18,0,0.08)"
             : "none",
       }}
     >
       <span
-        className={`${leader ? T.rankL : T.rank} flex aspect-square shrink-0 items-center justify-center rounded-full font-extrabold leading-none`}
+        className={`${leader ? T.leaderName : T.rowName} flex aspect-square shrink-0 items-center justify-center rounded-full font-extrabold leading-none`}
         style={{
           height: leader
-            ? "clamp(1.625rem,min(6vh,8vw),4.0625rem)"
-            : "clamp(1.25rem,min(4.6vh,6vw),3.125rem)",
+            ? "clamp(1.625rem,min(5.47vh,7vw),3.69rem)"
+            : "clamp(1.25rem,min(4.2vh,5.5vw),2.838rem)",
           background: badgeBg,
           color: badgeColor,
         }}
@@ -211,39 +206,27 @@ function StandingRow({
       {entry ? (
         <>
           <span
-            className={`${leader ? "text-[clamp(0.625rem,min(2.2vh,3vw),1.5rem)]" : "text-[clamp(0.5rem,min(1.8vh,2.5vw),1.1875rem)]"} hidden aspect-square shrink-0 items-center justify-center rounded-full font-bold leading-none sm:flex`}
-            style={{
-              height: leader
-                ? "clamp(1.5rem,min(5.4vh,7vw),3.625rem)"
-                : "clamp(1.125rem,min(4.2vh,5.5vw),2.8125rem)",
-              background: leader ? "rgba(255,255,255,0.22)" : INITIALS_BG,
-              color: leader ? "#ffffff" : ORANGE_DEEP,
-            }}
-          >
-            {initials(entry.name)}
-          </span>
-          <span
-            className={`${leader ? T.leaderName : T.rowName} min-w-0 flex-1 truncate font-extrabold ${leader ? "text-white" : "text-charcoal"}`}
+            className={`${leader ? T.leaderName : T.rowName} min-w-0 flex-1 truncate font-extrabold ${leader ? "leading-[1.05] text-white" : "leading-[1.1] text-charcoal"}`}
           >
             {entry.name}
           </span>
           {leader ? (
             <span className="flex shrink-0 flex-col items-end leading-none">
               <span
-                className={`${T.micro} font-bold uppercase tracking-[0.25em]`}
+                className={`${T.timeToBeat} font-bold uppercase tracking-[0.25em]`}
                 style={{ color: LEADER_LABEL }}
               >
                 Time to beat
               </span>
               <span
-                className={`${T.leaderTime} mt-[0.15em] font-extrabold tabular-nums text-white`}
+                className={`${T.leaderTime} mt-[0.1em] font-extrabold leading-none tracking-[-0.01em] tabular-nums text-white`}
               >
                 {formatTime(entry.timeMs)}
               </span>
             </span>
           ) : (
             <span
-              className={`${T.rowTime} shrink-0 font-extrabold tabular-nums`}
+              className={`${T.rowTime} shrink-0 font-extrabold leading-[1.05] tabular-nums`}
               style={{ color: ORANGE_DEEP }}
             >
               {formatTime(entry.timeMs)}
@@ -252,13 +235,6 @@ function StandingRow({
         </>
       ) : (
         <>
-          <span
-            className="hidden aspect-square shrink-0 rounded-full sm:block"
-            style={{
-              height: "clamp(1.125rem,min(4.2vh,5.5vw),2.8125rem)",
-              border: `2px dashed ${CARD_LINE}`,
-            }}
-          />
           <span
             className={`${T.rowEmpty} min-w-0 flex-1 truncate font-semibold`}
             style={{ color: INK_FAINT }}
@@ -277,88 +253,46 @@ function StandingRow({
   );
 }
 
-/* ------------------------------ Scan rail ------------------------------- */
+/* ------------------------------- Scan rail ------------------------------ */
 
 /**
- * The left rail: the call to action, then the QR as large as the column allows.
- * Deliberately card-less - the headline sits straight on the canvas so it reads
- * from across a room, with the game's own lightning symbol tucked beside the
- * code the way the design has it.
+ * SCAN TO PLAY over the code (693:22439-22444). The label is a solid
+ * highlighter block the width of the column; the QR takes the square the
+ * column allows.
+ *
+ * The code is sized with `min(vw, vh)` rather than by aspect-ratio against a
+ * percentage height: Safari (which runs the board at events) resolves
+ * `aspect-square h-full` inside nested flex differently from Chromium and
+ * collapsed the code to a fraction of its intended size on a 13" laptop.
  */
 function ScanRail() {
   return (
-    <div className="flex h-full min-h-0 flex-col justify-center gap-[2vh] lg:gap-[3vh]">
+    <div className="flex h-full min-h-0 flex-col items-center gap-[clamp(0.75rem,1.85vh,1.25rem)] lg:items-start lg:justify-start">
       <p
-        className={`${T.scanHead} shrink-0 font-extrabold leading-[1.28] tracking-tight text-charcoal`}
+        className={`${T.scanLabel} flex h-[clamp(2.25rem,6.04vh,4.08rem)] w-[min(20rem,100%)] shrink-0 items-center justify-center text-center font-extrabold leading-[1.55] tracking-[0.12em] lg:w-[97.7%]`}
+        style={{ background: HIGHLIGHT, color: HIGHLIGHT_INK }}
       >
-        SCAN TO{" "}
-        <span className="text-[1.27em]" style={{ color: SCAN_ACCENT }}>
-          MEASURE
-        </span>
-        <br />
-        YOUR{" "}
-        <span className="text-[1.29em]" style={{ color: SCAN_ACCENT }}>
-          SPEED
-        </span>
-        <br />
-        <span className="text-[1.18em]">
-          in{" "}
-          {/* The vw term in T.scanHead is tuned so this phrase fits one line
-              at every width; box-decoration-clone keeps the highlight whole if
-              a future string ever does wrap. */}
-          <span
-            className="box-decoration-clone px-[0.14em] py-[0.02em] text-[1.11em]"
-            style={{ background: SCAN_HIGHLIGHT }}
-          >
-            &lt; 60 SECONDS
-          </span>
-        </span>
+        {SCAN_LABEL}
       </p>
 
-      {/* QR + bolt. The code is sized explicitly rather than by aspect-ratio
-          against a percentage height: Safari (which runs the board at events)
-          resolves `aspect-square h-full` inside nested flex differently from
-          Chromium and collapsed the code to a fraction of its intended size on
-          a 13" laptop. min(vw, vh) keeps it as large as the column and the
-          leftover height allow, in every engine. */}
-      <div className="relative flex min-h-0 flex-1 items-center justify-center lg:justify-start">
-        <div className="relative flex max-w-full items-center">
-          {/* Scannability settings measured at a live event (#46), kept
-              through the redesign: no size cap, so the code grows until the
-              column or the leftover height stops it; level L needs 29 modules
-              against M's 33, making each ~14% larger in the same box; and
-              marginSize={4} puts the spec'd four-module quiet zone inside the
-              SVG, where the design's black frame cannot eat into it. Pure
-              black thresholds better than the brand brown on a washed-out
-              projector and is indistinguishable across a room. */}
-          <div
-            className="flex size-[min(70vw,40vh)] max-w-full items-center justify-center rounded-[1.4rem] bg-white p-[0.25rem] lg:size-[min(29vw,46vh)]"
-            style={{ border: "0.5rem solid #111111" }}
-          >
-            <QRCodeSVG
-              value={PLAY_URL}
-              className="h-full w-full"
-              level="L"
-              marginSize={4}
-              fgColor="#000000"
-              bgColor="#ffffff"
-            />
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/task-2/flash.png"
-            alt=""
-            aria-hidden
-            className="animate-symbol-drift pointer-events-none absolute -bottom-[3%] -right-[9%] w-[clamp(3.5rem,min(18vh,14vw),11rem)] rotate-[17deg] drop-shadow-[0_18px_32px_rgba(0,0,0,0.25)]"
-            style={{
-              ["--drift-y" as string]: "-10px",
-              ["--drift-x" as string]: "0px",
-              ["--drift-tilt" as string]: "17deg",
-              ["--drift-tilt-to" as string]: "22deg",
-              ["--drift-duration" as string]: "6s",
-            }}
-          />
-        </div>
+      {/* Scannability settings measured at a live event (#46), kept through
+          the redesign: level L needs 29 modules against M's 33, making each
+          ~14% larger in the same box, and marginSize={4} puts the spec'd
+          four-module quiet zone inside the SVG, where the design's black
+          frame cannot eat into it. Pure black thresholds better than the
+          brand brown on a washed-out projector. */}
+      <div
+        className="flex size-[min(70vw,40vh)] max-w-full shrink-0 items-center justify-center bg-white p-[0.25rem] lg:size-[min(20vw,35.5vh)]"
+        style={{ border: "0.5rem solid #111111" }}
+      >
+        <QRCodeSVG
+          value={PLAY_URL}
+          className="h-full w-full"
+          level="L"
+          marginSize={4}
+          fgColor="#000000"
+          bgColor="#ffffff"
+        />
       </div>
     </div>
   );
@@ -468,7 +402,6 @@ export default function PhklLeaderboardBoard() {
   }, [slots]);
 
   const rows = Array.from({ length: TOP_N }, (_, i) => entries[i] ?? null);
-  const leader = entries[0] ?? null;
   // Guarded modulo: the slot count shrinks again if the rate goes away.
   const slot = factIdx % slots;
   const showHowTo = slot === BRAIN_FACTS.length;
@@ -479,47 +412,27 @@ export default function PhklLeaderboardBoard() {
       className="relative flex min-h-screen w-full flex-col overflow-x-hidden font-sans text-charcoal lg:h-screen lg:overflow-hidden"
       style={{ background: CANVAS }}
     >
-      {/* Soft capsule shapes from the funnel's splash art, tilted off-canvas. */}
+      {/* The yellow capsule the design tilts off the top-right corner. */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
         <div
-          className="absolute -left-[16vw] -top-[14vh] h-[14vh] w-[42vw] rotate-[-38deg] rounded-full"
-          style={{
-            background: "linear-gradient(90deg, #ffe382, #ffd75e)",
-            opacity: 0.62,
-          }}
-        />
-        <div
-          className="absolute -right-[10vw] top-[2vh] h-[13vh] w-[36vw] rotate-[32deg] rounded-full"
+          className="absolute -right-[8vw] -top-[9vh] h-[13.9vh] w-[33.9vw] rotate-[-32deg] rounded-full"
           style={{
             background: "linear-gradient(90deg, #ffd75e, #ffe9a8)",
             opacity: 0.5,
           }}
         />
-        <div
-          className="absolute -bottom-[16vh] -left-[12vw] h-[14vh] w-[38vw] rotate-[38deg] rounded-full"
-          style={{
-            background: "linear-gradient(90deg, #ffe382, #ffd75e)",
-            opacity: 0.55,
-          }}
-        />
       </div>
 
-      {/* Masthead */}
-      <header
-        className="relative z-10 shrink-0 px-[4vw] pb-3 pt-4 sm:pb-3.5 sm:pt-5 lg:px-[3vw]"
-        style={{ borderBottom: `1px solid ${CARD_LINE}` }}
-      >
-        <Masthead live={!PHKL_PAUSED} />
+      <header className="relative z-10 shrink-0 px-[4vw] pt-[3vh] lg:px-[1.35vw] lg:pt-[4.26vh]">
+        <BoardHeader />
       </header>
 
-      {/* Body: scan | standings. The standings take the column the v3 board
-          spends on its prize card, so long names have room to sit unclipped;
-          the scan rail keeps the width (and so the QR size) it has there.
-          Reflows to a single column - standings first - below lg. */}
-      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 lg:grid-cols-[588fr_1155fr] lg:gap-[1.6vw] lg:px-[3vw] lg:py-[2vh]">
+      {/* Scan | standings. The design gives the standings 1434 of the 1920
+          and the scan rail 384; below `lg` they stack, standings first. */}
+      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 lg:grid-cols-[384fr_1434fr] lg:gap-[1.32vw] lg:px-[2.4vw] lg:py-[2.5vh]">
         <div className="order-2 lg:order-1 lg:min-h-0">
           {PHKL_PAUSED ? (
             <div
@@ -531,12 +444,10 @@ export default function PhklLeaderboardBoard() {
               >
                 That&apos;s a wrap
               </p>
-              <p className={`${T.scanTitle} mt-3 font-extrabold leading-tight`}>
+              <p className={`${T.boardLabel} mt-3 font-extrabold leading-tight`}>
                 The challenge has ended
               </p>
-              <p
-                className={`${T.rowEmpty} mt-3 font-semibold text-secondary`}
-              >
+              <p className={`${T.rowEmpty} mt-3 font-semibold text-secondary`}>
                 {total > 0
                   ? `${total} minds tested today`
                   : "Thanks for playing"}
@@ -547,24 +458,39 @@ export default function PhklLeaderboardBoard() {
           )}
         </div>
 
-        <ol className="order-1 flex min-h-0 flex-col gap-2 lg:order-2 lg:gap-[1.2vh]">
-          {rows.map((e, i) => (
-            <StandingRow
-              key={e ? keyOf(e) : `empty-${i}`}
-              rank={i + 1}
-              entry={e}
-              leader={i === 0 && !!e}
-            />
-          ))}
-        </ol>
+        <div className="order-1 flex min-h-0 flex-col lg:order-2">
+          {/* The label band: highlighter yellow fading out to the right. */}
+          <p
+            className={`${T.boardLabel} w-full shrink-0 py-[0.7em] pl-[clamp(1rem,min(4.4vh,6vw),4.44rem)] font-bold italic leading-none tracking-[0.09em] lg:w-[49.6%]`}
+            style={{ background: LABEL_BAND, color: HIGHLIGHT_INK }}
+          >
+            {BOARD_LABEL}
+          </p>
 
+          <ol className="mt-[1.01vh] flex min-h-0 flex-col justify-start gap-2 lg:gap-[1.01vh]">
+            {rows.map((e, i) => (
+              <StandingRow
+                key={e ? keyOf(e) : `empty-${i}`}
+                rank={i + 1}
+                entry={e}
+                leader={i === 0 && !!e}
+              />
+            ))}
+          </ol>
+        </div>
       </div>
 
-      {/* Brain-facts strip */}
+      {/* Fact strip: the lockup, then the rotating fact. */}
       <div
-        className="relative z-10 flex shrink-0 items-center justify-center overflow-hidden px-[4vw] py-3 lg:h-[7vh] lg:px-[3vw] lg:py-0"
-        style={{ borderTop: `1px solid ${CARD_LINE}`, background: "#ffffffb8" }}
+        className="relative z-10 flex shrink-0 flex-col items-center justify-center gap-3 overflow-hidden px-[4vw] py-3 sm:flex-row sm:justify-start sm:gap-[4.17vw] lg:h-[12.87vh] lg:px-[2.5vw] lg:py-0"
+        style={{ background: "rgba(255,255,255,0.72)" }}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/gms-ntu-logo.png"
+          alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
+          className="h-[clamp(1.75rem,min(7.99vh,7vw),5.393rem)] w-auto shrink-0"
+        />
         <AnimatePresence mode="wait">
           <motion.p
             key={factIdx}
@@ -572,7 +498,7 @@ export default function PhklLeaderboardBoard() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.45 }}
-            className={`${T.fact} text-center`}
+            className={`${T.fact} min-w-0 text-center leading-[1.3] sm:text-left`}
           >
             {showRate ? (
               <>
@@ -606,15 +532,6 @@ export default function PhklLeaderboardBoard() {
           </motion.p>
         </AnimatePresence>
       </div>
-
-      {/* Footer */}
-      <footer
-        className={`${T.footer} relative z-10 shrink-0 px-[4vw] py-2.5 text-center lg:px-[3vw]`}
-        style={{ color: INK_FAINT, borderTop: `1px solid ${CARD_LINE}` }}
-      >
-        Gray Matter Solutions · A Spin-off from Nanyang Technological
-        University, Singapore
-      </footer>
 
       {/* Podium celebration takeover (queued, one at a time). */}
       <AnimatePresence>
