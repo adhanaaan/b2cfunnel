@@ -8,6 +8,7 @@ import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "./Event3Shell";
 import { BrainHero } from "./BrainHero";
 import { ConsentText, GradientWords, StrongWords, ctaPrimaryClass } from "./ui";
+import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
 
 interface Event3SplashProps {
   /**
@@ -195,7 +196,28 @@ export function Event3Splash({
         initial={reduced ? "show" : "hidden"}
         animate="show"
       >
-        <div aria-hidden className="h-[7.5dvh] min-h-0 shrink" />
+        {design === "phkl" ? (
+          <>
+            {/* The partner's logo above the eyebrow. The row keeps its height
+                whether or not the file has been uploaded yet, so the hero
+                sits where it does on every other daylight landing; the image
+                itself appears the moment public/images/phkl/partner-logo.png
+                lands. */}
+            <div aria-hidden className="h-[1dvh] min-h-0 shrink" />
+            <motion.div
+              variants={item}
+              className="mb-[1.5dvh] flex h-[clamp(34px,5dvh,44px)] shrink-0 items-center justify-center"
+            >
+              <OptionalImage
+                src="/images/phkl/partner-logo.png"
+                alt="Pantai Hospital Kuala Lumpur"
+                className="h-full w-auto max-w-[70%] object-contain"
+              />
+            </motion.div>
+          </>
+        ) : (
+          <div aria-hidden className="h-[7.5dvh] min-h-0 shrink" />
+        )}
 
         <motion.p
           variants={item}
