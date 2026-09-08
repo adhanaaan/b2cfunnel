@@ -29,6 +29,13 @@ export const FACTOR_LABELS: Record<string, string> = {
 };
 
 /**
+ * The published basis of the quiz, worded once: the landing's credibility list
+ * and the PHKL quiz primer's citation card cite the same two sources.
+ */
+const EVIDENCE_BASIS =
+  "Grounded in the 2024 Lancet Commission Risk Report and the CAIDE (Cardiovascular Risk Factors, Aging, and Incidence of Dementia) Dementia Risk Score.";
+
+/**
  * The Daylight Ember landing copy, shared by /event-v3, the /event-v6 preview,
  * /rotaryklwam, /ntuhomecoming and /ihhsearegatta. Words wrapped in
  * *asterisks* are emphasised where the
@@ -155,7 +162,7 @@ export const COPY: CopyConfig = {
         heading: "Built on science",
         points: [
           "Developed and validated at NTU's Lee Kong Chian School of Medicine, Dementia Research Centre.",
-          "Grounded in the 2024 Lancet Commission Risk Report and the CAIDE (Cardiovascular Risk Factors, Aging, and Incidence of Dementia) Dementia Risk Score.",
+          EVIDENCE_BASIS,
         ],
         logo: "/gms-ntu-logo.png",
       },
@@ -656,6 +663,7 @@ export const COPY: CopyConfig = {
         body: "It is driven by sleep, exercise, diet and other lifestyle factors.",
         factors: ["Sleep", "Exercise", "Diet"],
         lead: "Next, a few quick questions about yours.",
+        citation: { heading: "Built on science", body: EVIDENCE_BASIS },
         cta: "Continue",
       },
       analysing: {
