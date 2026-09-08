@@ -658,6 +658,18 @@ export const COPY: CopyConfig = {
         lead: "Next, a few quick questions about yours.",
         cta: "Continue",
       },
+      analysing: {
+        heading: "{name}, we are preparing your report",
+        headingAnonymous: "Preparing your report…",
+        // One line per part of the workup, ticked off as the ring fills.
+        steps: [
+          "Linking your Reaction Time Challenge result",
+          "Calculating your processing speed score",
+          "Reviewing your health and lifestyle answers",
+          "Comparing you with your age band",
+          "Preparing your Brain Health Score",
+        ],
+      },
       report: {
         header: {
           eyebrow: "Reaction Time Challenge",

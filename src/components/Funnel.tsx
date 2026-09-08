@@ -47,6 +47,7 @@ import { PhklSpeedIntro } from "@/components/screens/phkl/PhklSpeedIntro";
 import { PhklAgeSelect } from "@/components/screens/phkl/PhklAgeSelect";
 import { PhklGreatJob } from "@/components/screens/phkl/PhklGreatJob";
 import { PhklQuizIntro } from "@/components/screens/phkl/PhklQuizIntro";
+import { PhklAnalysingScreen } from "@/components/screens/phkl/PhklAnalysingScreen";
 import { PhklResultScreen } from "@/components/screens/phkl/PhklResultScreen";
 
 /** A stable, human-readable name for a funnel step (for drop-off analytics). */
@@ -363,6 +364,16 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "analysing":
+      // PHKL loads its report behind its own screen: a progress ring counting
+      // to 100% with each part of the workup ticking off, one by one.
+      if (state.variant === "phkl") {
+        return (
+          <PhklAnalysingScreen
+            name={state.name}
+            onDone={handleAnalysisDone}
+          />
+        );
+      }
       return <AnalysingScreen name={state.name} onDone={handleAnalysisDone} />;
 
     case "result":

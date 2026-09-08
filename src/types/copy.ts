@@ -432,6 +432,14 @@ export interface PhklCopy {
     lead: string;
     cta: string;
   };
+  // The loading beat between the last question and the report: a progress ring
+  // that counts up while each part of the workup ticks off, one by one.
+  analysing: {
+    heading: string; // contains {name}
+    headingAnonymous: string;
+    /** The parts of the workup, in the order they tick off. */
+    steps: string[];
+  };
   report: {
     header: {
       eyebrow: string;
