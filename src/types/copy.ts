@@ -390,6 +390,8 @@ export interface ScreenCopy {
   rotary: NoPartnerSplashCopy;
   ntuhomecoming: NoPartnerSplashCopy;
   ihhsearegatta: IhhseaCopy;
+  // /ihh: the regatta block again, with its own privacy-policy link.
+  ihh: IhhseaCopy;
   phkl: PhklCopy;
 }
 

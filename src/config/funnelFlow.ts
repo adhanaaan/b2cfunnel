@@ -3,6 +3,7 @@ import type { Answers, Axis } from "@/types/question";
 import { QUESTIONS_BY_ID } from "@/config/questions";
 import {
   EVENT3_CHALLENGE_CLOSED,
+  IHH_CHALLENGE_CLOSED,
   IHHSEA_CHALLENGE_CLOSED,
 } from "@/config/event";
 
@@ -360,6 +361,10 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   rotary: ROTARY_FLOW,
   ntuhomecoming: NTU_HOMECOMING_FLOW,
   ihhsearegatta: IHHSEA_FLOW,
+  // /ihh is the regatta arc, shared rather than rebuilt: the two routes differ
+  // only in the bucket their rows are tagged with, so a later change to the
+  // arc reaches both and neither one's question set can drift off the other's.
+  ihh: IHHSEA_FLOW,
   phkl: PHKL_FLOW,
   event6: EVENT6_FLOW,
 };
@@ -435,6 +440,11 @@ export function resolveFlow(
   if (variant === "ihhsearegatta" && IHHSEA_CHALLENGE_CLOSED) {
     // The regatta's partner consent lives on the landing, so the landing is
     // the last step before the wrap.
+    return closeAfter(flow, "nameGate");
+  }
+  if (variant === "ihh" && IHH_CHALLENGE_CLOSED) {
+    // Same arc, same last step - and its own switch, so closing the regatta
+    // never closes /ihh.
     return closeAfter(flow, "nameGate");
   }
   return flow;

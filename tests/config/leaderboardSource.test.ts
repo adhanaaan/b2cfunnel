@@ -3,6 +3,7 @@ import {
   DBS_DAY1_SOURCE,
   DBS_DAY2_SOURCE,
   EVENT3_SOURCE,
+  IHH_SOURCE,
   IHHSEA_SOURCE,
   NTU_HOMECOMING_SOURCE,
   PHKL_SOURCE,
@@ -216,6 +217,58 @@ describe("phkl leaderboard source", () => {
     ];
     for (const variant of others) {
       expect(eventSource(variant)).not.toBe(PHKL_SOURCE);
+    }
+  });
+});
+
+/**
+ * /ihh runs the regatta's arc, so the ONLY thing separating the two events'
+ * rows is this tag - which makes a collision here the whole failure the route
+ * exists to avoid: one bucket, two events, and standings nobody can unpick
+ * afterwards. Pinned to the literal the database's `source` column carries.
+ */
+describe("ihh leaderboard source", () => {
+  it("is the tag the database column expects", () => {
+    expect(IHH_SOURCE).toBe("ihh");
+  });
+
+  it("never collides with another event's bucket, the regatta's above all", () => {
+    for (const other of [
+      "event",
+      "event2",
+      "event3",
+      EVENT3_SOURCE,
+      DBS_DAY1_SOURCE,
+      DBS_DAY2_SOURCE,
+      ROTARY_SOURCE,
+      NTU_HOMECOMING_SOURCE,
+      IHHSEA_SOURCE,
+      PHKL_SOURCE,
+    ]) {
+      expect(IHH_SOURCE).not.toBe(other);
+    }
+  });
+
+  // A score and the report that follows it must carry the SAME tag, or the
+  // board's completion rate divides one event's reports by another's players.
+  it("tags both the score and the lead from the /ihh funnel", () => {
+    expect(eventSource("ihh")).toBe(IHH_SOURCE);
+  });
+
+  it("leaves every other variant's tag alone", () => {
+    const others: QuizVariant[] = [
+      "full",
+      "woman",
+      "event",
+      "event2",
+      "event3",
+      "rotary",
+      "ntuhomecoming",
+      "ihhsearegatta",
+      "phkl",
+    ];
+    for (const variant of others) {
+      expect(eventSource(variant)).not.toBe(IHH_SOURCE);
     }
   });
 });

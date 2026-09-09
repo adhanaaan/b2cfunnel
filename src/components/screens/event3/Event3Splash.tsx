@@ -31,12 +31,19 @@ interface Event3SplashProps {
    * designs differ in the consent rows - "v3" (shared with the /event-v6
    * preview) keeps the parenthetical "(Required)" and the ember privacy link,
    * while the others lead with a bold "Required." and keep the link in body
-   * colour. "ihhsearegatta" and "phkl" also carry the partner's consent as a
+   * colour. "ihhsearegatta", "ihh" and "phkl" also carry the partner's consent
+   * as a
    * third row (Figma 638:7729 and 697:24953), which is what makes them taller
    * than a screen and lets them scroll. Each one reads its own copy block and
    * tags its own newsletter opt-ins, so their wording can move independently.
    */
-  design?: "v3" | "rotary" | "ntuhomecoming" | "ihhsearegatta" | "phkl";
+  design?:
+    | "v3"
+    | "rotary"
+    | "ntuhomecoming"
+    | "ihhsearegatta"
+    | "ihh"
+    | "phkl";
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -129,7 +136,7 @@ export function Event3Splash({
   // The partner's block, on the landings that carry one (the regatta's and
   // PHKL's copy blocks are the only ones with it).
   const partner: { clauses: ConsentClause[] } | null =
-    design === "ihhsearegatta" || design === "phkl"
+    design === "ihhsearegatta" || design === "ihh" || design === "phkl"
       ? COPY.screens[design].splash.partnerConsent
       : null;
   // The newest landing takes the roomier consent rows (see ConsentCheckbox).

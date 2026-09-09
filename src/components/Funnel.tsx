@@ -220,6 +220,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             state.variant === "rotary" ||
             state.variant === "ntuhomecoming" ||
             state.variant === "ihhsearegatta" ||
+            state.variant === "ihh" ||
             state.variant === "phkl"
               ? state.variant
               : "v3"
@@ -245,7 +246,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "quizInvite":
-      // ihhsearegatta: "Tell me more" on the result card lands here, and the
+      // ihhsearegatta and ihh: "Tell me more" on the result card lands here, and the
       // quiz is accepted or declined on this page. "Not now" hands the player
       // back to that result card - their time, rank and share - rather than
       // ending the session on a closing screen; the invite sits directly
@@ -262,7 +263,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "wrap":
       // Challenge closed (EVENT3_CHALLENGE_CLOSED on v3,
-      // IHHSEA_CHALLENGE_CLOSED on the regatta): the last step of that flow.
+      // IHHSEA_CHALLENGE_CLOSED on the regatta, IHH_CHALLENGE_CLOSED on /ihh):
+      // the last step of that flow.
       // Terminal - there is nothing behind it to advance to.
       return <Event3Wrap />;
 
