@@ -19,6 +19,12 @@ export type QuizVariant =
   // questionnaire invite before the quiz. Closed by its own switch
   // (IHHSEA_CHALLENGE_CLOSED), which ends it on the "wrap" screen.
   | "ihhsearegatta"
+  // IHH (/ihh): the regatta arc again, unchanged, on its own `ihh` bucket -
+  // same landing, same invite, same report, with its own pause and
+  // challenge-closed switches so the two events never move together. The
+  // duplicate exists to keep this run's scores, leads and completion rate in
+  // a column of their own rather than mixed into the regatta's history.
+  | "ihh"
   // Pantai Hospital KL (/phkl): the regatta arc rebuilt for IHH Malaysia - a
   // processing-speed primer and the age question before the game, a "great
   // job" beat and a quiz primer instead of the post-game card (so the quiz is

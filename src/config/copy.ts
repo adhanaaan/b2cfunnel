@@ -1,4 +1,4 @@
-import type { ConsentClause, CopyConfig } from "@/types/copy";
+import type { ConsentClause, CopyConfig, IhhseaCopy } from "@/types/copy";
 
 /**
  * ALL user-facing copy lives here. British English. Working titles per build
@@ -149,6 +149,64 @@ const DAYLIGHT_GAME_RESULT: CopyConfig["screens"]["event3"]["gameResult"] = {
   bridgeQuestion: "Continue filling out a questionnaire for",
   bridgeHighlight: "your brain health report",
   cta: "Continue to report",
+};
+
+/**
+ * The IHH SEA Regatta screen copy, shared by /ihhsearegatta and /ihh: the two
+ * routes run the same arc, so the wording is defined once here and the only
+ * thing /ihh overrides is the privacy-policy link under its required consent
+ * row (COPY.screens.ihh below).
+ */
+const IHHSEA_SCREEN_COPY: IhhseaCopy = {
+  // The regatta landing (Figma 638:7729) is the daylight landing with the
+  // bold "Required." row, its own privacy policy behind that row's link,
+  // and the partner's consent as a third row: IHH's three clauses and the
+  // withdrawal right under one tick, in place of the v3 consent page.
+  splash: {
+    ...NO_PARTNER_SPLASH,
+    privacyHref: "/ihhsearegatta/privacy-policy",
+    partnerConsent: {
+      clauses: [...IHH_CONSENT_CLAUSES, IHH_CONSENT_WITHDRAWAL],
+    },
+  },
+  // The regatta bridge card leads with the player's own wish, then turns
+  // it on the organ nobody tracks. Only the card differs on this screen -
+  // the share, retry, rank and time copy is v3's.
+  gameResult: {
+    ...DAYLIGHT_GAME_RESULT,
+    bridgeWish: "I want to be faster\u2026",
+    bridgeWishNote: "in conversations and decision making",
+    bridgeQuestion: "You tracked everything,",
+    bridgeHighlight: "What about your brain?",
+    cta: "Tell me more",
+  },
+  quizInvite: {
+    heading:
+      "Fill a free 2-min questionnaire to get personalised brain health results",
+    cta: "Sure!",
+    decline: "Not now",
+    domainCard: {
+      title: "Processing Speed",
+      body: "How fast your brain connects the dots, from reading speed to reaction time to quick mental math.",
+      whyLabel: "Why it matters",
+      whyHeading: "Processing speed in everyday life",
+      whyPoints: [
+        "Scanning a menu and deciding what to order",
+        "Keeping up in fast-paced group conversations",
+        "Doing mental math at the checkout",
+        "Taking in new instructions without slowing down",
+      ],
+      scienceLabel: "Neuroscience",
+      science: [
+        "Located right behind your forehead, this area acts as your brain's \u201cCEO\u201d. It handles planning, decision-making and personality.",
+        "When you make choices or control your behaviour, this area is hard at work.",
+      ],
+    },
+    reportCard: {
+      blurb:
+        "A handful of modifiable factors are affecting your brain health performance.",
+    },
+  },
 };
 
 export const COPY: CopyConfig = {
@@ -576,55 +634,15 @@ export const COPY: CopyConfig = {
       // own block so this event's wording can be changed on its own.
       splash: NO_PARTNER_SPLASH,
     },
-    ihhsearegatta: {
-      // The regatta landing (Figma 638:7729) is the daylight landing with the
-      // bold "Required." row, its own privacy policy behind that row's link,
-      // and the partner's consent as a third row: IHH's three clauses and the
-      // withdrawal right under one tick, in place of the v3 consent page.
+    ihhsearegatta: IHHSEA_SCREEN_COPY,
+    // /ihh - the regatta arc again on its own `ihh` source bucket. Same copy,
+    // word for word, with the required consent row pointing at this route's
+    // own copy of the policy so a reader never leaves /ihh mid-consent.
+    ihh: {
+      ...IHHSEA_SCREEN_COPY,
       splash: {
-        ...NO_PARTNER_SPLASH,
-        privacyHref: "/ihhsearegatta/privacy-policy",
-        partnerConsent: {
-          clauses: [...IHH_CONSENT_CLAUSES, IHH_CONSENT_WITHDRAWAL],
-        },
-      },
-      // The regatta bridge card leads with the player's own wish, then turns
-      // it on the organ nobody tracks. Only the card differs on this screen -
-      // the share, retry, rank and time copy is v3's.
-      gameResult: {
-        ...DAYLIGHT_GAME_RESULT,
-        bridgeWish: "I want to be faster\u2026",
-        bridgeWishNote: "in conversations and decision making",
-        bridgeQuestion: "You tracked everything,",
-        bridgeHighlight: "What about your brain?",
-        cta: "Tell me more",
-      },
-      quizInvite: {
-        heading:
-          "Fill a free 2-min questionnaire to get personalised brain health results",
-        cta: "Sure!",
-        decline: "Not now",
-        domainCard: {
-          title: "Processing Speed",
-          body: "How fast your brain connects the dots, from reading speed to reaction time to quick mental math.",
-          whyLabel: "Why it matters",
-          whyHeading: "Processing speed in everyday life",
-          whyPoints: [
-            "Scanning a menu and deciding what to order",
-            "Keeping up in fast-paced group conversations",
-            "Doing mental math at the checkout",
-            "Taking in new instructions without slowing down",
-          ],
-          scienceLabel: "Neuroscience",
-          science: [
-            "Located right behind your forehead, this area acts as your brain's \u201cCEO\u201d. It handles planning, decision-making and personality.",
-            "When you make choices or control your behaviour, this area is hard at work.",
-          ],
-        },
-        reportCard: {
-          blurb:
-            "A handful of modifiable factors are affecting your brain health performance.",
-        },
+        ...IHHSEA_SCREEN_COPY.splash,
+        privacyHref: "/ihh/privacy-policy",
       },
     },
     phkl: {

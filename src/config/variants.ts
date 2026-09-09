@@ -30,6 +30,7 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
     variant === "rotary" ||
     variant === "ntuhomecoming" ||
     variant === "ihhsearegatta" ||
+    variant === "ihh" ||
     variant === "phkl"
   );
 }

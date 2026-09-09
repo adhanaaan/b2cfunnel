@@ -57,7 +57,8 @@ export function Event3GameResult({
   const variant = useVariant();
   // The regatta rewrites the bridge card only (its own copy block spreads the
   // v3 copy, so everything above the card is identical either way).
-  const regatta = variant === "ihhsearegatta";
+  // /ihh runs the regatta arc, so it takes the regatta bridge card too.
+  const regatta = variant === "ihhsearegatta" || variant === "ihh";
   const regattaCopy = COPY.screens.ihhsearegatta.gameResult;
   const c = regatta ? regattaCopy : COPY.screens.event3.gameResult;
   const source = eventSource(variant);

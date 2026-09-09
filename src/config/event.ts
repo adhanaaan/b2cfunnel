@@ -139,6 +139,35 @@ export const IHHSEA_SOURCE = "ihhsearegatta";
 export const IHHSEA_CHALLENGE_CLOSED = true;
 
 /**
+ * Independent pause switch for the /ihh event. Its own switch, like every
+ * other event's: closing one must never take another down with it - in
+ * particular, /ihh and /ihhsearegatta run the same arc but are paused
+ * separately.
+ */
+export const IHH_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the /ihh funnel. Every /ihh score and report is
+ * tagged with it, and the /ihh board filters to it - which is what keeps its
+ * standings clear of every other event's history, the regatta's included.
+ *
+ * This is the value written to the `source` column for this event, and the
+ * whole reason /ihh exists alongside /ihhsearegatta: the same flow, collected
+ * into a column of its own.
+ */
+export const IHH_SOURCE = "ihh";
+
+/**
+ * Temporarily closes the /ihh Reaction Time Challenge, and with it the
+ * leaderboard it feeds. The /ihh sibling of IHHSEA_CHALLENGE_CLOSED, and
+ * deliberately its own switch: /ihh opens with the arc walkable end to end
+ * while the regatta's own challenge stays closed. Applied per variant in
+ * resolveFlow; flip to `true` (and redeploy) to end the session on the
+ * "That's a wrap!" screen straight after the landing.
+ */
+export const IHH_CHALLENGE_CLOSED = false;
+
+/**
  * Independent pause switch for the Pantai Hospital KL event (/phkl and its TV
  * board). Its own switch, like every other event's: closing one must never
  * take another down with it. There is no challenge-closed switch for this
@@ -174,6 +203,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return NTU_HOMECOMING_SOURCE;
     case "ihhsearegatta":
       return IHHSEA_SOURCE;
+    case "ihh":
+      return IHH_SOURCE;
     case "phkl":
       return PHKL_SOURCE;
     case "event2":
