@@ -53,3 +53,31 @@ with the devices on a white or transparent ground.
 and cropped from the top, so give them a matching portrait shape - around
 660x980 each (roughly 2:3). Anything below the first two thirds of the page
 is cropped away, so put the heading and the chart up top.
+
+## Leaderboard (`/phkl/leaderboard`)
+
+The TV board (`app/phkl/leaderboard/page.tsx`, Figma 739:10645) takes three
+files. Each is optional: while one is missing the board falls back (a
+generated QR, a prize panel with no render, no coupon) rather than breaking.
+
+| File | Shows | Export from Figma | Fallback while missing |
+| --- | --- | --- | --- |
+| `qr.png` | The QR code in the scan block | Node 739:10675, PNG, 2000x2000 | A code generated from `playUrlFor("phkl")` |
+| `prize-grab.png` | The Grab gift box and vouchers over the prize panel | Node 740:10745, PNG at 2x (738x882) | The panel shows the offer alone |
+| `prize-coupon.png` | The tilted coupon under the panel's bottom-right corner | Node 741:11216, PNG at 2x (about 154x154) | Nothing |
+
+`qr.png` is shown as-is, with no frame of the board's own around it, so
+export it with its black frame and quiet zone in the file (the regatta board's
+`/regatta-qr.png` is the same shape). Whatever the file encodes is where
+players land - the board cannot check it - so make it from the link the event
+is actually using.
+
+`prize-grab.png` is placed in the design's own 369x441 box, which overhangs
+the panel's top and right edges, so export the frame (not just the artwork)
+with its transparent surround intact. `prize-coupon.png` is placed in its
+77x77 bounding box; the tilt is in the export, so nothing is rotated in code.
+
+The photos along the bottom edge are the regatta board's (`/regatta-band-1.jpg`,
+`/regatta-band-2.png`, `/regatta-band-3.jpg` at the root of `public/`), and
+the brain and the GMS + NTU lockup are shared assets, so none of those need
+uploading again.
