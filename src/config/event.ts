@@ -136,7 +136,7 @@ export const IHHSEA_SOURCE = "ihhsearegatta";
  * untouched by this switch, because the close is applied when the flow is
  * resolved, per variant, in resolveFlow.
  */
-export const IHHSEA_CHALLENGE_CLOSED = true;
+export const IHHSEA_CHALLENGE_CLOSED = false;
 
 /**
  * Independent pause switch for the /ihh event. Its own switch, like every
