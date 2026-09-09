@@ -723,7 +723,7 @@ export const COPY: CopyConfig = {
           headingHighlight: "2 out of 5",
           cardLabel: "Your baseline",
           cardProgress: "2 of 5 done",
-          axes: ["Speed", "Memory", "Attention", "Executive", "Risk"],
+          axes: ["Speed", "Memory", "Attention", "Executive", "Risk Safety"],
           paragraphs: [
             "The speed game and your quiz answers gave us two axes, speed and risk.",
             "But your brain doesn't work on two dimensions. Memory, attention and executive function each tell a different story, and you can score well on one while struggling with another.",

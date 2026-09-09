@@ -139,18 +139,23 @@ export function PhklBaselineCard({ result }: { result: ScoreResult }) {
               {c.axes.map((label, i) => {
                 const [x, y] = pointAt(i, 1.24);
                 const anchor = i === 0 ? "middle" : i === 1 || i === 2 ? "start" : "end";
+                const words = label.toUpperCase().split(" ");
+                const lineHeight = 13;
+                const startY = y + 4 - ((words.length - 1) * lineHeight) / 2;
                 return (
                   <text
                     key={label}
-                    x={x}
-                    y={y + 4}
                     textAnchor={i === 2 || i === 3 ? "middle" : anchor}
                     fontSize="11"
                     fontWeight="800"
                     letterSpacing="1.1"
                     fill={MEASURED.has(i) ? "#5f4638" : "#c9b4a6"}
                   >
-                    {label.toUpperCase()}
+                    {words.map((word, wi) => (
+                      <tspan key={word} x={x} y={startY + wi * lineHeight}>
+                        {word}
+                      </tspan>
+                    ))}
                   </text>
                 );
               })}
