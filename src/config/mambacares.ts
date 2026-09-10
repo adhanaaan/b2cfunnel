@@ -8,17 +8,21 @@
  */
 
 /**
- * Where every "Donate" button goes.
+ * Where every "Donate" button goes - the campaign's short link, which is also
+ * what is printed on the run's posters and shared in the crews' chats.
  *
- * CHECK THIS BEFORE THE EVENT. It is the link written on the Figma
- * ("giving.sg/campaign/gms-mambacares") read as a URL; if giving.sg serves the
- * campaign at a different path, this is the one line to correct.
+ * A redirect rather than the giving.sg page itself, so where it points can be
+ * changed on the day without a deploy. It is the destination the share sheet
+ * hands over too.
  */
-export const MAMBACARES_DONATION_URL =
-  "https://www.giving.sg/campaign/gms-mambacares";
+export const MAMBACARES_DONATION_URL = "https://bit.ly/gms-mambacares";
 
-/** The same link as the report prints it, under the buttons. */
-export const MAMBACARES_DONATION_LABEL = "giving.sg/campaign/gms-mambacares";
+/**
+ * The same link as the report prints it, under the buttons. Kept in step with
+ * MAMBACARES_DONATION_URL on purpose: this line is there to be read off a
+ * phone and typed in, so it has to be the address that actually opens.
+ */
+export const MAMBACARES_DONATION_LABEL = "bit.ly/gms-mambacares";
 
 /**
  * The campaign thermometer on the report.
