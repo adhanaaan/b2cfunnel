@@ -1,4 +1,10 @@
-import type { ConsentClause, CopyConfig, IhhseaCopy } from "@/types/copy";
+import type {
+  ConsentClause,
+  CopyConfig,
+  IhhseaCopy,
+  PhklArcCopy,
+} from "@/types/copy";
+import type { QuizVariant } from "@/types/funnel";
 
 /**
  * ALL user-facing copy lives here. British English. Working titles per build
@@ -68,6 +74,85 @@ const NO_PARTNER_SPLASH: CopyConfig["screens"]["event3"]["splash"] = {
   ...DAYLIGHT_SPLASH,
   consentRequired:
     "*Required.* I agree to be contacted about my results and prize.",
+};
+
+/**
+ * The screens the Pantai Hospital KL arc introduced (/phkl), and the two
+ * parts of its report that every event built on that arc reuses: the header
+ * and the risk section.
+ *
+ * Two events run these screens - /phkl itself and the GMS x #MambaCares
+ * community run (/mambacares) - and both open with the same words today. The
+ * blocks are spread into each event rather than read from here by the screens,
+ * so either event can override any one of them without touching the other's
+ * (arcCopyFor is what hands a shared screen the right event's block).
+ */
+const PHKL_ARC_COPY: PhklArcCopy = {
+  rail: {
+    gameLabel: "Game",
+    quizLabel: "Brain health quiz",
+    resultsLabel: "Results",
+  },
+  speedIntro: {
+    eyebrow: "You're about to measure",
+    heading: "Processing speed",
+    body: "How *fast* your brain takes in what it *sees* and *responds*.",
+    cta: "Got it",
+  },
+  ageSelect: {
+    heading: "Select your age",
+    body: "See how you compare with your peers.",
+  },
+  greatJob: {
+    heading: "Great job in measuring your speed!",
+    skipHint: "Tap to continue",
+  },
+  quizIntro: {
+    heading: "{name}, your brain speed isn't fixed",
+    headingAnonymous: "Your brain speed isn't fixed",
+    body: "It is driven by sleep, exercise, diet and other lifestyle factors.",
+    factors: ["Sleep", "Exercise", "Diet"],
+    lead: "Next, a few quick questions about yours.",
+    citation: { heading: "Built on science", body: EVIDENCE_BASIS },
+    cta: "Continue",
+  },
+  analysing: {
+    heading: "{name}, we are preparing your report",
+    headingAnonymous: "Preparing your report…",
+    // One line per part of the workup, ticked off as the ring fills.
+    steps: [
+      "Linking your Reaction Time Challenge result",
+      "Calculating your processing speed score",
+      "Reviewing your health and lifestyle answers",
+      "Comparing you with your age band",
+      "Preparing your Brain Health Score",
+    ],
+  },
+  report: {
+    header: {
+      eyebrow: "Reaction Time Challenge",
+      heading: "{name}'s {ordinal} record in",
+      headingAnonymous: "Your {ordinal} record in",
+      headingHighlight: "processing speed",
+      timeLabel: "Time",
+      rankLabel: "Rank",
+      fastestLabel: "Fastest so far",
+      fastestEmpty: "Be the first",
+      shareLabel: "Share",
+      retryLabel: "Retry",
+    },
+    risk: {
+      eyebrow: "Also measured",
+      heading: "Speed was not the only thing we looked at.",
+      body: "We also looked at your risk factors. Health and lifestyle habits like high blood pressure, poor sleep or too little exercise can slow your brain down over time.",
+      riskLevelLabel: "Your risk level:",
+      factorsLead: "Some factors that affect your risk level, {name}:",
+      factorsLeadAnonymous: "Some factors that affect your risk level:",
+      noFactors:
+        "No notable lifestyle or biomedical factors stood out in your answers.",
+      goodNews: "The good news is",
+    },
+  },
 };
 
 /**
@@ -646,6 +731,7 @@ export const COPY: CopyConfig = {
       },
     },
     phkl: {
+      ...PHKL_ARC_COPY,
       // The Pantai Hospital KL landing (Figma 697:24953) is the regatta's with
       // the partner's Malaysian wording under the third tick and its own
       // privacy policy behind the required row's link.
@@ -656,59 +742,8 @@ export const COPY: CopyConfig = {
           clauses: [...PHKL_CONSENT_CLAUSES, PHKL_CONSENT_WITHDRAWAL],
         },
       },
-      rail: {
-        gameLabel: "Game",
-        quizLabel: "Brain health quiz",
-        resultsLabel: "Results",
-      },
-      speedIntro: {
-        eyebrow: "You're about to measure",
-        heading: "Processing speed",
-        body: "How *fast* your brain takes in what it *sees* and *responds*.",
-        cta: "Got it",
-      },
-      ageSelect: {
-        heading: "Select your age",
-        body: "See how you compare with your peers.",
-      },
-      greatJob: {
-        heading: "Great job in measuring your speed!",
-        skipHint: "Tap to continue",
-      },
-      quizIntro: {
-        heading: "{name}, your brain speed isn't fixed",
-        headingAnonymous: "Your brain speed isn't fixed",
-        body: "It is driven by sleep, exercise, diet and other lifestyle factors.",
-        factors: ["Sleep", "Exercise", "Diet"],
-        lead: "Next, a few quick questions about yours.",
-        citation: { heading: "Built on science", body: EVIDENCE_BASIS },
-        cta: "Continue",
-      },
-      analysing: {
-        heading: "{name}, we are preparing your report",
-        headingAnonymous: "Preparing your report…",
-        // One line per part of the workup, ticked off as the ring fills.
-        steps: [
-          "Linking your Reaction Time Challenge result",
-          "Calculating your processing speed score",
-          "Reviewing your health and lifestyle answers",
-          "Comparing you with your age band",
-          "Preparing your Brain Health Score",
-        ],
-      },
       report: {
-        header: {
-          eyebrow: "Reaction Time Challenge",
-          heading: "{name}'s {ordinal} record in",
-          headingAnonymous: "Your {ordinal} record in",
-          headingHighlight: "processing speed",
-          timeLabel: "Time",
-          rankLabel: "Rank",
-          fastestLabel: "Fastest so far",
-          fastestEmpty: "Be the first",
-          shareLabel: "Share",
-          retryLabel: "Retry",
-        },
+        ...PHKL_ARC_COPY.report,
         sticky: {
           book: "Book memory screening",
         },
@@ -723,17 +758,6 @@ export const COPY: CopyConfig = {
             ".",
           ],
           intro: "With high processing speed, you can:",
-        },
-        risk: {
-          eyebrow: "Also measured",
-          heading: "Speed was not the only thing we looked at.",
-          body: "We also looked at your risk factors. Health and lifestyle habits like high blood pressure, poor sleep or too little exercise can slow your brain down over time.",
-          riskLevelLabel: "Your risk level:",
-          factorsLead: "Some factors that affect your risk level, {name}:",
-          factorsLeadAnonymous: "Some factors that affect your risk level:",
-          noFactors:
-            "No notable lifestyle or biomedical factors stood out in your answers.",
-          goodNews: "The good news is",
         },
         baseline: {
           eyebrow: "Your baseline so far",
@@ -816,6 +840,74 @@ export const COPY: CopyConfig = {
         },
       },
     },
+    // GMS x #MambaCares (/mambacares): the PHKL arc run for the World
+    // Alzheimer's Month community run. No partner, so the landing is the plain
+    // daylight one; the report keeps the header and the risk section and then
+    // turns to the Dementia Singapore campaign instead of a screening offer.
+    //
+    // The campaign's own numbers - what has been raised, the goal, the dates -
+    // are in config/mambacares.ts, not here. The placeholders below are filled
+    // in by the report: {seconds} is the player's own round, and {raised},
+    // {goal}, {lastUpdated} and {deadline} come from that config.
+    mambacares: {
+      ...PHKL_ARC_COPY,
+      splash: NO_PARTNER_SPLASH,
+      report: {
+        ...PHKL_ARC_COPY.report,
+        problem: {
+          heading: "You were fast. Alzheimer's takes that speed away.",
+          yourRoundLabel: "Your round",
+          dementiaLabel: "With dementia",
+          dementiaValue: "2 to 3\u00d7 longer",
+          // The dementia track is drawn this many times the player's own.
+          dementiaFactor: 3.2,
+          note:
+            "Illustrative. Timed tasks slow early in dementia. Not a clinical comparison.",
+          paragraphs: [
+            "You just processed information in under a second.",
+            "For someone living with dementia, that same response slows to a struggle. Names, faces, and everyday decisions take far longer.",
+            "Your gift funds Dementia Singapore's work with the people this affects and the families who care for them.",
+          ],
+        },
+        donate: {
+          eyebrow: "World Alzheimer's Month",
+          heading: "It took you {seconds} seconds. Donating takes a minute.",
+          headingAnonymous: "It took you under a minute. Donating takes one too.",
+          progressLabel: "{raised} raised of {goal}",
+          progressUpdated: "Last updated: {lastUpdated}",
+          paragraphs: [
+            "This September, #MambaCares, six running crews and Gray Matter Solutions are raising {goal} for Dementia Singapore.",
+            "Dementia touches more Singapore families every year. Our running community can help.",
+            "Every dollar supports people living with dementia and the families who care for them.",
+          ],
+        },
+        closing: {
+          heading: "One minute before you go.",
+          body:
+            "Help us hit {goal} by {deadline}. Every dollar reaches Dementia Singapore, and we believe the strength of our running community can help make a difference.",
+        },
+        cta: {
+          donate: "Donate to Dementia Singapore",
+          share: "Share donation",
+          directLead: "Donate at",
+          shareTitle: "GMS x #MambaCares for Dementia Singapore",
+          shareText:
+            "I just measured my brain processing speed at the #MambaCares run. Help us raise {goal} for Dementia Singapore this World Alzheimer's Month.",
+          shareCopied: "Link copied - paste it anywhere.",
+          shareFailed: "Couldn't open sharing. The link is on screen below.",
+        },
+        partners: {
+          runningHeading: "Running partners",
+          sponsorsHeading: "Giveaway sponsors",
+          wordmark: "GMS X #MAMBACARES",
+          wordmarkNote: "WORLD ALZHEIMER'S MONTH COMMUNITY RUN",
+        },
+        sticky: {
+          share: "Share",
+          donate: "Donate now",
+        },
+      },
+    },
   },
 
   personas: {
@@ -889,3 +981,16 @@ export const COPY: CopyConfig = {
 
   factorLabels: FACTOR_LABELS,
 };
+
+/**
+ * The arc copy for whichever event is running the shared PHKL screens.
+ *
+ * The primers, the age question, the great-job beat, the analysing ring, the
+ * report header and the risk section are one set of components serving two
+ * events. Each reads its words through here rather than through
+ * `COPY.screens.phkl` by name, so changing one event's wording cannot quietly
+ * change the other's.
+ */
+export function arcCopyFor(variant: QuizVariant): PhklArcCopy {
+  return variant === "mambacares" ? COPY.screens.mambacares : COPY.screens.phkl;
+}

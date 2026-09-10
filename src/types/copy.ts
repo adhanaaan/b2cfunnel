@@ -393,13 +393,22 @@ export interface ScreenCopy {
   // /ihh: the regatta block again, with its own privacy-policy link.
   ihh: IhhseaCopy;
   phkl: PhklCopy;
+  // GMS x #MambaCares (/mambacares): the PHKL arc with no partner on its
+  // landing and a fundraising report at the end.
+  mambacares: MambacaresCopy;
 }
 
-// Pantai Hospital KL (/phkl): the regatta arc rebuilt for IHH Malaysia. The
-// landing is the regatta's with the partner's Malaysian wording; the screens
-// either side of the game and the whole report are this event's own.
-export interface PhklCopy {
-  splash: IhhseaCopy["splash"];
+/**
+ * The screens the Pantai Hospital KL arc introduced, and the two parts of its
+ * report that every event built on that arc reuses - the header and the risk
+ * section.
+ *
+ * Two events fill this in: /phkl itself, and the GMS x #MambaCares community
+ * run (/mambacares). The screens they share read whichever event is running
+ * (`arcCopyFor` in config/copy.ts) rather than one event's block by name, so
+ * either one's wording can be changed without quietly changing the other's.
+ */
+export interface PhklArcCopy {
   // The GAME / BRAIN HEALTH QUIZ / RESULTS rail on the two primers.
   rail: {
     gameLabel: string;
@@ -459,16 +468,6 @@ export interface PhklCopy {
       shareLabel: string;
       retryLabel: string;
     };
-    // The one button pinned to the bottom of the screen for the whole report.
-    sticky: {
-      book: string;
-    };
-    speed: {
-      // Fragments alternate plain/serif-italic, starting plain.
-      headingParts: string[];
-      intro: string;
-      // The three perks are the event3 speed popup's.
-    };
     risk: {
       eyebrow: string;
       heading: string;
@@ -478,6 +477,27 @@ export interface PhklCopy {
       factorsLeadAnonymous: string;
       noFactors: string;
       goodNews: string;
+    };
+  };
+}
+
+// Pantai Hospital KL (/phkl): the regatta arc rebuilt for IHH Malaysia. The
+// landing is the regatta's with the partner's Malaysian wording; the screens
+// either side of the game are the shared arc's, and the rest of the report -
+// what processing speed is, the baseline, the screening offer and the close -
+// is this event's own.
+export interface PhklCopy extends PhklArcCopy {
+  splash: IhhseaCopy["splash"];
+  report: PhklArcCopy["report"] & {
+    // The one button pinned to the bottom of the screen for the whole report.
+    sticky: {
+      book: string;
+    };
+    speed: {
+      // Fragments alternate plain/serif-italic, starting plain.
+      headingParts: string[];
+      intro: string;
+      // The three perks are the event3 speed popup's.
     };
     baseline: {
       eyebrow: string;
@@ -527,6 +547,85 @@ export interface PhklCopy {
       thinkingHeading: string;
       thinkingBody: string[];
       credit: string;
+    };
+  };
+}
+
+// GMS x #MambaCares (/mambacares): the same arc with no partner on the landing
+// and a fundraising report in place of the screening offer. The header and the
+// risk section are the shared arc's; everything below is this event's own - the
+// cost of losing that speed, the Dementia Singapore campaign, a closing ask and
+// the crews and sponsors behind the run.
+//
+// Every figure in the campaign (what has been raised, the goal, the dates) is
+// in config/mambacares.ts, not here: this block holds only the words around it,
+// with {raised}, {goal}, {lastUpdated}, {deadline} and {seconds} filled in by
+// the report.
+export interface MambacaresCopy extends PhklArcCopy {
+  // No partner runs this event, so the landing is the plain daylight one - two
+  // consent rows, no third block.
+  splash: Event3Copy["splash"];
+  report: PhklArcCopy["report"] & {
+    // "You were fast. Alzheimer's takes that speed away." - the player's own
+    // round set against how long the same response takes with dementia.
+    problem: {
+      heading: string;
+      /** Row labels and the comparison's value, above the two tracks. */
+      yourRoundLabel: string;
+      dementiaLabel: string;
+      dementiaValue: string;
+      /**
+       * How many times longer the dementia track runs than the player's. Only
+       * ever drawn as a bar - `dementiaValue` is what is read.
+       */
+      dementiaFactor: number;
+      /** The line under the tracks: this is illustrative, not clinical. */
+      note: string;
+      paragraphs: string[];
+    };
+    // The campaign itself, with the thermometer and the two buttons.
+    donate: {
+      eyebrow: string;
+      /** "It took you {seconds} seconds. Donating takes a minute." */
+      heading: string;
+      /** The same line when there is no time to quote. */
+      headingAnonymous: string;
+      /** "{raised} raised of {goal}". */
+      progressLabel: string;
+      /** "Last updated: {lastUpdated}". */
+      progressUpdated: string;
+      paragraphs: string[];
+    };
+    // The last ask, under the report.
+    closing: {
+      heading: string;
+      /** Contains {goal} and {deadline}. */
+      body: string;
+    };
+    // Both buttons and the printed link, shown under `donate` and `closing`.
+    cta: {
+      donate: string;
+      share: string;
+      /** "Donate at" - the label before the printed link. */
+      directLead: string;
+      /** What the share sheet offers when the browser can share a link. */
+      shareTitle: string;
+      shareText: string;
+      /** Shown when the link was copied instead of shared. */
+      shareCopied: string;
+      shareFailed: string;
+    };
+    // The crews and sponsors at the foot of the report, and the wordmark.
+    partners: {
+      runningHeading: string;
+      sponsorsHeading: string;
+      wordmark: string;
+      wordmarkNote: string;
+    };
+    // The bar pinned to the bottom of the screen for the whole report.
+    sticky: {
+      share: string;
+      donate: string;
     };
   };
 }

@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { COPY } from "@/config/copy";
 import { ease, springs } from "@/lib/motion";
+import { arcCopyFor } from "@/config/copy";
+import { useVariant } from "@/components/VariantContext";
 
 /** Which leg of the journey the rail is standing on. */
 export type RailStage = "game" | "quiz";
@@ -32,7 +33,7 @@ const STOP_PX = 36;
  * fill drawn up to the stop they are on.
  */
 export function PhklProgressRail({ stage }: { stage: RailStage }) {
-  const c = COPY.screens.phkl.rail;
+  const c = arcCopyFor(useVariant()).rail;
   const reduced = useReducedMotion();
   const fill = FILL[stage];
   const stepIndex = stage === "game" ? 1 : 2;

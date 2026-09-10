@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { COPY } from "@/config/copy";
 import { firstName } from "@/lib/format";
 import { ease, springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "@/components/screens/event3/Event3Shell";
 import { ctaPrimaryClass } from "@/components/screens/event3/ui";
 import { PhklProgressRail } from "./PhklProgressRail";
+import { arcCopyFor } from "@/config/copy";
+import { useVariant } from "@/components/VariantContext";
 
 const item = {
   hidden: { opacity: 0, y: 16 },
@@ -100,7 +101,7 @@ export function PhklQuizIntro({
   name?: string;
   onContinue: () => void;
 }) {
-  const c = COPY.screens.phkl.quizIntro;
+  const c = arcCopyFor(useVariant()).quizIntro;
   const reduced = useReducedMotion();
   const first = firstName(name);
   const heading = first

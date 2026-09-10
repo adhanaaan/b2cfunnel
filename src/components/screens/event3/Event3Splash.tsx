@@ -34,8 +34,10 @@ interface Event3SplashProps {
    * colour. "ihhsearegatta", "ihh" and "phkl" also carry the partner's consent
    * as a
    * third row (Figma 638:7729 and 697:24953), which is what makes them taller
-   * than a screen and lets them scroll. Each one reads its own copy block and
-   * tags its own newsletter opt-ins, so their wording can move independently.
+   * than a screen and lets them scroll; "mambacares" (Figma 756:14394) has no
+   * partner at all, so it is the plain two-row landing at the roomier size.
+   * Each one reads its own copy block and tags its own newsletter opt-ins, so
+   * their wording can move independently.
    */
   design?:
     | "v3"
@@ -43,7 +45,8 @@ interface Event3SplashProps {
     | "ntuhomecoming"
     | "ihhsearegatta"
     | "ihh"
-    | "phkl";
+    | "phkl"
+    | "mambacares";
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -139,8 +142,9 @@ export function Event3Splash({
     design === "ihhsearegatta" || design === "ihh" || design === "phkl"
       ? COPY.screens[design].splash.partnerConsent
       : null;
-  // The newest landing takes the roomier consent rows (see ConsentCheckbox).
-  const roomy = design === "phkl";
+  // The landings designed since the 18px row was deprecated take the roomier
+  // consent rows (see ConsentCheckbox); the earlier events keep what shipped.
+  const roomy = design === "phkl" || design === "mambacares";
   const reduced = useReducedMotion();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

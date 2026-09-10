@@ -1,9 +1,10 @@
 "use client";
 
 import type { BandName } from "@/types/engine";
-import { COPY } from "@/config/copy";
+import { COPY, arcCopyFor } from "@/config/copy";
 import { BANDS, BAND_ORDER } from "@/engine/bands";
 import { reportCard } from "../ui";
+import { useVariant } from "@/components/VariantContext";
 
 /** "Moderate risk" -> "Moderate": the band on its own, for the meter's labels. */
 export function shortBandLabel(band: BandName): string {
@@ -17,7 +18,7 @@ export function shortBandLabel(band: BandName): string {
  * alone, and the whole figure states the result in words.
  */
 export function RiskMeter({ band }: { band: BandName }) {
-  const c = COPY.screens.phkl.report.risk;
+  const c = arcCopyFor(useVariant()).report.risk;
   const label = shortBandLabel(band);
 
   return (

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { animate, useInView, useReducedMotion } from "framer-motion";
 import type { ScoreResult } from "@/types/engine";
-import { COPY } from "@/config/copy";
 import { pickActions } from "@/config/actions";
 import { STAT_CARDS_BY_ID } from "@/config/statCards";
 import { firstName } from "@/lib/format";
@@ -11,6 +10,8 @@ import { TrajectoryChart } from "@/components/result/TrajectoryChart";
 import { ActionablesCard } from "@/components/result/ActionablesCard";
 import { RiskMeter } from "./RiskMeter";
 import { Reveal, rankGradientText, reportEyebrow, reportHeading } from "../ui";
+import { arcCopyFor } from "@/config/copy";
+import { useVariant } from "@/components/VariantContext";
 
 /**
  * "About 45%", with the number counting up the first time it scrolls into
@@ -63,7 +64,7 @@ export function PhklRiskSection({
   name?: string;
   gameTimeMs?: number;
 }) {
-  const c = COPY.screens.phkl.report.risk;
+  const c = arcCopyFor(useVariant()).report.risk;
   const card = STAT_CARDS_BY_ID.lancet2024;
   const first = firstName(name);
   const actions = pickActions({

@@ -319,6 +319,19 @@ const PHKL_FLOW: FunnelStep[] = DAYLIGHT_FLOW.filter(
   });
 
 /**
+ * GMS x #MambaCares (/mambacares): the PHKL arc, shared rather than rebuilt.
+ *
+ * The two events differ in what the landing carries (no partner on this one)
+ * and in the report at the end (a Dementia Singapore fundraiser instead of the
+ * Memory Screening Package), neither of which is a step of its own - so the
+ * step sequence, and with it the question set and achievableAxisMax, is PHKL's
+ * exactly. Sharing the array is what keeps it that way: a later change to the
+ * arc reaches both events, and neither one's question set can drift off the
+ * other's.
+ */
+const MAMBACARES_FLOW: FunnelStep[] = PHKL_FLOW;
+
+/**
  * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
  * so the split-tick treatment of the partner consents (one box per clause) can
  * still be walked through and compared against the single tick that v3 ships.
@@ -366,6 +379,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   // arc reaches both and neither one's question set can drift off the other's.
   ihh: IHHSEA_FLOW,
   phkl: PHKL_FLOW,
+  mambacares: MAMBACARES_FLOW,
   event6: EVENT6_FLOW,
 };
 

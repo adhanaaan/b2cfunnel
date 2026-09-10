@@ -150,6 +150,9 @@ describe("phkl flow", () => {
     expect(questionNumber({}, flow.findIndex((s) => s.kind === "ageSelect"), "phkl")).toBe(0);
   });
 
+  // /mambacares is deliberately absent: it runs this same arc on its own
+  // bucket, so these screens are meant to be in its flow (see
+  // mambacaresFlow.test.ts, which pins the two flows to each other).
   it("keeps its screens out of every other variant", () => {
     const others: QuizVariant[] = [
       "full",
