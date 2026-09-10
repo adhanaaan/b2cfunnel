@@ -494,12 +494,16 @@ function DonatePanel() {
         </p>
       </div>
 
+      {/* Broken where the design breaks it (813:19291) rather than left to
+          wrap: the donation box sits over the end of this block, and the
+          design's break is what keeps a whole word from going under it. */}
       <p
         className="font-bold board:absolute board:left-[calc(var(--u)*313)] board:top-[calc(var(--u)*184)] board:w-[calc(var(--u)*421)]"
         style={{ color: INVERSE, fontSize: u(22.601), lineHeight: 1.6 }}
       >
-        Every dollar supports people living with dementia and the families who
-        care for them.
+        Every dollar supports people living with dementia and the families
+        <br />
+        who care for them.
       </p>
 
       {/* 190px box at 608px in, 208px down - hanging past the card's right and

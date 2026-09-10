@@ -36,9 +36,13 @@ the board is opened on a phone.
 `donate-qr.png` is the one file the board does not need: with no file there it
 generates the code itself from `MAMBACARES_DONATION_URL`
 (`src/config/mambacares.ts`), which is the same short link every Donate button
-on the report opens. Upload a file only if you want the campaign-branded code -
-and check it scans to that link first, because **whatever the file encodes is
-where people's money goes**. Nothing in the code can verify it.
+on the report opens. The file committed here decodes to
+`https://bit.ly/gms-mambacares?r=qr` - the campaign link with a QR source tag -
+and was checked as such.
+
+**Anyone replacing it has to scan it first.** Whatever the file encodes is
+where people's money goes, and nothing in the code can verify it: a code for
+the wrong campaign is a wrong code, however right the artwork looks.
 
 ## Photo band (along the bottom edge)
 
