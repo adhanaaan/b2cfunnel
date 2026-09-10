@@ -5,6 +5,7 @@ import {
   EVENT3_SOURCE,
   IHH_SOURCE,
   IHHSEA_SOURCE,
+  MAMBACARES_SOURCE,
   NTU_HOMECOMING_SOURCE,
   PHKL_SOURCE,
   ROTARY_SOURCE,
@@ -269,6 +270,60 @@ describe("ihh leaderboard source", () => {
     ];
     for (const variant of others) {
       expect(eventSource(variant)).not.toBe(IHH_SOURCE);
+    }
+  });
+});
+
+/**
+ * The #MambaCares board is scoped the same way, and `mambacares` is the
+ * literal the database's `source` column carries for this event. The board at
+ * /mambacares/leaderboard reads this bucket, and the rank on the report reads
+ * it too - so a collision here would put another event's times on both.
+ */
+describe("mambacares leaderboard source", () => {
+  it("is the tag the database column expects", () => {
+    expect(MAMBACARES_SOURCE).toBe("mambacares");
+  });
+
+  it("never collides with another event's bucket", () => {
+    for (const other of [
+      "event",
+      "event2",
+      "event3",
+      EVENT3_SOURCE,
+      DBS_DAY1_SOURCE,
+      DBS_DAY2_SOURCE,
+      ROTARY_SOURCE,
+      NTU_HOMECOMING_SOURCE,
+      IHHSEA_SOURCE,
+      IHH_SOURCE,
+      PHKL_SOURCE,
+    ]) {
+      expect(MAMBACARES_SOURCE).not.toBe(other);
+    }
+  });
+
+  // A score and the report that follows it must carry the SAME tag, or the
+  // board's completion rate divides one event's reports by another's players.
+  it("tags both the score and the lead from the /mambacares funnel", () => {
+    expect(eventSource("mambacares")).toBe(MAMBACARES_SOURCE);
+  });
+
+  it("leaves every other variant's tag alone", () => {
+    const others: QuizVariant[] = [
+      "full",
+      "woman",
+      "event",
+      "event2",
+      "event3",
+      "rotary",
+      "ntuhomecoming",
+      "ihhsearegatta",
+      "ihh",
+      "phkl",
+    ];
+    for (const variant of others) {
+      expect(eventSource(variant)).not.toBe(MAMBACARES_SOURCE);
     }
   });
 });

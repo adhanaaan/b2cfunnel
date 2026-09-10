@@ -342,6 +342,48 @@ picks the file up the moment it lands.
 | `screening-devices.png` | the digital cognitive assessment on a phone, a tablet and a laptop | `/landing/woman-tablet.png` |
 | `report-1.png`, `report-2.png` | two pages of the full report | the frame is left out |
 
+## /mambacares/leaderboard (the #MambaCares board)
+
+The TV board for the GMS x #MambaCares community run, built to Figma
+`813:19115` against a 1920x1080 panel. Same construction as the other boards -
+one design unit `--u` = `min(100vw / 1920, 100vh / 1080)`, every size the
+design's px times it, so a 16:9 screen of any resolution is the frame exactly
+and everything stacks below 1024px or in portrait.
+
+**The board is at `/mambacares/leaderboard`.** `/mambacare/leaderboard` (and
+`/mambacare`) redirect to the plural, since both spellings get written down.
+
+What differs from `/phkl/leaderboard`:
+
+- **Fifteen rows, not six**: the leader on a wide white hero row with the time
+  to beat, then ranks 2-15 in two columns of seven. The prize copy ("Top 15
+  fastest minds") is written from `TOP_N`, so it cannot promise a depth the
+  board does not show. Unclaimed slots are dashed "Play to claim this spot"
+  rows - fifteen of them at the start of the day.
+- **The QR is the donation, not the game.** It encodes
+  `MAMBACARES_DONATION_URL` (`src/config/mambacares.ts`), the same short link
+  every Donate button on the report opens, so the board and the funnel cannot
+  point at two campaigns. An uploaded `board/donate-qr.png` overrides it -
+  whatever that file encodes is where the money goes, and nothing in the code
+  can check it.
+- **The prizes are the run's, listed as copy** ("From PMAM, SALTIFY, PRFM,
+  LKSD, ZODA, 2050"), with three product cutouts breaking out of the panel.
+- **`MAMBACARES_PAUSED` only closes the prizes.** The panel becomes "That's a
+  wrap" with the number of minds tested; the donation card and the standings
+  stay up, because the campaign runs to its own deadline.
+- A new entry in the **top 3** takes the board over for four seconds. Three
+  rather than fifteen on purpose: a top-15 takeover would fire on nearly every
+  early play and then never again.
+
+Standings and the completion stat come from `/api/leaderboard` (every 8s) and
+`/api/report-rate` (every 30s), both scoped to the `mambacares` bucket
+(`MAMBACARES_SOURCE`); the last good values stay on screen through an error.
+
+Images under `public/images/mambacares/board/` - **that folder's README lists
+every file, its box on the board and the size to export it at**. All of them
+are optional: the board draws without any of them and picks each up the moment
+it lands.
+
 ## /event-v6 (preview)
 
 `/event-v6` walks exactly the v3 flow, and exists only to compare consent

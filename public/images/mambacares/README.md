@@ -67,13 +67,21 @@ Five sponsor logos, about 40px across. Same export rules as the crews.
 Names and the number of slots live in `src/config/mambacares.ts`
 (`MAMBACARES_GIVEAWAY_SPONSORS`).
 
+## Leaderboard board art
+
+The TV board's files live in **`board/`** (see `board/README.md`): the three
+prize cutouts, the donation illustration, an optional QR override and the
+three photos in the band along the bottom edge. Same rules as everything here
+- each is optional and appears on the next deploy once it lands.
+
 ## What this event does NOT need
 
 - **No landing logo.** There is no partner on this landing (Figma 756:14394),
   so nothing sits above the eyebrow - unlike `/phkl`.
-- **No leaderboard files.** This event has no TV board of its own. The rank on
-  the report is read from the `mambacares` bucket through the leaderboard API,
-  which needs no artwork.
+- **No leaderboard files _here_.** The TV board at `/mambacares/leaderboard`
+  has artwork of its own - the prize cutouts, the donation illustration and
+  the photo band - and it goes in the `board/` subfolder, which has its own
+  README listing the files and their sizes. Nothing on the report reads it.
 - **The quiz-intro photos are shared.** "Your brain speed isn't fixed" uses
   `/images/phkl/quiz-intro-{sleep,exercise,diet}.png`, which are already
   committed. Nothing to upload here for that screen.
