@@ -73,9 +73,11 @@ export interface MambaLogo {
 /**
  * The six running crews, in the order the files were uploaded.
  *
- * The names that are filled in are the ones readable on the artwork; the rest
- * are honest placeholders. Correcting one here corrects its alt text - which
- * is the only place a name is read once every file has landed.
+ * Names are read off the committed artwork. The three left as placeholders are
+ * the marks that carry no legible wordmark at all - a script monogram and two
+ * emblems - so they are waiting on someone who knows the crews and sponsors.
+ * Correcting one here corrects its alt text, which is the only place a name is
+ * read once every file has landed.
  *
  * The count is load-bearing: the campaign copy says "six running crews", and
  * mambacaresFlow.test.ts holds the two to each other, so a seventh crew means
@@ -86,8 +88,8 @@ export const MAMBACARES_RUNNING_PARTNERS: MambaLogo[] = [
   { src: "/images/mambacares/running-partner-2.png", name: "Running partner 2" },
   { src: "/images/mambacares/running-partner-3.png", name: "2050 Coffee" },
   { src: "/images/mambacares/running-partner-4.png", name: "SGFR" },
-  { src: "/images/mambacares/running-partner-5.png", name: "okay. and running" },
-  { src: "/images/mambacares/running-partner-6.png", name: "Running partner 6" },
+  { src: "/images/mambacares/running-partner-5.png", name: "okay anot running" },
+  { src: "/images/mambacares/running-partner-6.png", name: "Bad Boys On The Run" },
 ];
 
 /** The five giveaway sponsors, left to right. Same rules as the crews above. */
@@ -102,15 +104,23 @@ export const MAMBACARES_GIVEAWAY_SPONSORS: MambaLogo[] = [
 /**
  * The Dementia Singapore photographs on the report. Optional like every other
  * file here: each falls back to a warm tile until it lands.
+ *
+ * JPEG, and sized to what the report actually renders (900px for the pair,
+ * 1400px for the wide one). They are served straight out of public/ by a plain
+ * <img>, because OptionalImage has to be able to see a 404 and fall back - so
+ * nothing resizes them on the way to the phone, and the file IS the download.
+ * The originals were 21 MB between them, one of them an 8192px camera frame
+ * shown 342px wide, which no phone on event mobile data would have finished
+ * loading. Replace a photo at the same size, not with a camera original.
  */
 export const MAMBACARES_PHOTOS = {
   /** The pair beside the campaign thermometer. */
   campaignPair: [
-    "/images/mambacares/campaign-1.png",
-    "/images/mambacares/campaign-2.png",
+    "/images/mambacares/campaign-1.jpg",
+    "/images/mambacares/campaign-2.jpg",
   ],
   /** The wide one above the closing call to action. */
-  closing: "/images/mambacares/campaign-wide.png",
+  closing: "/images/mambacares/campaign-wide.jpg",
 } as const;
 
 /** Alt text for the photographs - one description covers all three. */
