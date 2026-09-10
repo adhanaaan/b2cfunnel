@@ -108,13 +108,18 @@ const QR_IMAGE = `${BOARD_ART}/donate-qr.png`;
 /**
  * The band of event photography along the bottom edge (813:19137, 813:19135,
  * 813:19136). The design's three frames overlap; these are the widths of each
- * that is actually visible. Each is optional, so the band simply thins out
- * (and finally disappears) until the photos are dropped in.
+ * that is actually visible, which is why they are not the phkl board's
+ * ratios over the same three photos.
+ *
+ * The photos are the regatta board's, as /phkl's are: one event's crowd
+ * standing in for the next, already committed at the repo root. Each is still
+ * optional, so the band thins out (and finally disappears) rather than
+ * breaking if one is ever removed.
  */
 const BAND = [
-  { src: `${BOARD_ART}/band-1.png`, grow: 408 },
-  { src: `${BOARD_ART}/band-2.png`, grow: 764 },
-  { src: `${BOARD_ART}/band-3.png`, grow: 748 },
+  { src: "/regatta-band-1.jpg", grow: 408 },
+  { src: "/regatta-band-2.png", grow: 764 },
+  { src: "/regatta-band-3.jpg", grow: 748 },
 ];
 
 interface Entry {

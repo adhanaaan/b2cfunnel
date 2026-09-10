@@ -70,18 +70,19 @@ Names and the number of slots live in `src/config/mambacares.ts`
 ## Leaderboard board art
 
 The TV board's files live in **`board/`** (see `board/README.md`): the three
-prize cutouts, the donation illustration, an optional QR override and the
-three photos in the band along the bottom edge. Same rules as everything here
-- each is optional and appears on the next deploy once it lands.
+prize cutouts, the donation illustration and an optional QR override. Same
+rules as everything here - each is optional and appears on the next deploy
+once it lands. The photo band along the board's bottom edge needs nothing: it
+reuses the regatta photos already at the repo root, as `/phkl`'s board does.
 
 ## What this event does NOT need
 
 - **No landing logo.** There is no partner on this landing (Figma 756:14394),
   so nothing sits above the eyebrow - unlike `/phkl`.
 - **No leaderboard files _here_.** The TV board at `/mambacares/leaderboard`
-  has artwork of its own - the prize cutouts, the donation illustration and
-  the photo band - and it goes in the `board/` subfolder, which has its own
-  README listing the files and their sizes. Nothing on the report reads it.
+  has artwork of its own - the prize cutouts and the donation illustration -
+  and it goes in the `board/` subfolder, which has its own README listing the
+  files and their sizes. Nothing on the report reads it.
 - **The quiz-intro photos are shared.** "Your brain speed isn't fixed" uses
   `/images/phkl/quiz-intro-{sleep,exercise,diet}.png`, which are already
   committed. Nothing to upload here for that screen.

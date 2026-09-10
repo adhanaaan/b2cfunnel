@@ -382,7 +382,9 @@ Standings and the completion stat come from `/api/leaderboard` (every 8s) and
 Images under `public/images/mambacares/board/` - **that folder's README lists
 every file, its box on the board and the size to export it at**. All of them
 are optional: the board draws without any of them and picks each up the moment
-it lands.
+it lands. The band along the bottom edge is the exception, and needs nothing
+uploaded: it reuses the regatta board's three photos from the repo root, as
+`/phkl` does, at the widths this frame shows of each.
 
 ## /event-v6 (preview)
 
