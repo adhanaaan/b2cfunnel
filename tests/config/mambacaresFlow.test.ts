@@ -178,6 +178,16 @@ describe("mambacares campaign config", () => {
     expect(pct).toBeLessThanOrEqual(1);
   });
 
+  // The campaign paragraph states the number of crews in words. Nothing else
+  // ties it to the logo row, so a crew joining would leave the report saying
+  // "six" over seven logos - true of the copy, visibly wrong on the page.
+  it("keeps the crew count in step with the copy that states it", () => {
+    expect(MAMBACARES_RUNNING_PARTNERS).toHaveLength(6);
+    expect(COPY.screens.mambacares.report.donate.paragraphs[0]).toContain(
+      "six running",
+    );
+  });
+
   // Every image is optional at runtime, but a duplicated path would silently
   // render the same logo twice and hide a partner.
   it("gives every logo and photo its own file", () => {

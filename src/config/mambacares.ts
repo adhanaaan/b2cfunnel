@@ -71,26 +71,32 @@ export interface MambaLogo {
 }
 
 /**
- * The running crews, as read off the Figma. Names are a best reading of the
- * artwork - correct any that are wrong here and the alt text follows.
+ * The six running crews, in the order the files were uploaded.
+ *
+ * The names that are filled in are the ones readable on the artwork; the rest
+ * are honest placeholders. Correcting one here corrects its alt text - which
+ * is the only place a name is read once every file has landed.
+ *
+ * The count is load-bearing: the campaign copy says "six running crews", and
+ * mambacaresFlow.test.ts holds the two to each other, so a seventh crew means
+ * editing that sentence in config/copy.ts as well.
  */
 export const MAMBACARES_RUNNING_PARTNERS: MambaLogo[] = [
   { src: "/images/mambacares/running-partner-1.png", name: "Black Mamba" },
   { src: "/images/mambacares/running-partner-2.png", name: "Running partner 2" },
-  { src: "/images/mambacares/running-partner-3.png", name: "okay. and running" },
+  { src: "/images/mambacares/running-partner-3.png", name: "2050 Coffee" },
   { src: "/images/mambacares/running-partner-4.png", name: "SGFR" },
-  { src: "/images/mambacares/running-partner-5.png", name: "Running partner 5" },
+  { src: "/images/mambacares/running-partner-5.png", name: "okay. and running" },
+  { src: "/images/mambacares/running-partner-6.png", name: "Running partner 6" },
 ];
 
-/** The giveaway sponsors, left to right. Same rules as the crews above. */
+/** The five giveaway sponsors, left to right. Same rules as the crews above. */
 export const MAMBACARES_GIVEAWAY_SPONSORS: MambaLogo[] = [
-  { src: "/images/mambacares/sponsor-1.png", name: "2050 Coffee" },
-  { src: "/images/mambacares/sponsor-2.png", name: "Sponsor 2" },
+  { src: "/images/mambacares/sponsor-1.png", name: "Sponsor 1" },
+  { src: "/images/mambacares/sponsor-2.png", name: "PRFM" },
   { src: "/images/mambacares/sponsor-3.png", name: "Sponsor 3" },
-  { src: "/images/mambacares/sponsor-4.png", name: "PRFM" },
-  { src: "/images/mambacares/sponsor-5.png", name: "Sponsor 5" },
-  { src: "/images/mambacares/sponsor-6.png", name: "Sponsor 6" },
-  { src: "/images/mambacares/sponsor-7.png", name: "Sunday Shades" },
+  { src: "/images/mambacares/sponsor-4.png", name: "Sponsor 4" },
+  { src: "/images/mambacares/sponsor-5.png", name: "Sunday Shades" },
 ];
 
 /**

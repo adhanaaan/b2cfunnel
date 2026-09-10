@@ -28,36 +28,41 @@ in `src/config/mambacares.ts` (`MAMBACARES_PHOTOS`) to match.
 
 ## Running partners
 
-Five round crew logos, about 44px across on screen, cropped to fill a circle.
-Export each **square** (roughly 400x400) with the mark centred and no wide
-margin; a logo on a wide canvas will be cropped to its middle.
+Six crew logos, about 44px across on screen, each fitted inside a round white
+frame. Export **square** (roughly 400x400). The artwork is fitted, not cropped,
+so a wordmark on a square canvas keeps both its ends - but the frame is still a
+circle, so leave a little margin around the mark rather than running it to the
+edges.
 
-| File | Crew (left to right in Figma) |
+| File | Crew (left to right) |
 | --- | --- |
 | `running-partner-1.png` | Black Mamba |
 | `running-partner-2.png` | (2nd crew) |
-| `running-partner-3.png` | okay. and running |
+| `running-partner-3.png` | 2050 Coffee |
 | `running-partner-4.png` | SGFR |
-| `running-partner-5.png` | (5th crew) |
+| `running-partner-5.png` | okay. and running |
+| `running-partner-6.png` | (6th crew) |
 
-The names above are read off the Figma artwork and are the alt text as well as
-the stand-in shown while a file is missing, so correct any that are wrong in
-`src/config/mambacares.ts` (`MAMBACARES_RUNNING_PARTNERS`) - that is also where
-a sixth crew is added.
+The filled-in names are the ones readable on the artwork; the rest are
+placeholders. A name is the alt text as well as the stand-in shown while a file
+is missing, so correct any that are wrong in `src/config/mambacares.ts`
+(`MAMBACARES_RUNNING_PARTNERS`).
+
+**Adding a seventh crew** also means editing the campaign paragraph in
+`src/config/copy.ts`, which says "six running crews" in words - a test holds
+the two together so the page can't end up saying six over seven logos.
 
 ## Giveaway sponsors
 
-Seven round sponsor logos, about 40px across. Same export rules as the crews.
+Five sponsor logos, about 40px across. Same export rules as the crews.
 
-| File | Sponsor (left to right in Figma) |
+| File | Sponsor (left to right) |
 | --- | --- |
-| `sponsor-1.png` | 2050 Coffee |
-| `sponsor-2.png` | (2nd sponsor) |
+| `sponsor-1.png` | (1st sponsor) |
+| `sponsor-2.png` | PRFM |
 | `sponsor-3.png` | (3rd sponsor) |
-| `sponsor-4.png` | PRFM |
-| `sponsor-5.png` | (5th sponsor) |
-| `sponsor-6.png` | (6th sponsor) |
-| `sponsor-7.png` | Sunday Shades |
+| `sponsor-4.png` | (4th sponsor) |
+| `sponsor-5.png` | Sunday Shades |
 
 Names and the number of slots live in `src/config/mambacares.ts`
 (`MAMBACARES_GIVEAWAY_SPONSORS`).
@@ -76,6 +81,6 @@ Names and the number of slots live in `src/config/mambacares.ts`
 ## Campaign numbers, not images
 
 The amount raised, the goal, the "last updated" date, the deadline and the
-donation link are **not** in any of these files - they are in
+donation short link are **not** in any of these files - they are in
 `src/config/mambacares.ts`. Edit that file and redeploy to move the
 thermometer.

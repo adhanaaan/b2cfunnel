@@ -15,18 +15,24 @@ import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
  * slot shows the partner's name instead, which keeps the row at its designed
  * length and makes it plain which logo is still outstanding rather than
  * leaving a gap nobody notices.
+ *
+ * The supplied files are a mix - some are circular marks, some are wordmarks
+ * centred on a square canvas - so the artwork is fitted inside the circle
+ * (`object-contain` on a padded frame) rather than cropped to fill it. Filling
+ * would push the ends of a wordmark under the mask and cut them off; fitting
+ * costs a circular mark a hair of size and keeps every logo whole.
  */
 function LogoSlot({ logo, size }: { logo: MambaLogo; size: string }) {
   return (
     <li
-      className={`flex ${size} shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/70 ring-1 ring-[#f0dccf]`}
+      className={`flex ${size} shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-[3px] ring-1 ring-[#f0dccf]`}
     >
       <OptionalImage
         src={logo.src}
         alt={logo.name}
-        className="h-full w-full object-cover"
+        className="h-full w-full rounded-full object-contain"
         fallback={
-          <span className="px-1 text-center text-[7px] font-bold uppercase leading-[1.15] tracking-[0.02em] text-[#b79c8e]">
+          <span className="text-center text-[7px] font-bold uppercase leading-[1.15] tracking-[0.02em] text-[#b79c8e]">
             {logo.name}
           </span>
         }
@@ -49,7 +55,10 @@ function LogoRow({
       <h3 className="text-center text-[13px] font-bold text-[#8a6a58]">
         {heading}
       </h3>
-      <ul className="mt-3 flex flex-wrap items-center justify-center gap-2.5">
+      {/* 8px, not 10: six 44px crew logos plus their gaps have to fit the
+          content column on a 360px phone, which 10px misses by two pixels.
+          Still wraps rather than overflows on anything narrower. */}
+      <ul className="mt-3 flex flex-wrap items-center justify-center gap-2">
         {logos.map((logo) => (
           <LogoSlot key={logo.src} logo={logo} size={size} />
         ))}
