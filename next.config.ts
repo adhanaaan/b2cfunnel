@@ -20,6 +20,16 @@ const nextConfig: NextConfig = {
     return [
       { source: "/woman", destination: "/prologue", permanent: true },
       { source: "/woman/quiz", destination: "/prologue/quiz", permanent: true },
+      // The #MambaCares funnel is /mambacares; the singular gets typed and
+      // written down just as often, so both spellings land. Temporary (307)
+      // rather than permanent: nothing is cached in a browser that would have
+      // to be undone if /mambacare is ever wanted as a route of its own.
+      { source: "/mambacare", destination: "/mambacares", permanent: false },
+      {
+        source: "/mambacare/leaderboard",
+        destination: "/mambacares/leaderboard",
+        permanent: false,
+      },
     ];
   },
   async headers() {
