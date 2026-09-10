@@ -185,6 +185,23 @@ export const PHKL_PAUSED = false;
 export const PHKL_SOURCE = "phkl";
 
 /**
+ * Independent pause switch for the GMS x #MambaCares community run
+ * (/mambacares). Its own switch, like every other event's: closing one must
+ * never take another down with it. There is no challenge-closed switch for
+ * this event; the arc is open for as long as the route is up.
+ */
+export const MAMBACARES_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the #MambaCares run funnel. Every /mambacares score
+ * and report is tagged with it, and the rank on its report is read back from
+ * it - which is what keeps its standings clear of every other event's history.
+ *
+ * This is the value written to the `source` column for this event.
+ */
+export const MAMBACARES_SOURCE = "mambacares";
+
+/**
  * The bucket a variant's rows are tagged with, for both `game_scores.source`
  * and `leads.source`. Shared so a score and the report that follows it always
  * carry the same tag - the report rate on the board divides one by the other,
@@ -207,6 +224,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return IHH_SOURCE;
     case "phkl":
       return PHKL_SOURCE;
+    case "mambacares":
+      return MAMBACARES_SOURCE;
     case "event2":
       return "event2";
     case "event":

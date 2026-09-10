@@ -31,6 +31,12 @@ export type QuizVariant =
   // no longer optional), and a long report ending on the memory screening
   // offer. Its own `phkl` bucket.
   | "phkl"
+  // GMS x #MambaCares (/mambacares): the PHKL arc reused for the World
+  // Alzheimer's Month community run - the same landing, primers, game, quiz
+  // and analysing screens, with no partner on the landing and a report that
+  // ends on the Dementia Singapore fundraiser instead of a screening offer.
+  // Its own `mambacares` bucket.
+  | "mambacares"
   // Preview-only: the daylight arc with a partner consent page. Submits nothing
   // (see PREVIEW_VARIANTS in config/variants.ts).
   | "event6";

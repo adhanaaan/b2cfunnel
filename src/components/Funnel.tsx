@@ -49,6 +49,7 @@ import { PhklGreatJob } from "@/components/screens/phkl/PhklGreatJob";
 import { PhklQuizIntro } from "@/components/screens/phkl/PhklQuizIntro";
 import { PhklAnalysingScreen } from "@/components/screens/phkl/PhklAnalysingScreen";
 import { PhklResultScreen } from "@/components/screens/phkl/PhklResultScreen";
+import { MambaResultScreen } from "@/components/screens/mambacares/MambaResultScreen";
 
 /** A stable, human-readable name for a funnel step (for drop-off analytics). */
 function stepKey(step: FunnelStep): string {
@@ -221,7 +222,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             state.variant === "ntuhomecoming" ||
             state.variant === "ihhsearegatta" ||
             state.variant === "ihh" ||
-            state.variant === "phkl"
+            state.variant === "phkl" ||
+            state.variant === "mambacares"
               ? state.variant
               : "v3"
           }
@@ -366,9 +368,10 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       );
 
     case "analysing":
-      // PHKL loads its report behind its own screen: a progress ring counting
-      // to 100% with each part of the workup ticking off, one by one.
-      if (state.variant === "phkl") {
+      // The PHKL arc loads its report behind its own screen: a progress ring
+      // counting to 100% with each part of the workup ticking off, one by one.
+      // #MambaCares runs the same arc, so it gets the same screen.
+      if (state.variant === "phkl" || state.variant === "mambacares") {
         return (
           <PhklAnalysingScreen
             name={state.name}
@@ -379,6 +382,24 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       return <AnalysingScreen name={state.name} onDone={handleAnalysisDone} />;
 
     case "result":
+      // Same header, same risk section, a different argument under them: the
+      // #MambaCares report ends on the Dementia Singapore campaign where the
+      // PHKL one ends on the Memory Screening Package.
+      if (state.variant === "mambacares") {
+        return state.result ? (
+          <MambaResultScreen
+            result={state.result}
+            name={state.name}
+            email={state.email}
+            gameTimeMs={state.gameTimeMs}
+            gameAttempts={state.gameAttempts}
+            onRetake={() => {
+              track("game_retake", { variant: state.variant, step: "result" });
+              retakeGame();
+            }}
+          />
+        ) : null;
+      }
       if (state.variant === "phkl") {
         // The PHKL report carries the time and standing itself (there is no
         // post-game card in this arc) and its own "Retry": the reducer
@@ -420,7 +441,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           theme={ember ? "warm" : "default"}
           hideBack={ember}
           music={ember}
-          // A replay from the phkl report goes straight to the countdown,
+          // A replay from the phkl or #MambaCares report goes straight to the
+          // countdown,
           // whatever sessionStorage remembers about the guided tour.
           skipDemo={state.result != null}
         />

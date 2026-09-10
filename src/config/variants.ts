@@ -19,9 +19,10 @@ export function isPreviewVariant(variant: QuizVariant): boolean {
  * instructions, post-game result). v6 is v3 with the partner consents split
  * one per tick, rotary and NTU Homecoming are v3 without a consent page, the
  * regatta is v3 with the partner consent moved onto the landing and an extra
- * page after the post-game result, and PHKL is the regatta with its own
- * screens either side of the game - so all six share the landing, the
- * instructions and the warm game theme.
+ * page after the post-game result, PHKL is the regatta with its own screens
+ * either side of the game, and #MambaCares is PHKL with no partner and a
+ * fundraising report in place of the screening offer - so all of them share
+ * the landing, the instructions and the warm game theme.
  */
 export function usesDaylightScreens(variant: QuizVariant): boolean {
   return (
@@ -31,6 +32,7 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
     variant === "ntuhomecoming" ||
     variant === "ihhsearegatta" ||
     variant === "ihh" ||
-    variant === "phkl"
+    variant === "phkl" ||
+    variant === "mambacares"
   );
 }

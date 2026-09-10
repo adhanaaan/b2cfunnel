@@ -1,11 +1,12 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { COPY } from "@/config/copy";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "@/components/screens/event3/Event3Shell";
 import { StrongWords, ctaPrimaryClass } from "@/components/screens/event3/ui";
 import { PhklProgressRail } from "./PhklProgressRail";
+import { arcCopyFor } from "@/config/copy";
+import { useVariant } from "@/components/VariantContext";
 
 const item = {
   hidden: { opacity: 0, y: 16 },
@@ -19,7 +20,7 @@ const item = {
  * a keyboard.
  */
 export function PhklSpeedIntro({ onContinue }: { onContinue: () => void }) {
-  const c = COPY.screens.phkl.speedIntro;
+  const c = arcCopyFor(useVariant()).speedIntro;
   const reduced = useReducedMotion();
 
   return (

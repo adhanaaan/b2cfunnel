@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { animate, motion, useReducedMotion } from "framer-motion";
-import { COPY } from "@/config/copy";
 import { firstName, formatTime, ordinal } from "@/lib/format";
 import { springs, stagger } from "@/lib/motion";
 import { RetryIcon, ShareIcon } from "@/components/screens/event3/icons";
@@ -11,6 +10,8 @@ import {
   emberTextGradient,
 } from "@/components/screens/event3/ui";
 import type { Standing } from "@/components/screens/event3/useStanding";
+import { arcCopyFor } from "@/config/copy";
+import { useVariant } from "@/components/VariantContext";
 
 interface PhklResultHeaderProps {
   name?: string;
@@ -46,7 +47,7 @@ export function PhklResultHeader({
   share,
   onRetry,
 }: PhklResultHeaderProps) {
-  const c = COPY.screens.phkl.report.header;
+  const c = arcCopyFor(useVariant()).report.header;
   const reduced = useReducedMotion();
   const [display, setDisplay] = useState(reduced ? (timeMs ?? 0) : 0);
   const [countDone, setCountDone] = useState(!!reduced);
