@@ -36,27 +36,33 @@ the board is opened on a phone.
 `donate-qr.png` is the one file the board does not need: with no file there it
 generates the code itself from `MAMBACARES_DONATION_URL`
 (`src/config/mambacares.ts`), which is the same short link every Donate button
-on the report opens. Upload a file only if you want the campaign-branded code -
-and check it scans to that link first, because **whatever the file encodes is
-where people's money goes**. Nothing in the code can verify it.
+on the report opens. The file committed here decodes to
+`https://bit.ly/gms-mambacares?r=qr` - the campaign link with a QR source tag -
+and was checked as such.
+
+**Anyone replacing it has to scan it first.** Whatever the file encodes is
+where people's money goes, and nothing in the code can verify it: a code for
+the wrong campaign is a wrong code, however right the artwork looks.
 
 ## Photo band (along the bottom edge)
 
-| File | Shows | Box on the board | Export at |
-| --- | --- | --- | --- |
-| `band-1.png` | left photo | 408x53 | 1224x159 |
-| `band-2.png` | middle photo | 764x53 | 2292x159 |
-| `band-3.png` | right photo | 748x53 | 2244x159 |
+**Nothing to upload.** The band reuses the regatta board's three photos -
+`/regatta-band-1.jpg`, `/regatta-band-2.png`, `/regatta-band-3.jpg` at the
+repo root - as `/phkl`'s board does: one event's crowd standing in for the
+next. They are cropped to fill (`object-cover`) at the widths this frame
+shows of each, 408:764:748.
 
-These three are cropped to fill (`object-cover`), so export them as ordinary
-run photos - roughly 3:1 or wider, ~160px tall or more, and keep faces near
-the vertical centre. Whichever are missing, the rest share the width, so the
-band never leaves a gap.
+To put the run's own photos in the band instead, replace those three files at
+the root (every board that uses them changes together), or point `BAND` in
+`app/mambacares/leaderboard/page.tsx` at files here. Either way they want to
+be roughly 3:1 or wider, ~160px tall or more, with faces near the vertical
+centre.
 
 ## Already in the repo - nothing to upload
 
-- The brain (`/images/event3/brain.webp`) and the Gray Matter Solutions + NTU
-  lockup in the fact strip (`/gms-ntu-logo.png`).
+- The brain (`/images/event3/brain.webp`), the Gray Matter Solutions + NTU
+  lockup in the fact strip (`/gms-ntu-logo.png`), and the three band photos
+  above.
 - The prize sponsor names ("From PMAM, SALTIFY, ...") are copy in
   `app/mambacares/leaderboard/page.tsx`, not logo files. The sponsor and crew
   logos on the report are a separate set, one folder up.
