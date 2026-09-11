@@ -16,7 +16,11 @@ import type { LeadPayload } from "@/lib/supabase/types";
 import type { QuizVariant } from "@/types/funnel";
 import { VariantProvider } from "@/components/VariantContext";
 import { eventSource } from "@/config/event";
-import { isPreviewVariant, usesDaylightScreens } from "@/config/variants";
+import {
+  isPreviewVariant,
+  usesDaylightScreens,
+  usesMambaScreens,
+} from "@/config/variants";
 
 import { HookScreen } from "@/components/screens/HookScreen";
 import { PostGameHook } from "@/components/screens/PostGameHook";
@@ -222,10 +226,11 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             state.variant === "ntuhomecoming" ||
             state.variant === "ihhsearegatta" ||
             state.variant === "ihh" ||
-            state.variant === "phkl" ||
-            state.variant === "mambacares"
+            state.variant === "phkl"
               ? state.variant
-              : "v3"
+              : usesMambaScreens(state.variant)
+                ? "mambacares"
+                : "v3"
           }
         />
       ) : state.variant === "event2" ? (
@@ -371,7 +376,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       // The PHKL arc loads its report behind its own screen: a progress ring
       // counting to 100% with each part of the workup ticking off, one by one.
       // #MambaCares runs the same arc, so it gets the same screen.
-      if (state.variant === "phkl" || state.variant === "mambacares") {
+      if (state.variant === "phkl" || usesMambaScreens(state.variant)) {
         return (
           <PhklAnalysingScreen
             name={state.name}
@@ -385,7 +390,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       // Same header, same risk section, a different argument under them: the
       // #MambaCares report ends on the Dementia Singapore campaign where the
       // PHKL one ends on the Memory Screening Package.
-      if (state.variant === "mambacares") {
+      if (usesMambaScreens(state.variant)) {
         return state.result ? (
           <MambaResultScreen
             result={state.result}

@@ -37,6 +37,10 @@ export type QuizVariant =
   // ends on the Dementia Singapore fundraiser instead of a screening offer.
   // Its own `mambacares` bucket.
   | "mambacares"
+  // /event-v7 (preview): the #MambaCares arc with the share moment at the top
+  // of the report. A preview variant - see PREVIEW_VARIANTS - so walking it
+  // writes nothing while the live run is on.
+  | "event7"
   // Preview-only: the daylight arc with a partner consent page. Submits nothing
   // (see PREVIEW_VARIANTS in config/variants.ts).
   | "event6";
