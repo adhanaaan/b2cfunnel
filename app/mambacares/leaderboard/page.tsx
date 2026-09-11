@@ -106,16 +106,21 @@ const QR_IMAGE = `${BOARD_ART}/donate-qr.png`;
  * The prize drop, back to front - the order they overlap in.
  *
  * `box` is the slot in the prize panel's own pixels (the frame's, less the
- * panel's 39,164 origin), and the artwork is fitted inside it, so moving a
- * prize is these four numbers and nothing else. Slots break out of the
- * panel's top and right edges the way the design has them, which is why the
- * panel does not clip.
+ * panel's 39,164 origin), and the file is fitted inside it, so moving a prize
+ * is these four numbers and nothing else. Slots break out of the panel's top
+ * and right edges the way the design has them, which is why the panel does
+ * not clip.
  *
- * The two garments are the frame's own slots (813:19280, 813:19283). The
- * socks and the shades joined the drop after that frame was drawn, and the
- * box moved right and shrank to make room for them, so those three are placed
- * from the render of the grown drop rather than from Figma - and are the ones
- * to nudge if they sit a few pixels off what the designer intended.
+ * The files carry their own margins - the socks fill 62% of theirs, the vest
+ * 88% - and a box sized for the *artwork* shows a cutout at whatever fraction
+ * of that its file leaves empty. So each box is its file's full frame at one
+ * scale, chosen so the visible artwork lands where the approved render of the
+ * drop puts it: vest 173 wide behind the hoodie, socks 141 tall in the gap
+ * right of it, the box 139 tall right of those, shades 108 wide over the
+ * hoodie's lower left. The hoodie's slot is the frame's own (813:19283).
+ * Replacing a file with different margins means re-fitting its row: measure
+ * the artwork's bounding box in the new file and solve for the same visible
+ * size. Trimming the file to the artwork first makes that a no-op.
  *
  * Adding a prize is a row here plus its file under public/images/mambacares/
  * board/ (see the README there). Each file is optional: an empty slot draws
@@ -136,7 +141,7 @@ const PRIZE_ART: {
   {
     src: `${BOARD_ART}/prize-vest.png`,
     alt: "",
-    box: { left: 450.67, top: -37, width: 344.469, height: 344.469 },
+    box: { left: 543.8, top: -29.8, width: 196.5, height: 238.2 },
   },
   {
     src: `${BOARD_ART}/prize-hoodie.png`,
@@ -147,20 +152,17 @@ const PRIZE_ART: {
   {
     src: `${BOARD_ART}/prize-socks.png`,
     alt: "",
-    box: { left: 523, top: 143, width: 100, height: 139 },
+    box: { left: 492.5, top: 136, width: 161, height: 150 },
   },
   {
     src: `${BOARD_ART}/prize-salt.png`,
     alt: "",
-    // Moved right of the frame's own slot, and smaller, to clear the socks -
-    // as the render of the grown drop has it. Its right edge stays 27px off
-    // the leader row, which is the gap that render keeps.
-    box: { left: 632, top: 144, width: 127, height: 140 },
+    box: { left: 622.8, top: 131.2, width: 142.3, height: 156.5 },
   },
   {
     src: `${BOARD_ART}/prize-shades.png`,
     alt: "",
-    box: { left: 422, top: 210, width: 105, height: 58 },
+    box: { left: 421.1, top: 204.5, width: 112.1, height: 61.2 },
   },
 ];
 
@@ -386,14 +388,17 @@ function PrizePanel() {
       className="relative w-full px-[calc(var(--u)*24)] py-[calc(var(--u)*28)] board:ml-[calc(var(--u)*39)] board:h-[calc(var(--u)*288)] board:w-[calc(var(--u)*755)] board:px-0 board:py-0"
       style={{ background: PRIZE_GRADIENT, borderRadius: u(20) }}
     >
-      <div className="relative z-10 flex min-w-0 flex-col gap-[calc(var(--u)*20)] pr-[38%] text-charcoal board:absolute board:left-[calc(var(--u)*47)] board:top-[calc(var(--u)*42)] board:w-[calc(var(--u)*495.726)] board:gap-[calc(var(--u)*26)] board:pr-0">
+      <div className="relative z-10 flex min-w-0 flex-col gap-[calc(var(--u)*12)] pr-[38%] text-charcoal board:absolute board:left-[calc(var(--u)*47)] board:top-[calc(var(--u)*42)] board:w-[calc(var(--u)*495.726)] board:gap-[calc(var(--u)*15)] board:pr-0">
+        {/* 15 under the eyebrow and 23 under the title, not the frame's 26
+            and 12: the approved render sits the title closer to its eyebrow
+            and leaves the sponsor lines where they were. */}
         <p
           className="font-bold uppercase leading-[1.1] tracking-[0.23em]"
           style={{ fontSize: u(20.726) }}
         >
           Top {TOP_N} fastest minds
         </p>
-        <div className="flex flex-col gap-[calc(var(--u)*12)]">
+        <div className="flex flex-col gap-[calc(var(--u)*12)] board:gap-[calc(var(--u)*23)]">
           <p className="text-[length:calc(var(--u)*38)] font-extrabold leading-[1.19] tracking-[-0.015em] board:w-[calc(var(--u)*448)] board:text-[length:calc(var(--u)*57.554)]">
             Win prizes
           </p>

@@ -15,26 +15,30 @@ the file.
 
 ## Prizes (the peach panel, top left)
 
-Five slots, listed back to front - the order they overlap in.
+Five slots, listed back to front - the order they overlap in. All five files
+are uploaded. Each box below is fitted to the file that is there now, so the
+*artwork* inside it lands at the size the approved render shows.
 
-| File | Shows | Box on the board | Export at |
+| File | Shows | Artwork on the board | File it is fitted to |
 | --- | --- | --- | --- |
-| `prize-vest.png` | the vest, furthest back | 344x344 | 688x688 |
-| `prize-hoodie.png` | the white 2050 Coffee hoodie | 347x369 | 694x738 |
-| `prize-socks.png` | **new** - the socks, in the gap right of the hoodie | 100x139 | 200x278 |
-| `prize-salt.png` | the SALTIFY box, right of the socks | 127x140 | 254x280 |
-| `prize-shades.png` | **new** - the Sunday Shades, over the hoodie's lower left | 105x58 | 210x116 |
+| `prize-vest.png` | the PMAM vest, furthest back | 173x231 | 452x548 |
+| `prize-hoodie.png` | the white 2050 Coffee hoodie | 200x307 | 694x738 |
+| `prize-socks.png` | the socks, in the gap right of the hoodie | 100x141 | 322x300 |
+| `prize-salt.png` | the SALTIFY box, right of the socks | 128x139 | 350x385 |
+| `prize-shades.png` | the Sunday Shades, over the hoodie's lower left | 108x54 | 357x195 |
 
-Cutouts on transparent backgrounds, trimmed to the artwork - each is fitted
-inside its box (`object-contain`), so empty margins in the file shrink the
-prize on screen. Slots break out of the panel's top and right edges as the
-design has them; the hoodie also hangs below it, and the donate card paints
-over anything in its lower edge. Only the hoodie shows when the board is
-opened on a phone.
+Cutouts on transparent backgrounds; each file is fitted whole inside its box
+(`object-contain`). **The margins inside a file are part of the fit**: the
+socks fill 62% of their file's width, and a box sized for the socks alone
+would show them at 62% of the size. Replacing a file with the same margins is
+just an upload. Replacing it with different margins - a tighter trim, a new
+export - means re-fitting its row in `PRIZE_ART` (measure the artwork's
+bounding box in the new file, solve for the same visible size), or trimming
+the new file to its artwork first, which makes the fit hold on its own.
 
-`prize-vest.png` is whichever vest is in the drop - replacing the file is the
-whole change, no code edit. Same for a garment that swaps out: keep the
-filename.
+Slots break out of the panel's top and right edges as the design has them;
+the hoodie also hangs below it, and the donate card paints over anything in
+its lower edge. Only the hoodie shows when the board is opened on a phone.
 
 ### Changing the drop
 
@@ -48,9 +52,10 @@ Slots and sponsor names are both data at the top of
   from a fixed top and the panel has about one line's clearance left, so keep
   lines to roughly the length they are now.
 
-The socks, the shades and the box's position come from the render of the grown
+Every slot but the hoodie's is placed from the approved render of the grown
 drop rather than from Figma (the frame still shows the three-prize version), so
-those are the ones to nudge if they sit a few pixels off.
+those are the ones to nudge if they sit a few pixels off. The eyebrow-to-title
+gap in the panel comes from that render too.
 
 ## Donation card (the orange panel)
 
