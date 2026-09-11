@@ -15,16 +15,42 @@ the file.
 
 ## Prizes (the peach panel, top left)
 
+Five slots, listed back to front - the order they overlap in.
+
 | File | Shows | Box on the board | Export at |
 | --- | --- | --- | --- |
-| `prize-hoodie.png` | the white 2050 Coffee hoodie, front of the group | 347x369 | 694x738 |
-| `prize-vest.png` | the black ZODA vest, behind the hoodie | 344x344 | 688x688 |
-| `prize-salt.png` | the SALTIFY box, front right | 175x192 | 350x384 |
+| `prize-vest.png` | the vest, furthest back | 344x344 | 688x688 |
+| `prize-hoodie.png` | the white 2050 Coffee hoodie | 347x369 | 694x738 |
+| `prize-socks.png` | **new** - the socks, in the gap right of the hoodie | 100x139 | 200x278 |
+| `prize-salt.png` | the SALTIFY box, right of the socks | 127x140 | 254x280 |
+| `prize-shades.png` | **new** - the Sunday Shades, over the hoodie's lower left | 105x58 | 210x116 |
 
-Cutouts on transparent backgrounds. All three break out of the panel's top and
-right edges, as the design has them; the hoodie also hangs below it, and the
-donate card paints over anything in its lower edge. Only the hoodie shows when
-the board is opened on a phone.
+Cutouts on transparent backgrounds, trimmed to the artwork - each is fitted
+inside its box (`object-contain`), so empty margins in the file shrink the
+prize on screen. Slots break out of the panel's top and right edges as the
+design has them; the hoodie also hangs below it, and the donate card paints
+over anything in its lower edge. Only the hoodie shows when the board is
+opened on a phone.
+
+`prize-vest.png` is whichever vest is in the drop - replacing the file is the
+whole change, no code edit. Same for a garment that swaps out: keep the
+filename.
+
+### Changing the drop
+
+Slots and sponsor names are both data at the top of
+`app/mambacares/leaderboard/page.tsx`:
+
+- `PRIZE_ART` - one row per prize: its file, and `box` (`left`, `top`,
+  `width`, `height`) in the panel's own pixels. Adding a prize is a row plus a
+  file; moving one is four numbers.
+- `PRIZE_SPONSORS` - one line per entry, as printed. The block grows downwards
+  from a fixed top and the panel has about one line's clearance left, so keep
+  lines to roughly the length they are now.
+
+The socks, the shades and the box's position come from the render of the grown
+drop rather than from Figma (the frame still shows the three-prize version), so
+those are the ones to nudge if they sit a few pixels off.
 
 ## Donation card (the orange panel)
 

@@ -366,8 +366,11 @@ What differs from `/phkl/leaderboard`:
   point at two campaigns. An uploaded `board/donate-qr.png` overrides it -
   whatever that file encodes is where the money goes, and nothing in the code
   can check it.
-- **The prizes are the run's, listed as copy** ("From PMAM, SALTIFY, PRFM,
-  LKSD, ZODA, 2050"), with three product cutouts breaking out of the panel.
+- **The prizes are the run's**, and both halves of the panel are data at the
+  top of the page: `PRIZE_SPONSORS` (the printed lines - "From PMAM, SALTIFY,
+  PRFM, 2050, Sunday Shades, and more!") and `PRIZE_ART` (one row per cutout,
+  with its box in the panel's own pixels). The drop grows between now and the
+  run, so adding a prize is a row and a file, not a component edit.
 - **`MAMBACARES_PAUSED` only closes the prizes.** The panel becomes "That's a
   wrap" with the number of minds tested; the donation card and the standings
   stay up, because the campaign runs to its own deadline.

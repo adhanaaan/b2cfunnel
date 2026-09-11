@@ -99,11 +99,82 @@ const STRIP_BG = "rgba(255, 255, 255, 0.72)";
  * them land, and each appears the moment its file is committed.
  */
 const BOARD_ART = "/images/mambacares/board";
-const PRIZE_HOODIE = `${BOARD_ART}/prize-hoodie.png`;
-const PRIZE_VEST = `${BOARD_ART}/prize-vest.png`;
-const PRIZE_SALT = `${BOARD_ART}/prize-salt.png`;
 const DONATE_GIFT = `${BOARD_ART}/donate-gift.png`;
 const QR_IMAGE = `${BOARD_ART}/donate-qr.png`;
+
+/**
+ * The prize drop, back to front - the order they overlap in.
+ *
+ * `box` is the slot in the prize panel's own pixels (the frame's, less the
+ * panel's 39,164 origin), and the artwork is fitted inside it, so moving a
+ * prize is these four numbers and nothing else. Slots break out of the
+ * panel's top and right edges the way the design has them, which is why the
+ * panel does not clip.
+ *
+ * The two garments are the frame's own slots (813:19280, 813:19283). The
+ * socks and the shades joined the drop after that frame was drawn, and the
+ * box moved right and shrank to make room for them, so those three are placed
+ * from the render of the grown drop rather than from Figma - and are the ones
+ * to nudge if they sit a few pixels off what the designer intended.
+ *
+ * Adding a prize is a row here plus its file under public/images/mambacares/
+ * board/ (see the README there). Each file is optional: an empty slot draws
+ * nothing rather than a broken image, so the drop can be uploaded a piece at
+ * a time.
+ */
+const PRIZE_ART: {
+  src: string;
+  alt: string;
+  box: { left: number; top: number; width: number; height: number };
+  /**
+   * The one slot the stacked phone layout keeps, at the panel's right edge -
+   * there is no phone frame in the design, and five cutouts in a phone-width
+   * panel would be five smudges.
+   */
+  phone?: boolean;
+}[] = [
+  {
+    src: `${BOARD_ART}/prize-vest.png`,
+    alt: "",
+    box: { left: 450.67, top: -37, width: 344.469, height: 344.469 },
+  },
+  {
+    src: `${BOARD_ART}/prize-hoodie.png`,
+    alt: "This year's #MambaCares prize drop",
+    box: { left: 324, top: 10, width: 346.698, height: 368.578 },
+    phone: true,
+  },
+  {
+    src: `${BOARD_ART}/prize-socks.png`,
+    alt: "",
+    box: { left: 523, top: 143, width: 100, height: 139 },
+  },
+  {
+    src: `${BOARD_ART}/prize-salt.png`,
+    alt: "",
+    // Moved right of the frame's own slot, and smaller, to clear the socks -
+    // as the render of the grown drop has it. Its right edge stays 27px off
+    // the leader row, which is the gap that render keeps.
+    box: { left: 632, top: 144, width: 127, height: 140 },
+  },
+  {
+    src: `${BOARD_ART}/prize-shades.png`,
+    alt: "",
+    box: { left: 422, top: 210, width: 105, height: 58 },
+  },
+];
+
+/**
+ * The sponsors, as the panel prints them - one line per entry, broken where
+ * the artwork leaves room rather than left to wrap into it. Keep the lines
+ * roughly this length: the block grows downwards from a fixed top, and the
+ * panel has about one line's clearance left.
+ */
+const PRIZE_SPONSORS = [
+  "From PMAM, SALTIFY, PRFM,",
+  "2050, Sunday Shades,",
+  "and more!",
+];
 
 /**
  * The band of event photography along the bottom edge (813:19137, 813:19135,
@@ -299,13 +370,15 @@ function StandingsColumn({
 
 /**
  * The prizes (813:19148): a pale peach panel with the offer at 47px in, and
- * the three product cutouts breaking out of its top and its right edge the way
- * the design has them - which is why the panel does not clip. The hoodie hangs
- * below the panel; the donate card paints after it, so a file with anything
- * in its lower edge is covered rather than sitting over the ember.
+ * the drop breaking out of its top and its right edge the way the design has
+ * it - which is why the panel does not clip. The hoodie hangs below the
+ * panel; the donate card paints after it, so a file with anything in its
+ * lower edge is covered rather than sitting over the ember.
  *
- * Sponsor names are the design's own line. They are copy, not the sponsor
- * logos on the report (those live in `src/config/mambacares.ts`).
+ * Both the slots and the sponsor lines are data (PRIZE_ART, PRIZE_SPONSORS):
+ * the drop grows between now and the run, and nothing about it should mean
+ * editing this component. The names are copy, not the sponsor logos on the
+ * report (those live in `src/config/mambacares.ts`).
  */
 function PrizePanel() {
   return (
@@ -324,32 +397,37 @@ function PrizePanel() {
           <p className="text-[length:calc(var(--u)*38)] font-extrabold leading-[1.19] tracking-[-0.015em] board:w-[calc(var(--u)*448)] board:text-[length:calc(var(--u)*57.554)]">
             Win prizes
           </p>
-          <p className="text-[length:calc(var(--u)*22)] font-semibold leading-[1.34] tracking-[-0.015em] board:w-[calc(var(--u)*330)] board:text-[length:calc(var(--u)*26)]">
-            From PMAM, SALTIFY, PRFM, LKSD, ZODA, 2050
+          <p className="text-[length:calc(var(--u)*22)] font-semibold leading-[1.34] tracking-[-0.015em] board:text-[length:calc(var(--u)*26)]">
+            {PRIZE_SPONSORS.map((line) => (
+              <span key={line} className="board:block">
+                {line}{" "}
+              </span>
+            ))}
           </p>
         </div>
       </div>
 
-      {/* The vest sits furthest back, then the hoodie over it, then the box on
-          top - the design's own order (813:19280, 813:19283, 813:19274). Each
-          box is the frame's, and the artwork is fitted inside it, so a file
-          exported to the sizes in the README lands exactly where it is drawn.
-          On a phone only the hoodie shows, at the panel's right edge. */}
-      <OptionalImage
-        src={PRIZE_VEST}
-        alt=""
-        className="pointer-events-none absolute hidden object-contain board:block board:left-[calc(var(--u)*450.67)] board:top-[calc(var(--u)*-37)] board:size-[calc(var(--u)*344.469)]"
-      />
-      <OptionalImage
-        src={PRIZE_HOODIE}
-        alt="This year's #MambaCares prize drop"
-        className="pointer-events-none absolute right-[-2%] top-[-8%] h-[116%] w-auto object-contain board:left-[calc(var(--u)*324)] board:right-auto board:top-[calc(var(--u)*10)] board:h-[calc(var(--u)*368.578)] board:w-[calc(var(--u)*346.698)]"
-      />
-      <OptionalImage
-        src={PRIZE_SALT}
-        alt=""
-        className="pointer-events-none absolute hidden object-contain board:block board:left-[calc(var(--u)*565.5)] board:top-[calc(var(--u)*140.75)] board:h-[calc(var(--u)*192.25)] board:w-[calc(var(--u)*174.747)]"
-      />
+      {/* The drop, each slot in its designed box. Board sizes come through
+          custom properties so one loop can carry them, which leaves the phone
+          slot's own percentage box to the class list below it. */}
+      {PRIZE_ART.map((slot) => (
+        <OptionalImage
+          key={slot.src}
+          src={slot.src}
+          alt={slot.alt}
+          className={`pointer-events-none absolute object-contain board:left-[var(--slot-left)] board:top-[var(--slot-top)] board:h-[var(--slot-h)] board:w-[var(--slot-w)] ${
+            slot.phone
+              ? "right-[-2%] top-[-8%] h-[116%] w-auto board:right-auto"
+              : "hidden board:block"
+          }`}
+          style={{
+            ["--slot-left" as string]: u(slot.box.left),
+            ["--slot-top" as string]: u(slot.box.top),
+            ["--slot-w" as string]: u(slot.box.width),
+            ["--slot-h" as string]: u(slot.box.height),
+          }}
+        />
+      ))}
     </div>
   );
 }
