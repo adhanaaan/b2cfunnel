@@ -15,47 +15,41 @@ the file.
 
 ## Prizes (the peach panel, top left)
 
-Five slots, listed back to front - the order they overlap in. All five files
-are uploaded. Each box below is fitted to the file that is there now, so the
-*artwork* inside it lands at the size the approved render shows.
+**One file, the whole drop composed:**
 
-| File | Shows | Artwork on the board | File it is fitted to |
+| File | Shows | Box on the board | Export at |
 | --- | --- | --- | --- |
-| `prize-vest.png` | the PMAM vest, furthest back | 173x231 | 452x548 |
-| `prize-hoodie.png` | the white 2050 Coffee hoodie | 200x307 | 694x738 |
-| `prize-socks.png` | the socks, in the gap right of the hoodie | 100x141 | 322x300 |
-| `prize-salt.png` | the SALTIFY box, right of the socks | 128x139 | 350x385 |
-| `prize-shades.png` | the Sunday Shades, over the hoodie's lower left | 108x54 | 357x195 |
+| `prize-drop.png` | every prize, arranged as it should look | 462x380 | **924x760** |
 
-Cutouts on transparent backgrounds; each file is fitted whole inside its box
-(`object-contain`). **The margins inside a file are part of the fit**: the
-socks fill 62% of their file's width, and a box sized for the socks alone
-would show them at 62% of the size. Replacing a file with the same margins is
-just an upload. Replacing it with different margins - a tighter trim, a new
-export - means re-fitting its row in `PRIZE_ART` (measure the artwork's
-bounding box in the new file, solve for the same visible size), or trimming
-the new file to its artwork first, which makes the fit hold on its own.
+Compose the drop in Figma (or wherever) exactly as it should sit on the
+board - garments, socks, shades, box, overlapping however you like - and
+export the group as one transparent PNG at 924x760. That is the box's own
+ratio, so the export fills it edge to edge and what you see in the design
+tool is what the board shows. A file at a different ratio is fitted inside
+the box and centred, with the spare space left empty.
 
-Slots break out of the panel's top and right edges as the design has them;
-the hoodie also hangs below it, and the donate card paints over anything in
-its lower edge. Only the hoodie shows when the board is opened on a phone.
+Where the box sits: its top-left is 39px right of the panel's left edge and
+37px *above* the panel's top, and it runs to the leader row's left edge and
+the donate card's top edge - so nothing on the board paints over any part of
+it. It breaks out of the panel's top and right, as the design has it. The
+sponsor lines ("From PMAM, ...") run about 75px into the box's left edge,
+between 215px and 320px down from its top (150px in, 430-640px down, in the
+924x760 export) - the text paints over anything there, so either keep that
+corner clear or let a cutout sit behind the words on purpose.
 
-### Changing the drop
+The five separate cutouts that were here before (`prize-hoodie.png`,
+`prize-vest.png`, `prize-socks.png`, `prize-salt.png`, `prize-shades.png`)
+are gone: nothing reads them now, and they are in git history if a source is
+ever needed. Placing each from its own file meant measuring every PNG's
+margins and solving for a box, and the result still was not the composition
+the designer had in front of them.
 
-Slots and sponsor names are both data at the top of
-`app/mambacares/leaderboard/page.tsx`:
+On a phone the same image sits at the panel's right edge, scaled to fit.
 
-- `PRIZE_ART` - one row per prize: its file, and `box` (`left`, `top`,
-  `width`, `height`) in the panel's own pixels. Adding a prize is a row plus a
-  file; moving one is four numbers.
-- `PRIZE_SPONSORS` - one line per entry, as printed. The block grows downwards
-  from a fixed top and the panel has about one line's clearance left, so keep
-  lines to roughly the length they are now.
-
-Every slot but the hoodie's is placed from the approved render of the grown
-drop rather than from Figma (the frame still shows the three-prize version), so
-those are the ones to nudge if they sit a few pixels off. The eyebrow-to-title
-gap in the panel comes from that render too.
+**The sponsor lines** are `PRIZE_SPONSORS` at the top of
+`app/mambacares/leaderboard/page.tsx` - one line per entry, as printed. The
+block grows downwards from a fixed top and the panel has about one line's
+clearance left, so keep lines to roughly the length they are now.
 
 ## Donation card (the orange panel)
 
