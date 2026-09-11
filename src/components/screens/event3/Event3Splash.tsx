@@ -65,10 +65,17 @@ function ConsentCheckbox({
   onChange,
   children,
   roomy = false,
+  required = false,
 }: {
   checked: boolean;
   onChange: (checked: boolean) => void;
   children: React.ReactNode;
+  /**
+   * Announce the row as required. The asterisk that marks it visually is
+   * aria-hidden - it is punctuation, not a word - so without this a screen
+   * reader would meet the gate only as an error after submitting.
+   */
+  required?: boolean;
   /**
    * A 20px box and 12.5px text instead of 18px and 11.5px. The design flags
    * the smaller row as failing WCAG 2.5.5 and 1.4.3, so the newest landing
@@ -82,6 +89,7 @@ function ConsentCheckbox({
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
+        aria-required={required || undefined}
         className="peer sr-only"
       />
       <span
@@ -292,12 +300,21 @@ export function Event3Splash({
           <div className="space-y-1.5 pt-0.5">
             <ConsentCheckbox
               roomy={roomy}
+              required
               checked={contactConsent}
               onChange={(v) => {
                 setContactConsent(v);
                 if (v) setError(null);
               }}
             >
+              {c.consentRequiredMark && (
+                // Drawn here rather than written into the copy: StrongWords
+                // treats "*" as an emphasis delimiter, so a literal one in the
+                // string would be eaten and bold the rest of the line.
+                <span aria-hidden className="font-bold text-ember-core">
+                  *{" "}
+                </span>
+              )}
               <StrongWords text={c.consentRequired} />{" "}
               <a
                 href={c.privacyHref}

@@ -852,7 +852,14 @@ export const COPY: CopyConfig = {
     // {goal}, {lastUpdated} and {deadline} come from that config.
     mambacares: {
       ...PHKL_ARC_COPY,
-      splash: NO_PARTNER_SPLASH,
+      // Its own splash block rather than the shared one: this event marks the
+      // required tick with an asterisk instead of the word "Required", and
+      // NO_PARTNER_SPLASH is read by rotary, NTU Homecoming and phkl too.
+      splash: {
+        ...NO_PARTNER_SPLASH,
+        consentRequired: "I agree to be contacted about my results and prize.",
+        consentRequiredMark: true,
+      },
       report: {
         ...PHKL_ARC_COPY.report,
         problem: {

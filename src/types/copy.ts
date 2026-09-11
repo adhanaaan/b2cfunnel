@@ -240,6 +240,13 @@ export interface Event3Copy {
     // PDPA consent. The first is required to play (we email results and need
     // to reach the prize winner); the second is a separate marketing opt-in.
     consentRequired: string;
+    /**
+     * Mark the required tick with a leading asterisk instead of naming it
+     * "Required" in the sentence. The star is drawn by the screen, not written
+     * into consentRequired: StrongWords treats "*" as an emphasis delimiter,
+     * so a literal one in the copy would be swallowed and bold the line.
+     */
+    consentRequiredMark?: boolean;
     consentRequiredError: string;
     consentMarketing: string;
     privacyLinkLabel: string;
