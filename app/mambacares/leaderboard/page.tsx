@@ -103,66 +103,21 @@ const DONATE_GIFT = `${BOARD_ART}/donate-gift.png`;
 const QR_IMAGE = `${BOARD_ART}/donate-qr.png`;
 
 /**
- * The prize drop, back to front - the order they overlap in.
+ * The prize drop: one composed image of everything in it, dropped into the
+ * box the frame's own artwork group occupies (813:19285) - trimmed to the
+ * leader row on the right and the donate card below, so nothing paints over
+ * any of it. Whatever is in the file is what the board shows, at the size it
+ * was composed; the file is fitted inside the box and centred, so an export
+ * at the box's own 462:380 ratio uses all of it.
  *
- * `box` is the slot in the prize panel's own pixels (the frame's, less the
- * panel's 39,164 origin), and the artwork is fitted inside it, so moving a
- * prize is these four numbers and nothing else. Slots break out of the
- * panel's top and right edges the way the design has them, which is why the
- * panel does not clip.
- *
- * The two garments are the frame's own slots (813:19280, 813:19283). The
- * socks and the shades joined the drop after that frame was drawn, and the
- * box moved right and shrank to make room for them, so those three are placed
- * from the render of the grown drop rather than from Figma - and are the ones
- * to nudge if they sit a few pixels off what the designer intended.
- *
- * Adding a prize is a row here plus its file under public/images/mambacares/
- * board/ (see the README there). Each file is optional: an empty slot draws
- * nothing rather than a broken image, so the drop can be uploaded a piece at
- * a time.
+ * One image rather than a slot per prize on purpose. The drop kept growing,
+ * and each cutout's file carried its own margins, so every addition meant
+ * measuring a PNG and solving for a box - and the board still did not look
+ * like the composition the designer had in front of them. Composing it once,
+ * in a design tool, and exporting the group is how /phkl's board does its
+ * Grab render, and it puts the layout back in the designer's hands.
  */
-const PRIZE_ART: {
-  src: string;
-  alt: string;
-  box: { left: number; top: number; width: number; height: number };
-  /**
-   * The one slot the stacked phone layout keeps, at the panel's right edge -
-   * there is no phone frame in the design, and five cutouts in a phone-width
-   * panel would be five smudges.
-   */
-  phone?: boolean;
-}[] = [
-  {
-    src: `${BOARD_ART}/prize-vest.png`,
-    alt: "",
-    box: { left: 450.67, top: -37, width: 344.469, height: 344.469 },
-  },
-  {
-    src: `${BOARD_ART}/prize-hoodie.png`,
-    alt: "This year's #MambaCares prize drop",
-    box: { left: 324, top: 10, width: 346.698, height: 368.578 },
-    phone: true,
-  },
-  {
-    src: `${BOARD_ART}/prize-socks.png`,
-    alt: "",
-    box: { left: 523, top: 143, width: 100, height: 139 },
-  },
-  {
-    src: `${BOARD_ART}/prize-salt.png`,
-    alt: "",
-    // Moved right of the frame's own slot, and smaller, to clear the socks -
-    // as the render of the grown drop has it. Its right edge stays 27px off
-    // the leader row, which is the gap that render keeps.
-    box: { left: 632, top: 144, width: 127, height: 140 },
-  },
-  {
-    src: `${BOARD_ART}/prize-shades.png`,
-    alt: "",
-    box: { left: 422, top: 210, width: 105, height: 58 },
-  },
-];
+const PRIZE_DROP = `${BOARD_ART}/prize-drop.png`;
 
 /**
  * The sponsors, as the panel prints them - one line per entry, broken where
@@ -370,15 +325,13 @@ function StandingsColumn({
 
 /**
  * The prizes (813:19148): a pale peach panel with the offer at 47px in, and
- * the drop breaking out of its top and its right edge the way the design has
- * it - which is why the panel does not clip. The hoodie hangs below the
- * panel; the donate card paints after it, so a file with anything in its
- * lower edge is covered rather than sitting over the ember.
+ * the drop - one composed image, PRIZE_DROP - breaking out of its top and its
+ * right edge the way the design has it, which is why the panel does not clip.
  *
- * Both the slots and the sponsor lines are data (PRIZE_ART, PRIZE_SPONSORS):
- * the drop grows between now and the run, and nothing about it should mean
- * editing this component. The names are copy, not the sponsor logos on the
- * report (those live in `src/config/mambacares.ts`).
+ * The sponsor lines are data (PRIZE_SPONSORS) and the drop is a file, so the
+ * prizes can change between now and the run without editing this component.
+ * The names are copy, not the sponsor logos on the report (those live in
+ * `src/config/mambacares.ts`).
  */
 function PrizePanel() {
   return (
@@ -386,14 +339,17 @@ function PrizePanel() {
       className="relative w-full px-[calc(var(--u)*24)] py-[calc(var(--u)*28)] board:ml-[calc(var(--u)*39)] board:h-[calc(var(--u)*288)] board:w-[calc(var(--u)*755)] board:px-0 board:py-0"
       style={{ background: PRIZE_GRADIENT, borderRadius: u(20) }}
     >
-      <div className="relative z-10 flex min-w-0 flex-col gap-[calc(var(--u)*20)] pr-[38%] text-charcoal board:absolute board:left-[calc(var(--u)*47)] board:top-[calc(var(--u)*42)] board:w-[calc(var(--u)*495.726)] board:gap-[calc(var(--u)*26)] board:pr-0">
+      <div className="relative z-10 flex min-w-0 flex-col gap-[calc(var(--u)*12)] pr-[38%] text-charcoal board:absolute board:left-[calc(var(--u)*47)] board:top-[calc(var(--u)*42)] board:w-[calc(var(--u)*495.726)] board:gap-[calc(var(--u)*15)] board:pr-0">
+        {/* 15 under the eyebrow and 23 under the title, not the frame's 26
+            and 12: the approved render sits the title closer to its eyebrow
+            and leaves the sponsor lines where they were. */}
         <p
           className="font-bold uppercase leading-[1.1] tracking-[0.23em]"
           style={{ fontSize: u(20.726) }}
         >
           Top {TOP_N} fastest minds
         </p>
-        <div className="flex flex-col gap-[calc(var(--u)*12)]">
+        <div className="flex flex-col gap-[calc(var(--u)*12)] board:gap-[calc(var(--u)*23)]">
           <p className="text-[length:calc(var(--u)*38)] font-extrabold leading-[1.19] tracking-[-0.015em] board:w-[calc(var(--u)*448)] board:text-[length:calc(var(--u)*57.554)]">
             Win prizes
           </p>
@@ -407,27 +363,15 @@ function PrizePanel() {
         </div>
       </div>
 
-      {/* The drop, each slot in its designed box. Board sizes come through
-          custom properties so one loop can carry them, which leaves the phone
-          slot's own percentage box to the class list below it. */}
-      {PRIZE_ART.map((slot) => (
-        <OptionalImage
-          key={slot.src}
-          src={slot.src}
-          alt={slot.alt}
-          className={`pointer-events-none absolute object-contain board:left-[var(--slot-left)] board:top-[var(--slot-top)] board:h-[var(--slot-h)] board:w-[var(--slot-w)] ${
-            slot.phone
-              ? "right-[-2%] top-[-8%] h-[116%] w-auto board:right-auto"
-              : "hidden board:block"
-          }`}
-          style={{
-            ["--slot-left" as string]: u(slot.box.left),
-            ["--slot-top" as string]: u(slot.box.top),
-            ["--slot-w" as string]: u(slot.box.width),
-            ["--slot-h" as string]: u(slot.box.height),
-          }}
-        />
-      ))}
+      {/* Frame 363,127 to 825,507: the artwork group's box, cut at the leader
+          row's left edge and the donate card's top edge. It breaks out of the
+          panel's top and right, as the design has it. On a phone the same
+          image sits at the panel's right edge, scaled to the panel. */}
+      <OptionalImage
+        src={PRIZE_DROP}
+        alt="This year's #MambaCares prize drop"
+        className="pointer-events-none absolute right-[-2%] top-[-8%] h-[116%] w-auto object-contain board:left-[calc(var(--u)*324)] board:right-auto board:top-[calc(var(--u)*-37)] board:h-[calc(var(--u)*380)] board:w-[calc(var(--u)*462)]"
+      />
     </div>
   );
 }
