@@ -14,7 +14,10 @@ import type { TipCategory } from "@/config/tips";
  * async work.
  */
 
-const W = 1080;
+/** The feed poster is 1080x1350; the story card (mambaStoryCard) is 1080x1920.
+ *  Both are 1080 wide, which is why the helpers below can be shared. */
+export const CARD_W = 1080;
+const W = CARD_W;
 const H = 1350;
 
 export interface ResultCardOpts {
@@ -33,7 +36,7 @@ export interface ResultCardOpts {
 }
 
 /** Resolve a next/font CSS variable to a concrete canvas font family. */
-function fontFamily(varName: string, fallback: string): string {
+export function fontFamily(varName: string, fallback: string): string {
   if (typeof document === "undefined") return fallback;
   const v = getComputedStyle(document.documentElement)
     .getPropertyValue(varName)
@@ -41,7 +44,7 @@ function fontFamily(varName: string, fallback: string): string {
   return v || fallback;
 }
 
-async function loadImage(src: string): Promise<HTMLImageElement | null> {
+export async function loadImage(src: string): Promise<HTMLImageElement | null> {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => resolve(img);
@@ -164,7 +167,7 @@ function drawBrandRow(
 }
 
 /** Fit text to a max width by stepping the font size down. */
-function fitFont(
+export function fitFont(
   ctx: CanvasRenderingContext2D,
   text: string,
   weight: number,
@@ -180,7 +183,7 @@ function fitFont(
   }
 }
 
-function drawLogo(
+export function drawLogo(
   ctx: CanvasRenderingContext2D,
   logo: HTMLImageElement | null,
   invert: boolean,
@@ -199,7 +202,7 @@ function drawLogo(
   }
 }
 
-function drawQr(
+export function drawQr(
   ctx: CanvasRenderingContext2D,
   qr: HTMLCanvasElement | null | undefined,
   cx: number,
@@ -221,7 +224,7 @@ function drawQr(
   return true;
 }
 
-function wrapText(
+export function wrapText(
   ctx: CanvasRenderingContext2D,
   text: string,
   maxWidth: number,
@@ -242,7 +245,7 @@ function wrapText(
   return lines;
 }
 
-function toBlob(canvas: HTMLCanvasElement): Promise<Blob | null> {
+export function toBlob(canvas: HTMLCanvasElement): Promise<Blob | null> {
   return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
 }
 

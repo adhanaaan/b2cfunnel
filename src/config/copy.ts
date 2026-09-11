@@ -5,6 +5,7 @@ import type {
   PhklArcCopy,
 } from "@/types/copy";
 import type { QuizVariant } from "@/types/funnel";
+import { usesMambaScreens } from "@/config/variants";
 
 /**
  * ALL user-facing copy lives here. British English. Working titles per build
@@ -992,5 +993,5 @@ export const COPY: CopyConfig = {
  * change the other's.
  */
 export function arcCopyFor(variant: QuizVariant): PhklArcCopy {
-  return variant === "mambacares" ? COPY.screens.mambacares : COPY.screens.phkl;
+  return usesMambaScreens(variant) ? COPY.screens.mambacares : COPY.screens.phkl;
 }

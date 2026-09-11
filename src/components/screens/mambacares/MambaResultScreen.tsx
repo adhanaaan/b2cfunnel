@@ -16,6 +16,7 @@ import { MambaClosing } from "./MambaClosing";
 import { MambaPartners } from "./MambaPartners";
 import { MambaStickyCta } from "./MambaStickyCta";
 import { useShareDonation } from "./useShareDonation";
+import { MambaShareMoment } from "./MambaShareMoment";
 
 interface MambaResultScreenProps {
   result: ScoreResult;
@@ -44,6 +45,11 @@ interface MambaResultScreenProps {
  * Two shares, doing different jobs, which is why there are two hooks here: the
  * header's passes on a picture of the player's own time (useShareCard), while
  * the campaign's passes on the fundraiser's link (useShareDonation).
+ *
+ * On /event-v7 a third appears: MambaShareMoment, which asks at the reveal
+ * rather than waiting to be found, with a story-shaped card carrying both the
+ * time and the campaign. That route is the experiment; /mambacares is
+ * unchanged by it.
  */
 export function MambaResultScreen({
   result,
@@ -64,6 +70,9 @@ export function MambaResultScreen({
     playUrl,
   });
   const donationShare = useShareDonation();
+  // /event-v7 only: the experiment is whether asking at the reveal beats
+  // waiting for someone to find the share button.
+  const shareMoment = variant === "event7";
 
   return (
     <Event3Shell scroll pills sparkles>
@@ -90,6 +99,15 @@ export function MambaResultScreen({
       </div>
 
       <MambaStickyCta share={donationShare} />
+
+      {shareMoment && (
+        <MambaShareMoment
+          name={name}
+          timeMs={gameTimeMs}
+          rank={standing.rank}
+          total={standing.total}
+        />
+      )}
     </Event3Shell>
   );
 }

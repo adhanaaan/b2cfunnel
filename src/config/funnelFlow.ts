@@ -341,6 +341,14 @@ const MAMBACARES_FLOW: FunnelStep[] = PHKL_FLOW;
 const EVENT6_FLOW: FunnelStep[] = EVENT3_FLOW;
 
 /**
+ * /event-v7 (preview): the #MambaCares arc exactly, with the share moment on
+ * the report. Shares MAMBACARES_FLOW rather than copying it, the same way
+ * mambacares shares PHKL's - so the question set, and with it
+ * achievableAxisMax, cannot drift off the event it is meant to be testing.
+ */
+const EVENT7_FLOW: FunnelStep[] = MAMBACARES_FLOW;
+
+/**
  * An arc while its challenge is closed: everything up to and including `after`
  * still runs, then the "That's a wrap!" screen ends the session. Everything
  * behind it - instructions, game, questionnaire, report - is simply
@@ -381,6 +389,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   phkl: PHKL_FLOW,
   mambacares: MAMBACARES_FLOW,
   event6: EVENT6_FLOW,
+  event7: EVENT7_FLOW,
 };
 
 /** The question an ageSelect step asks (phkl asks it before the game). */

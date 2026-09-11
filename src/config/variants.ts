@@ -8,7 +8,7 @@ import type { QuizVariant } from "@/types/funnel";
  * This is the single list every write path checks, so adding a preview variant
  * cannot accidentally leave one endpoint live.
  */
-export const PREVIEW_VARIANTS: readonly QuizVariant[] = ["event6"];
+export const PREVIEW_VARIANTS: readonly QuizVariant[] = ["event6", "event7"];
 
 export function isPreviewVariant(variant: QuizVariant): boolean {
   return PREVIEW_VARIANTS.includes(variant);
@@ -33,6 +33,20 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
     variant === "ihhsearegatta" ||
     variant === "ihh" ||
     variant === "phkl" ||
-    variant === "mambacares"
+    variant === "mambacares" ||
+    variant === "event7"
   );
+}
+
+/**
+ * Variants served by the #MambaCares screens - the landing without a partner,
+ * and the report that ends on the Dementia Singapore fundraiser rather than a
+ * screening offer.
+ *
+ * /event-v7 is the same arc with the share moment on the report, so it reads
+ * every one of those screens. One helper rather than a `||` repeated at each
+ * branch, so adding the next variant to the arc cannot miss one.
+ */
+export function usesMambaScreens(variant: QuizVariant): boolean {
+  return variant === "mambacares" || variant === "event7";
 }
