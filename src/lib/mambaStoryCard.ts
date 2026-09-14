@@ -9,14 +9,11 @@ import {
   wrapText,
 } from "@/lib/shareCard";
 import { formatTime } from "@/lib/format";
-import {
-  MAMBACARES_CAMPAIGN,
-  MAMBACARES_DONATION_LABEL,
-  campaignAmount,
-} from "@/config/mambacares";
+import type { CommunityRun } from "@/config/communityRun";
+import { campaignAmount } from "@/config/communityRun";
 
 /**
- * The #MambaCares story card: 1080x1920 for an Instagram story, where the
+ * A community run's story card: 1080x1920 for an Instagram story, where the
  * report's other card is 1080x1350 for a feed post.
  *
  * Two differences beyond the shape, both deliberate. It carries the campaign
@@ -76,8 +73,12 @@ function paintStory(ctx: CanvasRenderingContext2D) {
 }
 
 /** The campaign thermometer, drawn as a rounded track with a filled bar. */
-function drawProgress(ctx: CanvasRenderingContext2D, y: number) {
-  const { raised, goal } = MAMBACARES_CAMPAIGN;
+function drawProgress(
+  ctx: CanvasRenderingContext2D,
+  y: number,
+  run: CommunityRun,
+) {
+  const { raised, goal } = run.campaign;
   const pct = goal > 0 ? Math.max(0, Math.min(1, raised / goal)) : 0;
   const x = 140;
   const w = W - x * 2;
@@ -106,8 +107,14 @@ export interface MambaStoryCardOpts {
   rank?: number;
   total?: number;
   /**
+   * The run the card is for - its thermometer figures and the donation address
+   * printed under the QR. Passed in rather than imported so the card can never
+   * print one run's campaign on another run's share.
+   */
+  run: CommunityRun;
+  /**
    * Rendered QR canvas (a hidden QRCodeCanvas) stamped onto the card. It must
-   * encode the donation link: the card is printed with MAMBACARES_DONATION_LABEL
+   * encode the donation link: the card is printed with `run.donationLabel`
    * underneath it, and a QR that went anywhere else would contradict the words.
    */
   qrCanvas?: HTMLCanvasElement | null;
@@ -179,13 +186,14 @@ export async function generateMambaStoryCard(
   }
 
   y += 40;
-  const pct = drawProgress(ctx, y);
+  const pct = drawProgress(ctx, y, opts.run);
   y += 90;
   ctx.fillStyle = INK_SOFT;
   ctx.font = `800 42px ${jakarta}`;
   ctx.fillText(
-    `${campaignAmount(MAMBACARES_CAMPAIGN.raised)} of ${campaignAmount(
-      MAMBACARES_CAMPAIGN.goal,
+    `${campaignAmount(opts.run, opts.run.campaign.raised)} of ${campaignAmount(
+      opts.run,
+      opts.run.campaign.goal,
     )} raised`,
     W / 2,
     y,
@@ -200,7 +208,7 @@ export async function generateMambaStoryCard(
   ctx.fillStyle = EMBER;
   ctx.font = `800 46px ${jakarta}`;
   ctx.fillText(
-    hasQr ? MAMBACARES_DONATION_LABEL : `Donate: ${MAMBACARES_DONATION_LABEL}`,
+    hasQr ? opts.run.donationLabel : `Donate: ${opts.run.donationLabel}`,
     W / 2,
     SAFE_BOTTOM - 30,
   );

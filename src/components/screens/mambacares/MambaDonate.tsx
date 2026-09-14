@@ -1,24 +1,26 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { COPY } from "@/config/copy";
+import { runCopyFor } from "@/config/copy";
 import {
-  MAMBACARES_CAMPAIGN,
-  MAMBACARES_PHOTOS,
   campaignAmount,
   campaignProgress,
-} from "@/config/mambacares";
+  communityRunFor,
+} from "@/config/communityRun";
 import { ease } from "@/lib/motion";
+import { useVariant } from "@/components/VariantContext";
 import { Reveal, reportEyebrow, reportHeading } from "@/components/screens/phkl/ui";
 import { CampaignPhoto, DonateActions } from "./ui";
 
 /** The campaign thermometer: what has been raised, against the goal. */
 function CampaignProgress() {
-  const c = COPY.screens.mambacares.report.donate;
+  const variant = useVariant();
+  const run = communityRunFor(variant);
+  const c = runCopyFor(variant).report.donate;
   const reduced = useReducedMotion();
-  const raised = campaignAmount(MAMBACARES_CAMPAIGN.raised);
-  const goal = campaignAmount(MAMBACARES_CAMPAIGN.goal);
-  const pct = campaignProgress();
+  const raised = campaignAmount(run, run.campaign.raised);
+  const goal = campaignAmount(run, run.campaign.goal);
+  const pct = campaignProgress(run);
 
   // "$1,120 raised of $5,000" - the raised figure carries the emphasis, so it
   // is split out of the line rather than styled by matching on its text.
@@ -46,10 +48,7 @@ function CampaignProgress() {
         />
       </div>
       <p className="mt-2.5 text-[11.5px] text-[#a8877a]">
-        {c.progressUpdated.replace(
-          "{lastUpdated}",
-          MAMBACARES_CAMPAIGN.lastUpdated,
-        )}
+        {c.progressUpdated.replace("{lastUpdated}", run.campaign.lastUpdated)}
       </p>
     </div>
   );
@@ -72,8 +71,10 @@ export function MambaDonate({
   timeMs?: number;
   share: { share: () => void; sharing: boolean; note: string | null };
 }) {
-  const c = COPY.screens.mambacares.report.donate;
-  const goal = campaignAmount(MAMBACARES_CAMPAIGN.goal);
+  const variant = useVariant();
+  const run = communityRunFor(variant);
+  const c = runCopyFor(variant).report.donate;
+  const goal = campaignAmount(run, run.campaign.goal);
   const heading =
     timeMs != null
       ? c.heading.replace("{seconds}", String(Math.round(timeMs / 1000)))
@@ -102,7 +103,7 @@ export function MambaDonate({
         {/* The pair runs past the section's right edge in Figma; here it is a
             two-up that fits, so nothing is cropped away on a narrow phone. */}
         <div className="grid grid-cols-2 gap-3">
-          {MAMBACARES_PHOTOS.campaignPair.map((src) => (
+          {run.photos.campaignPair.map((src) => (
             <CampaignPhoto key={src} src={src} className="aspect-[16/9]" />
           ))}
         </div>

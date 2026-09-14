@@ -226,9 +226,12 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             state.variant === "ntuhomecoming" ||
             state.variant === "ihhsearegatta" ||
             state.variant === "ihh" ||
-            state.variant === "phkl"
+            state.variant === "phkl" ||
+            state.variant === "urbanmilers"
               ? state.variant
-              : usesMambaScreens(state.variant)
+              : // Everything left on the community-run arc is #MambaCares or
+                // its /event-v7 preview, which walks that run's landing.
+                usesMambaScreens(state.variant)
                 ? "mambacares"
                 : "v3"
           }

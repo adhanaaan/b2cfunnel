@@ -1,11 +1,8 @@
 "use client";
 
-import { COPY } from "@/config/copy";
-import {
-  MAMBACARES_CAMPAIGN,
-  MAMBACARES_PHOTOS,
-  campaignAmount,
-} from "@/config/mambacares";
+import { runCopyFor } from "@/config/copy";
+import { campaignAmount, communityRunFor } from "@/config/communityRun";
+import { useVariant } from "@/components/VariantContext";
 import { Reveal, reportHeading } from "@/components/screens/phkl/ui";
 import { CampaignPhoto, DonateActions } from "./ui";
 
@@ -20,7 +17,9 @@ export function MambaClosing({
 }: {
   share: { share: () => void; sharing: boolean; note: string | null };
 }) {
-  const c = COPY.screens.mambacares.report.closing;
+  const variant = useVariant();
+  const run = communityRunFor(variant);
+  const c = runCopyFor(variant).report.closing;
 
   return (
     <section className="bg-[#fff8f3] px-6 pb-12 pt-12">
@@ -31,13 +30,13 @@ export function MambaClosing({
       <Reveal className="mt-6">
         <p className="text-[15px] leading-[1.6] text-[#41586b]">
           {c.body
-            .replace("{goal}", campaignAmount(MAMBACARES_CAMPAIGN.goal))
-            .replace("{deadline}", MAMBACARES_CAMPAIGN.deadline)}
+            .replace("{goal}", campaignAmount(run, run.campaign.goal))
+            .replace("{deadline}", run.campaign.deadline)}
         </p>
       </Reveal>
 
       <Reveal className="mt-7">
-        <CampaignPhoto src={MAMBACARES_PHOTOS.closing} className="aspect-[16/9]" />
+        <CampaignPhoto src={run.photos.closing} className="aspect-[16/9]" />
       </Reveal>
 
       <Reveal className="mt-7">

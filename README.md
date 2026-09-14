@@ -389,6 +389,47 @@ it lands. The band along the bottom edge is the exception, and needs nothing
 uploaded: it reuses the regatta board's three photos from the repo root, as
 `/phkl` does, at the widths this frame shows of each.
 
+## /urbanmilers (GMS x Urban Milers)
+
+`/urbanmilers` is the `/mambacares` arc on a leaderboard of its own: the same
+landing with no partner on it, the same primers either side of the game, the
+same questionnaire, and the same report ending on the Dementia Singapore
+fundraiser. The flow array is shared (`URBANMILERS_FLOW = MAMBACARES_FLOW`), so
+the question set, `achievableAxisMax` and therefore every score recorded stay
+comparable with `/mambacares`, `/phkl` and event2
+(`tests/config/urbanmilersFlow.test.ts`).
+
+What this run holds of its own is the part that must not be shared:
+
+- **Its own bucket.** Scores and reports are tagged `urbanmilers`
+  (`URBANMILERS_SOURCE`), so **the board opens empty** - fifteen unclaimed
+  rows - instead of on #MambaCares' standings, and neither run can rank the
+  other's players. Nothing is deleted to get there: every row already recorded
+  keeps the tag it was written with. To clear this board later (a second run
+  day), give `URBANMILERS_SOURCE` a new value and redeploy.
+- **Its own board**, at `/urbanmilers/leaderboard`: the #MambaCares board
+  pointed at that bucket, with its own artwork folder
+  (`public/images/urbanmilers/board/`, whose README lists every file and its
+  size). Every file there is optional, so the board is live and correct before
+  any of them land.
+- **Its own pause switch**, `URBANMILERS_PAUSED` (`src/config/event.ts`).
+- **Its own words**, `COPY.screens.urbanmilers`. They are #MambaCares' copy with
+  this run named wherever the wording names the event that is hosting it (the
+  wordmark, the share sheet, the campaign's opening line). The shared screens
+  read them through `runCopyFor(variant)`, so a change to either run's wording
+  cannot reach the other's page.
+
+**The campaign is deliberately still #MambaCares'.** This run raises for the
+same Dementia Singapore fundraiser, so `src/config/urbanmilers.ts` starts with
+that campaign's donation link, thermometer figures, crew and sponsor logos and
+photographs - which is what makes the report read correctly the day the route
+goes up rather than showing an empty fundraiser. Each is an independent value in
+that one file: point any of them somewhere else and only `/urbanmilers` moves.
+The screens read them through `communityRunFor(variant)`
+(`src/config/communityRun.ts`), which is the same rule `arcCopyFor` applies to
+the words - one run's link or total must never be printed on the other's page,
+because both are read off a phone at a finish line.
+
 ## /event-v6 (preview)
 
 `/event-v6` walks exactly the v3 flow, and exists only to compare consent
@@ -481,7 +522,10 @@ boards send no `source` and so keep ranking every row, history included.
 **Rotary KL-WAM uses `rotaryklwam`** (`ROTARY_SOURCE`), **NTU Homecoming uses
 `ntuhomecoming`** (`NTU_HOMECOMING_SOURCE`) and **the IHH SEA Regatta uses
 `ihhsearegatta`** (`IHHSEA_SOURCE`), so no event's rows ever mix with a DBS
-board's or with each other's. All three tags are pinned by
+board's or with each other's. The two community runs are split the same way -
+**`mambacares`** (`MAMBACARES_SOURCE`) and **`urbanmilers`**
+(`URBANMILERS_SOURCE`) - which is what opens each new run's board empty while
+they share every screen. Every tag is pinned by
 `tests/config/leaderboardSource.test.ts`, since a collision would be silent -
 no error, just the wrong standings on a TV at an event.
 

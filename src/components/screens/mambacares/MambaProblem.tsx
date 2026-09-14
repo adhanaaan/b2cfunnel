@@ -1,9 +1,10 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { COPY } from "@/config/copy";
+import { runCopyFor } from "@/config/copy";
 import { formatTime } from "@/lib/format";
 import { ease } from "@/lib/motion";
+import { useVariant } from "@/components/VariantContext";
 import { Reveal } from "@/components/screens/phkl/ui";
 
 /**
@@ -20,7 +21,7 @@ import { Reveal } from "@/components/screens/phkl/ui";
  * be dressed up as one.
  */
 export function MambaProblem({ timeMs }: { timeMs?: number }) {
-  const c = COPY.screens.mambacares.report.problem;
+  const c = runCopyFor(useVariant()).report.problem;
   const reduced = useReducedMotion();
 
   // The player's bar is drawn at a fixed share of the track and the dementia

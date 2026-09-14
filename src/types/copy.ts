@@ -396,6 +396,10 @@ export interface ScreenCopy {
   // GMS x #MambaCares (/mambacares): the PHKL arc with no partner on its
   // landing and a fundraising report at the end.
   mambacares: MambacaresCopy;
+  // GMS x Urban Milers (/urbanmilers): the same run's screens on a bucket of
+  // its own, so the same shape - a block of its own so either run's wording can
+  // be changed without touching the other's.
+  urbanmilers: MambacaresCopy;
 }
 
 /**
@@ -403,8 +407,9 @@ export interface ScreenCopy {
  * report that every event built on that arc reuses - the header and the risk
  * section.
  *
- * Two events fill this in: /phkl itself, and the GMS x #MambaCares community
- * run (/mambacares). The screens they share read whichever event is running
+ * Three events fill this in: /phkl itself, and the two community runs built on
+ * the arc (/mambacares, /urbanmilers). The screens they share read whichever
+ * event is running
  * (`arcCopyFor` in config/copy.ts) rather than one event's block by name, so
  * either one's wording can be changed without quietly changing the other's.
  */
@@ -551,8 +556,9 @@ export interface PhklCopy extends PhklArcCopy {
   };
 }
 
-// GMS x #MambaCares (/mambacares): the same arc with no partner on the landing
-// and a fundraising report in place of the screening offer. The header and the
+// A community run on the PHKL arc (/mambacares, /urbanmilers): the same arc
+// with no partner on the landing and a fundraising report in place of the
+// screening offer. The header and the
 // risk section are the shared arc's; everything below is this event's own - the
 // cost of losing that speed, the Dementia Singapore campaign, a closing ask and
 // the crews and sponsors behind the run.

@@ -202,6 +202,30 @@ export const MAMBACARES_PAUSED = false;
 export const MAMBACARES_SOURCE = "mambacares";
 
 /**
+ * Independent pause switch for the GMS x Urban Milers run (/urbanmilers and
+ * its TV board). Its own switch, like every other event's: /urbanmilers and
+ * /mambacares run the same arc and must never be closed together by accident.
+ */
+export const URBANMILERS_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the Urban Milers run funnel. Every /urbanmilers score
+ * and report is tagged with it, its board filters to it and the rank on its
+ * report is read back from it.
+ *
+ * A bucket of its own is the whole reason this route exists alongside
+ * /mambacares, and it is what starts the board empty: standings are filtered by
+ * this tag, so /urbanmilers opens on a clean board with no #MambaCares row on
+ * it, and no row already recorded is touched or moved to get there. Nothing is
+ * ever deleted - rows keep the tag they were written with.
+ *
+ * To clear this board later (a second run day that should not open on the
+ * first's standings), give this a new value - "urbanmilers-day2" - and
+ * redeploy: the earlier rows keep their tag and simply stop appearing.
+ */
+export const URBANMILERS_SOURCE: string = "urbanmilers";
+
+/**
  * The bucket a variant's rows are tagged with, for both `game_scores.source`
  * and `leads.source`. Shared so a score and the report that follows it always
  * carry the same tag - the report rate on the board divides one by the other,
@@ -226,6 +250,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return PHKL_SOURCE;
     case "mambacares":
       return MAMBACARES_SOURCE;
+    case "urbanmilers":
+      return URBANMILERS_SOURCE;
     case "event2":
       return "event2";
     case "event":

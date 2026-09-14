@@ -332,6 +332,18 @@ const PHKL_FLOW: FunnelStep[] = DAYLIGHT_FLOW.filter(
 const MAMBACARES_FLOW: FunnelStep[] = PHKL_FLOW;
 
 /**
+ * GMS x Urban Milers (/urbanmilers): the #MambaCares arc, shared rather than
+ * rebuilt, the same way that one shares PHKL's.
+ *
+ * The two runs differ in the bucket their rows are tagged with, the board that
+ * reads it and the words on the report - none of which is a step - so the step
+ * sequence, and with it the question set and achievableAxisMax, is #MambaCares'
+ * exactly, and neither run's scores can drift off a scale the other is ranked
+ * on.
+ */
+const URBANMILERS_FLOW: FunnelStep[] = MAMBACARES_FLOW;
+
+/**
  * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
  * so the split-tick treatment of the partner consents (one box per clause) can
  * still be walked through and compared against the single tick that v3 ships.
@@ -388,6 +400,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   ihh: IHHSEA_FLOW,
   phkl: PHKL_FLOW,
   mambacares: MAMBACARES_FLOW,
+  urbanmilers: URBANMILERS_FLOW,
   event6: EVENT6_FLOW,
   event7: EVENT7_FLOW,
 };
