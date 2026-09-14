@@ -5,7 +5,14 @@
  * than in the components, because all of it moves during the campaign: the
  * total climbs, the deadline passes, crews and sponsors join. Editing this one
  * file and redeploying is the whole update - no component has a number in it.
+ *
+ * The screens reach these values through `communityRunFor` (config/
+ * communityRun.ts) rather than by importing them directly, because the same
+ * arc also serves Urban Milers (/urbanmilers): MAMBACARES_RUN at the foot of
+ * this file is that handover, and is what a screen actually reads.
  */
+
+import type { CommunityRun, RunLogo } from "@/config/communityRun";
 
 /**
  * Where every "Donate" button goes - the campaign's short link, which is also
@@ -42,34 +49,6 @@ export const MAMBACARES_CAMPAIGN = {
   deadline: "30 September",
 } as const;
 
-/** A campaign figure, formatted the way the report prints it ("$1,120"). */
-export function campaignAmount(value: number): string {
-  return `${MAMBACARES_CAMPAIGN.currency}${value.toLocaleString("en-SG")}`;
-}
-
-/** How far along the thermometer is, clamped to 0-1. */
-export function campaignProgress(): number {
-  const { raised, goal } = MAMBACARES_CAMPAIGN;
-  if (goal <= 0) return 0;
-  return Math.min(1, Math.max(0, raised / goal));
-}
-
-/**
- * A logo in one of the two rows at the foot of the report.
- *
- * `src` is a file under public/images/mambacares/ that may not have been
- * uploaded yet: while it is missing the slot draws the name instead of a
- * broken image (see MambaPartners), so the rows keep their shape and it is
- * obvious which one is still outstanding. `name` is both the alt text and that
- * stand-in, so correcting a crew's name here corrects it in both places.
- *
- * Order is left to right, as in Figma (794:17895).
- */
-export interface MambaLogo {
-  src: string;
-  name: string;
-}
-
 /**
  * The six running crews, in the order the files were uploaded.
  *
@@ -81,7 +60,7 @@ export interface MambaLogo {
  * mambacaresFlow.test.ts holds the two to each other, so a seventh crew means
  * editing that sentence in config/copy.ts as well.
  */
-export const MAMBACARES_RUNNING_PARTNERS: MambaLogo[] = [
+export const MAMBACARES_RUNNING_PARTNERS: RunLogo[] = [
   { src: "/images/mambacares/running-partner-1.png", name: "Black Mamba" },
   { src: "/images/mambacares/running-partner-2.png", name: "Running partner 2" },
   { src: "/images/mambacares/running-partner-3.png", name: "2050 Coffee" },
@@ -91,7 +70,7 @@ export const MAMBACARES_RUNNING_PARTNERS: MambaLogo[] = [
 ];
 
 /** The five giveaway sponsors, left to right. Same rules as the crews above. */
-export const MAMBACARES_GIVEAWAY_SPONSORS: MambaLogo[] = [
+export const MAMBACARES_GIVEAWAY_SPONSORS: RunLogo[] = [
   { src: "/images/mambacares/sponsor-1.png", name: "Sponsor 1" },
   { src: "/images/mambacares/sponsor-2.png", name: "PRFM" },
   { src: "/images/mambacares/sponsor-3.png", name: "Sponsor 3" },
@@ -116,3 +95,21 @@ export const MAMBACARES_PHOTOS = {
 /** Alt text for the photographs - one description covers all three. */
 export const MAMBACARES_PHOTO_ALT =
   "People living with dementia taking part in a Dementia Singapore activity";
+
+/**
+ * The campaign as a screen reads it.
+ *
+ * The constants above stay exported by name - they are what an editor opens
+ * this file to change, and what the tests hold to - and this is the one shape
+ * the shared report screens consume, so #MambaCares and Urban Milers can run
+ * the same components without either one's figures reaching the other's page.
+ */
+export const MAMBACARES_RUN: CommunityRun = {
+  donationUrl: MAMBACARES_DONATION_URL,
+  donationLabel: MAMBACARES_DONATION_LABEL,
+  campaign: MAMBACARES_CAMPAIGN,
+  runningPartners: MAMBACARES_RUNNING_PARTNERS,
+  giveawaySponsors: MAMBACARES_GIVEAWAY_SPONSORS,
+  photos: MAMBACARES_PHOTOS,
+  photoAlt: MAMBACARES_PHOTO_ALT,
+};

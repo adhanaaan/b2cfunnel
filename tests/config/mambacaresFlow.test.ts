@@ -17,9 +17,10 @@ import {
   MAMBACARES_DONATION_URL,
   MAMBACARES_GIVEAWAY_SPONSORS,
   MAMBACARES_PHOTOS,
+  MAMBACARES_RUN,
   MAMBACARES_RUNNING_PARTNERS,
-  campaignProgress,
 } from "@/config/mambacares";
+import { campaignProgress, communityRunFor } from "@/config/communityRun";
 
 /**
  * GMS x #MambaCares (/mambacares) is the PHKL arc with a different landing and
@@ -151,6 +152,7 @@ describe("mambacares flow", () => {
       "ihhsearegatta",
       "ihh",
       "phkl",
+      "urbanmilers",
     ] as const;
     for (const variant of others) {
       expect(eventSource(variant), `collides with ${variant}`).not.toBe(source);
@@ -163,6 +165,16 @@ describe("mambacares flow", () => {
   it("is served at its own route", () => {
     expect(EVENT_PATHS.mambacares).toBe("/mambacares");
   });
+
+  // The report and the board both read the campaign through communityRunFor,
+  // so this is what keeps /urbanmilers' figures and links off this event's
+  // page while the two share every screen.
+  it("hands its own campaign to the shared report screens", () => {
+    expect(communityRunFor("mambacares")).toBe(MAMBACARES_RUN);
+    expect(communityRunFor("event7")).toBe(MAMBACARES_RUN);
+    expect(MAMBACARES_RUN.donationUrl).toBe(MAMBACARES_DONATION_URL);
+    expect(MAMBACARES_RUN.campaign).toBe(MAMBACARES_CAMPAIGN);
+  });
 });
 
 describe("mambacares campaign config", () => {
@@ -173,7 +185,7 @@ describe("mambacares campaign config", () => {
   it("keeps the thermometer inside its track", () => {
     expect(MAMBACARES_CAMPAIGN.goal).toBeGreaterThan(0);
     expect(MAMBACARES_CAMPAIGN.raised).toBeGreaterThanOrEqual(0);
-    const pct = campaignProgress();
+    const pct = campaignProgress(MAMBACARES_RUN);
     expect(pct).toBeGreaterThanOrEqual(0);
     expect(pct).toBeLessThanOrEqual(1);
   });

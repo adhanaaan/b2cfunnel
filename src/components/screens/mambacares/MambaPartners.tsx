@@ -1,11 +1,9 @@
 "use client";
 
-import { COPY } from "@/config/copy";
-import type { MambaLogo } from "@/config/mambacares";
-import {
-  MAMBACARES_GIVEAWAY_SPONSORS,
-  MAMBACARES_RUNNING_PARTNERS,
-} from "@/config/mambacares";
+import { runCopyFor } from "@/config/copy";
+import type { RunLogo } from "@/config/communityRun";
+import { communityRunFor } from "@/config/communityRun";
+import { useVariant } from "@/components/VariantContext";
 import { Reveal } from "@/components/screens/phkl/ui";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
 
@@ -22,7 +20,7 @@ import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
  * would push the ends of a wordmark under the mask and cut them off; fitting
  * costs a circular mark a hair of size and keeps every logo whole.
  */
-function LogoSlot({ logo, size }: { logo: MambaLogo; size: string }) {
+function LogoSlot({ logo, size }: { logo: RunLogo; size: string }) {
   return (
     <li
       className={`flex ${size} shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-[3px] ring-1 ring-[#f0dccf]`}
@@ -47,7 +45,7 @@ function LogoRow({
   size,
 }: {
   heading: string;
-  logos: MambaLogo[];
+  logos: readonly RunLogo[];
   size: string;
 }) {
   return (
@@ -72,19 +70,21 @@ function LogoRow({
  * sponsors, and the event's wordmark under them. The end of the report - there
  * is no compliance footer on this arc, as on /phkl.
  *
- * Both rows read their logos from config/mambacares.ts, so a crew joining
- * before the event is one entry there and a file dropped into public/, with no
- * change here.
+ * Both rows read their logos from the running event's own config (see
+ * communityRunFor), so a crew joining before the event is one entry there and a
+ * file dropped into public/, with no change here.
  */
 export function MambaPartners() {
-  const c = COPY.screens.mambacares.report.partners;
+  const variant = useVariant();
+  const run = communityRunFor(variant);
+  const c = runCopyFor(variant).report.partners;
 
   return (
     <section className="bg-[#fbeadf] px-6 pb-32 pt-9">
       <Reveal>
         <LogoRow
           heading={c.runningHeading}
-          logos={MAMBACARES_RUNNING_PARTNERS}
+          logos={run.runningPartners}
           size="h-11 w-11"
         />
       </Reveal>
@@ -92,7 +92,7 @@ export function MambaPartners() {
       <Reveal className="mt-7">
         <LogoRow
           heading={c.sponsorsHeading}
-          logos={MAMBACARES_GIVEAWAY_SPONSORS}
+          logos={run.giveawaySponsors}
           size="h-10 w-10"
         />
       </Reveal>

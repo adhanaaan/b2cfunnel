@@ -1,21 +1,22 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { COPY } from "@/config/copy";
-import {
-  MAMBACARES_DONATION_LABEL,
-  MAMBACARES_DONATION_URL,
-  MAMBACARES_PHOTO_ALT,
-} from "@/config/mambacares";
+import { runCopyFor } from "@/config/copy";
+import { communityRunFor } from "@/config/communityRun";
 import { track } from "@/lib/analytics";
 import { useVariant } from "@/components/VariantContext";
 import { ShareIcon } from "@/components/screens/event3/icons";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
 
 /**
- * Shared vocabulary for the #MambaCares report (Figma 775:17580, "Full Speed +
- * Donation"): the two buttons, the printed link under them, and the campaign
+ * Shared vocabulary for a community run's report (Figma 775:17580, "Full Speed
+ * + Donation"): the two buttons, the printed link under them, and the campaign
  * photographs.
+ *
+ * Every piece of it is the RUNNING event's - the link a button opens, the
+ * address printed under it, the photographs - read from the variant in context,
+ * so /mambacares and /urbanmilers can share these components without either
+ * one's campaign reaching the other's page.
  */
 
 /** The filled donate button, in the report's rank gradient (Gradient/Rank). */
@@ -44,7 +45,7 @@ export function DonateLink({
   const variant = useVariant();
   return (
     <a
-      href={MAMBACARES_DONATION_URL}
+      href={communityRunFor(variant).donationUrl}
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => track("donate_click", { variant, placement })}
@@ -68,7 +69,9 @@ export function DonateActions({
   placement: "donate-section" | "closing";
   share: { share: () => void; sharing: boolean; note: string | null };
 }) {
-  const c = COPY.screens.mambacares.report.cta;
+  const variant = useVariant();
+  const run = communityRunFor(variant);
+  const c = runCopyFor(variant).report.cta;
   return (
     <div className="flex flex-col gap-3.5">
       <div className="flex flex-col gap-3">
@@ -93,13 +96,13 @@ export function DonateActions({
       <p className="text-center text-[13.5px] leading-normal text-[#6b5245]">
         {c.directLead}{" "}
         <a
-          href={MAMBACARES_DONATION_URL}
+          href={run.donationUrl}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => track("donate_click", { placement: `${placement}-link` })}
           className="font-bold text-[#c2410c] underline underline-offset-2"
         >
-          {MAMBACARES_DONATION_LABEL}
+          {run.donationLabel}
         </a>
       </p>
     </div>
@@ -118,13 +121,14 @@ export function CampaignPhoto({
   src: string;
   className?: string;
 }) {
+  const variant = useVariant();
   return (
     <div
       className={`relative overflow-hidden rounded-[18px] bg-gradient-to-br from-[#fbe3d2] to-[#f6cdb4] ${className}`}
     >
       <OptionalImage
         src={src}
-        alt={MAMBACARES_PHOTO_ALT}
+        alt={communityRunFor(variant).photoAlt}
         className="h-full w-full object-cover"
       />
     </div>

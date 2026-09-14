@@ -9,6 +9,7 @@ import {
   NTU_HOMECOMING_SOURCE,
   PHKL_SOURCE,
   ROTARY_SOURCE,
+  URBANMILERS_SOURCE,
   eventSource,
 } from "@/config/event";
 import type { QuizVariant } from "@/types/funnel";
@@ -298,6 +299,7 @@ describe("mambacares leaderboard source", () => {
       IHHSEA_SOURCE,
       IHH_SOURCE,
       PHKL_SOURCE,
+      URBANMILERS_SOURCE,
     ]) {
       expect(MAMBACARES_SOURCE).not.toBe(other);
     }
@@ -321,9 +323,68 @@ describe("mambacares leaderboard source", () => {
       "ihhsearegatta",
       "ihh",
       "phkl",
+      "urbanmilers",
     ];
     for (const variant of others) {
       expect(eventSource(variant)).not.toBe(MAMBACARES_SOURCE);
+    }
+  });
+});
+
+/**
+ * The Urban Milers board is scoped the same way, and `urbanmilers` is the
+ * literal the database's `source` column carries for this run.
+ *
+ * This bucket is also what makes the new board start EMPTY: /urbanmilers and
+ * /mambacares run the same arc, and only this tag keeps one run's times off the
+ * other's TV. A collision would merge two live boards with no error at all.
+ */
+describe("urbanmilers leaderboard source", () => {
+  it("is the tag the database column expects", () => {
+    expect(URBANMILERS_SOURCE).toBe("urbanmilers");
+  });
+
+  it("never collides with another event's bucket", () => {
+    for (const other of [
+      "event",
+      "event2",
+      "event3",
+      EVENT3_SOURCE,
+      DBS_DAY1_SOURCE,
+      DBS_DAY2_SOURCE,
+      ROTARY_SOURCE,
+      NTU_HOMECOMING_SOURCE,
+      IHHSEA_SOURCE,
+      IHH_SOURCE,
+      PHKL_SOURCE,
+      MAMBACARES_SOURCE,
+    ]) {
+      expect(URBANMILERS_SOURCE).not.toBe(other);
+    }
+  });
+
+  // A score and the report that follows it must carry the SAME tag, or the
+  // board's completion rate divides one event's reports by another's players.
+  it("tags both the score and the lead from the /urbanmilers funnel", () => {
+    expect(eventSource("urbanmilers")).toBe(URBANMILERS_SOURCE);
+  });
+
+  it("leaves every other variant's tag alone", () => {
+    const others: QuizVariant[] = [
+      "full",
+      "woman",
+      "event",
+      "event2",
+      "event3",
+      "rotary",
+      "ntuhomecoming",
+      "ihhsearegatta",
+      "ihh",
+      "phkl",
+      "mambacares",
+    ];
+    for (const variant of others) {
+      expect(eventSource(variant)).not.toBe(URBANMILERS_SOURCE);
     }
   });
 });

@@ -34,6 +34,7 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
     variant === "ihh" ||
     variant === "phkl" ||
     variant === "mambacares" ||
+    variant === "urbanmilers" ||
     variant === "event7"
   );
 }
@@ -43,10 +44,19 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
  * and the report that ends on the Dementia Singapore fundraiser rather than a
  * screening offer.
  *
- * /event-v7 is the same arc with the share moment on the report, so it reads
- * every one of those screens. One helper rather than a `||` repeated at each
- * branch, so adding the next variant to the arc cannot miss one.
+ * Urban Milers (/urbanmilers) is the same run on a bucket of its own, and
+ * /event-v7 is that arc again with the share moment on the report, so all three
+ * read every one of those screens. One helper rather than a `||` repeated at
+ * each branch, so adding the next variant to the arc cannot miss one.
+ *
+ * What the screens must NOT share is which run they are drawing: each reads its
+ * words through `runCopyFor` and its campaign through `communityRunFor`, both
+ * keyed on the variant.
  */
 export function usesMambaScreens(variant: QuizVariant): boolean {
-  return variant === "mambacares" || variant === "event7";
+  return (
+    variant === "mambacares" ||
+    variant === "urbanmilers" ||
+    variant === "event7"
+  );
 }

@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { QRCodeCanvas } from "qrcode.react";
-import { MAMBACARES_DONATION_URL } from "@/config/mambacares";
+import { communityRunFor } from "@/config/communityRun";
 import { generateMambaStoryCard } from "@/lib/mambaStoryCard";
 import { shareBlob } from "@/lib/shareCard";
 import { springs } from "@/lib/motion";
+import { useVariant } from "@/components/VariantContext";
 import { ShareIcon } from "@/components/screens/event3/icons";
 import { donateButtonClass } from "./ui";
 
@@ -40,6 +41,10 @@ export function MambaShareMoment({
   rank,
   total,
 }: MambaShareMomentProps) {
+  // The run being walked. Only /event-v7 mounts this today, and that preview is
+  // the #MambaCares arc - but the card it hands over carries a donation link,
+  // so it is read from the variant rather than fixed to one campaign.
+  const run = communityRunFor(useVariant());
   const reduced = useReducedMotion();
   const qrHostRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<Blob | null>(null);
@@ -71,6 +76,7 @@ export function MambaShareMoment({
         timeMs,
         rank: rank ?? undefined,
         total: total ?? undefined,
+        run,
         qrCanvas,
       });
       if (cancelled || !blob) return;
@@ -81,7 +87,7 @@ export function MambaShareMoment({
       cancelled = true;
       clearTimeout(t);
     };
-  }, [open, name, timeMs, rank, total]);
+  }, [open, name, timeMs, rank, total, run]);
 
   // Release the preview object URL when the sheet goes away.
   useEffect(() => {
@@ -106,7 +112,7 @@ export function MambaShareMoment({
       const outcome = await shareBlob(
         cardRef.current,
         "I tested my brain processing speed at the #MambaCares run. Help us reach our goal for Dementia Singapore:",
-        MAMBACARES_DONATION_URL,
+        run.donationUrl,
         "mambacares-brain-speed.png",
       );
       if (outcome === "shared") {
@@ -129,7 +135,7 @@ export function MambaShareMoment({
     <>
       {/* The QR the card is stamped with - the donation link, as printed. */}
       <div ref={qrHostRef} className="hidden" aria-hidden>
-        <QRCodeCanvas value={MAMBACARES_DONATION_URL} size={240} marginSize={0} />
+        <QRCodeCanvas value={run.donationUrl} size={240} marginSize={0} />
       </div>
 
       <AnimatePresence>

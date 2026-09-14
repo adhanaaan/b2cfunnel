@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { COPY } from "@/config/copy";
+import { runCopyFor } from "@/config/copy";
 import { ease } from "@/lib/motion";
+import { useVariant } from "@/components/VariantContext";
 import { ShareIcon } from "@/components/screens/event3/icons";
 import { DonateLink, donateButtonClass, shareButtonClass } from "./ui";
 
@@ -19,7 +20,7 @@ export function MambaStickyCta({
 }: {
   share: { share: () => void; sharing: boolean; note: string | null };
 }) {
-  const c = COPY.screens.mambacares.report.sticky;
+  const c = runCopyFor(useVariant()).report.sticky;
   const reduced = useReducedMotion();
 
   return (

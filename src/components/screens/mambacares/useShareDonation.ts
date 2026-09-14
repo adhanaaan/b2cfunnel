@@ -1,12 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { COPY } from "@/config/copy";
-import {
-  MAMBACARES_CAMPAIGN,
-  MAMBACARES_DONATION_URL,
-  campaignAmount,
-} from "@/config/mambacares";
+import { runCopyFor } from "@/config/copy";
+import { campaignAmount, communityRunFor } from "@/config/communityRun";
 import { track } from "@/lib/analytics";
 import { useVariant } from "@/components/VariantContext";
 
@@ -27,10 +23,11 @@ export function useShareDonation() {
   const share = async () => {
     if (sharing) return;
     setSharing(true);
-    const c = COPY.screens.mambacares.report.cta;
+    const run = communityRunFor(variant);
+    const c = runCopyFor(variant).report.cta;
     const text = c.shareText.replace(
       "{goal}",
-      campaignAmount(MAMBACARES_CAMPAIGN.goal),
+      campaignAmount(run, run.campaign.goal),
     );
     try {
       track("donation_share", { variant });
@@ -38,12 +35,12 @@ export function useShareDonation() {
         await navigator.share({
           title: c.shareTitle,
           text,
-          url: MAMBACARES_DONATION_URL,
+          url: run.donationUrl,
         });
         setNote(null);
         return;
       }
-      await navigator.clipboard.writeText(`${text}\n${MAMBACARES_DONATION_URL}`);
+      await navigator.clipboard.writeText(`${text}\n${run.donationUrl}`);
       setNote(c.shareCopied);
     } catch (error) {
       // A dismissed share sheet is a cancellation, not a failure - saying

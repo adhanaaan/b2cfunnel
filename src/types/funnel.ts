@@ -37,6 +37,13 @@ export type QuizVariant =
   // ends on the Dementia Singapore fundraiser instead of a screening offer.
   // Its own `mambacares` bucket.
   | "mambacares"
+  // GMS x Urban Milers (/urbanmilers): the #MambaCares arc again, shared rather
+  // than rebuilt - same landing, same primers, same game, quiz and fundraising
+  // report - on its own `urbanmilers` bucket, with its own pause switch, board
+  // and copy block. The duplicate exists to keep this run's scores, leads and
+  // completion rate in a column of their own rather than mixed into the
+  // #MambaCares standings.
+  | "urbanmilers"
   // /event-v7 (preview): the #MambaCares arc with the share moment at the top
   // of the report. A preview variant - see PREVIEW_VARIANTS - so walking it
   // writes nothing while the live run is on.

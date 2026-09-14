@@ -2,6 +2,7 @@ import type {
   ConsentClause,
   CopyConfig,
   IhhseaCopy,
+  MambacaresCopy,
   PhklArcCopy,
 } from "@/types/copy";
 import type { QuizVariant } from "@/types/funnel";
@@ -291,6 +292,75 @@ const IHHSEA_SCREEN_COPY: IhhseaCopy = {
     reportCard: {
       blurb:
         "A handful of modifiable factors are affecting your brain health performance.",
+    },
+  },
+};
+
+// GMS x #MambaCares (/mambacares): the PHKL arc run for the World
+// Alzheimer's Month community run. No partner, so the landing is the plain
+// daylight one; the report keeps the header and the risk section and then
+// turns to the Dementia Singapore campaign instead of a screening offer.
+//
+// The campaign's own numbers - what has been raised, the goal, the dates -
+// are in config/mambacares.ts, not here. The placeholders below are filled
+// in by the report: {seconds} is the player's own round, and {raised},
+// {goal}, {lastUpdated} and {deadline} come from that config.
+const MAMBACARES_SCREEN_COPY: MambacaresCopy = {
+  ...PHKL_ARC_COPY,
+  splash: NO_PARTNER_SPLASH,
+  report: {
+    ...PHKL_ARC_COPY.report,
+    problem: {
+      heading: "You were fast. Alzheimer's takes that speed away.",
+      yourRoundLabel: "Your round",
+      dementiaLabel: "With dementia",
+      dementiaValue: "2 to 3\u00d7 longer",
+      // The dementia track is drawn this many times the player's own.
+      dementiaFactor: 3.2,
+      note:
+        "Illustrative. Timed tasks slow early in dementia. Not a clinical comparison.",
+      paragraphs: [
+        "You just processed information in under a second.",
+        "For someone living with dementia, that same response slows to a struggle. Names, faces, and everyday decisions take far longer.",
+        "Your gift funds Dementia Singapore's work with the people this affects and the families who care for them.",
+      ],
+    },
+    donate: {
+      eyebrow: "World Alzheimer's Month",
+      heading: "It took you {seconds} seconds. Donating takes a minute.",
+      headingAnonymous: "It took you under a minute. Donating takes one too.",
+      progressLabel: "{raised} raised of {goal}",
+      progressUpdated: "Last updated: {lastUpdated}",
+      paragraphs: [
+        "This September, #MambaCares, six running crews and Gray Matter Solutions are raising {goal} for Dementia Singapore.",
+        "Dementia touches more Singapore families every year. Our running community can help.",
+        "Every dollar supports people living with dementia and the families who care for them.",
+      ],
+    },
+    closing: {
+      heading: "One minute before you go.",
+      body:
+        "Help us hit {goal} by {deadline}. Every dollar reaches Dementia Singapore, and we believe the strength of our running community can help make a difference.",
+    },
+    cta: {
+      donate: "Donate to Dementia Singapore",
+      share: "Share donation",
+      directLead: "Donate at",
+      shareTitle: "GMS x #MambaCares for Dementia Singapore",
+      shareText:
+        "I just measured my brain processing speed at the #MambaCares run. Help us raise {goal} for Dementia Singapore this World Alzheimer's Month.",
+      shareCopied: "Link copied - paste it anywhere.",
+      shareFailed: "Couldn't open sharing. The link is on screen below.",
+    },
+    partners: {
+      runningHeading: "Running partners",
+      sponsorsHeading: "Giveaway sponsors",
+      wordmark: "GMS X #MAMBACARES",
+      wordmarkNote: "WORLD ALZHEIMER'S MONTH COMMUNITY RUN",
+    },
+    sticky: {
+      share: "Share",
+      donate: "Donate now",
     },
   },
 };
@@ -841,71 +911,36 @@ export const COPY: CopyConfig = {
         },
       },
     },
-    // GMS x #MambaCares (/mambacares): the PHKL arc run for the World
-    // Alzheimer's Month community run. No partner, so the landing is the plain
-    // daylight one; the report keeps the header and the risk section and then
-    // turns to the Dementia Singapore campaign instead of a screening offer.
+    mambacares: MAMBACARES_SCREEN_COPY,
+    // GMS x Urban Milers (/urbanmilers): the same run's arc, word for word,
+    // with this event named where the words name the event that is hosting it.
+    // Its own block so a change to either run's wording cannot reach the
+    // other's page - the two are read off phones at the same finish line.
     //
-    // The campaign's own numbers - what has been raised, the goal, the dates -
-    // are in config/mambacares.ts, not here. The placeholders below are filled
-    // in by the report: {seconds} is the player's own round, and {raised},
-    // {goal}, {lastUpdated} and {deadline} come from that config.
-    mambacares: {
-      ...PHKL_ARC_COPY,
-      splash: NO_PARTNER_SPLASH,
+    // Its campaign figures are in config/urbanmilers.ts, not here.
+    urbanmilers: {
+      ...MAMBACARES_SCREEN_COPY,
       report: {
-        ...PHKL_ARC_COPY.report,
-        problem: {
-          heading: "You were fast. Alzheimer's takes that speed away.",
-          yourRoundLabel: "Your round",
-          dementiaLabel: "With dementia",
-          dementiaValue: "2 to 3\u00d7 longer",
-          // The dementia track is drawn this many times the player's own.
-          dementiaFactor: 3.2,
-          note:
-            "Illustrative. Timed tasks slow early in dementia. Not a clinical comparison.",
-          paragraphs: [
-            "You just processed information in under a second.",
-            "For someone living with dementia, that same response slows to a struggle. Names, faces, and everyday decisions take far longer.",
-            "Your gift funds Dementia Singapore's work with the people this affects and the families who care for them.",
-          ],
-        },
+        ...MAMBACARES_SCREEN_COPY.report,
         donate: {
-          eyebrow: "World Alzheimer's Month",
-          heading: "It took you {seconds} seconds. Donating takes a minute.",
-          headingAnonymous: "It took you under a minute. Donating takes one too.",
-          progressLabel: "{raised} raised of {goal}",
-          progressUpdated: "Last updated: {lastUpdated}",
+          ...MAMBACARES_SCREEN_COPY.report.donate,
+          // The crew count is load-bearing: it is stated in words here and
+          // drawn as logos from URBANMILERS_RUNNING_PARTNERS, and
+          // urbanmilersFlow.test.ts holds the two to each other.
           paragraphs: [
-            "This September, #MambaCares, six running crews and Gray Matter Solutions are raising {goal} for Dementia Singapore.",
-            "Dementia touches more Singapore families every year. Our running community can help.",
-            "Every dollar supports people living with dementia and the families who care for them.",
+            "This September, Urban Milers, six running crews and Gray Matter Solutions are raising {goal} for Dementia Singapore.",
+            ...MAMBACARES_SCREEN_COPY.report.donate.paragraphs.slice(1),
           ],
-        },
-        closing: {
-          heading: "One minute before you go.",
-          body:
-            "Help us hit {goal} by {deadline}. Every dollar reaches Dementia Singapore, and we believe the strength of our running community can help make a difference.",
         },
         cta: {
-          donate: "Donate to Dementia Singapore",
-          share: "Share donation",
-          directLead: "Donate at",
-          shareTitle: "GMS x #MambaCares for Dementia Singapore",
+          ...MAMBACARES_SCREEN_COPY.report.cta,
+          shareTitle: "GMS x Urban Milers for Dementia Singapore",
           shareText:
-            "I just measured my brain processing speed at the #MambaCares run. Help us raise {goal} for Dementia Singapore this World Alzheimer's Month.",
-          shareCopied: "Link copied - paste it anywhere.",
-          shareFailed: "Couldn't open sharing. The link is on screen below.",
+            "I just measured my brain processing speed at the Urban Milers run. Help us raise {goal} for Dementia Singapore this World Alzheimer's Month.",
         },
         partners: {
-          runningHeading: "Running partners",
-          sponsorsHeading: "Giveaway sponsors",
-          wordmark: "GMS X #MAMBACARES",
-          wordmarkNote: "WORLD ALZHEIMER'S MONTH COMMUNITY RUN",
-        },
-        sticky: {
-          share: "Share",
-          donate: "Donate now",
+          ...MAMBACARES_SCREEN_COPY.report.partners,
+          wordmark: "GMS X URBAN MILERS",
         },
       },
     },
@@ -984,6 +1019,19 @@ export const COPY: CopyConfig = {
 };
 
 /**
+ * The words for whichever community run is being walked.
+ *
+ * The fundraising report is one set of components serving both runs, so each
+ * reads its wording through here rather than through `COPY.screens.mambacares`
+ * by name. Defaults to #MambaCares, which is what the /event-v7 preview walks.
+ */
+export function runCopyFor(variant: QuizVariant): MambacaresCopy {
+  return variant === "urbanmilers"
+    ? COPY.screens.urbanmilers
+    : COPY.screens.mambacares;
+}
+
+/**
  * The arc copy for whichever event is running the shared PHKL screens.
  *
  * The primers, the age question, the great-job beat, the analysing ring, the
@@ -993,5 +1041,5 @@ export const COPY: CopyConfig = {
  * change the other's.
  */
 export function arcCopyFor(variant: QuizVariant): PhklArcCopy {
-  return usesMambaScreens(variant) ? COPY.screens.mambacares : COPY.screens.phkl;
+  return usesMambaScreens(variant) ? runCopyFor(variant) : COPY.screens.phkl;
 }
