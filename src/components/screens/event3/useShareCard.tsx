@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import { COPY } from "@/config/copy";
+import { useCopy } from "@/components/LanguageContext";
 import { formatTime } from "@/lib/format";
 import { generateResultCard, shareBlob } from "@/lib/shareCard";
 import type { Standing } from "./useStanding";
@@ -29,6 +29,7 @@ export function useShareCard({
   standing,
   playUrl,
 }: UseShareCardOptions) {
+  const copy = useCopy();
   const qrHostRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<Blob | null>(null);
   const [shareNote, setShareNote] = useState<string | null>(null);
@@ -62,7 +63,7 @@ export function useShareCard({
     try {
       // "I scored 0:41.8 ... / Rank 63/181 / Can you beat my score? ..." -
       // the share ladder appends the play URL under the closing colon.
-      const sc = COPY.screens.event3.share;
+      const sc = copy.screens.event3.share;
       const lines = [sc.text.replace("{time}", formatTime(timeMs))];
       if (standing.rank && standing.total) {
         lines.push(
@@ -80,12 +81,12 @@ export function useShareCard({
       );
       setShareNote(
         outcome === "shared"
-          ? "Shared."
+          ? sc.shared
           : outcome === "downloaded"
-            ? "Card saved. The caption is on your clipboard."
+            ? sc.downloaded
             : outcome === "copied"
-              ? "Copied to your clipboard."
-              : "Sharing is not available here.",
+              ? sc.copied
+              : sc.unavailable,
       );
     } finally {
       setSharing(false);

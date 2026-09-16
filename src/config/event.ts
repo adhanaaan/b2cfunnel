@@ -226,6 +226,32 @@ export const URBANMILERS_PAUSED = false;
 export const URBANMILERS_SOURCE: string = "urbanmilers";
 
 /**
+ * Independent pause switch for the Siloam Neuroscience Summit
+ * (/siloamneurosciencesummit and its TV board). Its own switch, like every
+ * other event's: closing one must never take another down with it. There is no
+ * challenge-closed switch for this event; the arc is open for as long as the
+ * route is up.
+ */
+export const SILOAM_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the Siloam Neuroscience Summit funnel. Every
+ * /siloamneurosciencesummit score and report is tagged with it, its board
+ * filters to it and the rank on its report is read back from it - which is what
+ * keeps its standings clear of every other event's history.
+ *
+ * This is the value written to the `source` column for this event, and it is
+ * what starts this board empty: the arc is /phkl's, so nothing but this tag
+ * keeps the Kuala Lumpur standings off a screen in Jakarta. Nothing is ever
+ * deleted to get there - rows keep the tag they were written with.
+ *
+ * To clear this board later (a second summit day that should not open on the
+ * first's standings), give this a new value - "siloam-day2" - and redeploy: the
+ * earlier rows keep their tag and simply stop appearing.
+ */
+export const SILOAM_SOURCE: string = "siloam";
+
+/**
  * The bucket a variant's rows are tagged with, for both `game_scores.source`
  * and `leads.source`. Shared so a score and the report that follows it always
  * carry the same tag - the report rate on the board divides one by the other,
@@ -252,6 +278,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return MAMBACARES_SOURCE;
     case "urbanmilers":
       return URBANMILERS_SOURCE;
+    case "siloam":
+      return SILOAM_SOURCE;
     case "event2":
       return "event2";
     case "event":

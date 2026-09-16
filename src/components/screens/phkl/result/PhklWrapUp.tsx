@@ -1,6 +1,6 @@
 "use client";
 
-import { COPY } from "@/config/copy";
+import { usePhklReportCopy } from "@/components/LanguageContext";
 import { Reveal, SerifParts } from "../ui";
 
 /**
@@ -11,7 +11,7 @@ import { Reveal, SerifParts } from "../ui";
  * credit.
  */
 export function PhklWrapUp({ ageBand }: { ageBand?: string }) {
-  const c = COPY.screens.phkl.report.wrapUp;
+  const c = usePhklReportCopy().wrapUp;
   const attribution =
     ageBand === c.attributionAgeBand ? c.attributionPeer : c.attribution;
 

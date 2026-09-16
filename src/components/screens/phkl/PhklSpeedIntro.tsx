@@ -5,8 +5,7 @@ import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "@/components/screens/event3/Event3Shell";
 import { StrongWords, ctaPrimaryClass } from "@/components/screens/event3/ui";
 import { PhklProgressRail } from "./PhklProgressRail";
-import { arcCopyFor } from "@/config/copy";
-import { useVariant } from "@/components/VariantContext";
+import { useArcCopy } from "@/components/LanguageContext";
 
 const item = {
   hidden: { opacity: 0, y: 16 },
@@ -20,7 +19,7 @@ const item = {
  * a keyboard.
  */
 export function PhklSpeedIntro({ onContinue }: { onContinue: () => void }) {
-  const c = arcCopyFor(useVariant()).speedIntro;
+  const c = useArcCopy().speedIntro;
   const reduced = useReducedMotion();
 
   return (

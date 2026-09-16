@@ -5,7 +5,7 @@ import { useFunnel } from "@/state/useFunnel";
 import { track, recordResponse, setPreviewMode } from "@/lib/analytics";
 import { computeScore } from "@/engine/scoring";
 import type { FunnelStep } from "@/types/funnel";
-import { QUESTIONS_BY_ID } from "@/config/questions";
+import { questionsByIdFor } from "@/config/questions";
 import { STAT_CARDS_BY_ID } from "@/config/statCards";
 import {
   AGE_SELECT_QUESTION_ID,
@@ -15,6 +15,7 @@ import {
 import type { LeadPayload } from "@/lib/supabase/types";
 import type { QuizVariant } from "@/types/funnel";
 import { VariantProvider } from "@/components/VariantContext";
+import { useLanguage } from "@/components/LanguageContext";
 import { eventSource } from "@/config/event";
 import {
   isPreviewVariant,
@@ -54,6 +55,7 @@ import { PhklQuizIntro } from "@/components/screens/phkl/PhklQuizIntro";
 import { PhklAnalysingScreen } from "@/components/screens/phkl/PhklAnalysingScreen";
 import { PhklResultScreen } from "@/components/screens/phkl/PhklResultScreen";
 import { MambaResultScreen } from "@/components/screens/mambacares/MambaResultScreen";
+import { SiloamResultScreen } from "@/components/screens/siloam/SiloamResultScreen";
 
 /** A stable, human-readable name for a funnel step (for drop-off analytics). */
 function stepKey(step: FunnelStep): string {
@@ -85,6 +87,12 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     skipToKind,
     retakeGame,
   } = useFunnel(variant);
+
+  // The language the player chose on the landing, and the question bank in it.
+  // Outside the Siloam summit nothing mounts a LanguageProvider, so this is
+  // "en" and the bank is the English one, the same object as before.
+  const language = useLanguage();
+  const questionsById = questionsByIdFor(language);
 
   // Preview variants are walkthroughs: they render the whole experience but
   // must not write anything, so every submit below is skipped and analytics is
@@ -227,7 +235,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             state.variant === "ihhsearegatta" ||
             state.variant === "ihh" ||
             state.variant === "phkl" ||
-            state.variant === "urbanmilers"
+            state.variant === "urbanmilers" ||
+            state.variant === "siloam"
               ? state.variant
               : // Everything left on the community-run arc is #MambaCares or
                 // its /event-v7 preview, which walks that run's landing.
@@ -332,7 +341,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
     }
 
     case "question": {
-      const question = QUESTIONS_BY_ID[step.questionId];
+      const question = questionsById[step.questionId];
       return (
         <QuestionScreen
           question={question}
@@ -351,7 +360,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       return (
         <QuestionGroupScreen
           title={step.title}
-          questions={step.questionIds.map((id) => QUESTIONS_BY_ID[id])}
+          questions={step.questionIds.map((id) => questionsById[id])}
           answers={state.answers}
           current={questionNumber(state.answers, state.cursor, state.variant)}
           total={totalQuestions(state.answers, state.variant)}
@@ -379,7 +388,11 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       // The PHKL arc loads its report behind its own screen: a progress ring
       // counting to 100% with each part of the workup ticking off, one by one.
       // #MambaCares runs the same arc, so it gets the same screen.
-      if (state.variant === "phkl" || usesMambaScreens(state.variant)) {
+      if (
+        state.variant === "phkl" ||
+        state.variant === "siloam" ||
+        usesMambaScreens(state.variant)
+      ) {
         return (
           <PhklAnalysingScreen
             name={state.name}
@@ -401,6 +414,25 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             email={state.email}
             gameTimeMs={state.gameTimeMs}
             gameAttempts={state.gameAttempts}
+            onRetake={() => {
+              track("game_retake", { variant: state.variant, step: "result" });
+              retakeGame();
+            }}
+          />
+        ) : null;
+      }
+      if (state.variant === "siloam") {
+        // The summit's report is PHKL's, with the NTU Homecoming close in
+        // place of the Memory Screening Package - and readable in whichever
+        // language the landing was answered in.
+        return state.result ? (
+          <SiloamResultScreen
+            result={state.result}
+            name={state.name}
+            email={state.email}
+            gameTimeMs={state.gameTimeMs}
+            gameAttempts={state.gameAttempts}
+            ageBand={ageBand}
             onRetake={() => {
               track("game_retake", { variant: state.variant, step: "result" });
               retakeGame();
@@ -449,9 +481,9 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           theme={ember ? "warm" : "default"}
           hideBack={ember}
           music={ember}
-          // A replay from the phkl or #MambaCares report goes straight to the
-          // countdown,
-          // whatever sessionStorage remembers about the guided tour.
+          // A replay from the phkl, #MambaCares or Siloam report goes straight
+          // to the countdown, whatever sessionStorage remembers about the
+          // guided tour.
           skipDemo={state.result != null}
         />
       );

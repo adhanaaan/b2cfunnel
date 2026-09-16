@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { COPY } from "@/config/copy";
+import { useCopy } from "@/components/LanguageContext";
 import { springs, stagger } from "@/lib/motion";
 import { unlockAudio } from "@/lib/gameAudio";
 import { Event3Shell } from "./Event3Shell";
@@ -26,7 +26,7 @@ const item = {
  * then run the guided demo round or jump straight in.
  */
 export function Event3Instructions({ onDemo, onSkip }: Event3InstructionsProps) {
-  const c = COPY.screens.event3.instructions;
+  const c = useCopy().screens.event3.instructions;
   const reduced = useReducedMotion();
 
   // iOS only opens an audio context inside a real tap, and this screen holds

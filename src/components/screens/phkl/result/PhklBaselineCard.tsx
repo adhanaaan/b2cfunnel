@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import type { ScoreResult } from "@/types/engine";
-import { COPY } from "@/config/copy";
+import { usePhklReportCopy } from "@/components/LanguageContext";
 import { ease } from "@/lib/motion";
 import { Reveal, rankGradientText, reportCard, reportEyebrow, reportHeading } from "../ui";
 
@@ -42,7 +42,7 @@ const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v
  * assistive tech.
  */
 export function PhklBaselineCard({ result }: { result: ScoreResult }) {
-  const c = COPY.screens.phkl.report.baseline;
+  const c = usePhklReportCopy().baseline;
   const reduced = useReducedMotion();
 
   // Risk: the Brain Health Score itself (high = healthy), kept off the centre

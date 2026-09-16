@@ -4,13 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import { animate, useInView, useReducedMotion } from "framer-motion";
 import type { ScoreResult } from "@/types/engine";
 import { pickActions } from "@/config/actions";
-import { STAT_CARDS_BY_ID } from "@/config/statCards";
 import { firstName } from "@/lib/format";
 import { TrajectoryChart } from "@/components/result/TrajectoryChart";
 import { ActionablesCard } from "@/components/result/ActionablesCard";
 import { RiskMeter } from "./RiskMeter";
 import { Reveal, rankGradientText, reportEyebrow, reportHeading } from "../ui";
-import { arcCopyFor } from "@/config/copy";
+import {
+  useArcCopy,
+  useCopy,
+  useLanguage,
+} from "@/components/LanguageContext";
+import { reportStatFor } from "@/config/copy";
 import { useVariant } from "@/components/VariantContext";
 
 /**
@@ -64,13 +68,19 @@ export function PhklRiskSection({
   name?: string;
   gameTimeMs?: number;
 }) {
-  const c = arcCopyFor(useVariant()).report.risk;
-  const card = STAT_CARDS_BY_ID.lancet2024;
+  const copy = useCopy();
+  const language = useLanguage();
+  const c = useArcCopy().report.risk;
+  // /phkl quotes the global Lancet card; the Siloam summit quotes its own, so
+  // the figure can be Indonesia's without moving a number every other event
+  // prints.
+  const card = reportStatFor(useVariant(), copy);
   const first = firstName(name);
   const actions = pickActions({
     drivingFactors: result.drivingFactors,
     band: result.band,
     gameTimeMs,
+    language,
   });
 
   return (
@@ -100,7 +110,7 @@ export function PhklRiskSection({
                 key={factor.id}
                 className="rounded-full border border-[#e7d3c4] bg-white px-4 py-2 text-[13px] font-bold leading-none text-[#5f4638]"
               >
-                {factor.label}
+                {copy.factorLabels[factor.id] ?? factor.label}
               </li>
             ))}
           </ul>
@@ -116,7 +126,9 @@ export function PhklRiskSection({
             <CountUpStat stat={card.stat} />
           </p>
           <p className="mt-2 text-[15px] leading-[1.55] text-[#41586b]">{card.body}</p>
-          <p className="mt-2 text-xs italic text-[#b79c8e]">Source: {card.source}</p>
+          <p className="mt-2 text-xs italic text-[#b79c8e]">
+            {c.sourceLabel} {card.source}
+          </p>
         </Reveal>
       )}
 

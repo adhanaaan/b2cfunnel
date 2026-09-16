@@ -44,6 +44,16 @@ export type QuizVariant =
   // completion rate in a column of their own rather than mixed into the
   // #MambaCares standings.
   | "urbanmilers"
+  // Siloam Neuroscience Summit (/siloamneurosciencesummit): the /phkl arc run
+  // in Indonesia, and the first Indonesian event on this funnel. The steps are
+  // PHKL's exactly (shared, not rebuilt), so a Siloam score sits on the same
+  // /100 scale as every score already recorded. What it holds of its own is
+  // the part that must not be shared: its `siloam` bucket, its landing (the
+  // #MambaCares two-row consent, no partner block), a report that closes on
+  // the NTU Homecoming call to action rather than on a screening package, and
+  // a language choice - English or Bahasa Indonesia - offered on the landing
+  // and carried through every screen behind it.
+  | "siloam"
   // /event-v7 (preview): the #MambaCares arc with the share moment at the top
   // of the report. A preview variant - see PREVIEW_VARIANTS - so walking it
   // writes nothing while the live run is on.

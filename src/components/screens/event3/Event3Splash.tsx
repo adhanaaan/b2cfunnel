@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { ConsentClause } from "@/types/copy";
-import { COPY } from "@/config/copy";
+import { useCopy } from "@/components/LanguageContext";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "./Event3Shell";
 import { BrainHero } from "./BrainHero";
 import { ConsentText, GradientWords, StrongWords, ctaPrimaryClass } from "./ui";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
+import { LanguagePicker } from "@/components/screens/siloam/LanguagePicker";
 
 interface Event3SplashProps {
   /**
@@ -34,9 +35,12 @@ interface Event3SplashProps {
    * colour. "ihhsearegatta", "ihh" and "phkl" also carry the partner's consent
    * as a
    * third row (Figma 638:7729 and 697:24953), which is what makes them taller
-   * than a screen and lets them scroll; "mambacares" (Figma 756:14394) and
-   * "urbanmilers", the two community runs, have no partner at all, so they are
-   * the plain two-row landing at the roomier size.
+   * than a screen and lets them scroll; "mambacares" (Figma 756:14394),
+   * "urbanmilers" and "siloam" have no partner at all, so they are the plain
+   * two-row landing at the roomier size.
+   * "siloam" is that landing with one thing added: the language picker, at the
+   * very top, where it is the first decision on the screen rather than a
+   * setting to be hunted for after reading a page you cannot read.
    * Each one reads its own copy block and tags its own newsletter opt-ins, so
    * their wording can move independently.
    */
@@ -48,7 +52,8 @@ interface Event3SplashProps {
     | "ihh"
     | "phkl"
     | "mambacares"
-    | "urbanmilers";
+    | "urbanmilers"
+    | "siloam";
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -137,19 +142,24 @@ export function Event3Splash({
   // every other design leads with a bold "Required." and a body-colour link,
   // while keeping a copy block of its own.
   const v3 = design === "v3";
-  const c = v3 ? COPY.screens.event3.splash : COPY.screens[design].splash;
+  // Read through the context rather than straight off COPY: on a landing that
+  // offers a language, the picker below has to change these words as it is
+  // used. Every other landing is handed the English config itself.
+  const copy = useCopy();
+  const c = v3 ? copy.screens.event3.splash : copy.screens[design].splash;
   // The partner's block, on the landings that carry one (the regatta's and
   // PHKL's copy blocks are the only ones with it).
   const partner: { clauses: ConsentClause[] } | null =
     design === "ihhsearegatta" || design === "ihh" || design === "phkl"
-      ? COPY.screens[design].splash.partnerConsent
+      ? copy.screens[design].splash.partnerConsent
       : null;
   // The landings designed since the 18px row was deprecated take the roomier
   // consent rows (see ConsentCheckbox); the earlier events keep what shipped.
   const roomy =
     design === "phkl" ||
     design === "mambacares" ||
-    design === "urbanmilers";
+    design === "urbanmilers" ||
+    design === "siloam";
   const reduced = useReducedMotion();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -161,11 +171,11 @@ export function Event3Splash({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim().length === 0) {
-      setError("Please enter your name.");
+      setError(c.nameError);
       return;
     }
     if (!EMAIL_RE.test(email.trim())) {
-      setError("Please enter a valid email address.");
+      setError(c.emailError);
       return;
     }
     // PDPA: consent to be contacted is what lets us email the result and
@@ -212,6 +222,15 @@ export function Event3Splash({
         initial={reduced ? "show" : "hidden"}
         animate="show"
       >
+        {/* The language choice, before anything there is to read. Only the
+            summit's landing carries one; every other design renders nothing
+            here and keeps the spacing it shipped with. */}
+        {design === "siloam" && (
+          <motion.div variants={item} className="shrink-0 pt-1">
+            <LanguagePicker label={copy.screens.siloam.splash.languageLabel} />
+          </motion.div>
+        )}
+
         {design === "phkl" ? (
           <>
             {/* The partner's logo above the eyebrow, at the presence it has in

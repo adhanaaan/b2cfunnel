@@ -1,3 +1,5 @@
+import type { Language } from "@/config/language";
+
 /** Format milliseconds as m:ss.s (e.g. 18400 -> "0:18.4", 65200 -> "1:05.2"). */
 export function formatTime(ms: number): string {
   const totalSec = Math.max(0, ms) / 1000;
@@ -38,6 +40,19 @@ export function ordinal(n: number): string {
       ? "th"
       : (["th", "st", "nd", "rd"][whole % 10] ?? "th");
   return `${whole}${suffix}`;
+}
+
+/**
+ * The same count, in a given language.
+ *
+ * English suffixes the number ("2nd record"); Bahasa Indonesia prefixes it
+ * ("Rekor ke-2"), which no amount of suffixing gets to. The heading is one
+ * string with a {ordinal} placeholder in both, so this is the only place the
+ * two shapes have to be told apart.
+ */
+export function ordinalFor(n: number, language: Language): string {
+  const whole = Math.max(1, Math.round(n));
+  return language === "id" ? `ke-${whole}` : ordinal(whole);
 }
 
 /** The first word of a name, for a heading that speaks to the player. */

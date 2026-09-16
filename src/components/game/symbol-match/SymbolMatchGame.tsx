@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Task2Game } from "./Task2Game";
 import { SymbolMatchTour } from "./demo/SymbolMatchTour";
 import { formatTime } from "@/lib/format";
+import { useCopy } from "@/components/LanguageContext";
 import {
   finish as finishSound,
   isMuted,
@@ -71,6 +72,7 @@ export function SymbolMatchGame({
   music = false,
 }: Props) {
   const warm = theme === "warm";
+  const c = useCopy().screens.symbolMatch;
   const [phase, setPhase] = useState<"demo" | "countdown" | "play">(() => {
     if (skipDemo) return "countdown";
     // Skip the guided tour on replays within the same session.
@@ -159,7 +161,7 @@ export function SymbolMatchGame({
       type="button"
       onClick={toggleSound}
       aria-pressed={soundOff}
-      aria-label={soundOff ? "Turn sound on" : "Turn sound off"}
+      aria-label={soundOff ? c.soundOn : c.soundOff}
       className={[
         // Above the HUD: that row is a flex item carrying z-40, so it would
         // otherwise tie with this button and swallow the tap on DOM order.
@@ -219,7 +221,7 @@ export function SymbolMatchGame({
               warm ? "text-primary" : "text-[#8735AC]",
             ].join(" ")}
           >
-            {warm ? "Get ready" : "Reaction Time Challenge"}
+            {warm ? c.getReady : c.challengeName}
           </p>
           <p
             className={[
@@ -227,7 +229,7 @@ export function SymbolMatchGame({
               warm ? "text-secondary" : "text-charcoal",
             ].join(" ")}
           >
-            Match {GOAL} symbols as fast as you can. Ready…
+            {c.readyLine.replace("{count}", String(GOAL))}
           </p>
           <div
             key={count}
@@ -242,7 +244,7 @@ export function SymbolMatchGame({
                 : "text-8xl text-[#8735AC]",
             ].join(" ")}
           >
-            {count === 0 ? "GO!" : count}
+            {count === 0 ? c.go : count}
           </div>
         </div>
       </div>
@@ -274,7 +276,7 @@ export function SymbolMatchGame({
                   warm ? "text-outline" : "text-[#5b2c6f]",
                 ].join(" ")}
               >
-                Time
+                {c.timeLabel}
               </p>
               <p
                 className={[

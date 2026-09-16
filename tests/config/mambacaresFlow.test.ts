@@ -153,6 +153,7 @@ describe("mambacares flow", () => {
       "ihh",
       "phkl",
       "urbanmilers",
+      "siloam",
     ] as const;
     for (const variant of others) {
       expect(eventSource(variant), `collides with ${variant}`).not.toBe(source);

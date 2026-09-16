@@ -9,6 +9,7 @@
  */
 
 import type { BandName } from "@/types/engine";
+import type { Language } from "@/config/language";
 
 /** One action per modifiable factor. Non-modifiable ids are absent by design:
  *  age and family history have no action, so they fall through to the defaults. */
@@ -47,23 +48,94 @@ export const DEFAULT_ACTIONS: string[] = [
   "Book a health screening if it has been more than a year. Knowing your numbers is the start of changing them.",
 ];
 
+/**
+ * The same three tables in Bahasa Indonesia, for the Siloam Neuroscience
+ * Summit. Keyed by the SAME factor ids, so which action a player is given is
+ * decided by `pickActions` exactly as it is in English - only the words
+ * change. A factor missing here falls back to the English line rather than to
+ * a blank row on the report.
+ */
+const ACTIONS_BY_FACTOR_ID: Record<string, string> = {
+  sleep:
+    "Usahakan tidur 7 hingga 9 jam. Memori dikonsolidasikan saat tidur, dan kurang tidur paling cepat terlihat sebagai fokus yang buruk.",
+  exercise:
+    "Tingkatkan hingga 150 menit gerak cepat per minggu. Olahraga aerobik teratur adalah salah satu kebiasaan dengan bukti terkuat untuk kesehatan otak.",
+  diet: "Tambahkan satu hidangan bergaya Mediterania setiap hari: sayuran, ikan, minyak zaitun, biji-bijian utuh.",
+  alcohol:
+    "Batasi alkohol, dan beri diri Anda beberapa hari bebas alkohol setiap minggu.",
+  smoking:
+    "Berhenti merokok adalah perubahan tunggal terbesar yang tersedia bagi Anda di sini. Tanyakan kepada kami di booth soal dukungannya.",
+  highBp:
+    "Periksakan dan tangani tekanan darah Anda. Tekanan darah pada usia paruh baya membentuk kesehatan otak puluhan tahun kemudian.",
+  highCholesterol:
+    "Tanyakan kepada dokter Anda tentang angka kolesterol Anda dan target mana yang sesuai.",
+  diabetes:
+    "Jaga gula darah Anda tetap dalam rentang bersama dokter. Glukosa yang stabil melindungi pembuluh darah kecil di otak Anda.",
+  hearingLoss:
+    "Lakukan tes pendengaran. Gangguan pendengaran yang tidak ditangani adalah salah satu faktor risiko terbesar yang dapat diubah dalam laporan Lancet 2024.",
+  visionLoss:
+    "Periksakan mata Anda, dan pastikan resep kacamata Anda selalu terbaru.",
+};
+
+const SPEED_ACTIONS_ID = {
+  strong:
+    "Pertahankan apa yang Anda lakukan sekarang. Kecepatan reaksi Anda baik, jadi jagalah dengan tidur yang konsisten dan olahraga teratur.",
+  build:
+    "Kecepatan reaksi Anda adalah potret sesaat, bukan vonis. Tidur dan gerak teratur yang mengubahnya seiring waktu.",
+} as const;
+
+const DEFAULT_ACTIONS_ID: string[] = [
+  "Tantang otak Anda setiap hari. Ambil rute baru ke tempat kerja, pelajari keterampilan baru, atau ubah rutinitas Anda.",
+  "Tetap bersosialisasi. Percakapan rutin adalah salah satu kebiasaan dengan kaitan terkuat dengan ketajaman berpikir.",
+  "Lakukan pemeriksaan kesehatan jika sudah lebih dari setahun. Mengetahui angka Anda adalah awal dari mengubahnya.",
+];
+
+/** Every language's tables, picked by `pickActions`. */
+const ACTION_TABLES: Record<
+  Language,
+  {
+    byFactor: Record<string, string>;
+    speed: { strong: string; build: string };
+    defaults: string[];
+  }
+> = {
+  en: {
+    byFactor: ACTIONS_BY_FACTOR,
+    speed: SPEED_ACTIONS,
+    defaults: DEFAULT_ACTIONS,
+  },
+  id: {
+    byFactor: ACTIONS_BY_FACTOR_ID,
+    speed: SPEED_ACTIONS_ID,
+    defaults: DEFAULT_ACTIONS_ID,
+  },
+};
+
 export interface PickActionsInput {
   /** Impact-sorted, straight from the engine. */
   drivingFactors: { id: string }[];
   band: BandName;
   /** Reaction game result, when they played one. */
   gameTimeMs?: number;
+  /** Which language's wording to hand back. Defaults to English. */
+  language?: Language;
 }
 
 /**
  * Exactly three actions: the reaction-time line first when they played, then
  * their heaviest modifiable factors in the engine's order, then defaults.
+ *
+ * `language` only changes the words. The factors, their order and the number
+ * picked are the same in every language, so two players with the same answers
+ * are told the same three things.
  */
 export function pickActions({
   drivingFactors,
   band,
   gameTimeMs,
+  language = "en",
 }: PickActionsInput): string[] {
+  const table = ACTION_TABLES[language] ?? ACTION_TABLES.en;
   const picked: string[] = [];
   const add = (text: string | undefined) => {
     if (!text || picked.length >= 3 || picked.includes(text)) return;
@@ -71,10 +143,14 @@ export function pickActions({
   };
 
   if (gameTimeMs != null) {
-    add(band === "low" ? SPEED_ACTIONS.strong : SPEED_ACTIONS.build);
+    add(band === "low" ? table.speed.strong : table.speed.build);
   }
-  for (const factor of drivingFactors) add(ACTIONS_BY_FACTOR[factor.id]);
-  for (const fallback of DEFAULT_ACTIONS) add(fallback);
+  for (const factor of drivingFactors) {
+    add(table.byFactor[factor.id] ?? ACTIONS_BY_FACTOR[factor.id]);
+  }
+  for (const [i, fallback] of table.defaults.entries()) {
+    add(fallback ?? DEFAULT_ACTIONS[i]);
+  }
 
   return picked;
 }

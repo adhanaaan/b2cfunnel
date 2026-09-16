@@ -430,6 +430,126 @@ The screens read them through `communityRunFor(variant)`
 the words - one run's link or total must never be printed on the other's page,
 because both are read off a phone at a finish line.
 
+## /siloamneurosciencesummit (Siloam Neuroscience Summit)
+
+The `/phkl` arc run in Indonesia, and the first Indonesian event on this
+funnel. The flow array is shared (`SILOAM_FLOW = PHKL_FLOW`), so the question
+set, `achievableAxisMax` and therefore every score recorded stay comparable
+with `/phkl`, `/mambacares` and event2 (`tests/config/siloamFlow.test.ts`).
+
+```
+landing (+ language) -> speed primer -> select your age -> instructions -> game
+-> great job (auto) -> quiz primer -> the quiz -> analysing -> report
+```
+
+What this event holds of its own:
+
+- **A language choice.** The landing opens on a two-pill picker, **English or
+  Bahasa Indonesia**, and the choice carries through every screen behind it:
+  the primers, the game and its guided tour, all fourteen questions, the
+  analysing beat and the whole report, share sheet included. See
+  **Translations** below.
+- **The #MambaCares landing** (`Event3Splash.tsx` with `design="siloam"`): the
+  plain two-row consent at the roomier 20px/12.5px size, no partner block. It
+  links a policy at **`/siloamneurosciencesummit/privacy-policy`**, which is
+  currently the general policy shared (not copied), so the rewrite against
+  Indonesia's Personal Data Protection Law (UU No. 27/2022) is one edit in
+  `config/privacyPolicy.ts` and cannot reach the Singapore policy every other
+  no-partner event links. **The consent wording and that policy are both still
+  to be confirmed against Indonesian law.**
+- **NTU Homecoming's call to action at the end** (`SiloamOffer.tsx`), in place
+  of `/phkl`'s Memory Screening Package: the ReCOGnAIze assessment as the next
+  step, and the team at the booth to take it from there. **No price, no poster
+  and nothing to click through to** - there is no Indonesian booking link, and
+  a button that opened the Malaysian form would be worse than no button. The
+  sticky bar (`SiloamStickyCta.tsx`) scrolls to that section rather than
+  opening anything. Everything above it is the `/phkl` component, shared:
+  header, speed explainer, risk section, baseline radar, wrap-up.
+- **Its own report statistic**, `COPY.screens.siloam.report.stat` (and its
+  Bahasa Indonesia twin in `config/copy.id.ts`). **AWAITING THE INDONESIAN
+  FIGURE**: until it lands, both say the *global* Lancet 45%, which is true in
+  Indonesia as everywhere else, so the report is correct on the day the route
+  goes up. Change both, or the summit quotes one number in English and another
+  in Bahasa Indonesia.
+- **Its own bucket**, `siloam` (`SILOAM_SOURCE`), so the board opens empty and
+  ranks only this event. The arc is `/phkl`'s, so this tag is the *only* thing
+  keeping Kuala Lumpur's standings off a screen in Jakarta. To clear the board
+  for a second summit day, give it a new value (`"siloam-day2"`) and redeploy.
+- **Its own pause switch**, `SILOAM_PAUSED`. There is no challenge-closed
+  switch; the arc is open for as long as the route is up.
+
+**The board is at `/siloamneurosciencesummit/leaderboard`**: the `/phkl` board
+pointed at this bucket, with the prize in rupiah (`SILOAM_PRIZE` in
+`src/config/siloam.ts`). **`Rp 600.000` is a placeholder** - `/phkl`'s RM 170
+converted and rounded - and is there to be signed off, not trusted. The depth
+("Top 3") is written from the board's own `PODIUM_N`, so the panel cannot
+promise a prize the rows below it do not show.
+
+The board is **in English**, copy and brain facts alike, while the funnel
+behind its QR code can be read in either language. That is the brief
+("leaderboard is the same as /phkl"), not an oversight: the board shows names
+and times, and the language belongs to the player holding the phone rather than
+to the room. `BRAIN_FACTS` is the one block of prose on it, and is the first
+thing to translate if that changes.
+
+Images under `public/images/siloam/` - **that folder's README lists every file
+and its box on the board**. All optional; the board is live and correct before
+any of them land. The three quiz-primer photos are read from `/images/phkl/`
+(generic sleep/exercise/diet shots, shared rather than duplicated).
+
+## Translations (English and Bahasa Indonesia)
+
+One event uses this today, and the whole layer is **inert for every other**:
+nothing else mounts `LanguageProvider`, so `useLanguage()` returns `"en"` and
+`copyFor()` hands back the `COPY` object **itself**, not a merged copy of it.
+That identity is asserted in `tests/config/siloamLanguage.test.ts` and is the
+containment argument for the whole feature.
+
+| Piece | Where |
+| --- | --- |
+| The language list and the storage key | `src/config/language.ts` |
+| The picker on the landing | `src/components/screens/siloam/LanguagePicker.tsx` |
+| The choice, and the hooks screens read it through | `src/components/LanguageContext.tsx` |
+| Bahasa Indonesia copy (overlay) | `src/config/copy.id.ts` |
+| Bahasa Indonesia questions (words only) | `src/config/questions.id.ts` |
+| Bahasa Indonesia actions | `src/config/actions.ts` |
+| The merge | `src/lib/deepMerge.ts` |
+
+How it works, and the rules that matter:
+
+- **The list is English and Bahasa Indonesia, and only those two.** The
+  ReCOGnAIze assessment offers Mandarin and Bahasa Melayu; neither belongs at
+  an Indonesian summit, and the test pins the list so neither can come back
+  through a shared edit.
+- **A translation is an overlay, not a second config.** Anything it leaves out
+  renders in English rather than as a blank - the failure mode worth designing
+  for, because it is the one that happens at an event. Screens no Indonesian
+  player reaches (the paywall, the booking page, the community-run report) are
+  deliberately untranslated.
+- **Arrays replace whole, never element by element.** A list of consent clauses
+  or report paragraphs only reads correctly as a set; a per-index merge would
+  leave one English paragraph inside an Indonesian block. Translate a list in
+  full or leave it in English.
+- **A translation changes WORDS AND NOTHING ELSE.** `questions.id.ts` carries
+  no ids, no axes, no `showIf` and no scores: `questionsFor()` replaces prompts
+  and option labels on the English bank and copies every number and branch
+  across untouched. An Indonesian player and an English one with the same
+  answers get the same score, on the same scale as every score already
+  recorded. Same for `pickActions`: the language changes the three lines, never
+  which three.
+- **Screens read `useCopy()` / `useArcCopy()` / `usePhklReportCopy()`**, never
+  `COPY` directly, wherever they can be reached in more than one language.
+  `arcCopyFor(variant, copy)` and `phklReportFor(variant, copy)` are what keep
+  a shared component from naming one event's block - without them the summit's
+  report would print Pantai Hospital's words.
+- **The privacy policy is NOT machine-translated.** It is what people are
+  consenting to, and it stays in English until reviewed Indonesian text is
+  supplied with the UU PDP rewrite.
+- Adding a language: add it to `LANGUAGES`, add an overlay to
+  `COPY_BY_LANGUAGE` and (optionally) `QUESTIONS_TEXT_BY_LANGUAGE`, add a row
+  to `ACTION_TABLES`, and check `ordinalFor` in `lib/format.ts` handles how
+  that language builds "2nd".
+
 ## /event-v6 (preview)
 
 `/event-v6` walks exactly the v3 flow, and exists only to compare consent
@@ -686,6 +806,25 @@ change once Audrey / clinical sign off:
 - **Per-axis band thresholds** for the worse-of-two comparison (`src/engine/bands.ts`).
 - **Q15 "what do you track" options + persona cut-offs** (`src/config/questions.ts`, `src/engine/persona.ts`).
 - **Names / labels / copy** (`src/config/copy.ts`) - "Brain Health Score", band labels, bridge wording, price, etc.
+
+### /siloamneurosciencesummit, specifically
+
+Four things on the Siloam summit are working defaults waiting on the client,
+each a one-line change and each flagged in the file it lives in:
+
+- **The landing's consent wording**, in both languages
+  (`COPY.screens.siloam.splash`, `config/copy.id.ts`). Written against
+  Singapore's PDPA framing and to be confirmed against Indonesia's Personal
+  Data Protection Law (UU No. 27/2022).
+- **The privacy policy** at `/siloamneurosciencesummit/privacy-policy`
+  (`SILOAM_PRIVACY_POLICY_SECTIONS`). Currently the general PDPA policy,
+  shared; to be replaced by the reviewed Indonesian text, with an Indonesian
+  translation supplied alongside it rather than machine-translated here.
+- **The report's headline statistic**, in both languages
+  (`COPY.screens.siloam.report.stat`). Currently the *global* Lancet 45%
+  awaiting the Indonesian figure. Change both languages together.
+- **The prize amount** (`SILOAM_PRIZE` in `src/config/siloam.ts`). `Rp 600.000`
+  is `/phkl`'s RM 170 converted and rounded, not a signed-off number.
 
 ## Out of scope (this build)
 
