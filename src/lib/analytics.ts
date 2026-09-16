@@ -43,6 +43,12 @@ export interface TrackProps {
   step?: string;
   /** Which of several same-named controls fired (the report's booking buttons). */
   placement?: string;
+  /**
+   * The language a player chose, on the events that offer one. Anonymous like
+   * everything else here: it says an Indonesian summit was read in Bahasa
+   * Indonesia, not by whom.
+   */
+  language?: string;
 }
 
 /** POST a JSON body to an analytics endpoint. Fire-and-forget; never blocks. */

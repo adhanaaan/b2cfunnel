@@ -1,6 +1,6 @@
 "use client";
 
-import { COPY } from "@/config/copy";
+import { useCopy } from "@/components/LanguageContext";
 
 /**
  * The three personalised actions, numbered. `tone="note"` is the phkl report's
@@ -14,6 +14,7 @@ export function ActionablesCard({
   actions: string[];
   tone?: "default" | "note";
 }) {
+  const copy = useCopy();
   if (actions.length === 0) return null;
   const note = tone === "note";
 
@@ -32,7 +33,7 @@ export function ActionablesCard({
             : "font-display text-lg font-extrabold leading-snug text-charcoal"
         }
       >
-        {COPY.screens.event2.report.actionablesHeading}
+        {copy.screens.event2.report.actionablesHeading}
       </h2>
       <ol className={note ? "mt-3.5 space-y-3.5" : "mt-4 space-y-3.5"}>
         {actions.map((text, i) => (

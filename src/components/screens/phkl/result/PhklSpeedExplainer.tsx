@@ -1,6 +1,6 @@
 "use client";
 
-import { COPY } from "@/config/copy";
+import { useCopy, usePhklReportCopy } from "@/components/LanguageContext";
 import { BrainHero } from "@/components/screens/event3/BrainHero";
 import { Reveal, SerifParts } from "../ui";
 
@@ -16,8 +16,9 @@ import { Reveal, SerifParts } from "../ui";
  * cream, and nothing more.
  */
 export function PhklSpeedExplainer() {
-  const c = COPY.screens.phkl.report.speed;
-  const points = COPY.screens.event3.speedPopup.points;
+  const copy = useCopy();
+  const c = usePhklReportCopy().speed;
+  const points = copy.screens.event3.speedPopup.points;
 
   return (
     <section className="relative -mx-4 mt-3 px-6 pb-10 pt-3">

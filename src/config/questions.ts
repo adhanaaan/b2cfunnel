@@ -1,4 +1,6 @@
 import type { Question } from "@/types/question";
+import type { Language } from "@/config/language";
+import { QUESTIONS_TEXT_BY_LANGUAGE } from "@/config/questions.translations";
 
 /**
  * The question bank. This is the single source of truth for scoring weights:
@@ -335,3 +337,56 @@ export const QUESTIONS: Question[] = [
 export const QUESTIONS_BY_ID: Record<string, Question> = Object.fromEntries(
   QUESTIONS.map((q) => [q.id, q]),
 );
+
+/**
+ * The question bank in a given language.
+ *
+ * English returns the bank itself, the same object, so nothing about the
+ * English funnels can change here. Any other language returns a COPY whose
+ * prompts, help text and option labels have been replaced from the overlay
+ * for that language - and nothing else.
+ *
+ * What is carried across verbatim is the load-bearing part: `id`, `axis`,
+ * `score`, `showIf`, `control`, `personaSignal`. A translation cannot move a
+ * weight, drop a branch or rename an option id, so an Indonesian answer is
+ * scored by exactly the code and exactly the numbers an English one is
+ * (tests/config/siloamLanguage.test.ts holds this).
+ *
+ * Memoised: the map is built once per language, not once per render.
+ */
+const questionCache = new Map<Language, Question[]>();
+
+export function questionsFor(language: Language): Question[] {
+  if (language === "en") return QUESTIONS;
+  const cached = questionCache.get(language);
+  if (cached) return cached;
+
+  const text = QUESTIONS_TEXT_BY_LANGUAGE[language];
+  const translated = QUESTIONS.map((q): Question => {
+    const t = text[q.id];
+    if (!t) return q;
+    return {
+      ...q,
+      prompt: t.prompt ?? q.prompt,
+      // Only override help text the question actually has: a translation must
+      // not invent one where the English question shows none.
+      ...(q.helpText !== undefined && t.helpText !== undefined
+        ? { helpText: t.helpText }
+        : {}),
+      options: q.options?.map((o) => ({
+        ...o,
+        label: t.options?.[o.id] ?? o.label,
+      })),
+    };
+  });
+  questionCache.set(language, translated);
+  return translated;
+}
+
+/** The same bank, by id - what the screens look a question up in. */
+export function questionsByIdFor(
+  language: Language,
+): Record<string, Question> {
+  if (language === "en") return QUESTIONS_BY_ID;
+  return Object.fromEntries(questionsFor(language).map((q) => [q.id, q]));
+}

@@ -20,6 +20,7 @@ export const EVENT_PATHS: Partial<Record<QuizVariant, string>> = {
   phkl: "/phkl",
   mambacares: "/mambacares",
   urbanmilers: "/urbanmilers",
+  siloam: "/siloamneurosciencesummit",
   // The v7 preview shares the real event's link on purpose: a card sent from
   // a walkthrough should still take a friend to the run, not to the preview.
   event7: "/mambacares",
@@ -39,6 +40,17 @@ export const PHKL_BOOKING_URL =
  * the sticky button and the button above the clinician's quote scroll to.
  */
 export const PHKL_PACKAGE_SECTION_ID = "memory-screening-package";
+
+/**
+ * The id of the close on the Siloam summit's report - what its sticky button
+ * scrolls to.
+ *
+ * The summit's PHKL sibling scrolls to a bookable package; this one scrolls to
+ * the ReCOGnAIze offer and the team at the booth, because there is no
+ * Indonesian booking link to open. When one exists, this is the section the
+ * button under it belongs in.
+ */
+export const SILOAM_OFFER_SECTION_ID = "siloam-next-step";
 
 /**
  * The absolute play link for a variant - used by the TV boards' QR codes and

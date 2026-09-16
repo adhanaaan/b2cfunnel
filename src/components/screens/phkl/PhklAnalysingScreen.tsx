@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { dur, ease, springs } from "@/lib/motion";
 import { Event3Shell } from "@/components/screens/event3/Event3Shell";
-import { arcCopyFor } from "@/config/copy";
-import { useVariant } from "@/components/VariantContext";
+import { useArcCopy } from "@/components/LanguageContext";
 
 /**
  * The PHKL loading beat (Figma "Preparing your report"): a thick ember ring
@@ -35,7 +34,7 @@ export function PhklAnalysingScreen({
   name?: string;
   onDone: () => void;
 }) {
-  const c = arcCopyFor(useVariant()).analysing;
+  const c = useArcCopy().analysing;
   const reduced = useReducedMotion();
   const steps = c.steps;
 

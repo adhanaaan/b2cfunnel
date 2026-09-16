@@ -1,14 +1,23 @@
 "use client";
 
 import type { BandName } from "@/types/engine";
-import { COPY, arcCopyFor } from "@/config/copy";
+import type { CopyConfig } from "@/types/copy";
+import { COPY } from "@/config/copy";
 import { BANDS, BAND_ORDER } from "@/engine/bands";
 import { reportCard } from "../ui";
-import { useVariant } from "@/components/VariantContext";
+import { useArcCopy, useCopy } from "@/components/LanguageContext";
 
-/** "Moderate risk" -> "Moderate": the band on its own, for the meter's labels. */
-export function shortBandLabel(band: BandName): string {
-  return COPY.bandLabels[band].replace(/\s+risk$/i, "");
+/**
+ * "Moderate risk" -> "Moderate": the band on its own, for the meter's labels.
+ *
+ * Read from the copy config rather than trimmed off `bandLabels`, because
+ * trimming only works in a language that puts the word "risk" last.
+ */
+export function shortBandLabel(
+  band: BandName,
+  copy: CopyConfig = COPY,
+): string {
+  return copy.bandShortLabels[band];
 }
 
 /**
@@ -18,8 +27,9 @@ export function shortBandLabel(band: BandName): string {
  * alone, and the whole figure states the result in words.
  */
 export function RiskMeter({ band }: { band: BandName }) {
-  const c = arcCopyFor(useVariant()).report.risk;
-  const label = shortBandLabel(band);
+  const copy = useCopy();
+  const c = useArcCopy().report.risk;
+  const label = shortBandLabel(band, copy);
 
   return (
     <figure
@@ -49,7 +59,7 @@ export function RiskMeter({ band }: { band: BandName }) {
                   active ? "text-[#5f4638]" : "text-[#c9b4a6]",
                 ].join(" ")}
               >
-                {shortBandLabel(name)}
+                {shortBandLabel(name, copy)}
               </span>
               <svg
                 viewBox="0 0 10 6"

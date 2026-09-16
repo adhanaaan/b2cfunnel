@@ -7,6 +7,7 @@ import { ReferenceIcons } from "./ReferenceIcons";
 import { ResultOverlay } from "./ResultOverlay";
 import { useResult } from "./useResult";
 import { IconList, genRandomIconList } from "./utils";
+import { useCopy } from "@/components/LanguageContext";
 
 /**
  * Symbol-matching round, ported faithfully from recognaizelite (default look).
@@ -26,6 +27,7 @@ export const Task2Game: React.FC<{
   children,
   background = "radial-gradient(#E4E3FF78, #D68DE878)",
 }) => {
+  const c = useCopy().screens.symbolMatch;
   const [refreshKey, updateRefreshKey] = useState(1);
   const [activeEle, setActiveEle] = useState(7);
   const { result, setResult, resetResult } = useResult();
@@ -83,7 +85,7 @@ export const Task2Game: React.FC<{
             exit={{ left: -200, height: "25%", width: "25%" }}
             className="absolute inset-y-0 my-auto animate-shake"
             src={`/images/task-2/${IconList[activeEle]}`}
-            alt="Match this symbol"
+            alt={c.symbolAlt}
           />
         </AnimatePresence>
       </div>

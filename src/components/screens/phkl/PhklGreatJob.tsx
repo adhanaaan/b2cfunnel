@@ -4,8 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { dur, ease, springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "@/components/screens/event3/Event3Shell";
-import { arcCopyFor } from "@/config/copy";
-import { useVariant } from "@/components/VariantContext";
+import { useArcCopy } from "@/components/LanguageContext";
 
 /** The five symbols that take a bow (Figma "07 Great job"), in the design's order. */
 const SYMBOLS = ["star", "sun", "moon", "flash", "setting"] as const;
@@ -32,7 +31,7 @@ const symbol = {
  * fire NEXT twice. Under reduced motion nothing loops and the hold is shorter.
  */
 export function PhklGreatJob({ onDone }: { onDone: () => void }) {
-  const c = arcCopyFor(useVariant()).greatJob;
+  const c = useArcCopy().greatJob;
   const reduced = useReducedMotion();
   const [leaving, setLeaving] = useState(false);
   const leavingRef = useRef(false);

@@ -4,9 +4,15 @@ import type {
   IhhseaCopy,
   MambacaresCopy,
   PhklArcCopy,
+  PhklReportSharedCopy,
+  SiloamCopy,
 } from "@/types/copy";
 import type { QuizVariant } from "@/types/funnel";
+import type { Language } from "@/config/language";
+import { COPY_BY_LANGUAGE } from "@/config/copy.translations";
 import { usesMambaScreens } from "@/config/variants";
+import { deepMerge } from "@/lib/deepMerge";
+import { STAT_CARDS_BY_ID } from "@/config/statCards";
 
 /**
  * ALL user-facing copy lives here. British English. Working titles per build
@@ -60,6 +66,8 @@ const DAYLIGHT_SPLASH: CopyConfig["screens"]["event3"]["splash"] = {
     "(Required) I agree to be contacted about my results and prize.",
   consentRequiredError:
     "Please agree to be contacted so we can send you your results.",
+  nameError: "Please enter your name.",
+  emailError: "Please enter a valid email address.",
   consentMarketing: "Send me occasional brain health tips and updates.",
   privacyLinkLabel: "Privacy Policy",
   privacyHref: "/privacy-policy",
@@ -153,6 +161,7 @@ const PHKL_ARC_COPY: PhklArcCopy = {
       noFactors:
         "No notable lifestyle or biomedical factors stood out in your answers.",
       goodNews: "The good news is",
+      sourceLabel: "Source:",
     },
   },
 };
@@ -365,6 +374,125 @@ const MAMBACARES_SCREEN_COPY: MambacaresCopy = {
   },
 };
 
+/**
+ * The three parts of the PHKL report that every event on that arc draws with
+ * the same components: what processing speed is, how much of the brain is
+ * still uncovered, and the close.
+ *
+ * Two events read them today - /phkl and the Siloam Neuroscience Summit - and
+ * both open with the same words. As with PHKL_ARC_COPY, the block is SPREAD
+ * into each event rather than read from here by the screens, so either event
+ * can override any one section without touching the other's.
+ */
+const PHKL_REPORT_SHARED: PhklReportSharedCopy = {
+  speed: {
+    headingParts: [
+      "Processing speed is ",
+      "how fast",
+      " your brain ",
+      "takes in",
+      " what it sees and ",
+      "responds",
+      ".",
+    ],
+    intro: "With high processing speed, you can:",
+  },
+  baseline: {
+    eyebrow: "Your baseline so far",
+    heading: "You've only covered",
+    headingHighlight: "2 out of 5",
+    cardLabel: "Your baseline",
+    cardProgress: "2 of 5 done",
+    axes: ["Speed", "Memory", "Attention", "Executive", "Risk Safety"],
+    paragraphs: [
+      "The speed game and your quiz answers gave us two axes, speed and risk.",
+      "But your brain doesn't work on two dimensions. Memory, attention and executive function each tell a different story, and you can score well on one while struggling with another.",
+      "The full test fills in the rest, so your recommendations match how your brain actually performs.",
+    ],
+  },
+  wrapUp: {
+    quoteParts: [
+      "Tomorrow's meeting is a tough one, and if I don't have my attention covered, I can't perform well. Thanks to checking my brain, I'm aware of how to optimise it now. Glad I found ",
+      "ReCOGnAIze",
+      "!",
+    ],
+    attributionAgeBand: "30-39",
+    attribution: "Chelsea, aged 30 to 39",
+    attributionPeer: "Chelsea, aged 30 to 39 like you",
+    thinkingHeading: "Still need time to think?",
+    thinkingBody: [
+      "Your score is already in your inbox, along with a short set of strategies for pushing it up.",
+      "When you're ready to test the remaining three brain domains, you know where we are.",
+    ],
+    credit:
+      "Built on clinical research by Nanyang Technological University, LKC Medicine, Dementia Research Centre Singapore.",
+  },
+};
+
+/**
+ * Siloam Neuroscience Summit (/siloamneurosciencesummit), in English. The
+ * Bahasa Indonesia rendering of every string below is in config/copy.id.ts,
+ * and is applied over this block by `copyFor()`.
+ *
+ * The arc is /phkl's, so the primers, the header and the risk section are the
+ * shared arc's words. Two things are this event's own:
+ *
+ * - The landing is #MambaCares': the plain two-row consent at the roomier
+ *   size, with no partner block. It links a policy written for THIS route, so
+ *   the wording can move to Indonesia's Personal Data Protection Law without
+ *   touching the Singapore policy every other event links.
+ * - The report closes on NTU Homecoming's call to action - the ReCOGnAIze
+ *   assessment, and the team at the booth - rather than on a bookable package.
+ *   There is no Indonesian booking link to send anyone to, and a button that
+ *   opens the Malaysian form would be worse than no button at all.
+ */
+const SILOAM_SCREEN_COPY: SiloamCopy = {
+  ...PHKL_ARC_COPY,
+  splash: {
+    ...NO_PARTNER_SPLASH,
+    privacyHref: "/siloamneurosciencesummit/privacy-policy",
+    // Sits above the two-option picker on the landing. Written in both
+    // languages at once, so it reads to whoever is holding the phone before
+    // they have chosen anything.
+    languageLabel: "Language · Bahasa",
+  },
+  report: {
+    ...PHKL_ARC_COPY.report,
+    ...PHKL_REPORT_SHARED,
+    sticky: {
+      talk: "Speak to our team",
+    },
+    // AWAITING THE INDONESIAN FIGURE. Until it lands this is the GLOBAL
+    // Lancet number, which is true in Indonesia as everywhere else - so the
+    // report is correct on the day the route goes up rather than quoting a
+    // country it is not being read in. Replace here and in config/copy.id.ts
+    // (both languages, or the summit reads one figure in English and another
+    // in Bahasa Indonesia).
+    stat: {
+      stat: "About 45%",
+      body: "of dementia cases worldwide could be prevented or delayed by addressing the modifiable risk factors across a person's life.",
+      source: "2024 Lancet Commission on Dementia Prevention",
+    },
+    // NTU Homecoming's close, word for word (COPY.screens.event2.closing).
+    offer: {
+      eyebrow: "Your next step",
+      heading: "Ready for the full picture?",
+      body: "Your Brain Health Score and recommendations are on their way to your inbox. Today's quiz estimates your risk profile; the ReCOGnAIze assessment shows how your brain is actually performing.",
+      reassurance:
+        "Whatever your score today, most of the factors behind it can change. That is the point of checking early.",
+      offerName: "ReCOGnAIze brain health assessment",
+      offerPoints: [
+        "Developed at NTU's Dementia Research Centre",
+        "Registered with Singapore's HSA",
+        "Results reviewed with a medical professional",
+      ],
+      cta: "Speak to our team at the booth",
+      credibility:
+        "Built with NTU's Dementia Research Centre · 2024 Lancet Commission",
+    },
+  },
+};
+
 export const COPY: CopyConfig = {
   screens: {
     hook: {
@@ -561,6 +689,34 @@ export const COPY: CopyConfig = {
         "Game placeholder: your symbol-matching game will drop in here.",
       cta: "Continue to the leaderboard",
     },
+    // The Reaction Time Challenge itself. Lifted out of the game components so
+    // the whole arc can be read in one language; nothing here affects timing
+    // or scoring.
+    symbolMatch: {
+      getReady: "Get ready",
+      challengeName: "Reaction Time Challenge",
+      readyLine: "Match {count} symbols as fast as you can. Ready…",
+      go: "GO!",
+      timeLabel: "Time",
+      soundOn: "Turn sound on",
+      soundOff: "Turn sound off",
+      symbolAlt: "Match this symbol",
+      tour: {
+        focusSymbol: "Focus on the symbol at the top of the screen.",
+        findMatch:
+          "Look for the matching symbol and its number. Here, it is {number}.",
+        tapNumber: 'Tap "{number}" in the number pad below.',
+        orderChanges:
+          "Be careful, the order of the symbols can change after every turn.",
+        tryYourself: "Now try the next few rounds yourself!",
+        startPractice: "Start practice",
+        practiceLabel: "Practice",
+        demoLabel: "Demo",
+        completeHeading: "Great!\nNow it's time to take the challenge.",
+        completeStart: "Start",
+        completeRetry: "Try again",
+      },
+    },
     leaderboard: {
       eyebrow: "Event leaderboard",
       heading: "Fastest minds",
@@ -727,6 +883,10 @@ export const COPY: CopyConfig = {
         text: "I scored {time} on the Brain Health Reaction Challenge",
         rankLine: "Rank {rank}/{total}",
         cta: "Can you beat my score? Try it for yourself here:",
+        shared: "Shared.",
+        downloaded: "Card saved. The caption is on your clipboard.",
+        copied: "Copied to your clipboard.",
+        unavailable: "Sharing is not available here.",
       },
       speedPopup: {
         eyebrow: "What that actually means",
@@ -815,33 +975,9 @@ export const COPY: CopyConfig = {
       },
       report: {
         ...PHKL_ARC_COPY.report,
+        ...PHKL_REPORT_SHARED,
         sticky: {
           book: "Book memory screening",
-        },
-        speed: {
-          headingParts: [
-            "Processing speed is ",
-            "how fast",
-            " your brain ",
-            "takes in",
-            " what it sees and ",
-            "responds",
-            ".",
-          ],
-          intro: "With high processing speed, you can:",
-        },
-        baseline: {
-          eyebrow: "Your baseline so far",
-          heading: "You've only covered",
-          headingHighlight: "2 out of 5",
-          cardLabel: "Your baseline",
-          cardProgress: "2 of 5 done",
-          axes: ["Speed", "Memory", "Attention", "Executive", "Risk Safety"],
-          paragraphs: [
-            "The speed game and your quiz answers gave us two axes, speed and risk.",
-            "But your brain doesn't work on two dimensions. Memory, attention and executive function each tell a different story, and you can score well on one while struggling with another.",
-            "The full test fills in the rest, so your recommendations match how your brain actually performs.",
-          ],
         },
         offer: {
           eyebrow: "What to do now?",
@@ -892,26 +1028,10 @@ export const COPY: CopyConfig = {
             "MBBS, FAMS (Neurology), FRCP (Edin)",
           ],
         },
-        wrapUp: {
-          quoteParts: [
-            "Tomorrow's meeting is a tough one, and if I don't have my attention covered, I can't perform well. Thanks to checking my brain, I'm aware of how to optimise it now. Glad I found ",
-            "ReCOGnAIze",
-            "!",
-          ],
-          attributionAgeBand: "30-39",
-          attribution: "Chelsea, aged 30 to 39",
-          attributionPeer: "Chelsea, aged 30 to 39 like you",
-          thinkingHeading: "Still need time to think?",
-          thinkingBody: [
-            "Your score is already in your inbox, along with a short set of strategies for pushing it up.",
-            "When you're ready to test the remaining three brain domains, you know where we are.",
-          ],
-          credit:
-            "Built on clinical research by Nanyang Technological University, LKC Medicine, Dementia Research Centre Singapore.",
-        },
       },
     },
     mambacares: MAMBACARES_SCREEN_COPY,
+    siloam: SILOAM_SCREEN_COPY,
     // GMS x Urban Milers (/urbanmilers): the same run's arc, word for word,
     // with this event named where the words name the event that is hosting it.
     // Its own block so a change to either run's wording cannot reach the
@@ -1015,8 +1135,39 @@ export const COPY: CopyConfig = {
     high: "High risk",
   },
 
+  bandShortLabels: {
+    low: "Low",
+    moderate: "Moderate",
+    elevated: "Elevated",
+    high: "High",
+  },
+
   factorLabels: FACTOR_LABELS,
 };
+
+/**
+ * The whole copy config in a given language.
+ *
+ * English is the base and is returned AS THE SAME OBJECT, not as a copy of it:
+ * every English-only event gets `COPY` itself, so this layer cannot change
+ * what any of them render. Bahasa Indonesia is `COPY` with the overlay in
+ * config/copy.id.ts applied over it, which means a string that has not been
+ * translated yet falls back to the English one rather than to a blank.
+ *
+ * Memoised per language, so the merge runs once rather than on every render.
+ * `variant` is taken but not read today: it is there so a later event can be
+ * given a language of its own without every call site changing.
+ */
+const copyCache = new Map<Language, CopyConfig>();
+
+export function copyFor(_variant: QuizVariant, language: Language): CopyConfig {
+  if (language === "en") return COPY;
+  const cached = copyCache.get(language);
+  if (cached) return cached;
+  const merged = deepMerge(COPY, COPY_BY_LANGUAGE[language]);
+  copyCache.set(language, merged);
+  return merged;
+}
 
 /**
  * The words for whichever community run is being walked.
@@ -1025,21 +1176,67 @@ export const COPY: CopyConfig = {
  * reads its wording through here rather than through `COPY.screens.mambacares`
  * by name. Defaults to #MambaCares, which is what the /event-v7 preview walks.
  */
-export function runCopyFor(variant: QuizVariant): MambacaresCopy {
+export function runCopyFor(
+  variant: QuizVariant,
+  copy: CopyConfig = COPY,
+): MambacaresCopy {
   return variant === "urbanmilers"
-    ? COPY.screens.urbanmilers
-    : COPY.screens.mambacares;
+    ? copy.screens.urbanmilers
+    : copy.screens.mambacares;
 }
 
 /**
  * The arc copy for whichever event is running the shared PHKL screens.
  *
  * The primers, the age question, the great-job beat, the analysing ring, the
- * report header and the risk section are one set of components serving two
+ * report header and the risk section are one set of components serving several
  * events. Each reads its words through here rather than through
  * `COPY.screens.phkl` by name, so changing one event's wording cannot quietly
- * change the other's.
+ * change another's.
+ *
+ * `copy` is the language the player chose (`useCopy()` supplies it). It
+ * defaults to the English config, which is what every English-only event and
+ * every test gets.
  */
-export function arcCopyFor(variant: QuizVariant): PhklArcCopy {
-  return usesMambaScreens(variant) ? runCopyFor(variant) : COPY.screens.phkl;
+export function arcCopyFor(
+  variant: QuizVariant,
+  copy: CopyConfig = COPY,
+): PhklArcCopy {
+  if (usesMambaScreens(variant)) return runCopyFor(variant, copy);
+  return variant === "siloam" ? copy.screens.siloam : copy.screens.phkl;
+}
+
+/**
+ * The statistic the risk section leads with, for the event being walked.
+ *
+ * /phkl and the community runs print the global Lancet card from
+ * config/statCards.ts - the same claim the quiz shows mid-flow, cited once.
+ * The Siloam summit prints its own, so the figure can be Indonesia's the day
+ * that data lands without moving a number every other event quotes.
+ */
+export function reportStatFor(
+  variant: QuizVariant,
+  copy: CopyConfig = COPY,
+): { stat: string; body: string; source: string } {
+  return variant === "siloam"
+    ? copy.screens.siloam.report.stat
+    : STAT_CARDS_BY_ID.lancet2024;
+}
+
+/**
+ * The three report sections /phkl and the Siloam summit draw with the same
+ * components - `PhklSpeedExplainer`, `PhklBaselineCard` and `PhklWrapUp`.
+ *
+ * Same rule as `arcCopyFor`, for the same reason: those components must never
+ * name one event's block, or the summit's report would quietly print Pantai
+ * Hospital's words. The community runs do not reach this - they have report
+ * screens of their own - so /phkl is the fallback.
+ */
+export function phklReportFor(
+  variant: QuizVariant,
+  copy: CopyConfig = COPY,
+): PhklReportSharedCopy {
+  return variant === "siloam"
+    ? copy.screens.siloam.report
+    : copy.screens.phkl.report;
 }

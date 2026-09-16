@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { animate, motion, useReducedMotion } from "framer-motion";
-import { firstName, formatTime, ordinal } from "@/lib/format";
+import { firstName, formatTime, ordinalFor } from "@/lib/format";
 import { springs, stagger } from "@/lib/motion";
 import { RetryIcon, ShareIcon } from "@/components/screens/event3/icons";
 import {
@@ -10,8 +10,7 @@ import {
   emberTextGradient,
 } from "@/components/screens/event3/ui";
 import type { Standing } from "@/components/screens/event3/useStanding";
-import { arcCopyFor } from "@/config/copy";
-import { useVariant } from "@/components/VariantContext";
+import { useArcCopy, useLanguage } from "@/components/LanguageContext";
 
 interface PhklResultHeaderProps {
   name?: string;
@@ -47,7 +46,8 @@ export function PhklResultHeader({
   share,
   onRetry,
 }: PhklResultHeaderProps) {
-  const c = arcCopyFor(useVariant()).report.header;
+  const c = useArcCopy().report.header;
+  const language = useLanguage();
   const reduced = useReducedMotion();
   const [display, setDisplay] = useState(reduced ? (timeMs ?? 0) : 0);
   const [countDone, setCountDone] = useState(!!reduced);
@@ -81,7 +81,7 @@ export function PhklResultHeader({
   const heading = (first
     ? c.heading.replace("{name}", first)
     : c.headingAnonymous
-  ).replace("{ordinal}", ordinal(attempts ?? 1));
+  ).replace("{ordinal}", ordinalFor(attempts ?? 1, language));
 
   return (
     <motion.section

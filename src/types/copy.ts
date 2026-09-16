@@ -106,6 +106,49 @@ export interface GameCopy {
   cta: string;
 }
 
+/**
+ * The Reaction Time Challenge itself: the countdown, the HUD and the guided
+ * tour that runs before the timed round.
+ *
+ * These were literals inside the game components until the Siloam summit
+ * needed the whole arc in Bahasa Indonesia. They are here so the game can be
+ * translated with everything else; nothing about how it is scored or timed
+ * reads from this block.
+ */
+export interface SymbolMatchCopy {
+  /** The countdown's eyebrow, on the warm (event2/daylight) theme. */
+  getReady: string;
+  /** The cold theme's eyebrow. */
+  challengeName: string;
+  /** "Match {count} symbols as fast as you can. Ready…" */
+  readyLine: string;
+  /** The last beat of the countdown, in place of a number. */
+  go: string;
+  /** The HUD's label over the running clock. */
+  timeLabel: string;
+  soundOn: string; // aria-label when sound is off
+  soundOff: string; // aria-label when sound is on
+  symbolAlt: string; // alt text on the symbol to be matched
+  /** The guided tour, step by step. */
+  tour: {
+    focusSymbol: string;
+    /** Contains {number} - the answer the tour walks through. */
+    findMatch: string;
+    /** Contains {number}. */
+    tapNumber: string;
+    orderChanges: string;
+    tryYourself: string;
+    startPractice: string;
+    /** The two chips over the practice board during the tour. */
+    practiceLabel: string;
+    demoLabel: string;
+    /** The final card, before the timed round. */
+    completeHeading: string;
+    completeStart: string;
+    completeRetry: string;
+  };
+}
+
 export interface LeaderboardCopy {
   eyebrow: string;
   heading: string;
@@ -241,6 +284,9 @@ export interface Event3Copy {
     // to reach the prize winner); the second is a separate marketing opt-in.
     consentRequired: string;
     consentRequiredError: string;
+    /** Shown when the two fields above the consents are empty or malformed. */
+    nameError: string;
+    emailError: string;
     consentMarketing: string;
     privacyLinkLabel: string;
     // Where the privacy link goes. Each event links the policy written for it:
@@ -302,6 +348,11 @@ export interface Event3Copy {
     text: string; // contains {time}
     rankLine: string; // contains {rank} and {total}; dropped if rank is unknown
     cta: string;
+    /** What the share button reports back, one line per rung of the ladder. */
+    shared: string;
+    downloaded: string;
+    copied: string;
+    unavailable: string;
   };
   // The "?" popup: what processing speed actually means.
   speedPopup: {
@@ -381,6 +432,8 @@ export interface ScreenCopy {
   paywall: PaywallCopy;
   booking: BookingCopy;
   game: GameCopy;
+  // The reaction game's own screens: countdown, HUD and guided tour.
+  symbolMatch: SymbolMatchCopy;
   leaderboard: LeaderboardCopy;
   eventHook: EventHookCopy;
   consult: ConsultCopy;
@@ -400,6 +453,9 @@ export interface ScreenCopy {
   // its own, so the same shape - a block of its own so either run's wording can
   // be changed without touching the other's.
   urbanmilers: MambacaresCopy;
+  // Siloam Neuroscience Summit (/siloamneurosciencesummit): the PHKL arc with
+  // the #MambaCares landing and the NTU Homecoming close.
+  siloam: SiloamCopy;
 }
 
 /**
@@ -482,7 +538,52 @@ export interface PhklArcCopy {
       factorsLeadAnonymous: string;
       noFactors: string;
       goodNews: string;
+      /** Precedes the statistic's citation, e.g. "Source: ...". */
+      sourceLabel: string;
     };
+  };
+}
+
+/**
+ * The three parts of the PHKL report that every event on that arc draws with
+ * the SAME components - `PhklSpeedExplainer`, `PhklBaselineCard` and
+ * `PhklWrapUp`. /phkl and the Siloam Neuroscience Summit both fill this in,
+ * and those components read whichever event is running (`phklReportFor` in
+ * config/copy.ts) rather than one event's block by name.
+ *
+ * What sits between the baseline and the wrap-up is NOT here, because that is
+ * exactly where the two events part: /phkl ends on the Memory Screening
+ * Package, Siloam on the NTU Homecoming call to action, and each has its own
+ * component for it.
+ */
+export interface PhklReportSharedCopy {
+  speed: {
+    // Fragments alternate plain/serif-italic, starting plain.
+    headingParts: string[];
+    intro: string;
+    // The three perks are the event3 speed popup's.
+  };
+  baseline: {
+    eyebrow: string;
+    // The highlight ("2 out of 5") takes the rank gradient.
+    heading: string;
+    headingHighlight: string;
+    cardLabel: string;
+    cardProgress: string;
+    axes: [string, string, string, string, string];
+    paragraphs: string[];
+  };
+  wrapUp: {
+    // Fragments alternate plain/serif-italic, starting plain.
+    quoteParts: string[];
+    // Chelsea's own age band, as an `age` option id, and the two ways of
+    // crediting her: the plain one, and "like you" for a player in that band.
+    attributionAgeBand: string;
+    attribution: string;
+    attributionPeer: string;
+    thinkingHeading: string;
+    thinkingBody: string[];
+    credit: string;
   };
 }
 
@@ -493,26 +594,11 @@ export interface PhklArcCopy {
 // is this event's own.
 export interface PhklCopy extends PhklArcCopy {
   splash: IhhseaCopy["splash"];
-  report: PhklArcCopy["report"] & {
+  report: PhklArcCopy["report"] &
+    PhklReportSharedCopy & {
     // The one button pinned to the bottom of the screen for the whole report.
     sticky: {
       book: string;
-    };
-    speed: {
-      // Fragments alternate plain/serif-italic, starting plain.
-      headingParts: string[];
-      intro: string;
-      // The three perks are the event3 speed popup's.
-    };
-    baseline: {
-      eyebrow: string;
-      // The highlight ("2 out of 5") takes the rank gradient.
-      heading: string;
-      headingHighlight: string;
-      cardLabel: string;
-      cardProgress: string;
-      axes: [string, string, string, string, string];
-      paragraphs: string[];
     };
     offer: {
       eyebrow: string;
@@ -541,19 +627,67 @@ export interface PhklCopy extends PhklArcCopy {
       quoteName: string;
       quoteRole: string[];
     };
-    wrapUp: {
-      // Fragments alternate plain/serif-italic, starting plain.
-      quoteParts: string[];
-      // Chelsea's own age band, as an `age` option id, and the two ways of
-      // crediting her: the plain one, and "like you" for a player in that band.
-      attributionAgeBand: string;
-      attribution: string;
-      attributionPeer: string;
-      thinkingHeading: string;
-      thinkingBody: string[];
-      credit: string;
-    };
   };
+}
+
+/**
+ * Siloam Neuroscience Summit (/siloamneurosciencesummit): the PHKL arc with
+ * two deliberate substitutions and one addition.
+ *
+ * - The landing is #MambaCares': the plain two-row consent at the roomier
+ *   size, with no partner block. Its wording is written against Indonesia's
+ *   Personal Data Protection Law and is the partner's to confirm.
+ * - The report closes on the NTU Homecoming call to action - the ReCOGnAIze
+ *   assessment and the team at the booth - rather than on a bookable screening
+ *   package, because there is no Indonesian booking link to send anyone to.
+ * - The landing offers a language, so its block carries the picker's label.
+ *
+ * Everything between those - the primers, the header, the risk section, what
+ * processing speed is, the baseline and the wrap-up - is the arc's, and reads
+ * exactly as /phkl's does.
+ */
+export interface SiloamCopy extends PhklArcCopy {
+  // No partner runs this event, so the landing is the plain daylight one, plus
+  // the label above the language picker.
+  splash: Event3Copy["splash"] & { languageLabel: string };
+  report: PhklArcCopy["report"] &
+    PhklReportSharedCopy & {
+      // The one button pinned to the bottom of the screen for the whole
+      // report. It scrolls to the offer rather than opening a booking form:
+      // this event closes at a booth, not at a checkout.
+      sticky: {
+        talk: string;
+      };
+      /**
+       * The headline statistic in the risk section.
+       *
+       * /phkl prints the global Lancet card straight from config/statCards.ts.
+       * The summit prints THIS one instead, so the figure can be Indonesia's
+       * the day that data lands, in one edit per language, without moving a
+       * number every other event quotes.
+       */
+      stat: {
+        stat: string;
+        body: string;
+        source: string;
+      };
+      /**
+       * The close, in NTU Homecoming's words (COPY.screens.event2.closing):
+       * the ReCOGnAIze assessment as the next step, and the team at the booth
+       * to take it from there. No price, no booking link, nothing to click
+       * through to.
+       */
+      offer: {
+        eyebrow: string;
+        heading: string;
+        body: string;
+        reassurance: string;
+        offerName: string;
+        offerPoints: string[];
+        cta: string;
+        credibility: string;
+      };
+    };
 }
 
 // A community run on the PHKL arc (/mambacares, /urbanmilers): the same arc
@@ -730,5 +864,14 @@ export interface CopyConfig {
   // user's reported modifiable risk factors.
   resultBlurbs: Record<BandName, string>;
   bandLabels: Record<BandName, string>;
+  /**
+   * The band on its own, for the risk meter's four segments - "Moderate"
+   * rather than "Moderate risk".
+   *
+   * Its own field rather than `bandLabels` with the word "risk" stripped off
+   * the end: that only works in a language that puts it there, and Bahasa
+   * Indonesia puts it first ("Risiko sedang").
+   */
+  bandShortLabels: Record<BandName, string>;
   factorLabels: Record<string, string>;
 }

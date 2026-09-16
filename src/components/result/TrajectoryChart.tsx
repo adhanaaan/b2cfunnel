@@ -1,6 +1,6 @@
 "use client";
 
-import { COPY } from "@/config/copy";
+import { useCopy } from "@/components/LanguageContext";
 
 /**
  * Two illustrative curves of thinking speed with age: one where the modifiable
@@ -50,7 +50,7 @@ function LineKey({ dashed }: { dashed: boolean }) {
 }
 
 export function TrajectoryChart() {
-  const c = COPY.screens.event2.report.chart;
+  const c = useCopy().screens.event2.report.chart;
 
   return (
     <section className="rounded-2xl bg-surface-lowest p-5 shadow-card">

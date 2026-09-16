@@ -7,8 +7,7 @@ import { ease, springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "@/components/screens/event3/Event3Shell";
 import { ctaPrimaryClass } from "@/components/screens/event3/ui";
 import { PhklProgressRail } from "./PhklProgressRail";
-import { arcCopyFor } from "@/config/copy";
-import { useVariant } from "@/components/VariantContext";
+import { useArcCopy } from "@/components/LanguageContext";
 
 const item = {
   hidden: { opacity: 0, y: 16 },
@@ -101,7 +100,7 @@ export function PhklQuizIntro({
   name?: string;
   onContinue: () => void;
 }) {
-  const c = arcCopyFor(useVariant()).quizIntro;
+  const c = useArcCopy().quizIntro;
   const reduced = useReducedMotion();
   const first = firstName(name);
   const heading = first

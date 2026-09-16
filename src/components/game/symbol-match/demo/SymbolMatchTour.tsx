@@ -7,6 +7,8 @@ import { Demo } from "./Demo";
 import { DemoProvider } from "./DemoContext";
 import { HandIcon } from "./icons";
 import { demoNextStep, type DemoStep } from "./types";
+import type { SymbolMatchCopy } from "@/types/copy";
+import { useCopy } from "@/components/LanguageContext";
 
 const COLORS = {
   color: "#630092",
@@ -26,14 +28,22 @@ const WARM_COLORS = {
   arrow2: "#f7d2c1",
 };
 
-function steps(hideBack: boolean): DemoStep[] {
+/**
+ * The number the tour walks the player through. It is fixed - `resetSkipShuffle`
+ * pins the deal so that "7" really is the answer during the demo - and it is
+ * threaded into the copy rather than written into it, so a translation states
+ * the same number without having to be trusted to.
+ */
+const TOUR_ANSWER = "7";
+
+function steps(hideBack: boolean, c: SymbolMatchCopy["tour"]): DemoStep[] {
   return [
     {
       elements: [
         {
           id: "sb-main-icon",
           className: "scale-105",
-          instruction: "Focus on the symbol at the top of the screen.",
+          instruction: c.focusSymbol,
         },
       ],
       delay: 400,
@@ -44,8 +54,7 @@ function steps(hideBack: boolean): DemoStep[] {
           id: "sb-reference-icon-7",
           className: "scale-125",
           side: "top",
-          instruction:
-            "Look for the matching symbol and its number. Here, it is 7.",
+          instruction: c.findMatch.replace("{number}", TOUR_ANSWER),
         },
       ],
     },
@@ -56,7 +65,7 @@ function steps(hideBack: boolean): DemoStep[] {
           side: "top",
           className: "scale-125 rounded-full",
           instructionClassName: "mb-8",
-          instruction: 'Tap "7" in the number pad below.',
+          instruction: c.tapNumber.replace("{number}", TOUR_ANSWER),
           showPreviousBtn: !hideBack,
           showNextBtn: false,
           arrow: false,
@@ -82,8 +91,7 @@ function steps(hideBack: boolean): DemoStep[] {
         {
           id: "sb-reference-icons",
           side: "top",
-          instruction:
-            "Be careful, the order of the symbols can change after every turn.",
+          instruction: c.orderChanges,
           showPreviousBtn: false,
         },
       ],
@@ -94,9 +102,9 @@ function steps(hideBack: boolean): DemoStep[] {
         {
           id: "demo-center",
           instructionClassName: "-translate-y-1/2",
-          instruction: "Now try the next few rounds yourself!",
+          instruction: c.tryYourself,
           arrow: false,
-          texts: { next: "Start practice" },
+          texts: { next: c.startPractice },
         },
       ],
     },
@@ -116,6 +124,7 @@ export function SymbolMatchTour({
   /** "warm" swaps the lavender backdrop for the brand light orange. */
   theme?: "default" | "warm";
 }) {
+  const c = useCopy().screens.symbolMatch;
   const [runKey, setRunKey] = useState(0);
   const score = useRef(-1);
 
@@ -149,8 +158,14 @@ export function SymbolMatchTour({
       <DemoProvider
         value={{
           title: "Symbol Matching",
-          steps: steps(hideBack),
-          texts: {},
+          steps: steps(hideBack, c.tour),
+          // The final card's two buttons and its heading ride along in the
+          // context, so DemoComplete can read them without a hook of its own.
+          texts: {
+            completeHeading: c.tour.completeHeading,
+            completeStart: c.tour.completeStart,
+            completeRetry: c.tour.completeRetry,
+          },
           colors: warm ? WARM_COLORS : COLORS,
           onComplete: onDone,
         }}
@@ -172,7 +187,7 @@ export function SymbolMatchTour({
                 warm ? "text-charcoal" : "text-[#630092]",
               ].join(" ")}
             >
-              Practice
+              {c.tour.practiceLabel}
             </span>
             <span
               className={[
@@ -182,7 +197,7 @@ export function SymbolMatchTour({
                   : "border-[#3A3A3A] text-[#3A3A3A]",
               ].join(" ")}
             >
-              Demo
+              {c.tour.demoLabel}
             </span>
           </div>
         </Task2Game>

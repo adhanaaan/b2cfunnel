@@ -9,6 +9,7 @@ import {
   NTU_HOMECOMING_SOURCE,
   PHKL_SOURCE,
   ROTARY_SOURCE,
+  SILOAM_SOURCE,
   URBANMILERS_SOURCE,
   eventSource,
 } from "@/config/event";
@@ -300,6 +301,7 @@ describe("mambacares leaderboard source", () => {
       IHH_SOURCE,
       PHKL_SOURCE,
       URBANMILERS_SOURCE,
+      SILOAM_SOURCE,
     ]) {
       expect(MAMBACARES_SOURCE).not.toBe(other);
     }
@@ -324,6 +326,7 @@ describe("mambacares leaderboard source", () => {
       "ihh",
       "phkl",
       "urbanmilers",
+      "siloam",
     ];
     for (const variant of others) {
       expect(eventSource(variant)).not.toBe(MAMBACARES_SOURCE);
@@ -358,6 +361,7 @@ describe("urbanmilers leaderboard source", () => {
       IHH_SOURCE,
       PHKL_SOURCE,
       MAMBACARES_SOURCE,
+      SILOAM_SOURCE,
     ]) {
       expect(URBANMILERS_SOURCE).not.toBe(other);
     }
@@ -382,6 +386,7 @@ describe("urbanmilers leaderboard source", () => {
       "ihh",
       "phkl",
       "mambacares",
+      "siloam",
     ];
     for (const variant of others) {
       expect(eventSource(variant)).not.toBe(URBANMILERS_SOURCE);

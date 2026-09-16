@@ -344,6 +344,25 @@ const MAMBACARES_FLOW: FunnelStep[] = PHKL_FLOW;
 const URBANMILERS_FLOW: FunnelStep[] = MAMBACARES_FLOW;
 
 /**
+ * Siloam Neuroscience Summit (/siloamneurosciencesummit): the /phkl arc,
+ * shared rather than rebuilt, the same way the two community runs share it.
+ *
+ * This event differs in the bucket its rows are tagged with, the board that
+ * reads it, the language it can be taken in and the words on its report -
+ * none of which is a step - so the step sequence, and with it the question set
+ * and achievableAxisMax, is PHKL's exactly. Sharing the array is what keeps it
+ * that way: an Indonesian score cannot drift off the /100 scale every score
+ * already recorded sits on, and a later change to the arc reaches this event
+ * too.
+ *
+ * The language choice is deliberately NOT a step. It is offered on the landing
+ * and carried in a context (see components/LanguageContext.tsx), so switching
+ * language never moves the cursor, never re-asks a question, and never changes
+ * what is scored.
+ */
+const SILOAM_FLOW: FunnelStep[] = PHKL_FLOW;
+
+/**
  * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
  * so the split-tick treatment of the partner consents (one box per clause) can
  * still be walked through and compared against the single tick that v3 ships.
@@ -401,6 +420,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   phkl: PHKL_FLOW,
   mambacares: MAMBACARES_FLOW,
   urbanmilers: URBANMILERS_FLOW,
+  siloam: SILOAM_FLOW,
   event6: EVENT6_FLOW,
   event7: EVENT7_FLOW,
 };
