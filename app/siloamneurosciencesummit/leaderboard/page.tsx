@@ -40,7 +40,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 import { displayName, formatTime } from "@/lib/format";
 import { SILOAM_PAUSED, SILOAM_SOURCE } from "@/config/event";
-import { SILOAM_PRIZE } from "@/config/siloam";
+import {
+  SILOAM_PODIUM_N,
+  SILOAM_PRIZE,
+  SILOAM_PRIZE_HEADLINE,
+} from "@/config/siloam";
 import { playUrlFor } from "@/config/eventLinks";
 import { BRAIN_FACTS } from "@/config/tips";
 import { springs } from "@/lib/motion";
@@ -53,8 +57,12 @@ interface Entry {
 
 /** Six rows, as the design lays out (739:10648-739:10653). */
 const TOP_N = 6;
-/** The prize goes three deep, so three rows ride the gradient. */
-const PODIUM_N = 3;
+/**
+ * The prize goes three deep, so three rows ride the gradient - read from the
+ * prize ladder itself (config/siloam.ts) rather than written again here, so
+ * the podium and the prize cannot promise different depths.
+ */
+const PODIUM_N = SILOAM_PODIUM_N;
 const POLL_MS = 8000;
 const FACT_MS = 8000;
 
@@ -110,9 +118,34 @@ const STRIP_BG = "rgba(255, 255, 255, 0.72)";
  */
 const QR_IMAGE = "/images/siloam/qr.png";
 const PRIZE_IMAGE = "/images/siloam/prize-grab.png";
-const COUPON_IMAGE = "/images/siloam/prize-coupon.png";
+const VOUCHER_IMAGE = "/images/siloam/prize-voucher.png";
+
+/**
+ * The gift render /phkl already ships, used while this event's own export has
+ * not landed. It is the same artwork the design places (892:7176), and its
+ * 738x882 fills the design's 369x441 box exactly - that box was sized for it.
+ * Swap it by dropping a file at PRIZE_IMAGE; nothing else changes.
+ */
+const PRIZE_IMAGE_FALLBACK = "/images/phkl/prize-grab.png";
 
 const keyOf = (e: Entry) => `${e.name}·${Math.round(e.timeMs)}`;
+
+/**
+ * The gift render's box, shared by the uploaded artwork and the /phkl render
+ * that stands in for it. One constant rather than two class lists: the
+ * fallback has to occupy exactly the same box, or the panel reflows the moment
+ * this event's own export lands.
+ */
+const PRIZE_ART_CLASS =
+  "animate-symbol-drift pointer-events-none absolute right-[-3%] top-[-6%] h-[112%] w-auto object-contain board:left-[calc(var(--u)*458)] board:right-auto board:top-[calc(var(--u)*-52)] board:h-[calc(var(--u)*441)] board:w-[calc(var(--u)*369)]";
+
+const PRIZE_ART_DRIFT = {
+  ["--drift-y" as string]: "-12px",
+  ["--drift-x" as string]: "0px",
+  ["--drift-tilt" as string]: "0deg",
+  ["--drift-tilt-to" as string]: "0deg",
+  ["--drift-duration" as string]: "5s",
+};
 
 /* ------------------------------- Masthead ------------------------------- */
 
@@ -401,66 +434,112 @@ function ScanBlock() {
 /* ------------------------------ Prize panel ----------------------------- */
 
 /**
- * The prize (739:10677): an ember panel with the offer, and the Grab gift
- * render breaking out of its top and its right edge the way the design has it
- * (which is why the panel does not clip), with the coupon tucked under its
- * bottom-right corner. The offer runs from 41px in, and the title is set in
- * the design's own three lines - "Win a total of" a size down, then the two
- * lines of the amount - so no font metric can move the break.
+ * One rung of the prize ladder (896:636): a white rank chip, then the amount.
  *
- * The amount is rupiah, and comes from SILOAM_PRIZE rather than from this
- * component: it is a placeholder converted from /phkl's RM 170 and still to be
- * signed off, and it should be changeable without opening the board. The depth
- * ("Top 3") is written from PODIUM_N, for the same reason /mambacares writes
- * its own from TOP_N: the panel must not be able to promise a prize the rows
- * below it do not show.
+ * The chips are one fixed width rather than hugging their text, as the design
+ * sets them - "1ST" is narrower than "2ND" and "3RD", and letting each hug
+ * would stagger the three amounts beside them.
+ */
+function PrizeRow({ rank, label }: { rank: string; label: string }) {
+  return (
+    <li className="flex items-center gap-[calc(var(--u)*13)] board:gap-[calc(var(--u)*19.85)]">
+      <span
+        className="flex shrink-0 items-center justify-center rounded-full bg-white text-center font-extrabold leading-none w-[calc(var(--u)*46)] py-[calc(var(--u)*3)] text-[length:calc(var(--u)*13)] tracking-[0.08em] board:w-[calc(var(--u)*67)] board:py-[calc(var(--u)*4)] board:text-[length:calc(var(--u)*19)]"
+        style={{ color: ORANGE_DEEP }}
+      >
+        {rank}
+      </span>
+      <span className="whitespace-nowrap font-bold leading-[1.1] tracking-[-0.015em] text-cream text-[length:calc(var(--u)*20)] board:text-[length:calc(var(--u)*33.5)]">
+        {label}
+      </span>
+    </li>
+  );
+}
+
+/**
+ * The prize (892:7159): an ember panel carrying the offer, with the Grab
+ * artwork breaking out of its top and its right edge the way the design has it
+ * (which is why the panel does not clip).
+ *
+ * The offer runs from 41px in and the panel reserves its right 383px for that
+ * artwork, which is what keeps the text clear of the gift box rather than
+ * relying on the copy staying short. Inside: the depth, the total, and then
+ * the ladder - 1ST / 2ND / 3RD and what each one wins.
+ *
+ * NOTHING HERE IS A NUMBER. The depth, the three amounts and the total all
+ * come from SILOAM_PRIZE (config/siloam.ts), where the total is summed from
+ * the ladder rather than typed beside it - so the headline cannot promise a
+ * pot the rows underneath it do not add up to, and the eyebrow cannot promise
+ * a depth the standings do not rank.
  */
 function PrizePanel() {
   return (
     <div
-      className="relative flex w-full items-center py-[calc(var(--u)*28)] pl-[calc(var(--u)*28)] pr-[40%] board:mb-[calc(var(--u)*5)] board:h-[calc(var(--u)*422)] board:w-[calc(var(--u)*775)] board:shrink-0 board:self-end board:py-0 board:pl-[calc(var(--u)*41)] board:pr-0"
+      className="relative flex w-full flex-col justify-center py-[calc(var(--u)*28)] pl-[calc(var(--u)*28)] pr-[40%] board:h-[calc(var(--u)*422)] board:w-[calc(var(--u)*775)] board:shrink-0 board:pb-[calc(var(--u)*59)] board:pl-[calc(var(--u)*41)] board:pr-[calc(var(--u)*383)] board:pt-[calc(var(--u)*43)]"
       style={{ background: PRIZE_GRADIENT, borderRadius: u(20) }}
     >
-      <div className="relative z-10 flex min-w-0 flex-col gap-[calc(var(--u)*8)] text-cream board:w-[calc(var(--u)*448)] board:gap-[calc(var(--u)*12.3)]">
-        <p className="text-[length:calc(var(--u)*16)] font-bold uppercase leading-[1.1] tracking-[0.23em] board:text-[length:calc(var(--u)*23.73)]">
+      <div className="relative z-10 flex min-w-0 flex-col gap-[calc(var(--u)*8)] text-cream board:gap-[calc(var(--u)*12.33)]">
+        <p className="text-[length:calc(var(--u)*13)] font-bold uppercase leading-[1.1] tracking-[0.23em] board:text-[length:calc(var(--u)*19.73)]">
           Top {PODIUM_N} fastest minds
         </p>
-        <p className="font-extrabold tracking-[-0.015em] board:whitespace-nowrap">
-          <span className="block text-[length:calc(var(--u)*30)] leading-[1.19] board:text-[length:calc(var(--u)*55.55)]">
-            Win a total of
-          </span>
-          <span className="block text-[length:calc(var(--u)*38)] leading-[1.19] board:text-[length:calc(var(--u)*69.55)]">
-            {SILOAM_PRIZE.lines[0]}
-          </span>
-          <span className="block text-[length:calc(var(--u)*38)] leading-[1.04] board:text-[length:calc(var(--u)*69.55)]">
-            {SILOAM_PRIZE.lines[1]}
-          </span>
+
+        {/* The headline is set in the design's own two lines - "Win a total
+            of" over the amount - so no font metric can move the break.
+
+            Sized at 37px rather than the design's 41px, and that is the
+            adaptation this event needs: the frame was set with "RM 300 Grab
+            Vouchers", and "IDR 600k Grab Vouchers" is a longer string, which
+            at 41px measures 483px against the design's 448px box and wraps to
+            a third line. 37px brings it to 436px, so it holds the designed
+            break at a size indistinguishable from it across a room.
+
+            The box is kept and the line is NOT set nowrap on purpose: a longer
+            amount later should wrap inside the panel rather than run silently
+            under the gift artwork to its right. */}
+        <p className="font-extrabold tracking-[-0.015em] board:w-[calc(var(--u)*448)]">
+          {SILOAM_PRIZE_HEADLINE.map((line) => (
+            <span
+              key={line}
+              className="block text-[length:calc(var(--u)*24)] leading-[1.1] board:text-[length:calc(var(--u)*37)]"
+            >
+              {line}
+            </span>
+          ))}
         </p>
+
+        <ul className="flex flex-col gap-[calc(var(--u)*10)] pt-[calc(var(--u)*8)] board:gap-[calc(var(--u)*14.89)] board:pt-[calc(var(--u)*12.41)]">
+          {SILOAM_PRIZE.ladder.map((tier) => (
+            <PrizeRow key={tier.rank} rank={tier.rank} label={tier.label} />
+          ))}
+        </ul>
       </div>
 
-      {/* The render sits over the panel's right edge, taller than the panel
-          itself - hence the offsets rather than a flow child. In the frame it
-          is 369x441 at 467px in from the panel's left, 22px above its top
-          (740:10745). */}
+      {/* The gift render sits over the panel's right edge, taller than the
+          panel itself - hence the offsets rather than a flow child. In the
+          frame it is 369x441 at 458px in from the panel's left and 52px above
+          its top (892:7176). */}
       <OptionalImage
         src={PRIZE_IMAGE}
         alt={`Grab gift box and ${SILOAM_PRIZE.total} of vouchers`}
-        className="animate-symbol-drift pointer-events-none absolute right-[-3%] top-[-6%] h-[112%] w-auto object-contain board:left-[calc(var(--u)*467)] board:right-auto board:top-[calc(var(--u)*-22)] board:h-[calc(var(--u)*441)] board:w-[calc(var(--u)*369)]"
-        style={{
-          ["--drift-y" as string]: "-12px",
-          ["--drift-x" as string]: "0px",
-          ["--drift-tilt" as string]: "0deg",
-          ["--drift-tilt-to" as string]: "0deg",
-          ["--drift-duration" as string]: "5s",
-        }}
+        className={PRIZE_ART_CLASS}
+        style={PRIZE_ART_DRIFT}
+        fallback={
+          <OptionalImage
+            src={PRIZE_IMAGE_FALLBACK}
+            alt={`Grab gift box and ${SILOAM_PRIZE.total} of vouchers`}
+            className={PRIZE_ART_CLASS}
+            style={PRIZE_ART_DRIFT}
+          />
+        }
       />
-      {/* The coupon (741:11216): a 77px box at 706.5px in, 352.4px down,
-          hanging 41px below the panel's bottom edge. Its tilt is baked into
-          the export, so nothing is rotated here. */}
+
+      {/* The e-voucher stack (892:7220): a 181x179 render tilted 7 degrees,
+          at 603px in and 242px down, so it hangs over the panel's bottom edge
+          under the gift box. */}
       <OptionalImage
-        src={COUPON_IMAGE}
+        src={VOUCHER_IMAGE}
         alt=""
-        className="pointer-events-none absolute hidden object-contain board:block board:left-[calc(var(--u)*706.5)] board:top-[calc(var(--u)*352.4)] board:size-[calc(var(--u)*77.2)]"
+        className="pointer-events-none absolute hidden rotate-[-7deg] object-contain board:block board:left-[calc(var(--u)*603)] board:top-[calc(var(--u)*242)] board:h-[calc(var(--u)*178.6)] board:w-[calc(var(--u)*181)]"
       />
     </div>
   );
@@ -670,7 +749,7 @@ export default function SiloamLeaderboardBoard() {
               </p>
             </div>
           ) : (
-            <div className="mt-[calc(var(--u)*28)] flex flex-col gap-[calc(var(--u)*24)] board:mt-[calc(var(--u)*52)] board:flex-row board:items-start board:gap-[calc(var(--u)*38)]">
+            <div className="mt-[calc(var(--u)*28)] flex flex-col gap-[calc(var(--u)*24)] board:mt-[calc(var(--u)*52)] board:flex-row board:items-center board:gap-[calc(var(--u)*38)]">
               <ScanBlock />
               <PrizePanel />
             </div>

@@ -478,12 +478,37 @@ What this event holds of its own:
 - **Its own pause switch**, `SILOAM_PAUSED`. There is no challenge-closed
   switch; the arc is open for as long as the route is up.
 
-**The board is at `/siloamneurosciencesummit/leaderboard`**: the `/phkl` board
-pointed at this bucket, with the prize in rupiah (`SILOAM_PRIZE` in
-`src/config/siloam.ts`). **`Rp 600.000` is a placeholder** - `/phkl`'s RM 170
-converted and rounded - and is there to be signed off, not trusted. The depth
-("Top 3") is written from the board's own `PODIUM_N`, so the panel cannot
-promise a prize the rows below it do not show.
+**The board is at `/siloamneurosciencesummit/leaderboard`**, built to Figma
+`892:7134`: the `/phkl` board pointed at this bucket, with that frame's
+**prize ladder** in place of a single headline figure.
+
+The prizes are client-confirmed and live in `SILOAM_PRIZE`
+(`src/config/siloam.ts`):
+
+| | |
+| --- | --- |
+| 1ST | IDR 300k voucher |
+| 2ND | IDR 200k voucher |
+| 3RD | IDR 100k voucher |
+
+**Nothing on the panel is a number typed twice.** The amounts are stored as
+numbers of thousands; the headline total (`IDR 600k`) is *summed* from them,
+the eyebrow's "Top 3" and the three gradient rows in the standings both read
+`SILOAM_PODIUM_N`, which is the ladder's own length. So the headline cannot
+promise a pot the rows underneath it do not add up to, and the panel cannot
+promise a depth the standings do not rank
+(`tests/config/siloamFlow.test.ts`). Changing a prize, or adding a fourth,
+is one edit in that config.
+
+Two deliberate departures from the frame:
+
+- **The QR is not the design's.** `892:7164` is the `/phkl` code; using it
+  would send players at an Indonesian summit to the Kuala Lumpur funnel. The
+  board generates its own against the production route.
+- **The headline is set at 37px, not the frame's 41px.** The frame was set
+  with "RM 300 Grab Vouchers"; "IDR 600k Grab Vouchers" is longer and at 41px
+  overruns the design's 448px box onto a third line. 37px holds the designed
+  two-line break at a size indistinguishable from it across a room.
 
 The board is **in English**, copy and brain facts alike, while the funnel
 behind its QR code can be read in either language. That is the brief
@@ -492,10 +517,15 @@ and times, and the language belongs to the player holding the phone rather than
 to the room. `BRAIN_FACTS` is the one block of prose on it, and is the first
 thing to translate if that changes.
 
-Images under `public/images/siloam/` - **that folder's README lists every file
-and its box on the board**. All optional; the board is live and correct before
-any of them land. The three quiz-primer photos are read from `/images/phkl/`
-(generic sleep/exercise/diet shots, shared rather than duplicated).
+Images under `public/images/siloam/` - **that folder's README lists every file,
+its box in the frame and what stands in until it lands**. All optional; the
+board is live and correct before any of them land, and the gift render falls
+back to `/images/phkl/prize-grab.png`, which is the same artwork and fills the
+frame's 369x441 box exactly. **One piece is still missing: `prize-voucher.png`,
+the tilted e-voucher stack over the panel's bottom edge** (`892:7220`) - the
+board simply draws without it. The three quiz-primer photos are read from
+`/images/phkl/` (generic sleep/exercise/diet shots, shared rather than
+duplicated).
 
 ## Translations (English and Bahasa Indonesia)
 
@@ -809,7 +839,7 @@ change once Audrey / clinical sign off:
 
 ### /siloamneurosciencesummit, specifically
 
-Four things on the Siloam summit are working defaults waiting on the client,
+Three things on the Siloam summit are working defaults waiting on the client,
 each a one-line change and each flagged in the file it lives in:
 
 - **The landing's consent wording**, in both languages
@@ -823,8 +853,10 @@ each a one-line change and each flagged in the file it lives in:
 - **The report's headline statistic**, in both languages
   (`COPY.screens.siloam.report.stat`). Currently the *global* Lancet 45%
   awaiting the Indonesian figure. Change both languages together.
-- **The prize amount** (`SILOAM_PRIZE` in `src/config/siloam.ts`). `Rp 600.000`
-  is `/phkl`'s RM 170 converted and rounded, not a signed-off number.
+
+The **prize amounts are settled** (IDR 300k / 200k / 100k, confirmed by the
+client) and are no longer on this list. The one piece of board artwork still
+missing is `public/images/siloam/prize-voucher.png` - see that folder's README.
 
 ## Out of scope (this build)
 
