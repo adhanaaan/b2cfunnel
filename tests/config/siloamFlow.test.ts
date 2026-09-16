@@ -17,7 +17,11 @@ import {
   usesMambaScreens,
 } from "@/config/variants";
 import { COPY, arcCopyFor, phklReportFor, reportStatFor } from "@/config/copy";
-import { SILOAM_PRIZE } from "@/config/siloam";
+import {
+  SILOAM_PODIUM_N,
+  SILOAM_PRIZE,
+  SILOAM_PRIZE_HEADLINE,
+} from "@/config/siloam";
 
 /**
  * The Siloam Neuroscience Summit (/siloamneurosciencesummit) is the PHKL arc
@@ -272,13 +276,46 @@ describe("siloam copy", () => {
 });
 
 describe("siloam prize", () => {
-  // The amount is a placeholder to sign off, but it must at least be rupiah -
-  // the one thing the brief was explicit about - and the two lines the panel
-  // sets it in must say the same thing the aria-label does.
-  it("is priced in rupiah", () => {
-    expect(SILOAM_PRIZE.total).toMatch(/^Rp\s/);
-    expect(SILOAM_PRIZE.lines[0]).toContain(SILOAM_PRIZE.total);
-    expect(SILOAM_PRIZE.total).not.toMatch(/RM|S?\$/);
+  it("is the ladder the client asked for, in order", () => {
+    expect(SILOAM_PRIZE.ladder.map((t) => [t.rank, t.label])).toEqual([
+      ["1ST", "IDR 300k voucher"],
+      ["2ND", "IDR 200k voucher"],
+      ["3RD", "IDR 100k voucher"],
+    ]);
+  });
+
+  // The panel prints "Win a total of X" directly above the rows that add up to
+  // X. Typed side by side those two can disagree, and nobody re-reads a TV
+  // board at an event - so the total is summed from the ladder, and this holds
+  // it there.
+  it("sums its headline total from the ladder rather than repeating it", () => {
+    const sum = SILOAM_PRIZE.ladder.reduce((n, t) => n + t.thousands, 0);
+    expect(sum).toBe(600);
+    expect(SILOAM_PRIZE.total).toBe(`IDR ${sum}k`);
+    expect(SILOAM_PRIZE_HEADLINE[1]).toContain(SILOAM_PRIZE.total);
+  });
+
+  // Rupiah was the one thing the brief was explicit about.
+  it("is priced in rupiah, and in nobody else's currency", () => {
+    for (const text of [
+      SILOAM_PRIZE.total,
+      ...SILOAM_PRIZE.ladder.map((t) => t.label),
+      ...SILOAM_PRIZE_HEADLINE,
+    ]) {
+      expect(text).not.toMatch(/RM\s*\d|S?\$\s*\d/);
+    }
+    expect(SILOAM_PRIZE.total).toMatch(/^IDR\s/);
+    for (const tier of SILOAM_PRIZE.ladder) {
+      expect(tier.label).toMatch(/^IDR\s\d+k voucher$/);
+    }
+  });
+
+  // The ladder's length is the board's PODIUM_N: how many rows ride the prize
+  // gradient, and what the eyebrow promises. A fourth tier with no fourth
+  // gradient row would be a prize the standings never show anyone winning.
+  it("sets the podium depth the standings rank to", () => {
+    expect(SILOAM_PODIUM_N).toBe(3);
+    expect(SILOAM_PODIUM_N).toBe(SILOAM_PRIZE.ladder.length);
   });
 });
 
