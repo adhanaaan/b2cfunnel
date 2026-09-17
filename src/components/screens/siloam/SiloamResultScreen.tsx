@@ -14,6 +14,7 @@ import { PhklBaselineCard } from "../phkl/result/PhklBaselineCard";
 import { PhklWrapUp } from "../phkl/result/PhklWrapUp";
 import { SiloamOffer } from "./SiloamOffer";
 import { SiloamStickyCta } from "./SiloamStickyCta";
+import { SharpShotStickyCta } from "@/components/screens/twentyTwoGrams/SharpShotStickyCta";
 
 interface SiloamResultScreenProps {
   result: ScoreResult;
@@ -39,6 +40,10 @@ interface SiloamResultScreenProps {
  *
  * What differs is the end: `SiloamOffer` in place of `PhklScreeningOffer`, and
  * a sticky bar that walks the reader to it rather than opening a booking form.
+ *
+ * /22grams runs this same report, and swaps that bar for its own: at Sharp
+ * Shot Week the thing still on offer is a free drink for a faster run, so its
+ * pinned button is the way back to the game.
  */
 export function SiloamResultScreen({
   result,
@@ -81,9 +86,20 @@ export function SiloamResultScreen({
         <PhklBaselineCard result={result} />
         <SiloamOffer />
         <PhklWrapUp ageBand={ageBand} />
+        {/* /22grams' banner is taller than the bar PhklWrapUp's own bottom
+            padding reserves space for, so this event buys the difference
+            rather than the shared section growing for every other one. */}
+        {variant === "22grams" && <div aria-hidden className="h-10" />}
       </div>
 
-      <SiloamStickyCta />
+      {/* The pinned call to action. The summit walks the reader down to its
+          close; /22grams sends them back to the game, because what is still on
+          offer there is a free drink for a faster run (Figma 925:9246). */}
+      {variant === "22grams" ? (
+        <SharpShotStickyCta onRetry={onRetake} />
+      ) : (
+        <SiloamStickyCta />
+      )}
     </Event3Shell>
   );
 }

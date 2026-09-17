@@ -7,6 +7,7 @@ import { SHARP_SHOT_POSTER } from "@/config/twentyTwoGrams";
 import { formatSeconds, formatStamp } from "@/lib/format";
 import { springs } from "@/lib/motion";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
+import { SharpShotCup } from "./SharpShotCup";
 
 /**
  * Sharp Shot Week's reward poster (/22grams), built to Figma 925:9236.
@@ -159,47 +160,6 @@ function Dash({
         }}
       />
     </span>
-  );
-}
-
-/**
- * The drink, while the photograph has not landed: a cup in the poster's own
- * colours, in the same 184x332 box. A hole in the corner would read as a
- * broken poster, and this one is still screenshot-worthy.
- */
-function CupFallback() {
-  return (
-    <svg
-      viewBox="0 0 184 332"
-      aria-hidden
-      className="h-full w-full"
-      role="presentation"
-    >
-      {/* A cup in the proportions the photograph fills this box with: the
-          artwork is a hand holding one, so the cup is about two thirds of the
-          width and stands on the card's bottom edge. */}
-      <g>
-        {/* Lid: the clear dome, so it reads as a takeaway cup. */}
-        <rect x="34" y="110" width="116" height="13" rx="6.5" fill="rgba(255,255,255,0.26)" />
-        <path d="M42 123h100l-7 13H49z" fill="rgba(255,255,255,0.16)" />
-        {/* Cup, tapering like a tumbler, standing on the bottom edge. */}
-        <path d="M48 136h88l-11 196H59z" fill="#2a1408" />
-        {/* Coffee, with the milk cap the artwork shows. */}
-        <path d="M52 148h80l-2 26H54z" fill="rgba(255,214,170,0.75)" />
-        <path d="M54 174h76l-9 158H63z" fill="#4a1c07" />
-        <text
-          x="92"
-          y="250"
-          textAnchor="middle"
-          fill="rgba(255,255,255,0.5)"
-          fontSize="20"
-          fontWeight="700"
-          letterSpacing="1"
-        >
-          22g
-        </text>
-      </g>
-    </svg>
   );
 }
 
@@ -361,7 +321,7 @@ export function SharpShotPoster({
                 src={DRINK}
                 alt=""
                 className="h-full w-full object-cover"
-                fallback={<CupFallback />}
+                fallback={<SharpShotCup className="h-full w-full" />}
               />
             </div>
 
@@ -413,6 +373,19 @@ export function SharpShotPoster({
                 {c.reward.drink}
               </p>
             </div>
+
+            {/* The one condition on the offer (925:9240), under it. */}
+            <p
+              className="absolute font-bold italic leading-[1.1]"
+              style={{
+                left: p(177),
+                top: p(345),
+                width: p(101),
+                fontSize: p(9.09),
+              }}
+            >
+              {c.fineprint}
+            </p>
 
             {/* Who, how fast, when - the three things staff read (923:8792). */}
             <dl

@@ -82,6 +82,9 @@ export const SHARP_SHOT_POSTER = {
     drink: `Get your free drink @${SHARP_SHOT_VENUE}`,
   },
 
+  /** The one condition on the offer, under it (925:9240). */
+  fineprint: "*while redemption last",
+
   /** The unit the score is printed in: "28.5 seconds". */
   secondsSuffix: "seconds",
 
@@ -92,4 +95,19 @@ export const SHARP_SHOT_POSTER = {
   /** How to get rid of it. The whole poster is the target. */
   dismiss: "Tap anywhere to close",
   closeLabel: "Close",
+} as const;
+
+/**
+ * The banner pinned to the /22grams report (Figma 925:9246): what is still on
+ * offer, and the way back to the game.
+ *
+ * It is the report's one sticky call to action, so it says the offer rather
+ * than repeating the poster: a reader this far down either has not beaten the
+ * clock or could beat it again, and either way the useful thing is another go.
+ */
+export const SHARP_SHOT_BANNER = {
+  /** Two lines, as the design breaks them (923:8780). */
+  heading: [`Beat the clock ${SHARP_SHOT_THRESHOLD_LABEL},`, "Get a free drink!"],
+  fineprint: "*while redemption last",
+  cta: "Retry Game",
 } as const;

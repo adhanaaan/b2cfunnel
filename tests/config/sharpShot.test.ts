@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  SHARP_SHOT_BANNER,
   SHARP_SHOT_POSTER,
   SHARP_SHOT_THRESHOLD_LABEL,
   SHARP_SHOT_THRESHOLD_MS,
@@ -70,6 +71,18 @@ describe("sharp shot threshold", () => {
 
   it("tells the reader the whole poster is the close", () => {
     expect(SHARP_SHOT_POSTER.dismiss.toLowerCase()).toContain("tap anywhere");
+  });
+
+  it("carries the condition on the offer, on the poster and the banner", () => {
+    expect(SHARP_SHOT_POSTER.fineprint).toBe("*while redemption last");
+    expect(SHARP_SHOT_BANNER.fineprint).toBe(SHARP_SHOT_POSTER.fineprint);
+  });
+
+  // The report's pinned banner repeats the offer, so it repeats the threshold.
+  // Written from the same label, so the two cannot advertise different clocks.
+  it("offers the same clock on the report's banner", () => {
+    expect(SHARP_SHOT_BANNER.heading[0]).toContain(SHARP_SHOT_THRESHOLD_LABEL);
+    expect(SHARP_SHOT_BANNER.cta).toBe("Retry Game");
   });
 });
 

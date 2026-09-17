@@ -568,6 +568,17 @@ conversation and names nothing this activation cannot deliver. `offer.cta` is
 the line to settle first, because it is the only one that says where that
 conversation happens.
 
+**Its landing takes one tick, not two.** `splash.consentForm` (this event's
+block alone) replaces the two rows every other daylight landing carries: a
+heading, one tick confirming whose answers these are, and - **stated rather
+than asked** - that registering is the consent to be emailed. Submitting the
+form therefore records the newsletter consent as given, because that is what
+the line under the tick says it does. `Event3Splash` renders one shape or the
+other, never both, driven by the copy block rather than by the design name, so
+the landing that carries the words is the landing that gets the block
+(`tests/config/twentyTwoGramsFlow.test.ts` pins that no other event has it).
+The Privacy Policy link is kept on the tick's row, as on every other landing.
+
 **Its bucket is the point of the route.** `TWENTY_TWO_GRAMS_SOURCE` is the
 literal `22grams` - the value written to the `source` column on both
 `game_scores` and `leads` - so its board opens empty rather than on another
@@ -609,8 +620,26 @@ the moment the run ended ("2026-09-21 12:35:00")**.
 top of anything that has to be read. The backdrop is a real button, which is
 what carries that to a keyboard and a screen reader; Escape works too.
 
+**The report's pinned call to action is this event's own** (Figma 925:9246): a
+floating card with the drink breaking out of its top-left corner, "Beat the
+clock < 30 s, Get a free drink!" and **Retry Game**, popping in rather than
+sliding up. Every other event on this report walks the reader down to its
+close; this one sends them back to the game, because what is still on offer at
+Sharp Shot Week is a free drink for a faster run - whether they missed it or
+could beat it again. `SharpShotStickyCta` replaces `SiloamStickyCta` for this
+variant only, and the report buys the extra clearance its taller card needs
+rather than the shared section growing for every other event.
+
+**The close answers a tap.** `offer.cta` is "I'm interested" and
+`offer.ctaThanks` is what replaces it once tapped - and the presence of that
+second string is what makes the line a BUTTON at all. The summit leaves it out,
+because it has nowhere to send anyone and its team is in the room, so its line
+stays the instruction it reads as. The tap fires an `interest_click` event
+(anonymous, like every other `track` call), so the interest is countable rather
+than a button that does nothing.
+
 The threshold is **one number** (`src/config/twentyTwoGrams.ts`) and every
-label on the poster is written from it, because the poster IS the voucher: a
+label on the poster AND on the report's banner is written from it, because the poster IS the voucher: a
 headline promising `< 30 s` beside a funnel applying something else is a
 barista holding a screenshot nobody can honour. `isSharpShot()` is the only
 thing that answers "did this run earn a drink?", it is strictly less than the
