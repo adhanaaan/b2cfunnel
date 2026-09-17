@@ -190,9 +190,13 @@ describe("the poster's code", () => {
     expect(GMS_SITE_LABEL).not.toContain("http");
   });
 
-  it("points its fallback code at the profile the card names", () => {
-    expect(GMS_INSTAGRAM_URL).toContain("instagram.com");
-    expect(GMS_INSTAGRAM_URL).toContain("graymatter.solutions");
+  // The code is a link AND a payload: a tap opens this, and the fallback code
+  // encodes it. Pinned to the literal, so the two cannot come apart and a
+  // typo cannot quietly send people to a profile that does not exist.
+  it("points at the Instagram profile the card names", () => {
+    expect(GMS_INSTAGRAM_URL).toBe(
+      "https://www.instagram.com/graymatter.solutions",
+    );
   });
 
   it("says what following is for", () => {

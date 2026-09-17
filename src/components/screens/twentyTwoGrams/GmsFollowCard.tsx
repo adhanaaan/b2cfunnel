@@ -7,6 +7,8 @@ import {
   GMS_SITE_URL,
 } from "@/config/eventLinks";
 import { GMS_FOLLOW_CARD } from "@/config/twentyTwoGrams";
+import { track } from "@/lib/analytics";
+import { useVariant } from "@/components/VariantContext";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
 
 /**
@@ -21,6 +23,10 @@ import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
  * It is the one thing on either surface that asks for anything beyond the
  * drink - so it names the month, the reason to follow, and the address, and
  * nothing else.
+ *
+ * Both of its links stop the click there. On the poster this card sits inside
+ * a takeover that closes on a tap ANYWHERE, and that takeover is the voucher:
+ * opening Instagram must not also throw away the thing they came to redeem.
  */
 
 /**
@@ -37,15 +43,40 @@ export function GmsFollowCard({
 }: {
   u: (n: number) => string;
 }) {
+  const variant = useVariant();
+
+  /**
+   * Follow the link and nothing else: no dismissing the poster underneath,
+   * and a note that someone went, so "did anyone find us" has an answer.
+   */
+  const open =
+    (placement: "instagram" | "site") =>
+    (e: { stopPropagation: () => void }) => {
+      e.stopPropagation();
+      track("follow_click", { variant, placement });
+    };
+
   return (
     <div
       className="flex size-full items-center justify-center bg-[#152039]"
       style={{ gap: u(10), borderRadius: u(20) }}
     >
+      {/* The code is also a tap target: it is the fastest route for whoever is
+          holding the phone the card is on, who cannot scan their own screen.
+          `aria-label` sits on the link rather than the image, because the
+          fallback below is a drawn code with no alt text of its own. */}
+      <a
+        href={GMS_INSTAGRAM_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Gray Matter Solutions on Instagram"
+        onClick={open("instagram")}
+        className="shrink-0 rounded-[inherit] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream"
+      >
       <OptionalImage
         src={INSTAGRAM_CODE}
-        alt="Gray Matter Solutions on Instagram"
-        className="shrink-0 object-cover"
+        alt=""
+        className="block shrink-0 object-cover"
         style={{
           width: u(83.886),
           height: u(85),
@@ -72,6 +103,7 @@ export function GmsFollowCard({
           </span>
         }
       />
+      </a>
 
       <div
         className="flex shrink-0 flex-col font-bold text-cream"
@@ -97,7 +129,8 @@ export function GmsFollowCard({
           href={GMS_SITE_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline decoration-solid underline-offset-2 leading-[1.1]"
+          onClick={open("site")}
+          className="underline decoration-solid underline-offset-2 leading-[1.1] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream"
           style={{ fontSize: u(10.09) }}
         >
           {GMS_SITE_LABEL}
