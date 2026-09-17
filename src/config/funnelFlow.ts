@@ -245,17 +245,6 @@ const ROTARY_FLOW: FunnelStep[] = DAYLIGHT_FLOW;
  */
 const NTU_HOMECOMING_FLOW: FunnelStep[] = ROTARY_FLOW;
 
-/**
- * 22 Grams (/22grams): the NTU Homecoming arc, shared rather than rebuilt - so
- * the daylight flow as-is again, with no partner consent page and no "That's a
- * wrap!" screen.
- *
- * Sharing the array is the point: a later change to that arc reaches this event
- * too, and its question set cannot drift off the one every other score was
- * recorded against. What /22grams holds of its own is the part that must not be
- * shared - its bucket, its pause switch, its copy block and its board.
- */
-const TWENTY_TWO_GRAMS_FLOW: FunnelStep[] = NTU_HOMECOMING_FLOW;
 
 /**
  * IHH SEA Regatta (/ihhsearegatta): the daylight arc - landing, instructions,
@@ -354,6 +343,26 @@ const MAMBACARES_FLOW: FunnelStep[] = PHKL_FLOW;
  * on.
  */
 const URBANMILERS_FLOW: FunnelStep[] = MAMBACARES_FLOW;
+
+/**
+ * 22 Grams (/22grams): the #MambaCares arc, shared rather than rebuilt, the
+ * same way that one shares PHKL's.
+ *
+ * So: the two-row landing with no partner, the processing-speed primer, the
+ * age question before the game, the "great job" beat in place of a post-game
+ * card, the quiz primer, and the report as the end of the arc. This event
+ * differs in the bucket its rows are tagged with, the board that reads it and
+ * the words that close its report - none of which is a step - so the step
+ * sequence, and with it the question set and achievableAxisMax, is
+ * #MambaCares' exactly and a Sharp Shot Week score sits on the same /100 scale
+ * as every score already recorded.
+ *
+ * NOTE for the free drink: this arc has NO `gameResult` step, so there is no
+ * post-game screen for the Sharp Shot poster to hang off. It is mounted by the
+ * funnel itself (Funnel.tsx), above whichever step is showing, which is why a
+ * later change to this arc cannot quietly stop the poster appearing.
+ */
+const TWENTY_TWO_GRAMS_FLOW: FunnelStep[] = MAMBACARES_FLOW;
 
 /**
  * Siloam Neuroscience Summit (/siloamneurosciencesummit): the /phkl arc,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFunnel } from "@/state/useFunnel";
 import { track, recordResponse, setPreviewMode } from "@/lib/analytics";
 import { computeScore } from "@/engine/scoring";
@@ -56,6 +56,8 @@ import { PhklAnalysingScreen } from "@/components/screens/phkl/PhklAnalysingScre
 import { PhklResultScreen } from "@/components/screens/phkl/PhklResultScreen";
 import { MambaResultScreen } from "@/components/screens/mambacares/MambaResultScreen";
 import { SiloamResultScreen } from "@/components/screens/siloam/SiloamResultScreen";
+import { SharpShotPoster } from "@/components/screens/twentyTwoGrams/SharpShotPoster";
+import { isSharpShot } from "@/config/twentyTwoGrams";
 
 /** A stable, human-readable name for a funnel step (for drop-off analytics). */
 function stepKey(step: FunnelStep): string {
@@ -167,6 +169,20 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     analysisDone();
   };
+
+  // Which finish the Sharp Shot poster has already been dismissed for.
+  //
+  // Keyed on the finish rather than a plain boolean so a retake that beats the
+  // clock again raises it again (a new run has a new `gameFinishedAt`), while
+  // dismissing it does not immediately reopen it. Gated on the variant as well
+  // as the time, so no other event can ever hand out this one's offer.
+  const [posterDismissedFor, setPosterDismissedFor] = useState<number | null>(
+    null,
+  );
+  const posterOpen =
+    state.variant === "22grams" &&
+    isSharpShot(state.gameTimeMs) &&
+    posterDismissedFor !== (state.gameFinishedAt ?? null);
 
   // Record the game result to the leaderboard, then advance.
   const handleGameDone = (timeMs: number) => {
@@ -392,6 +408,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       if (
         state.variant === "phkl" ||
         state.variant === "siloam" ||
+        state.variant === "22grams" ||
         usesMambaScreens(state.variant)
       ) {
         return (
@@ -422,10 +439,13 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           />
         ) : null;
       }
-      if (state.variant === "siloam") {
-        // The summit's report is PHKL's, with the NTU Homecoming close in
-        // place of the Memory Screening Package - and readable in whichever
-        // language the landing was answered in.
+      if (state.variant === "siloam" || state.variant === "22grams") {
+        // The booth report: PHKL's, with a close that ends in a conversation
+        // rather than a checkout, in place of the Memory Screening Package.
+        // The summit reads it in whichever language the landing was answered
+        // in; /22grams runs the same report because there is nothing to book
+        // at a coffee counter either. Each reads its own close - see
+        // `boothReportFor` - so neither can print the other's.
         return state.result ? (
           <SiloamResultScreen
             result={state.result}
@@ -516,7 +536,6 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             name={state.name}
             email={state.email}
             timeMs={state.gameTimeMs}
-            finishedAt={state.gameFinishedAt}
             onContinue={next}
             onRetake={() => {
               track("game_retake", { variant: state.variant });
@@ -552,6 +571,26 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
   })();
 
   return (
-    <VariantProvider value={state.variant}>{screen}</VariantProvider>
+    <VariantProvider value={state.variant}>
+      {screen}
+      {/* Sharp Shot Week (/22grams): a run under the threshold earns a free
+          drink, and the poster is the voucher.
+
+          Mounted HERE rather than on a screen, and that is the point: this
+          event runs the #MambaCares arc, which has no post-game card at all -
+          the 20th match walks straight into the "great job" beat and on into
+          the quiz. A poster hanging off a screen would unmount with it
+          mid-celebration, and would have to be re-hung every time the arc
+          moved. Above the whole funnel, it opens the moment the run is
+          recorded and stays until it is dismissed, whatever the step behind it
+          is doing. */}
+      <SharpShotPoster
+        open={posterOpen}
+        name={state.name}
+        timeMs={state.gameTimeMs}
+        finishedAt={state.gameFinishedAt}
+        onClose={() => setPosterDismissedFor(state.gameFinishedAt ?? null)}
+      />
+    </VariantProvider>
   );
 }
