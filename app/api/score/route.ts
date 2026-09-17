@@ -15,6 +15,8 @@ import {
   PHKL_SOURCE,
   ROTARY_PAUSED,
   ROTARY_SOURCE,
+  TWENTY_TWO_GRAMS_PAUSED,
+  TWENTY_TWO_GRAMS_SOURCE,
 } from "@/config/event";
 
 export const runtime = "nodejs";
@@ -27,8 +29,8 @@ interface ScorePayload {
   timeMs?: number;
   /**
    * Which event the score was played at - "event", "event2", EVENT3_SOURCE,
-   * ROTARY_SOURCE, NTU_HOMECOMING_SOURCE, IHHSEA_SOURCE, IHH_SOURCE or
-   * PHKL_SOURCE.
+   * ROTARY_SOURCE, NTU_HOMECOMING_SOURCE, IHHSEA_SOURCE, IHH_SOURCE,
+   * PHKL_SOURCE or TWENTY_TWO_GRAMS_SOURCE.
    * Selects the pause switch, and is stored so each board can filter to its
    * own standings.
    */
@@ -75,9 +77,11 @@ export async function POST(req: Request) {
               ? IHH_PAUSED
               : payload.source === PHKL_SOURCE
                 ? PHKL_PAUSED
-                : payload.source === "event2"
-                  ? EVENT2_PAUSED
-                  : EVENT_PAUSED;
+                : payload.source === TWENTY_TWO_GRAMS_SOURCE
+                  ? TWENTY_TWO_GRAMS_PAUSED
+                  : payload.source === "event2"
+                    ? EVENT2_PAUSED
+                    : EVENT_PAUSED;
   if (paused) {
     return NextResponse.json({ ok: true, stored: false });
   }

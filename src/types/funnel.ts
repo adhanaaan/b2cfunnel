@@ -54,6 +54,14 @@ export type QuizVariant =
   // a language choice - English or Bahasa Indonesia - offered on the landing
   // and carried through every screen behind it.
   | "siloam"
+  // 22 Grams (/22grams): the /ntuhomecoming arc again, shared rather than
+  // rebuilt - the daylight flow with no partner consent page and no "That's a
+  // wrap!" screen - on its own `22grams` bucket, with its own pause switch,
+  // copy block and board. The duplicate exists to keep this event's scores,
+  // leads and completion rate in a column of their own rather than mixed into
+  // NTU Homecoming's standings; its board is the /phkl frame rather than the
+  // NTU one.
+  | "22grams"
   // /event-v7 (preview): the #MambaCares arc with the share moment at the top
   // of the report. A preview variant - see PREVIEW_VARIANTS - so walking it
   // writes nothing while the live run is on.
