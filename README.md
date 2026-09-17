@@ -713,7 +713,14 @@ it: this band, and every other five seconds on the report's pinned banner. Both
 hand it a box and it fills what it is given, so the two cannot drift into
 different cards. Its address is printed AND encoded, derived from `GMS_SITE_URL`
 in `config/eventLinks.ts` so a reader cannot be shown one place and sent to
-another. Its code is the one file this poster still needs - see
+another. **The code is a tap target as well as a scan target** - it links to
+`GMS_INSTAGRAM_URL`, which is also what the fallback code encodes, because the
+person holding the phone the card is on cannot scan their own screen.
+
+**Both links stop the click there.** On the poster this card sits inside a
+takeover that closes on a tap ANYWHERE, and that takeover is the voucher:
+opening Instagram must not also throw away the thing they came to redeem.
+Tapping anywhere else on the card, or Escape, still closes it. Its code is the one file this poster still needs - see
 `public/images/22grams/README.md`; until it lands the card draws a plain code
 for the same profile, so it is scannable from the day it ships.
 

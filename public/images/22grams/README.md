@@ -49,6 +49,9 @@ rounded card itself, with no page around it. The card gives it its own 3.7px
 radius, and it is cropped to fill (`object-cover`), so anything far off square
 will lose its edges.
 
+The tile is a link to that same profile whether or not the artwork has landed,
+so a phone that cannot scan its own screen still gets there in a tap.
+
 Until it is there the card draws its own code from `GMS_INSTAGRAM_URL`
 (`src/config/eventLinks.ts`) - plain black, no handle under it - so the card is
 scannable from the day it ships. **Whoever uploads the artwork has to scan it
