@@ -583,6 +583,47 @@ lists the one file, its box in the frame and what stands in until it lands**.
 It is optional: with no `qr.png` there the board generates its own code from the
 play URL, so the board is live and correct before anything is uploaded.
 
+### Sharp Shot Week (the free-drink poster)
+
+**Beat the clock and the poster takes over the screen.** A run under
+`SHARP_SHOT_THRESHOLD_MS` (30s) on `/22grams` opens the Sharp Shot poster on
+top of the post-game result: the campaign lockup, "Congratulations on beating
+the clock < 30s", the offer in orange, the drink, and the three details a
+barista reads - **the player's name, the time in plain seconds ("28.5
+seconds"), and the moment the run ended ("2026-09-21 12:35:00")**. Dismissing
+it ("Continue", or Escape) drops back onto the normal result screen.
+
+The threshold is **one number** (`src/config/twentyTwoGrams.ts`) and every
+label on the poster is written from it, because the poster IS the voucher: a
+headline promising `< 30s` beside a funnel applying something else is a barista
+holding a screenshot nobody can honour. `isSharpShot()` is the only thing that
+answers "did this run earn a drink?", it is strictly less than the threshold
+(30.0s does not qualify - the poster says *beating* the clock), and a missing,
+zero or negative time is never a win. The venue named in the offer is the same
+single value. Pinned by `tests/config/sharpShot.test.ts`.
+
+**It is gated on the variant as well as the time.** `Event3GameResult` serves
+every daylight event, so the poster checks `variant === "22grams"` before it
+checks the clock - no other event can hand out this one's offer. A retake
+re-opens it for a second qualifying run and closes it for a slower one, so a
+new time can never leave the previous run's voucher on screen.
+
+**The stamp is the run's own moment, not the render's.** `GAME_DONE` carries
+`at` (the caller reads the clock; the reducer stays pure) and the funnel stores
+it as `gameFinishedAt`, cleared by `RETAKE_GAME` with the time it belongs to.
+Reopening the poster therefore cannot restamp it. `formatStamp` writes it from
+the local date parts rather than through `toLocaleString`, whose output moves
+with the device's locale - a stamp reading `21/09/2026` on one phone and
+`9/21/2026` on the next is one staff cannot check at a glance.
+
+The poster is **not** a pixel port of the print artwork: that is A-series
+portrait, and scaling its type down by width puts the score block at about 9px
+on a phone, which for the one line staff have to read is the whole poster
+failing. The composition is the artwork's, at sizes chosen to read on a phone
+first. Its two images (`logo-22g.png`, `sharp-shot-drink.png`) are optional
+like every other - see `public/images/22grams/README.md` - so it is correct and
+redeemable before either lands.
+
 ## Translations (English and Bahasa Indonesia)
 
 One event uses this today, and the whole layer is **inert for every other**:

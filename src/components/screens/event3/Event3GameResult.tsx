@@ -11,6 +11,8 @@ import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "./Event3Shell";
 import { BrainHero } from "./BrainHero";
 import { ProcessingSpeedPopup } from "./ProcessingSpeedPopup";
+import { SharpShotPoster } from "@/components/screens/twentyTwoGrams/SharpShotPoster";
+import { isSharpShot } from "@/config/twentyTwoGrams";
 import { QuestionCircleIcon, RetryIcon, ShareIcon } from "./icons";
 import { ctaInverseClass, emberLabelGradient, emberTextGradient } from "./ui";
 import { useStanding } from "./useStanding";
@@ -20,6 +22,12 @@ interface Event3GameResultProps {
   name?: string;
   email?: string;
   timeMs?: number;
+  /**
+   * When the run ended, epoch ms. Only /22grams reads it - the Sharp Shot
+   * poster stamps it - and it comes from the funnel's state so the stamp is
+   * the run's own moment rather than this screen's render.
+   */
+  finishedAt?: number;
   /** Continue into the brain-health quiz. */
   onContinue: () => void;
   /** Play the reaction game again for a fresh time. */
@@ -40,12 +48,14 @@ const item = {
  *
  * Serves every daylight event. The regatta (/ihhsearegatta) rewrites the
  * bridge card - the player's wish, then "Tell me more" into the questionnaire
- * invite - and nothing else on the screen.
+ * invite - and nothing else on the screen. 22 Grams (/22grams) adds one thing
+ * in front of it: the Sharp Shot poster, for a run that beat the clock.
  */
 export function Event3GameResult({
   name,
   email,
   timeMs,
+  finishedAt,
   onContinue,
   onRetake,
 }: Event3GameResultProps) {
@@ -74,6 +84,20 @@ export function Event3GameResult({
   const [display, setDisplay] = useState(reduced ? (timeMs ?? 0) : 0);
   const [countDone, setCountDone] = useState(!!reduced);
   const [popupOpen, setPopupOpen] = useState(false);
+
+  // Sharp Shot Week (/22grams only): a run under the threshold earns a free
+  // drink, and the poster is the voucher. Gated on the variant as well as the
+  // time so no other daylight event can ever hand out this event's offer.
+  const earnedSharpShot = variant === "22grams" && isSharpShot(timeMs);
+  const [posterOpen, setPosterOpen] = useState(earnedSharpShot);
+
+  // Open it for each qualifying run, including a retake that beats the clock
+  // again - and close it for one that does not, so a slower second attempt
+  // cannot leave the first run's voucher on screen. Keyed on the time, so
+  // dismissing it does not immediately reopen it.
+  useEffect(() => {
+    setPosterOpen(earnedSharpShot);
+  }, [earnedSharpShot, timeMs]);
 
   // The hero count-up: 0 -> the real time over 900ms, tap-skippable.
   useEffect(() => {
@@ -280,6 +304,14 @@ export function Event3GameResult({
       </motion.div>
 
       <ProcessingSpeedPopup open={popupOpen} onClose={() => setPopupOpen(false)} />
+
+      <SharpShotPoster
+        open={posterOpen}
+        name={name}
+        timeMs={timeMs}
+        finishedAt={finishedAt}
+        onClose={() => setPosterOpen(false)}
+      />
     </Event3Shell>
   );
 }

@@ -100,6 +100,7 @@ export function funnelReducer(
       return {
         ...state,
         gameTimeMs: action.timeMs,
+        gameFinishedAt: action.at,
         gameAttempts: (state.gameAttempts ?? 0) + 1,
         cursor: next,
       };
@@ -121,7 +122,12 @@ export function funnelReducer(
       const flow = resolveFlow(state.answers, state.variant);
       const index = flow.findIndex((s) => s.kind === "game");
       if (index < 0) return state;
-      return { ...state, cursor: index, gameTimeMs: undefined };
+      return {
+        ...state,
+        cursor: index,
+        gameTimeMs: undefined,
+        gameFinishedAt: undefined,
+      };
     }
 
     case "ANALYSIS_DONE": {

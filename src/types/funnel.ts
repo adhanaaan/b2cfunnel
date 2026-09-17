@@ -123,6 +123,13 @@ export interface FunnelState {
   // How many times the game has been completed this session. The phkl report
   // reads it for "{name}'s 2nd record"; undefined until the first finish.
   gameAttempts?: number;
+  // When the game was finished, as epoch ms - supplied with GAME_DONE rather
+  // than read off the clock in the reducer, which stays pure. The Sharp Shot
+  // poster (/22grams) prints it as its redemption stamp, so it has to be the
+  // moment the run ended and has to survive a re-render: a timestamp taken
+  // when a screen mounts would move every time the poster was reopened.
+  // Cleared by RETAKE_GAME with the time it belongs to.
+  gameFinishedAt?: number;
   // Brain-health-tips consent from the landing page. Undefined when the variant
   // never asked, which is stored as null rather than false.
   tipsConsent?: boolean;
@@ -150,7 +157,8 @@ export type FunnelAction =
   // Consent page: records the partner consent, ticked or not, and moves on.
   | { type: "SUBMIT_CONSENT"; partnerConsent: boolean }
   | { type: "ANALYSIS_DONE" }
-  | { type: "GAME_DONE"; timeMs: number }
+  // `at` is epoch ms, from the caller - the reducer never reads the clock.
+  | { type: "GAME_DONE"; timeMs: number; at: number }
   // Jump forward to the first step of a kind (event2: decline from gameResult
   // lands on the closing screen rather than backing into the game).
   | { type: "SKIP_TO_KIND"; kind: StepKind }

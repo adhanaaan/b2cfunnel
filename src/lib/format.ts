@@ -60,3 +60,30 @@ export function firstName(name?: string): string | undefined {
   const first = name?.trim().split(/\s+/)[0];
   return first ? first : undefined;
 }
+
+/**
+ * A time in plain seconds to one decimal - "28.5" - for the line that names
+ * its own unit ("28.5 seconds" on the Sharp Shot poster).
+ *
+ * `formatTime` is the leaderboard clock (m:ss.s) and stays that: a poster
+ * handed to a barista reads "28.5 seconds", not "0:28.5".
+ */
+export function formatSeconds(ms: number): string {
+  return (Math.max(0, ms) / 1000).toFixed(1);
+}
+
+/**
+ * A moment as "2026-09-21 12:35:00", in the reader's own timezone.
+ *
+ * Built from the local date parts rather than through `toLocaleString`, whose
+ * output moves with the device's locale - a redemption stamp that reads
+ * "21/09/2026" on one phone and "9/21/2026" on the next is a stamp staff
+ * cannot check at a glance. Local time rather than UTC on purpose: it is read
+ * against the clock on the wall.
+ */
+export function formatStamp(at: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const date = `${at.getFullYear()}-${pad(at.getMonth() + 1)}-${pad(at.getDate())}`;
+  const time = `${pad(at.getHours())}:${pad(at.getMinutes())}:${pad(at.getSeconds())}`;
+  return `${date} ${time}`;
+}

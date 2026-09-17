@@ -58,8 +58,11 @@ export function useFunnel(variant: QuizVariant) {
     () => dispatch({ type: "ANALYSIS_DONE" }),
     [],
   );
+  // `at` defaults to now: the caller reads the clock, not the reducer, and
+  // every real finish is dispatched the moment it happens.
   const gameDone = useCallback(
-    (timeMs: number) => dispatch({ type: "GAME_DONE", timeMs }),
+    (timeMs: number, at: number = Date.now()) =>
+      dispatch({ type: "GAME_DONE", timeMs, at }),
     [],
   );
   const skipToKind = useCallback(
