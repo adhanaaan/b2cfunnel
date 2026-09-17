@@ -1,12 +1,19 @@
 "use client";
 
 import { SILOAM_OFFER_SECTION_ID } from "@/config/eventLinks";
+import { boothReportFor } from "@/config/copy";
 import { useCopy } from "@/components/LanguageContext";
+import { useVariant } from "@/components/VariantContext";
 import { Reveal, reportCard, reportEyebrow, reportHeading } from "../phkl/ui";
 
 /**
- * The close on the Siloam summit's report, in place of /phkl's Memory
- * Screening Package.
+ * The close on the booth report, in place of /phkl's Memory Screening Package.
+ *
+ * Two events draw it - the Siloam summit and 22 Grams - so it reads whichever
+ * one is being walked through `boothReportFor` rather than naming a block. The
+ * summit invites people to a stand ten metres away; /22grams is a coffee
+ * counter at Frasers Tower, and printing the summit's line there would send
+ * players looking for a booth that is not in the building.
  *
  * This is NTU Homecoming's ending (`Event2Closing`), rebuilt in the PHKL
  * report's vocabulary so it sits on the same sheet as the sections above it:
@@ -21,7 +28,7 @@ import { Reveal, reportCard, reportEyebrow, reportHeading } from "../phkl/ui";
  * than any form.
  */
 export function SiloamOffer() {
-  const c = useCopy().screens.siloam.report.offer;
+  const c = boothReportFor(useVariant(), useCopy()).offer;
 
   return (
     <section

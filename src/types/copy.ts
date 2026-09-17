@@ -456,10 +456,10 @@ export interface ScreenCopy {
   // Siloam Neuroscience Summit (/siloamneurosciencesummit): the PHKL arc with
   // the #MambaCares landing and the NTU Homecoming close.
   siloam: SiloamCopy;
-  // 22 Grams (/22grams): the NTU Homecoming landing on a bucket of its own - a
-  // block of its own so either event's wording can be changed without touching
-  // the other's.
-  "22grams": NoPartnerSplashCopy;
+  // 22 Grams (/22grams): the #MambaCares arc with the summit's report at the
+  // end - a block of its own so this event's wording can be changed without
+  // touching either of theirs.
+  "22grams": TwentyTwoGramsCopy;
 }
 
 /**
@@ -694,6 +694,32 @@ export interface SiloamCopy extends PhklArcCopy {
     };
 }
 
+/**
+ * The PHKL report with its last section swapped for a close that ends in a
+ * conversation rather than a checkout - the shape /siloamneurosciencesummit
+ * introduced and /22grams now runs too.
+ *
+ * Named, rather than written out twice, because the two events draw it with
+ * the SAME components (`SiloamOffer`, `SiloamStickyCta`): those read whichever
+ * event is being walked through `boothReportFor`, and they can only do that if
+ * both blocks are the same shape.
+ */
+export type BoothCloseReportCopy = SiloamCopy["report"];
+
+/**
+ * 22 Grams (/22grams): the #MambaCares arc - the two-row landing with no
+ * partner, the primers, the age question, the great-job beat and the quiz -
+ * closing on the summit's report rather than the fundraiser.
+ *
+ * Its own block, like every other event's, so this event's wording can be
+ * changed without touching the summit's or the community runs'. No language
+ * picker on this one, so the splash is the plain daylight one.
+ */
+export interface TwentyTwoGramsCopy extends PhklArcCopy {
+  splash: Event3Copy["splash"];
+  report: BoothCloseReportCopy;
+}
+
 // A community run on the PHKL arc (/mambacares, /urbanmilers): the same arc
 // with no partner on the landing and a fundraising report in place of the
 // screening offer. The header and the
@@ -821,8 +847,7 @@ export interface IhhseaCopy {
   };
 }
 
-// The events with no partner in them (/rotaryklwam, /ntuhomecoming,
-// /22grams): the
+// The events with no partner in them (/rotaryklwam, /ntuhomecoming): the
 // daylight arc with no consent page. Only the landing's required-consent line
 // differs from v3; every other screen reuses the v3/v2 copy. One block per
 // event, so either one's wording can be changed on its own.

@@ -1,4 +1,5 @@
 import type {
+  BoothCloseReportCopy,
   ConsentClause,
   CopyConfig,
   IhhseaCopy,
@@ -6,6 +7,7 @@ import type {
   PhklArcCopy,
   PhklReportSharedCopy,
   SiloamCopy,
+  TwentyTwoGramsCopy,
 } from "@/types/copy";
 import type { QuizVariant } from "@/types/funnel";
 import type { Language } from "@/config/language";
@@ -493,6 +495,58 @@ const SILOAM_SCREEN_COPY: SiloamCopy = {
   },
 };
 
+/**
+ * 22 Grams (/22grams) - Sharp Shot Week at 22g Frasers Tower.
+ *
+ * The arc is the #MambaCares one (which is /phkl's), so the primers, the age
+ * question, the great-job beat and the header are the shared arc's words. Two
+ * things are this event's own:
+ *
+ * - The landing is #MambaCares': the plain two-row consent at the roomier
+ *   size, with no partner block. It links the shared policy, as /ntuhomecoming
+ *   does - there is no partner here whose own notice would have to be named.
+ * - The report closes the way the summit's does - the ReCOGnAIze assessment
+ *   and a conversation with the team - rather than on a fundraiser or a
+ *   bookable package. There is nothing to check out of at a coffee counter.
+ *
+ * The close below is the summit's wording (which is NTU Homecoming's), and is
+ * A WORKING DEFAULT FOR SIGN-OFF rather than words written for this event: it
+ * promises a conversation and names nothing this activation cannot deliver, so
+ * the route is correct the day it goes up. `offer.cta` is the line to settle
+ * first - it is the only one that says where that conversation happens.
+ */
+const TWENTY_TWO_GRAMS_SCREEN_COPY: TwentyTwoGramsCopy = {
+  ...PHKL_ARC_COPY,
+  splash: NO_PARTNER_SPLASH,
+  report: {
+    ...PHKL_ARC_COPY.report,
+    ...PHKL_REPORT_SHARED,
+    sticky: {
+      talk: "Speak to our team",
+    },
+    // The global Lancet figure, read from the one card every other event
+    // quotes rather than typed out again here - it is also the number on the
+    // Sharp Shot poster, and the two must not be able to disagree.
+    stat: STAT_CARDS_BY_ID.lancet2024,
+    offer: {
+      eyebrow: "Your next step",
+      heading: "Ready for the full picture?",
+      body: "Your Brain Health Score and recommendations are on their way to your inbox. Today's quiz estimates your risk profile; the ReCOGnAIze assessment shows how your brain is actually performing.",
+      reassurance:
+        "Whatever your score today, most of the factors behind it can change. That is the point of checking early.",
+      offerName: "ReCOGnAIze brain health assessment",
+      offerPoints: [
+        "Developed at NTU's Dementia Research Centre",
+        "Registered with Singapore's HSA",
+        "Results reviewed with a medical professional",
+      ],
+      cta: "Speak to our team",
+      credibility:
+        "Built with NTU's Dementia Research Centre · 2024 Lancet Commission",
+    },
+  },
+};
+
 export const COPY: CopyConfig = {
   screens: {
     hook: {
@@ -950,11 +1004,6 @@ export const COPY: CopyConfig = {
       // own block so this event's wording can be changed on its own.
       splash: NO_PARTNER_SPLASH,
     },
-    "22grams": {
-      // 22 Grams ships the same landing again, word for word. Its own block so
-      // this event's wording can be changed without touching NTU Homecoming's.
-      splash: NO_PARTNER_SPLASH,
-    },
     ihhsearegatta: IHHSEA_SCREEN_COPY,
     // /ihh - the regatta arc again on its own `ihh` source bucket. Same copy,
     // word for word, with the required consent row pointing at this route's
@@ -1037,6 +1086,7 @@ export const COPY: CopyConfig = {
     },
     mambacares: MAMBACARES_SCREEN_COPY,
     siloam: SILOAM_SCREEN_COPY,
+    "22grams": TWENTY_TWO_GRAMS_SCREEN_COPY,
     // GMS x Urban Milers (/urbanmilers): the same run's arc, word for word,
     // with this event named where the words name the event that is hosting it.
     // Its own block so a change to either run's wording cannot reach the
@@ -1208,7 +1258,9 @@ export function arcCopyFor(
   copy: CopyConfig = COPY,
 ): PhklArcCopy {
   if (usesMambaScreens(variant)) return runCopyFor(variant, copy);
-  return variant === "siloam" ? copy.screens.siloam : copy.screens.phkl;
+  if (variant === "siloam") return copy.screens.siloam;
+  if (variant === "22grams") return copy.screens["22grams"];
+  return copy.screens.phkl;
 }
 
 /**
@@ -1223,9 +1275,9 @@ export function reportStatFor(
   variant: QuizVariant,
   copy: CopyConfig = COPY,
 ): { stat: string; body: string; source: string } {
-  return variant === "siloam"
-    ? copy.screens.siloam.report.stat
-    : STAT_CARDS_BY_ID.lancet2024;
+  if (variant === "siloam") return copy.screens.siloam.report.stat;
+  if (variant === "22grams") return copy.screens["22grams"].report.stat;
+  return STAT_CARDS_BY_ID.lancet2024;
 }
 
 /**
@@ -1241,7 +1293,25 @@ export function phklReportFor(
   variant: QuizVariant,
   copy: CopyConfig = COPY,
 ): PhklReportSharedCopy {
-  return variant === "siloam"
-    ? copy.screens.siloam.report
-    : copy.screens.phkl.report;
+  if (variant === "siloam") return copy.screens.siloam.report;
+  if (variant === "22grams") return copy.screens["22grams"].report;
+  return copy.screens.phkl.report;
+}
+
+/**
+ * The close for whichever event is running the booth report - the sections
+ * `SiloamOffer` and `SiloamStickyCta` draw.
+ *
+ * Same rule as `arcCopyFor` and `phklReportFor`, for the same reason: those
+ * two components must never name one event's block, or /22grams would quietly
+ * invite its players to a booth at a summit in Jakarta. The summit is the
+ * fallback because it is the event that arc was built for.
+ */
+export function boothReportFor(
+  variant: QuizVariant,
+  copy: CopyConfig = COPY,
+): BoothCloseReportCopy {
+  return variant === "22grams"
+    ? copy.screens["22grams"].report
+    : copy.screens.siloam.report;
 }

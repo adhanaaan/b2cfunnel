@@ -531,26 +531,48 @@ duplicated).
 
 ## /22grams (22 Grams)
 
-`/22grams` is `/ntuhomecoming` under a different name and a different
-leaderboard bucket, with **the `/phkl` board** on the wall instead of the NTU
-one. Same Daylight Ember arc, same differences from `/event-v3` (no partner
-consent page, no "That's a wrap!" screen, the bold "Required." consent row),
-same question set - so a 22 Grams score stays comparable with every score
-already recorded (`tests/config/twentyTwoGramsFlow.test.ts`).
+Sharp Shot Week at 22g Frasers Tower. `/22grams` runs the **`/mambacares`
+arc** - which is `/phkl`'s - and closes on the **`/siloamneurosciencesummit`
+report**. The flow, in order:
 
-The arc is shared rather than copied, wherever sharing is what keeps the two
-from drifting apart: `TWENTY_TWO_GRAMS_FLOW` *is* `NTU_HOMECOMING_FLOW` (which
-is `ROTARY_FLOW`), so a later change to that arc reaches this event too, and
-both landings read the same `NO_PARTNER_SPLASH` copy. What each event holds of
-its own is the part that must not be shared - its bucket, its pause switch, its
-route, its board, and a copy block (`COPY.screens["22grams"]`) so this event's
-wording can be changed without touching NTU Homecoming's.
+```
+landing -> speed primer -> select your age -> instructions -> game
+-> great job (auto) -> quiz primer -> the quiz (age already answered)
+-> analysing -> report
+```
+
+The flow array is shared (`TWENTY_TWO_GRAMS_FLOW = MAMBACARES_FLOW`), so the
+question set, `achievableAxisMax` and therefore every score recorded stay
+comparable with `/mambacares`, `/phkl` and event2
+(`tests/config/twentyTwoGramsFlow.test.ts`). Its landing is #MambaCares' - the
+plain two-row consent at the roomier size, no partner block - and there is no
+post-game card, no questionnaire invite and no closing page: the report is the
+end of the arc.
+
+**The report is the summit's, not the fundraiser's.** `/mambacares` and
+`/urbanmilers` end on the Dementia Singapore campaign; this event ends the way
+`/siloamneurosciencesummit` does - the ReCOGnAIze assessment and a conversation
+with the team - drawn by the same `SiloamOffer` and `SiloamStickyCta`. There is
+nothing to check out of at a coffee counter, which is the same reason the
+summit has no button. `usesMambaScreens("22grams")` is therefore **false**, and
+pinned so: that helper is what picks the fundraising report, and this event runs
+#MambaCares' steps without its screens.
+
+**Each event reads its own words.** `arcCopyFor`, `phklReportFor` and
+`boothReportFor` are all keyed on the variant, so the two events on the booth
+report cannot print each other's close - the summit sends readers to a stand
+ten metres away, and this one is a coffee counter in Singapore. The close in
+`COPY.screens["22grams"].report.offer` is **a working default for sign-off**,
+seeded from the summit's (which is NTU Homecoming's): it promises a
+conversation and names nothing this activation cannot deliver. `offer.cta` is
+the line to settle first, because it is the only one that says where that
+conversation happens.
 
 **Its bucket is the point of the route.** `TWENTY_TWO_GRAMS_SOURCE` is the
 literal `22grams` - the value written to the `source` column on both
-`game_scores` and `leads` - so its board opens empty rather than on NTU
-Homecoming's standings, and nothing played here can move a board another route
-is still showing. No row already recorded is touched to get there: rows keep the
+`game_scores` and `leads` - so its board opens empty rather than on another
+event's standings, and nothing played here can move a board another route is
+still showing. No row already recorded is touched to get there: rows keep the
 tag they were written with. Changing the literal strands every row already
 written under it, so it is pinned to the string, not just to "something
 non-empty" (`tests/config/leaderboardSource.test.ts`). To clear this board for a
@@ -564,19 +586,9 @@ brain, the headline, the scan block and the ember panel - the live standings on
 the right, six rows with a three-deep gradient podium, then the fact strip and
 the band of event photography. Its QR is built from `playUrlFor("22grams")`, so
 a scanned code lands on this event's link rather than another's, and it polls
-`/api/leaderboard` and `/api/report-rate` scoped to the `22grams` tag.
-
-**One thing is deliberately not `/phkl`'s: there is no prize.** The
-`/ntuhomecoming` arc it runs has none, so the ember panel that carries the Grab
-vouchers on the Kuala Lumpur board carries the event's three steps here instead
-- same box, same gradient, same weight in the composition, and nothing on screen
-promising something the event is not giving away. The three steps therefore come
-out of the fact strip's rotation (they are on screen permanently instead), which
-leaves the strip to the brain facts and the live completion rate. If a prize is
-announced later, `HowItWorksPanel` in `app/22grams/leaderboard/page.tsx` is where
-it goes and `src/config/siloam.ts` is the pattern: the ladder in a config, the
-podium depth read from its length, so the panel and the gradient rows cannot
-disagree about how deep the prize goes.
+`/api/leaderboard` and `/api/report-rate` scoped to the `22grams` tag. The ember
+panel carries the event's three steps; **the free drink is not on it yet** - see
+the note under Sharp Shot Week below.
 
 Board artwork under `public/images/22grams/board/` - **that folder's README
 lists the one file, its box in the frame and what stands in until it lands**.
@@ -602,11 +614,27 @@ answers "did this run earn a drink?", it is strictly less than the threshold
 zero or negative time is never a win. The venue named in the offer is the same
 single value. Pinned by `tests/config/sharpShot.test.ts`.
 
-**It is gated on the variant as well as the time.** `Event3GameResult` serves
-every daylight event, so the poster checks `variant === "22grams"` before it
-checks the clock - no other event can hand out this one's offer. A retake
-re-opens it for a second qualifying run and closes it for a slower one, so a
-new time can never leave the previous run's voucher on screen.
+**The funnel raises it, not a screen.** This arc has no post-game card at all -
+the 20th match walks straight into the "great job" beat and on into the quiz -
+so there is no screen for the poster to hang off, and one hung off the beat
+would unmount with it mid-celebration. `Funnel.tsx` mounts it above whichever
+step is showing, so it appears the moment the run is recorded and stays until
+it is dismissed. `tests/config/twentyTwoGramsFlow.test.ts` pins the absence of
+a `gameResult` step, because that is the assumption behind the mount point.
+
+**It is gated on the variant as well as the time**, so no other event can hand
+out this one's offer, and on the finish rather than a flag: a retake that beats
+the clock again has a new `gameFinishedAt`, so it raises a fresh poster, while
+dismissing one does not immediately reopen it.
+
+**`/22grams/poster-preview` shows it without a qualifying run.** The poster only
+appears under 30 seconds, which makes it awkward to review: checking the
+wording or the artwork would otherwise mean beating the clock every time. That
+page opens the real component with whatever name, time and moment are typed in,
+and its time box is deliberately not limited to qualifying runs - it reports,
+for the number given, whether the funnel would have raised the poster, so the
+29.9 / 30.0 boundary can be seen rather than argued about. It writes nothing:
+no score, no lead, no analytics, and it is `noindex`.
 
 **The stamp is the run's own moment, not the render's.** `GAME_DONE` carries
 `at` (the caller reads the clock; the reducer stays pure) and the funnel stores
@@ -615,6 +643,12 @@ Reopening the poster therefore cannot restamp it. `formatStamp` writes it from
 the local date parts rather than through `toLocaleString`, whose output moves
 with the device's locale - a stamp reading `21/09/2026` on one phone and
 `9/21/2026` on the next is one staff cannot check at a glance.
+
+**The free drink is not on the leaderboard yet.** The board's ember panel
+carries the event's three steps, from when this route had no prize; the offer
+now lives only on the poster. If it should be on the wall too, `HowItWorksPanel`
+in `app/22grams/leaderboard/page.tsx` is the panel to change, and
+`SHARP_SHOT_THRESHOLD_LABEL` is where the "< 30s" has to come from.
 
 The poster is **not** a pixel port of the print artwork: that is A-series
 portrait, and scaling its type down by width puts the score block at about 9px

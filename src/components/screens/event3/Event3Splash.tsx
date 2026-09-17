@@ -31,13 +31,13 @@ interface Event3SplashProps {
    * Which event's landing this is. The screen is the same for all of them; the
    * designs differ in the consent rows - "v3" (shared with the /event-v6
    * preview) keeps the parenthetical "(Required)" and the ember privacy link,
-   * while the others - "rotary", "ntuhomecoming" and "22grams" among them -
-   * lead with a bold "Required." and keep the link in body colour. "ihhsearegatta", "ihh" and "phkl" also carry the partner's consent
+   * while the others - "rotary" and "ntuhomecoming" among them - lead with a
+   * bold "Required." and keep the link in body colour. "ihhsearegatta", "ihh" and "phkl" also carry the partner's consent
    * as a
    * third row (Figma 638:7729 and 697:24953), which is what makes them taller
    * than a screen and lets them scroll; "mambacares" (Figma 756:14394),
-   * "urbanmilers" and "siloam" have no partner at all, so they are the plain
-   * two-row landing at the roomier size.
+   * "urbanmilers", "siloam" and "22grams" have no partner at all, so they are
+   * the plain two-row landing at the roomier size.
    * "siloam" is that landing with one thing added: the language picker, at the
    * very top, where it is the first decision on the screen rather than a
    * setting to be hunted for after reading a page you cannot read.
@@ -160,7 +160,8 @@ export function Event3Splash({
     design === "phkl" ||
     design === "mambacares" ||
     design === "urbanmilers" ||
-    design === "siloam";
+    design === "siloam" ||
+    design === "22grams";
   const reduced = useReducedMotion();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
