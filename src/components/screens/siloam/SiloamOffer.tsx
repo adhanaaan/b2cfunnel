@@ -1,7 +1,11 @@
 "use client";
 
+import { useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { SILOAM_OFFER_SECTION_ID } from "@/config/eventLinks";
 import { boothReportFor } from "@/config/copy";
+import { track } from "@/lib/analytics";
+import { springs } from "@/lib/motion";
 import { useCopy } from "@/components/LanguageContext";
 import { useVariant } from "@/components/VariantContext";
 import { Reveal, reportCard, reportEyebrow, reportHeading } from "../phkl/ui";
@@ -28,7 +32,12 @@ import { Reveal, reportCard, reportEyebrow, reportHeading } from "../phkl/ui";
  * than any form.
  */
 export function SiloamOffer() {
-  const c = boothReportFor(useVariant(), useCopy()).offer;
+  const variant = useVariant();
+  const c = boothReportFor(variant, useCopy()).offer;
+  const reduced = useReducedMotion();
+  // Whether the reader has said they are interested. Only ever true on an
+  // event whose copy has a thank-you to give them - see `ctaThanks`.
+  const [interested, setInterested] = useState(false);
 
   return (
     <section
@@ -66,12 +75,43 @@ export function SiloamOffer() {
         </div>
       </Reveal>
 
-      {/* The call to action itself. Not a link and not a button: there is
-          nowhere to send anyone, so it reads as the instruction it is. */}
+      {/* The call to action. Where the event has a thank-you to give, it is a
+          real button and the tap is answered in place; where it has none
+          (the summit: nowhere to send anyone, and the team is in the room),
+          it stays the instruction it reads as. */}
       <Reveal className="mt-6">
-        <p className="flex min-h-[54px] w-full items-center justify-center rounded-full bg-gradient-to-r from-[#ff8a1f] via-[#f9550f] to-[#d62f16] px-8 py-3 text-center text-base font-bold tracking-[0.025em] text-white shadow-[0_14px_34px_-14px_rgba(214,47,22,0.6)]">
-          {c.cta}
-        </p>
+        <AnimatePresence mode="wait" initial={false}>
+          {c.ctaThanks && interested ? (
+            <motion.p
+              key="thanks"
+              role="status"
+              initial={reduced ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={springs.enter}
+              className="flex min-h-[54px] w-full items-center justify-center rounded-full bg-[#fff1e6] px-8 py-3 text-center text-base font-bold tracking-[0.025em] text-[#b4460f]"
+            >
+              {c.ctaThanks}
+            </motion.p>
+          ) : c.ctaThanks ? (
+            <motion.button
+              key="cta"
+              type="button"
+              onClick={() => {
+                track("interest_click", { variant, step: "report_offer" });
+                setInterested(true);
+              }}
+              whileTap={reduced ? undefined : { scale: 0.98 }}
+              transition={springs.pop}
+              className="flex min-h-[54px] w-full items-center justify-center rounded-full bg-gradient-to-r from-[#ff8a1f] via-[#f9550f] to-[#d62f16] px-8 py-3 text-center text-base font-bold tracking-[0.025em] text-white shadow-[0_14px_34px_-14px_rgba(214,47,22,0.6)] transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d62f16]"
+            >
+              {c.cta}
+            </motion.button>
+          ) : (
+            <p className="flex min-h-[54px] w-full items-center justify-center rounded-full bg-gradient-to-r from-[#ff8a1f] via-[#f9550f] to-[#d62f16] px-8 py-3 text-center text-base font-bold tracking-[0.025em] text-white shadow-[0_14px_34px_-14px_rgba(214,47,22,0.6)]">
+              {c.cta}
+            </p>
+          )}
+        </AnimatePresence>
         <p className="mt-4 text-center text-[11px] leading-[1.6] text-[#b79c8e]">
           {c.credibility}
         </p>

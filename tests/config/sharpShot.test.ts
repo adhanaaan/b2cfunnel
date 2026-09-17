@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  SHARP_SHOT_BANNER,
   SHARP_SHOT_POSTER,
   SHARP_SHOT_THRESHOLD_LABEL,
   SHARP_SHOT_THRESHOLD_MS,
@@ -47,17 +48,41 @@ describe("sharp shot threshold", () => {
   // The label is printed on the poster; the number decides who gets a drink.
   // If they could drift, the poster would advertise the wrong offer.
   it("prints the label the threshold actually is", () => {
-    expect(SHARP_SHOT_THRESHOLD_LABEL).toBe("< 30s");
-    expect(SHARP_SHOT_POSTER.heading.at(-1)).toContain(
-      SHARP_SHOT_THRESHOLD_LABEL,
-    );
+    expect(SHARP_SHOT_THRESHOLD_LABEL).toBe("< 30 s");
+    // The headline's second line IS the label, not a copy of it.
+    expect(SHARP_SHOT_POSTER.headingThreshold).toBe(SHARP_SHOT_THRESHOLD_LABEL);
     const seconds = String(SHARP_SHOT_THRESHOLD_MS / 1000);
     expect(SHARP_SHOT_THRESHOLD_LABEL).toContain(seconds);
   });
 
   it("names the venue the drink is redeemed at", () => {
-    expect(SHARP_SHOT_VENUE).toBe("22g Frasers Tower");
-    expect(SHARP_SHOT_POSTER.reward.join(" ")).toContain(SHARP_SHOT_VENUE);
+    expect(SHARP_SHOT_VENUE).toBe("22 Grams Coffee Frasers Tower");
+    // The line that names it is written from the constant, not beside it.
+    expect(SHARP_SHOT_POSTER.reward.drink).toContain(SHARP_SHOT_VENUE);
+  });
+
+  // The design (925:9236) drops the "while redemptions last" line and closes
+  // on the UK Biobank claim instead of the Lancet figure. Asserted so the two
+  // cannot quietly come back through a merge.
+  it("closes on the claim the campaign is built on", () => {
+    expect(SHARP_SHOT_POSTER.footnote).toContain("UK Biobank");
+    expect(JSON.stringify(SHARP_SHOT_POSTER)).not.toContain("redemptions");
+  });
+
+  it("tells the reader the whole poster is the close", () => {
+    expect(SHARP_SHOT_POSTER.dismiss.toLowerCase()).toContain("tap anywhere");
+  });
+
+  it("carries the condition on the offer, on the poster and the banner", () => {
+    expect(SHARP_SHOT_POSTER.fineprint).toBe("*while redemption last");
+    expect(SHARP_SHOT_BANNER.fineprint).toBe(SHARP_SHOT_POSTER.fineprint);
+  });
+
+  // The report's pinned banner repeats the offer, so it repeats the threshold.
+  // Written from the same label, so the two cannot advertise different clocks.
+  it("offers the same clock on the report's banner", () => {
+    expect(SHARP_SHOT_BANNER.heading[0]).toContain(SHARP_SHOT_THRESHOLD_LABEL);
+    expect(SHARP_SHOT_BANNER.cta).toBe("Retry Game");
   });
 });
 

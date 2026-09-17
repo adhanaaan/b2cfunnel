@@ -162,6 +162,11 @@ export function Event3Splash({
     design === "urbanmilers" ||
     design === "siloam" ||
     design === "22grams";
+  // The newer consent shape (/22grams): one tick for the authorisation, and
+  // registering as the marketing consent rather than a second tick. Driven by
+  // the copy block rather than by the design name, so the landing that carries
+  // the words is the landing that gets the block.
+  const consentForm = c.consentForm;
   const reduced = useReducedMotion();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -186,9 +191,14 @@ export function Event3Splash({
       setError(c.consentRequiredError);
       return;
     }
-    // The marketing opt-in is separate and never blocks play. Fire-and-forget
-    // so a slow write can't hold up the challenge.
-    if (marketingConsent && !preview) {
+    // What the player agreed to about marketing. With the newer block there is
+    // no second tick to read: the line under the one they ticked says that
+    // registering IS the consent, so submitting the form gives it.
+    const marketing = consentForm ? true : marketingConsent;
+
+    // The marketing opt-in never blocks play. Fire-and-forget so a slow write
+    // can't hold up the challenge.
+    if (marketing && !preview) {
       void fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -205,7 +215,7 @@ export function Event3Splash({
     onSubmit(
       name.trim(),
       email.trim(),
-      marketingConsent,
+      marketing,
       partner ? partnerConsent : undefined,
     );
   };
@@ -316,35 +326,71 @@ export function Event3Splash({
             className={inputClass}
           />
           <div className="space-y-1.5 pt-0.5">
-            <ConsentCheckbox
-              roomy={roomy}
-              checked={contactConsent}
-              onChange={(v) => {
-                setContactConsent(v);
-                if (v) setError(null);
-              }}
-            >
-              <StrongWords text={c.consentRequired} />{" "}
-              <a
-                href={c.privacyHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={
-                  v3
-                    ? "font-semibold text-ember-core underline underline-offset-2"
-                    : "underline underline-offset-2"
-                }
-              >
-                {c.privacyLinkLabel}
-              </a>
-            </ConsentCheckbox>
-            <ConsentCheckbox
-              roomy={roomy}
-              checked={marketingConsent}
-              onChange={setMarketingConsent}
-            >
-              {c.consentMarketing}
-            </ConsentCheckbox>
+            {consentForm ? (
+              // One tick, under a heading, with the newsletter consent stated
+              // beneath it rather than asked for again.
+              <>
+                <p className="text-[12.5px] font-bold leading-[1.45] text-charcoal">
+                  {consentForm.heading}
+                </p>
+                <ConsentCheckbox
+                  roomy={roomy}
+                  checked={contactConsent}
+                  onChange={(v) => {
+                    setContactConsent(v);
+                    if (v) setError(null);
+                  }}
+                >
+                  {consentForm.authorisation}{" "}
+                  <a
+                    href={c.privacyHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2"
+                  >
+                    {c.privacyLinkLabel}
+                  </a>
+                </ConsentCheckbox>
+                {/* Not a checkbox: it states what submitting the form does,
+                    which is not a thing to agree to separately. It is indented
+                    to the tick's text so it reads as part of the same block. */}
+                <p className="pl-[30px] text-[12.5px] font-bold leading-[1.45] text-secondary">
+                  {consentForm.registerNote}
+                </p>
+              </>
+            ) : (
+              <>
+                <ConsentCheckbox
+                  roomy={roomy}
+                  checked={contactConsent}
+                  onChange={(v) => {
+                    setContactConsent(v);
+                    if (v) setError(null);
+                  }}
+                >
+                  <StrongWords text={c.consentRequired} />{" "}
+                  <a
+                    href={c.privacyHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={
+                      v3
+                        ? "font-semibold text-ember-core underline underline-offset-2"
+                        : "underline underline-offset-2"
+                    }
+                  >
+                    {c.privacyLinkLabel}
+                  </a>
+                </ConsentCheckbox>
+                <ConsentCheckbox
+                  roomy={roomy}
+                  checked={marketingConsent}
+                  onChange={setMarketingConsent}
+                >
+                  {c.consentMarketing}
+                </ConsentCheckbox>
+              </>
+            )}
             {partner && (
               // The partner's wording is one all-or-nothing agreement, so it is
               // ONE tick over the whole block - the clauses and the withdrawal

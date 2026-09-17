@@ -231,13 +231,36 @@ describe("22grams copy", () => {
     expect(arcCopyFor("mambacares")).not.toBe(COPY.screens["22grams"]);
   });
 
-  // The landing is #MambaCares': the plain two-row consent, no partner block.
+  // The landing is #MambaCares', with ONE thing of its own: the consent block.
   // Asserted against that event's own splash rather than against a literal, so
-  // the two cannot drift into different landings while both claim to be one.
-  it("ships the #MambaCares landing", () => {
-    expect(COPY.screens["22grams"].splash).toEqual(
-      COPY.screens.mambacares.splash,
-    );
+  // the rest cannot drift while both claim to be the same landing.
+  it("ships the #MambaCares landing, bar its own consent block", () => {
+    const { consentForm, ...rest } = COPY.screens["22grams"].splash;
+    expect(rest).toEqual(COPY.screens.mambacares.splash);
+    expect(consentForm).toBeDefined();
+  });
+
+  /**
+   * The consent block is this event's alone. It replaces two ticks with one,
+   * and says that registering IS the newsletter consent - so a landing that
+   * picked it up by accident would start recording an opt-in nobody was asked
+   * for. Every other event must therefore still have none.
+   */
+  it("is the only landing on the one-tick consent block", () => {
+    const withBlock = (
+      Object.keys(COPY.screens) as (keyof typeof COPY.screens)[]
+    ).filter((key) => {
+      const screen = COPY.screens[key] as { splash?: { consentForm?: unknown } };
+      return screen?.splash?.consentForm !== undefined;
+    });
+    expect(withBlock).toEqual(["22grams"]);
+  });
+
+  it("asks whose answers these are, and states the newsletter consent", () => {
+    const form = COPY.screens["22grams"].splash.consentForm;
+    expect(form?.heading).toContain("I hereby confirm");
+    expect(form?.authorisation).toContain("authorized");
+    expect(form?.registerNote).toContain("Gray Matter Solutions");
   });
 });
 

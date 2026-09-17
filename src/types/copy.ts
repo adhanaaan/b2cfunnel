@@ -288,6 +288,25 @@ export interface Event3Copy {
     nameError: string;
     emailError: string;
     consentMarketing: string;
+    /**
+     * The newer consent block (/22grams): a heading, ONE tick for the
+     * authorisation, and a statement that registering IS the marketing
+     * consent - so there is no separate opt-in row, and `consentMarketing`
+     * goes unused on a landing that carries this.
+     *
+     * Optional: a landing without it keeps the two ticks above, which is every
+     * event that shipped before this one.
+     */
+    consentForm?: {
+      heading: string;
+      /** What the one tick agrees to. */
+      authorisation: string;
+      /**
+       * Under the tick, unticked: a consequence of submitting rather than a
+       * choice, so it is a statement and not a checkbox.
+       */
+      registerNote: string;
+    };
     privacyLinkLabel: string;
     // Where the privacy link goes. Each event links the policy written for it:
     // the regatta has its own, because its policy names the partner it shares
@@ -689,6 +708,15 @@ export interface SiloamCopy extends PhklArcCopy {
         offerName: string;
         offerPoints: string[];
         cta: string;
+        /**
+         * What the reader sees once they have said they are interested.
+         *
+         * Its presence is what makes the call to action a BUTTON. The summit
+         * has nowhere to send anyone and no way to follow up in the room, so
+         * it leaves this out and the line stays the instruction it is; the
+         * event that can follow up sets it, and the tap is answered.
+         */
+        ctaThanks?: string;
         credibility: string;
       };
     };

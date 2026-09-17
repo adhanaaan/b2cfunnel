@@ -517,7 +517,21 @@ const SILOAM_SCREEN_COPY: SiloamCopy = {
  */
 const TWENTY_TWO_GRAMS_SCREEN_COPY: TwentyTwoGramsCopy = {
   ...PHKL_ARC_COPY,
-  splash: NO_PARTNER_SPLASH,
+  splash: {
+    ...NO_PARTNER_SPLASH,
+    // This event's consent is one tick, not two: the player confirms whose
+    // answers they are giving, and registering is itself the marketing
+    // consent. `consentRequired` and `consentMarketing` are inherited above
+    // and go unused while this block is set - Event3Splash renders one or the
+    // other, never both.
+    consentForm: {
+      heading: "I hereby confirm that I am submitting this form:",
+      authorisation:
+        "On my own behalf; or on behalf of another person, and I confirm that I am authorized to provide the answers in this form.",
+      registerNote:
+        "By registering, I consent for Gray Matter Solutions to contact me with emails and newsletters.",
+    },
+  },
   report: {
     ...PHKL_ARC_COPY.report,
     ...PHKL_REPORT_SHARED,
@@ -540,7 +554,11 @@ const TWENTY_TWO_GRAMS_SCREEN_COPY: TwentyTwoGramsCopy = {
         "Registered with Singapore's HSA",
         "Results reviewed with a medical professional",
       ],
-      cta: "Speak to our team",
+      // A button on this event, unlike the summit's: there is a list to join
+      // and someone to follow up, so the tap is answered rather than being an
+      // instruction to walk somewhere.
+      cta: "I'm interested",
+      ctaThanks: "Thank you for interest. We will send details soon",
       credibility:
         "Built with NTU's Dementia Research Centre · 2024 Lancet Commission",
     },
