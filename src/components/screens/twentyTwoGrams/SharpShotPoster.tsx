@@ -241,7 +241,9 @@ export function SharpShotPoster({
             <Sparkle left={283} top={136.11} alpha={2} />
             <Sparkle left={6} top={29} alpha={1} />
 
-            {/* Top row (925:8802): the campaign lockup and the mark. */}
+            {/* Top row: the institutional lockup at the left, then the
+                campaign lockup and the 22g mark grouped at the right
+                (925:8802 for the two on the right). */}
             <div
               className="absolute flex items-center justify-between"
               style={{
@@ -251,33 +253,51 @@ export function SharpShotPoster({
                 height: p(32.152),
               }}
             >
-              <p
-                className="shrink-0 text-center font-bold uppercase leading-[1.1]"
-                style={{
-                  fontFamily: "var(--font-lexend-zetta), var(--font-jakarta)",
-                  fontSize: p(9.22),
-                }}
-              >
-                {c.week.map((word) => (
-                  <span key={word} className="block">
-                    {word}
-                  </span>
-                ))}
-              </p>
-              <OptionalImage
-                src={WORDMARK}
-                alt="22g"
-                className="shrink-0 object-contain"
-                style={{ width: p(55), height: p(23.913) }}
-                fallback={
-                  <span
-                    className="shrink-0 font-extrabold leading-none tracking-[-0.02em]"
-                    style={{ fontSize: p(23.913) }}
-                  >
-                    22g
-                  </span>
-                }
+              {/* The one lockup this build already ships, whited out: the file
+                  is the dark version every other screen puts on cream, and
+                  this card is white-on-ember. Same treatment Event2Splash and
+                  Event3Wrap give it. Its own alt text, because it is the only
+                  thing on the poster that says who ran this. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/gms-ntu-logo.png"
+                alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
+                className="w-auto shrink-0 select-none brightness-0 invert"
+                style={{ height: p(24) }}
               />
+
+              <div
+                className="flex shrink-0 items-center"
+                style={{ gap: p(15) }}
+              >
+                <p
+                  className="shrink-0 text-center font-bold uppercase leading-[1.1]"
+                  style={{
+                    fontFamily: "var(--font-lexend-zetta), var(--font-jakarta)",
+                    fontSize: p(9.22),
+                  }}
+                >
+                  {c.week.map((word) => (
+                    <span key={word} className="block">
+                      {word}
+                    </span>
+                  ))}
+                </p>
+                <OptionalImage
+                  src={WORDMARK}
+                  alt="22g"
+                  className="shrink-0 object-contain"
+                  style={{ width: p(55), height: p(23.913) }}
+                  fallback={
+                    <span
+                      className="shrink-0 font-extrabold leading-none tracking-[-0.02em]"
+                      style={{ fontSize: p(23.913) }}
+                    >
+                      22g
+                    </span>
+                  }
+                />
+              </div>
             </div>
 
             {/* Headline (923:8785): the sentence, then the time it is about,

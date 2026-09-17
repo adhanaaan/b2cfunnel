@@ -689,6 +689,12 @@ now lives only on the poster. If it should be on the wall too, `HowItWorksPanel`
 in `app/22grams/leaderboard/page.tsx` is the panel to change, and
 `SHARP_SHOT_THRESHOLD_LABEL` is where the "< 30 s" has to come from.
 
+The institutional lockup at the top left is `/gms-ntu-logo.png` - the one this
+build already ships, whited out with `brightness-0 invert`, because the file is
+the dark version every other screen puts on cream and this card is
+white-on-ember. Same treatment `Event2Splash` and `Event3Wrap` give it, so
+there is no second copy of the lockup to keep in step.
+
 **How it is built.** The card draws in the design's own pixels: one unit,
 `--p`, is one design pixel - the card scaled to fill the width inside a 20px
 gutter, capped at 1.25x so a 340px card does not balloon on a desktop, and
