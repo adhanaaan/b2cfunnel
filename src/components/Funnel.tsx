@@ -236,7 +236,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             state.variant === "ihh" ||
             state.variant === "phkl" ||
             state.variant === "urbanmilers" ||
-            state.variant === "siloam"
+            state.variant === "siloam" ||
+            state.variant === "22grams"
               ? state.variant
               : // Everything left on the community-run arc is #MambaCares or
                 // its /event-v7 preview, which walks that run's landing.

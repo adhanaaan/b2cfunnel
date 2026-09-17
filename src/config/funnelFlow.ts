@@ -246,6 +246,18 @@ const ROTARY_FLOW: FunnelStep[] = DAYLIGHT_FLOW;
 const NTU_HOMECOMING_FLOW: FunnelStep[] = ROTARY_FLOW;
 
 /**
+ * 22 Grams (/22grams): the NTU Homecoming arc, shared rather than rebuilt - so
+ * the daylight flow as-is again, with no partner consent page and no "That's a
+ * wrap!" screen.
+ *
+ * Sharing the array is the point: a later change to that arc reaches this event
+ * too, and its question set cannot drift off the one every other score was
+ * recorded against. What /22grams holds of its own is the part that must not be
+ * shared - its bucket, its pause switch, its copy block and its board.
+ */
+const TWENTY_TWO_GRAMS_FLOW: FunnelStep[] = NTU_HOMECOMING_FLOW;
+
+/**
  * IHH SEA Regatta (/ihhsearegatta): the daylight arc - landing, instructions,
  * game - with one page added and three kept out.
  *
@@ -421,6 +433,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   mambacares: MAMBACARES_FLOW,
   urbanmilers: URBANMILERS_FLOW,
   siloam: SILOAM_FLOW,
+  "22grams": TWENTY_TWO_GRAMS_FLOW,
   event6: EVENT6_FLOW,
   event7: EVENT7_FLOW,
 };

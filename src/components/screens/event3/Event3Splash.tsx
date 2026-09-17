@@ -31,8 +31,8 @@ interface Event3SplashProps {
    * Which event's landing this is. The screen is the same for all of them; the
    * designs differ in the consent rows - "v3" (shared with the /event-v6
    * preview) keeps the parenthetical "(Required)" and the ember privacy link,
-   * while the others lead with a bold "Required." and keep the link in body
-   * colour. "ihhsearegatta", "ihh" and "phkl" also carry the partner's consent
+   * while the others - "rotary", "ntuhomecoming" and "22grams" among them -
+   * lead with a bold "Required." and keep the link in body colour. "ihhsearegatta", "ihh" and "phkl" also carry the partner's consent
    * as a
    * third row (Figma 638:7729 and 697:24953), which is what makes them taller
    * than a screen and lets them scroll; "mambacares" (Figma 756:14394),
@@ -53,7 +53,8 @@ interface Event3SplashProps {
     | "phkl"
     | "mambacares"
     | "urbanmilers"
-    | "siloam";
+    | "siloam"
+    | "22grams";
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

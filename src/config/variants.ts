@@ -22,7 +22,8 @@ export function isPreviewVariant(variant: QuizVariant): boolean {
  * page after the post-game result, PHKL is the regatta with its own screens
  * either side of the game, and #MambaCares is PHKL with no partner and a
  * fundraising report in place of the screening offer - so all of them share
- * the landing, the instructions and the warm game theme.
+ * the landing, the instructions and the warm game theme. 22 Grams (/22grams)
+ * is NTU Homecoming again on a bucket of its own, so it lands here too.
  */
 export function usesDaylightScreens(variant: QuizVariant): boolean {
   return (
@@ -36,6 +37,7 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
     variant === "mambacares" ||
     variant === "urbanmilers" ||
     variant === "siloam" ||
+    variant === "22grams" ||
     variant === "event7"
   );
 }

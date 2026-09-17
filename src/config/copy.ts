@@ -950,6 +950,11 @@ export const COPY: CopyConfig = {
       // own block so this event's wording can be changed on its own.
       splash: NO_PARTNER_SPLASH,
     },
+    "22grams": {
+      // 22 Grams ships the same landing again, word for word. Its own block so
+      // this event's wording can be changed without touching NTU Homecoming's.
+      splash: NO_PARTNER_SPLASH,
+    },
     ihhsearegatta: IHHSEA_SCREEN_COPY,
     // /ihh - the regatta arc again on its own `ihh` source bucket. Same copy,
     // word for word, with the required consent row pointing at this route's

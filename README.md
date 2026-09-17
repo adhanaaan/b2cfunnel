@@ -191,6 +191,8 @@ its own switch.
 this bucket, with its QR built from `playUrlFor("ntuhomecoming")` so a scanned
 code lands on this event's link rather than another's.
 
+`/22grams` runs this same arc again on a bucket of its own - see below.
+
 ## /ihhsearegatta (IHH SEA Regatta)
 
 `/ihhsearegatta` runs the `/event-v3` arc (IHH is the partner at this event
@@ -526,6 +528,60 @@ the tilted e-voucher stack over the panel's bottom edge** (`892:7220`) - the
 board simply draws without it. The three quiz-primer photos are read from
 `/images/phkl/` (generic sleep/exercise/diet shots, shared rather than
 duplicated).
+
+## /22grams (22 Grams)
+
+`/22grams` is `/ntuhomecoming` under a different name and a different
+leaderboard bucket, with **the `/phkl` board** on the wall instead of the NTU
+one. Same Daylight Ember arc, same differences from `/event-v3` (no partner
+consent page, no "That's a wrap!" screen, the bold "Required." consent row),
+same question set - so a 22 Grams score stays comparable with every score
+already recorded (`tests/config/twentyTwoGramsFlow.test.ts`).
+
+The arc is shared rather than copied, wherever sharing is what keeps the two
+from drifting apart: `TWENTY_TWO_GRAMS_FLOW` *is* `NTU_HOMECOMING_FLOW` (which
+is `ROTARY_FLOW`), so a later change to that arc reaches this event too, and
+both landings read the same `NO_PARTNER_SPLASH` copy. What each event holds of
+its own is the part that must not be shared - its bucket, its pause switch, its
+route, its board, and a copy block (`COPY.screens["22grams"]`) so this event's
+wording can be changed without touching NTU Homecoming's.
+
+**Its bucket is the point of the route.** `TWENTY_TWO_GRAMS_SOURCE` is the
+literal `22grams` - the value written to the `source` column on both
+`game_scores` and `leads` - so its board opens empty rather than on NTU
+Homecoming's standings, and nothing played here can move a board another route
+is still showing. No row already recorded is touched to get there: rows keep the
+tag they were written with. Changing the literal strands every row already
+written under it, so it is pinned to the string, not just to "something
+non-empty" (`tests/config/leaderboardSource.test.ts`). To clear this board for a
+second event day, give it a new value - `22grams-day2` - and redeploy.
+`TWENTY_TWO_GRAMS_PAUSED` is likewise its own switch, and the score endpoint
+reads it per source, so pausing this event never drops another's results.
+
+**The board is at `/22grams/leaderboard`, and it is the horizontal `/phkl`
+frame** (Figma 739:10645) rather than the NTU board: the pitch on the left - the
+brain, the headline, the scan block and the ember panel - the live standings on
+the right, six rows with a three-deep gradient podium, then the fact strip and
+the band of event photography. Its QR is built from `playUrlFor("22grams")`, so
+a scanned code lands on this event's link rather than another's, and it polls
+`/api/leaderboard` and `/api/report-rate` scoped to the `22grams` tag.
+
+**One thing is deliberately not `/phkl`'s: there is no prize.** The
+`/ntuhomecoming` arc it runs has none, so the ember panel that carries the Grab
+vouchers on the Kuala Lumpur board carries the event's three steps here instead
+- same box, same gradient, same weight in the composition, and nothing on screen
+promising something the event is not giving away. The three steps therefore come
+out of the fact strip's rotation (they are on screen permanently instead), which
+leaves the strip to the brain facts and the live completion rate. If a prize is
+announced later, `HowItWorksPanel` in `app/22grams/leaderboard/page.tsx` is where
+it goes and `src/config/siloam.ts` is the pattern: the ladder in a config, the
+podium depth read from its length, so the panel and the gradient rows cannot
+disagree about how deep the prize goes.
+
+Board artwork under `public/images/22grams/board/` - **that folder's README
+lists the one file, its box in the frame and what stands in until it lands**.
+It is optional: with no `qr.png` there the board generates its own code from the
+play URL, so the board is live and correct before anything is uploaded.
 
 ## Translations (English and Bahasa Indonesia)
 

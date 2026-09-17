@@ -456,6 +456,10 @@ export interface ScreenCopy {
   // Siloam Neuroscience Summit (/siloamneurosciencesummit): the PHKL arc with
   // the #MambaCares landing and the NTU Homecoming close.
   siloam: SiloamCopy;
+  // 22 Grams (/22grams): the NTU Homecoming landing on a bucket of its own - a
+  // block of its own so either event's wording can be changed without touching
+  // the other's.
+  "22grams": NoPartnerSplashCopy;
 }
 
 /**
@@ -817,7 +821,8 @@ export interface IhhseaCopy {
   };
 }
 
-// The events with no partner in them (/rotaryklwam, /ntuhomecoming): the
+// The events with no partner in them (/rotaryklwam, /ntuhomecoming,
+// /22grams): the
 // daylight arc with no consent page. Only the landing's required-consent line
 // differs from v3; every other screen reuses the v3/v2 copy. One block per
 // event, so either one's wording can be changed on its own.

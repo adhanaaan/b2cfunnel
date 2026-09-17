@@ -252,6 +252,31 @@ export const SILOAM_PAUSED = false;
 export const SILOAM_SOURCE: string = "siloam";
 
 /**
+ * Independent pause switch for 22 Grams (/22grams and its TV board). Its own
+ * switch, like every other event's: /22grams and /ntuhomecoming run the same
+ * arc and must never be closed together by accident.
+ */
+export const TWENTY_TWO_GRAMS_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the 22 Grams funnel. Every /22grams score and report
+ * is tagged with it, its board filters to it and the rank on its post-game
+ * card is read back from it.
+ *
+ * A bucket of its own is the whole reason this route exists alongside
+ * /ntuhomecoming, and it is what starts the board empty: standings are filtered
+ * by this tag, so /22grams opens on a clean board with no NTU Homecoming row on
+ * it, and no row already recorded is touched or moved to get there. Nothing is
+ * ever deleted - rows keep the tag they were written with.
+ *
+ * This is the value written to the `source` column for this event. Changing the
+ * literal strands every row already written under it, which is exactly how a
+ * second event day gets a fresh board: give this a new value - "22grams-day2" -
+ * and redeploy, and the earlier rows keep their tag and simply stop appearing.
+ */
+export const TWENTY_TWO_GRAMS_SOURCE: string = "22grams";
+
+/**
  * The bucket a variant's rows are tagged with, for both `game_scores.source`
  * and `leads.source`. Shared so a score and the report that follows it always
  * carry the same tag - the report rate on the board divides one by the other,
@@ -280,6 +305,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return URBANMILERS_SOURCE;
     case "siloam":
       return SILOAM_SOURCE;
+    case "22grams":
+      return TWENTY_TWO_GRAMS_SOURCE;
     case "event2":
       return "event2";
     case "event":

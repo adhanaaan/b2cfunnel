@@ -10,6 +10,7 @@ import {
   PHKL_SOURCE,
   ROTARY_SOURCE,
   SILOAM_SOURCE,
+  TWENTY_TWO_GRAMS_SOURCE,
   URBANMILERS_SOURCE,
   eventSource,
 } from "@/config/event";
@@ -390,6 +391,69 @@ describe("urbanmilers leaderboard source", () => {
     ];
     for (const variant of others) {
       expect(eventSource(variant)).not.toBe(URBANMILERS_SOURCE);
+    }
+  });
+});
+
+/**
+ * The 22 Grams board is scoped the same way, and `22grams` is the literal the
+ * database's `source` column carries for this event.
+ *
+ * This bucket is also what makes the new board start EMPTY: /22grams and
+ * /ntuhomecoming run the same arc, and only this tag keeps one event's times
+ * off the other's TV. A collision would merge two live boards with no error at
+ * all.
+ */
+describe("22grams leaderboard source", () => {
+  it("is the tag the database column expects", () => {
+    expect(TWENTY_TWO_GRAMS_SOURCE).toBe("22grams");
+  });
+
+  it("never collides with another event's bucket", () => {
+    for (const other of [
+      "event",
+      "event2",
+      "event3",
+      EVENT3_SOURCE,
+      DBS_DAY1_SOURCE,
+      DBS_DAY2_SOURCE,
+      ROTARY_SOURCE,
+      NTU_HOMECOMING_SOURCE,
+      IHHSEA_SOURCE,
+      IHH_SOURCE,
+      PHKL_SOURCE,
+      MAMBACARES_SOURCE,
+      URBANMILERS_SOURCE,
+      SILOAM_SOURCE,
+    ]) {
+      expect(TWENTY_TWO_GRAMS_SOURCE).not.toBe(other);
+    }
+  });
+
+  // A score and the report that follows it must carry the SAME tag, or the
+  // board's completion rate divides one event's reports by another's players.
+  it("tags both the score and the lead from the /22grams funnel", () => {
+    expect(eventSource("22grams")).toBe(TWENTY_TWO_GRAMS_SOURCE);
+  });
+
+  it("leaves every other variant's tag alone", () => {
+    const others: QuizVariant[] = [
+      "full",
+      "woman",
+      "event",
+      "event2",
+      "event3",
+      "rotary",
+      "ntuhomecoming",
+      "ihhsearegatta",
+      "ihh",
+      "phkl",
+      "mambacares",
+      "urbanmilers",
+      "siloam",
+    ];
+    for (const variant of others) {
+      expect(eventSource(variant)).not.toBe(TWENTY_TWO_GRAMS_SOURCE);
     }
   });
 });
