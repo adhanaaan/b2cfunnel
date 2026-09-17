@@ -28,6 +28,17 @@ export const EVENT_PATHS: Partial<Record<QuizVariant, string>> = {
 };
 
 /**
+ * Gray Matter Solutions' own site - where someone who has just played goes to
+ * find out who made the thing they played.
+ *
+ * Here rather than inside a copy block because two places now point at it: the
+ * "That's a wrap" link, and the QR on the Sharp Shot poster. A poster whose
+ * code opened a different address from the link beside it would be a poster
+ * nobody could debug from the outside.
+ */
+export const GMS_SITE_URL = "https://www.graymattercognition.com/";
+
+/**
  * The booking form for the Memory Screening Package, at the end of the /phkl
  * report. Only the button under the poster goes straight here; the two
  * earlier buttons walk the reader down to the poster first, so nobody books

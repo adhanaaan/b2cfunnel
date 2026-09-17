@@ -15,6 +15,7 @@ import { COPY_BY_LANGUAGE } from "@/config/copy.translations";
 import { usesMambaScreens } from "@/config/variants";
 import { deepMerge } from "@/lib/deepMerge";
 import { STAT_CARDS_BY_ID } from "@/config/statCards";
+import { GMS_SITE_URL } from "@/config/eventLinks";
 
 /**
  * ALL user-facing copy lives here. British English. Working titles per build
@@ -939,7 +940,7 @@ export const COPY: CopyConfig = {
         body: "The Reaction Time Challenge has closed. Thanks to everyone who took part.",
         linkIntro: "Learn more about brain health",
         linkLabel: "Gray Matter Solutions",
-        linkHref: "https://www.graymattercognition.com/",
+        linkHref: GMS_SITE_URL,
       },
       instructions: {
         heading: "Reaction Time Challenge",

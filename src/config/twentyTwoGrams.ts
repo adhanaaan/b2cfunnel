@@ -88,6 +88,24 @@ export const SHARP_SHOT_POSTER = {
   /** The unit the score is printed in: "28.5 seconds". */
   secondsSuffix: "seconds",
 
+  /**
+   * Who measured the thing the player is about to screenshot.
+   *
+   * It sits over the score rather than at the foot on purpose: the score is
+   * the one part of this card a player re-reads and shows people, and until
+   * now nothing on it said where the number came from.
+   */
+  measuredBy: ["Processing speed, measured by", "Gray Matter Solutions"],
+
+  /** Under the close: why that measurement is worth anything. */
+  provenance: "Built with NTU's Dementia Research Centre",
+
+  /**
+   * Under the code. Held to one line at the width the code leaves it - a
+   * longer label wraps onto two and the second runs off the card.
+   */
+  scanLabel: "Find out more",
+
   /** The close: the claim this campaign is actually built on. */
   footnote:
     "Unsweetened caffeinated coffee is linked to lower dementia risk (UK Biobank)",

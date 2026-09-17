@@ -2,8 +2,10 @@
 
 import { useEffect, useMemo } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { QRCodeSVG } from "qrcode.react";
 import { Lexend_Zetta } from "next/font/google";
 import { SHARP_SHOT_POSTER } from "@/config/twentyTwoGrams";
+import { GMS_SITE_URL } from "@/config/eventLinks";
 import { formatSeconds, formatStamp } from "@/lib/format";
 import { springs } from "@/lib/motion";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
@@ -250,7 +252,7 @@ export function SharpShotPoster({
                 left: p(18),
                 top: p(12.86),
                 width: p(304),
-                height: p(32.152),
+                height: p(34),
               }}
             >
               {/* The one lockup this build already ships, whited out: the file
@@ -263,7 +265,7 @@ export function SharpShotPoster({
                 src="/gms-ntu-logo.png"
                 alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
                 className="w-auto shrink-0 select-none brightness-0 invert"
-                style={{ height: p(24) }}
+                style={{ height: p(34) }}
               />
 
               <div
@@ -407,6 +409,26 @@ export function SharpShotPoster({
               {c.fineprint}
             </p>
 
+            {/* Who measured it, over the score it belongs to. */}
+            <p
+              className="absolute text-right font-bold leading-[1.15] opacity-90"
+              style={{
+                left: p(171),
+                top: p(365),
+                width: p(151),
+                fontSize: p(9.6),
+              }}
+            >
+              {c.measuredBy.map((line, i) => (
+                <span
+                  key={line}
+                  className={i === c.measuredBy.length - 1 ? "block font-extrabold" : "block"}
+                >
+                  {line}
+                </span>
+              ))}
+            </p>
+
             {/* Who, how fast, when - the three things staff read (923:8792). */}
             <dl
               className="absolute text-right font-bold leading-[1.1] opacity-80"
@@ -429,26 +451,78 @@ export function SharpShotPoster({
               <dd className="tabular-nums">{stamp}</dd>
             </dl>
 
-            {/* The claim the campaign is built on (925:8803). */}
+            {/* The claim the campaign is built on (925:8803). The design
+                centres this across the card; it now shares the foot with the
+                code, so it takes the width left of it and centres in that. */}
             <p
               className="absolute text-center font-bold italic leading-[1.1]"
               style={{
-                left: p(27),
-                top: p(460),
-                width: p(285),
+                left: p(24),
+                top: p(450),
+                width: p(214),
                 fontSize: p(13.09),
               }}
             >
               {c.footnote}
             </p>
 
+            {/* Why that measurement is worth anything. */}
+            <p
+              className="absolute text-center font-bold leading-[1.1] opacity-75"
+              style={{
+                left: p(24),
+                top: p(497),
+                width: p(214),
+                fontSize: p(9.6),
+              }}
+            >
+              {c.provenance}
+            </p>
+
+            {/* The way to find out who made this. It encodes GMS' own site,
+                read from one place (GMS_SITE_URL) so it and the "That's a
+                wrap" link cannot open different addresses.
+
+                Level L and pure black on white, as the TV boards use - the
+                settings measured at a live event. This code is far smaller
+                than those and is read off a screenshot, so it takes every
+                module of size it can get: the quiet zone inside the SVG is
+                two modules rather than the spec'd four, and the white tile's
+                own padding makes up the rest, which buys the code about 12%
+                larger modules in the same box. */}
+            <div
+              className="absolute flex flex-col items-center"
+              style={{ left: p(248), top: p(442), width: p(74) }}
+            >
+              <div
+                className="flex w-full items-center justify-center bg-white"
+                style={{ padding: p(4), borderRadius: p(6) }}
+              >
+                <QRCodeSVG
+                  value={GMS_SITE_URL}
+                  className="h-full w-full"
+                  style={{ width: p(66), height: p(66) }}
+                  level="L"
+                  marginSize={2}
+                  fgColor="#000000"
+                  bgColor="#ffffff"
+                />
+              </div>
+              <p
+                className="mt-[calc(var(--p)*4)] text-center font-bold leading-[1.15] opacity-90"
+                style={{ fontSize: p(8.6) }}
+              >
+                {c.scanLabel}
+              </p>
+            </div>
+
             {/* How to get rid of it (925:9225). */}
             <p
               className="absolute text-center font-bold uppercase leading-[1.1] opacity-50"
               style={{
-                left: p(56),
-                top: p(507),
-                width: p(227),
+                left: p(24),
+                top: p(514),
+                width: p(214),
                 fontSize: p(10.09),
                 letterSpacing: p(0.9081),
               }}

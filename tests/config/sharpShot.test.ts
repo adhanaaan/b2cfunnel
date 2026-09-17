@@ -7,6 +7,8 @@ import {
   SHARP_SHOT_VENUE,
   isSharpShot,
 } from "@/config/twentyTwoGrams";
+import { GMS_SITE_URL } from "@/config/eventLinks";
+import { COPY } from "@/config/copy";
 import { formatSeconds, formatStamp } from "@/lib/format";
 import { createInitialState, funnelReducer } from "@/state/funnelMachine";
 
@@ -157,5 +159,28 @@ describe("the finish timestamp in funnel state", () => {
       at: AT + 90_000,
     });
     expect(again.gameFinishedAt).toBe(AT + 90_000);
+  });
+});
+
+/**
+ * The poster now carries a code, and a code for the wrong address is a wrong
+ * code however right the card looks. It encodes GMS' own site, read from the
+ * one constant the "That's a wrap" link also reads - so the two can never open
+ * different places, which is the failure nobody would catch from the outside.
+ */
+describe("the poster's code", () => {
+  it("points at Gray Matter Solutions", () => {
+    expect(GMS_SITE_URL).toBe("https://www.graymattercognition.com/");
+  });
+
+  it("is the same address the wrap screen links", () => {
+    expect(COPY.screens.event3.wrap.linkHref).toBe(GMS_SITE_URL);
+  });
+
+  it("names who measured the run, and what that is built on", () => {
+    expect(SHARP_SHOT_POSTER.measuredBy.join(" ")).toContain(
+      "Gray Matter Solutions",
+    );
+    expect(SHARP_SHOT_POSTER.provenance).toContain("Dementia Research Centre");
   });
 });

@@ -689,11 +689,32 @@ now lives only on the poster. If it should be on the wall too, `HowItWorksPanel`
 in `app/22grams/leaderboard/page.tsx` is the panel to change, and
 `SHARP_SHOT_THRESHOLD_LABEL` is where the "< 30 s" has to come from.
 
-The institutional lockup at the top left is `/gms-ntu-logo.png` - the one this
-build already ships, whited out with `brightness-0 invert`, because the file is
-the dark version every other screen puts on cream and this card is
-white-on-ember. Same treatment `Event2Splash` and `Event3Wrap` give it, so
-there is no second copy of the lockup to keep in step.
+**Gray Matter Solutions is on it four times, and that is deliberate.** The card
+is redeemed at a partner's counter and named 22g three times over (the
+wordmark, the cup in the photograph, and the offer), so the house that built
+the test earns its own presence:
+
+- the lockup at the top left - `/gms-ntu-logo.png`, the one this build already
+  ships, whited out with `brightness-0 invert` because the file is the dark
+  version every other screen puts on cream and this card is white-on-ember.
+  Same treatment `Event2Splash` and `Event3Wrap` give it, so there is no second
+  copy of the lockup to keep in step;
+- **"Processing speed, measured by Gray Matter Solutions", over the score.**
+  The score is the one part of this card a player re-reads and shows people,
+  and until now nothing on it said where the number came from;
+- **"Built with NTU's Dementia Research Centre" at the foot** - why that
+  measurement is worth anything;
+- **a QR to `GMS_SITE_URL`**, bottom right. It encodes the same address the
+  "That's a wrap" screen links, read from one constant in `config/eventLinks.ts`
+  so the two can never open different places - the failure nobody would catch
+  from the outside (`tests/config/sharpShot.test.ts`).
+
+The code is small: the card was full, and it takes the width the foot lines
+give up rather than a re-cut frame. Level L and pure black on white as the TV
+boards use, but with a two-module quiet zone inside the SVG instead of the
+spec'd four, the white tile's own padding making up the rest - which buys about
+12% larger modules in the same box. It reads off a phone at close range; it is
+not a poster code to be scanned across a room.
 
 **How it is built.** The card draws in the design's own pixels: one unit,
 `--p`, is one design pixel - the card scaled to fill the width inside a 20px
