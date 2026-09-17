@@ -630,6 +630,12 @@ could beat it again. `SharpShotStickyCta` replaces `SiloamStickyCta` for this
 variant only, and the report buys the extra clearance its taller card needs
 rather than the shared section growing for every other event.
 
+One deliberate departure from that frame: the design layers the cut-out over
+"*while redemption last", leaving only the part of that line clear of the cup
+showing. Here the line sits in front of the cup instead - it is the one line on
+the card that qualifies what is being promised, and a promise half-hidden
+behind a coffee cup is worse than a broken layer order.
+
 **The close answers a tap.** `offer.cta` is "I'm interested" and
 `offer.ctaThanks` is what replaces it once tapped - and the presence of that
 second string is what makes the line a BUTTON at all. The summit leaves it out,

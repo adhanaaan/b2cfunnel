@@ -77,17 +77,15 @@ export function SharpShotStickyCta({ onRetry }: { onRetry: () => void }) {
           ))}
         </p>
 
-        <p
-          className="absolute font-bold italic leading-[1.1] text-cream"
-          style={{ left: b(29), top: b(73), width: b(61), fontSize: b(9.09) }}
-        >
-          {c.fineprint}
-        </p>
-
         {/* The cut-out breaks out over the panel's top edge (925:9244), which
-            is why it is not clipped by the panel above - and it is drawn AFTER
-            the fineprint because the design paints it over that line, leaving
-            only the part clear of the cup showing. */}
+            is why it is not clipped by the panel above.
+
+            The design layers this OVER the fineprint, leaving only the part of
+            that line clear of the cup showing. Here it goes under, so the
+            condition on the offer is readable in full - it is the one line on
+            this card that qualifies what is being promised, and a promise
+            half-hidden behind a coffee cup is worse than one that breaks the
+            layer order. */}
         <OptionalImage
           src={DRINK}
           alt=""
@@ -111,6 +109,12 @@ export function SharpShotStickyCta({ onRetry }: { onRetry: () => void }) {
           }
         />
 
+        <p
+          className="absolute font-bold italic leading-[1.1] text-cream"
+          style={{ left: b(29), top: b(73), width: b(61), fontSize: b(9.09) }}
+        >
+          {c.fineprint}
+        </p>
 
         {/* Button/Ember CTA, inverse: white fill, gradient label, 97% pressed
             - the vocabulary the daylight screens already use. */}
