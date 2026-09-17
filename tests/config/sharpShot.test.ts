@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  GMS_FOLLOW_CARD,
   SHARP_SHOT_BANNER,
   SHARP_SHOT_POSTER,
   SHARP_SHOT_THRESHOLD_LABEL,
@@ -7,6 +8,12 @@ import {
   SHARP_SHOT_VENUE,
   isSharpShot,
 } from "@/config/twentyTwoGrams";
+import {
+  GMS_INSTAGRAM_URL,
+  GMS_SITE_LABEL,
+  GMS_SITE_URL,
+} from "@/config/eventLinks";
+import { COPY } from "@/config/copy";
 import { formatSeconds, formatStamp } from "@/lib/format";
 import { createInitialState, funnelReducer } from "@/state/funnelMachine";
 
@@ -157,5 +164,39 @@ describe("the finish timestamp in funnel state", () => {
       at: AT + 90_000,
     });
     expect(again.gameFinishedAt).toBe(AT + 90_000);
+  });
+});
+
+/**
+ * The poster now carries a code, and a code for the wrong address is a wrong
+ * code however right the card looks. It encodes GMS' own site, read from the
+ * one constant the "That's a wrap" link also reads - so the two can never open
+ * different places, which is the failure nobody would catch from the outside.
+ */
+describe("the poster's code", () => {
+  it("points at Gray Matter Solutions", () => {
+    expect(GMS_SITE_URL).toBe("https://www.graymattercognition.com/");
+  });
+
+  it("is the same address the wrap screen links", () => {
+    expect(COPY.screens.event3.wrap.linkHref).toBe(GMS_SITE_URL);
+  });
+
+  // The card's address is printed AND encoded. Derived from one constant so a
+  // reader cannot be shown one place and sent to another.
+  it("prints the address it opens", () => {
+    expect(GMS_SITE_LABEL).toBe("www.graymattercognition.com");
+    expect(GMS_SITE_URL).toContain(GMS_SITE_LABEL);
+    expect(GMS_SITE_LABEL).not.toContain("http");
+  });
+
+  it("points its fallback code at the profile the card names", () => {
+    expect(GMS_INSTAGRAM_URL).toContain("instagram.com");
+    expect(GMS_INSTAGRAM_URL).toContain("graymatter.solutions");
+  });
+
+  it("says what following is for", () => {
+    expect(GMS_FOLLOW_CARD.eyebrow).toContain("Alzheimer");
+    expect(GMS_FOLLOW_CARD.heading).toContain("brain health events");
   });
 });

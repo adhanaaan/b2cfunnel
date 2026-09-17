@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { SHARP_SHOT_BANNER } from "@/config/twentyTwoGrams";
 import { track } from "@/lib/analytics";
 import { springs } from "@/lib/motion";
@@ -8,6 +9,7 @@ import { useVariant } from "@/components/VariantContext";
 import { emberLabelGradient } from "@/components/screens/event3/ui";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
 import { SharpShotCup } from "./SharpShotCup";
+import { GmsFollowCard } from "./GmsFollowCard";
 
 /**
  * The one call to action on the /22grams report, pinned to the bottom of the
@@ -26,6 +28,13 @@ import { SharpShotCup } from "./SharpShotCup";
  * scaled to fill the width inside a 22px gutter and capped at 1.2x. Its enter
  * is a pop rather than a slide, so it arrives as a thing that appeared rather
  * than a bar that was always going to.
+ *
+ * It carries TWO cards and turns between them every five seconds (942:11389):
+ * the retry offer, and Gray Matter Solutions' own. One slot, because the
+ * report has room for one pinned thing and both have a claim on it - the
+ * drink is why they played, and GMS is who they would not otherwise learn
+ * about. The turn pauses while a pointer or the keyboard is on the banner, so
+ * nobody loses a button mid-reach.
  */
 
 /** `n` design pixels, in the banner's unit (a LENGTH - see the poster). */
@@ -34,10 +43,25 @@ const b = (n: number) => `calc(var(--b) * ${n})`;
 /** The same cut-out the poster uses; optional, like every image here. */
 const DRINK = "/images/22grams/sharp-shot-drink.png";
 
+/** How long each card holds the slot. */
+const TURN_MS = 5000;
+
 export function SharpShotStickyCta({ onRetry }: { onRetry: () => void }) {
   const variant = useVariant();
   const reduced = useReducedMotion();
   const c = SHARP_SHOT_BANNER;
+
+  const [showFollow, setShowFollow] = useState(false);
+  // Held while a pointer is over the banner or something inside it has focus:
+  // turning the card out from under a finger or a tab stop loses the button
+  // someone was reaching for.
+  const [held, setHeld] = useState(false);
+
+  useEffect(() => {
+    if (held) return;
+    const id = setInterval(() => setShowFollow((on) => !on), TURN_MS);
+    return () => clearInterval(id);
+  }, [held]);
 
   return (
     <div
@@ -49,11 +73,39 @@ export function SharpShotStickyCta({ onRetry }: { onRetry: () => void }) {
     >
       <motion.div
         className="pointer-events-auto relative"
-        style={{ width: b(346), height: b(121) }}
+        style={{ width: b(346), height: b(122) }}
         initial={reduced ? false : { opacity: 0, scale: 0.9, y: 28 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ ...springs.pop, delay: reduced ? 0 : 0.5 }}
+        onMouseEnter={() => setHeld(true)}
+        onMouseLeave={() => setHeld(false)}
+        onFocusCapture={() => setHeld(true)}
+        onBlurCapture={() => setHeld(false)}
       >
+        {/* The two cards cross-fade in one slot. `mode="wait"` would leave the
+            slot empty between them, which on a pinned bar reads as the page
+            losing its button, so they overlap instead. */}
+        <AnimatePresence initial={false}>
+          {showFollow ? (
+            <motion.div
+              key="follow"
+              className="absolute inset-0"
+              initial={reduced ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={reduced ? undefined : { opacity: 0 }}
+              transition={{ duration: reduced ? 0 : 0.45 }}
+            >
+              <GmsFollowCard u={b} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="retry"
+              className="absolute inset-0"
+              initial={reduced ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={reduced ? undefined : { opacity: 0 }}
+              transition={{ duration: reduced ? 0 : 0.45 }}
+            >
         <div
           className="absolute inset-0 bg-gradient-to-r from-[#f77528] to-[#ff9a4d] shadow-[0_18px_44px_-16px_rgba(122,46,12,0.55)]"
           style={{ borderRadius: b(20) }}
@@ -142,6 +194,9 @@ export function SharpShotStickyCta({ onRetry }: { onRetry: () => void }) {
             {c.cta}
           </span>
         </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );

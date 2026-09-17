@@ -28,6 +28,38 @@ export const EVENT_PATHS: Partial<Record<QuizVariant, string>> = {
 };
 
 /**
+ * Gray Matter Solutions' own site - where someone who has just played goes to
+ * find out who made the thing they played.
+ *
+ * Here rather than inside a copy block because two places now point at it: the
+ * "That's a wrap" link, and the QR on the Sharp Shot poster. A poster whose
+ * code opened a different address from the link beside it would be a poster
+ * nobody could debug from the outside.
+ */
+export const GMS_SITE_URL = "https://www.graymattercognition.com/";
+
+/**
+ * The same address as it is printed - no protocol, no trailing slash.
+ *
+ * Derived rather than typed out, so the link a reader sees and the address a
+ * tap opens cannot come apart.
+ */
+export const GMS_SITE_LABEL = GMS_SITE_URL.replace(/^https?:\/\//, "").replace(
+  /\/$/,
+  "",
+);
+
+/**
+ * Gray Matter Solutions on Instagram - what the code on the "follow" card
+ * encodes when the designed artwork has not been uploaded yet.
+ *
+ * The artwork is a styled code with the handle set under it; this is the plain
+ * one the build can draw for itself, so the card is scannable from the day it
+ * ships rather than from the day someone remembers to export it.
+ */
+export const GMS_INSTAGRAM_URL = "https://www.instagram.com/graymatter.solutions/";
+
+/**
  * The booking form for the Memory Screening Package, at the end of the /phkl
  * report. Only the button under the poster goes straight here; the two
  * earlier buttons walk the reader down to the poster first, so nobody books

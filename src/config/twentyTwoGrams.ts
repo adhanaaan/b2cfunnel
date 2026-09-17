@@ -88,13 +88,25 @@ export const SHARP_SHOT_POSTER = {
   /** The unit the score is printed in: "28.5 seconds". */
   secondsSuffix: "seconds",
 
-  /** The close: the claim this campaign is actually built on. */
+  /** The close, in its own pill under the offer (942:11403). */
   footnote:
     "Unsweetened caffeinated coffee is linked to lower dementia risk (UK Biobank)",
 
   /** How to get rid of it. The whole poster is the target. */
   dismiss: "Tap anywhere to close",
   closeLabel: "Close",
+} as const;
+
+/**
+ * The "follow us" card (Figma 942:11389): the dark band under the offer on the
+ * poster, and every other five seconds on the report's pinned banner.
+ *
+ * The address is not written here - it is derived from GMS_SITE_URL, so the
+ * link a reader sees and the one the code opens cannot come apart.
+ */
+export const GMS_FOLLOW_CARD = {
+  eyebrow: "World Alzheimer's Month",
+  heading: "Follow for more brain health events",
 } as const;
 
 /**

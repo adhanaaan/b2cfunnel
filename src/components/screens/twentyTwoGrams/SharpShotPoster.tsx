@@ -8,9 +8,10 @@ import { formatSeconds, formatStamp } from "@/lib/format";
 import { springs } from "@/lib/motion";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
 import { SharpShotCup } from "./SharpShotCup";
+import { GmsFollowCard } from "./GmsFollowCard";
 
 /**
- * Sharp Shot Week's reward poster (/22grams), built to Figma 925:9236.
+ * Sharp Shot Week's reward poster (/22grams), built to Figma 942:11120.
  *
  * The takeover a player gets for beating the clock, and the thing they
  * screenshot to redeem the drink - which is what the offer asks of them, and
@@ -26,7 +27,7 @@ import { SharpShotCup } from "./SharpShotCup";
  *   poster the target ("tap anywhere to close") - so there is no button to
  *   land on top of anything that has to be read.
  *
- * The design is a 340x536 card rather than a full-bleed screen, so it draws in
+ * The design is a 340x625 card rather than a full-bleed screen, so it draws in
  * its own pixels: one unit, `--p`, is the card scaled to the viewport, and
  * every size below is the design's px times it, via `p()`. The scale fills the
  * width inside a 20px gutter, is capped so the card does not balloon on a
@@ -94,10 +95,14 @@ function Sparkle({
   left,
   top,
   alpha,
+  width = 57,
+  fontSize = 65.671,
 }: {
   left: number;
   top: number;
   alpha: number;
+  width?: number;
+  fontSize?: number;
 }) {
   return (
     <span
@@ -106,8 +111,8 @@ function Sparkle({
       style={{
         left: p(left),
         top: p(top),
-        width: p(57),
-        fontSize: p(65.671),
+        width: p(width),
+        fontSize: p(fontSize),
         backgroundImage: `linear-gradient(to bottom, rgba(255, 255, 112, ${0.3 * alpha}), rgba(245, 158, 10, ${0.12 * alpha}))`,
       }}
     >
@@ -117,9 +122,13 @@ function Sparkle({
 }
 
 /**
- * One of the two yellow dashes over the cup (925:9230, 925:9233). The design
- * positions a box and centres a rotated, y-flipped rectangle in it; the flip
- * is kept because the rounded ends are not symmetric about the long axis.
+ * A tilted bar: the two yellow dashes over the cup (925:9230, 925:9233) and
+ * the pair off the top-right corner (942:11408). The design positions a box
+ * and centres a rotated rectangle in it, so that is what this does.
+ *
+ * `flip` is the dashes' y-mirror, kept because it is in the frame; on a shape
+ * this symmetric it changes nothing, which is why the corner pair leaves it
+ * off rather than carrying it for the sake of it.
  */
 function Dash({
   left,
@@ -130,7 +139,9 @@ function Dash({
   h,
   radius,
   rotate,
-  opacity,
+  opacity = 1,
+  flip = false,
+  background = SPEED_LIGHT,
 }: {
   left: number;
   top: number;
@@ -140,7 +151,9 @@ function Dash({
   h: number;
   radius: number;
   rotate: number;
-  opacity: number;
+  opacity?: number;
+  flip?: boolean;
+  background?: string;
 }) {
   return (
     <span
@@ -154,9 +167,9 @@ function Dash({
           width: p(w),
           height: p(h),
           borderRadius: p(radius),
-          background: SPEED_LIGHT,
+          background,
           opacity,
-          transform: `rotate(${rotate}deg) scaleY(-1)`,
+          transform: `rotate(${rotate}deg)${flip ? " scaleY(-1)" : ""}`,
         }}
       />
     </span>
@@ -210,7 +223,7 @@ export function SharpShotPoster({
             // past 1.25x (a 340px card has nothing to gain from a desktop's
             // width), and give way to the height on a short screen.
             ["--p" as string]:
-              "min(1.25px, (100vw - 40px) / 340, (100dvh - 40px) / 536)",
+              "min(1.25px, (100vw - 40px) / 340, (100dvh - 40px) / 625)",
           }}
         >
           {/* Backdrop. A real button so the close is reachable without a
@@ -230,7 +243,7 @@ export function SharpShotPoster({
             className={`${lexendZetta.variable} relative z-10 overflow-hidden bg-gradient-to-b from-[#e8782e] via-[#f09452] to-[#ffbb88] font-sans text-cream shadow-[0_24px_80px_-16px_rgba(122,46,12,0.55)]`}
             style={{
               width: p(340),
-              height: p(536),
+              height: p(625),
               borderRadius: p(20),
             }}
             initial={reduced ? false : { opacity: 0, y: 24, scale: 0.96 }}
@@ -238,10 +251,38 @@ export function SharpShotPoster({
             exit={reduced ? undefined : { opacity: 0, y: 16, scale: 0.97 }}
             transition={springs.enter}
           >
-            <Sparkle left={283} top={136.11} alpha={2} />
-            <Sparkle left={6} top={29} alpha={1} />
+            {/* The pair of tilted bars off the top-right corner (942:11408):
+                the solid Processing Speed tone with the soft gradient one
+                behind it, both at the design's 24 degrees. */}
+            <Dash
+              left={269}
+              top={33.44}
+              boxW={136.598}
+              boxH={74.934}
+              w={140.944}
+              h={19.274}
+              radius={13.265}
+              rotate={24}
+              opacity={1}
+            />
+            <Dash
+              left={259}
+              top={21}
+              boxW={121.029}
+              boxH={67.245}
+              w={124.362}
+              h={18.24}
+              radius={9.12}
+              rotate={24}
+              background="linear-gradient(to bottom, rgba(255, 255, 112, 0.3), rgba(245, 158, 10, 0.12))"
+            />
 
-            {/* Top row (925:8802): the campaign lockup and the mark. */}
+            <Sparkle left={283} top={136.11} alpha={2} />
+            <Sparkle left={5} top={22} alpha={1} width={86} fontSize={99.1} />
+
+            {/* Top row: the institutional lockup at the left, then the
+                campaign lockup and the 22g mark grouped at the right
+                (925:8802 for the two on the right). */}
             <div
               className="absolute flex items-center justify-between"
               style={{
@@ -251,33 +292,51 @@ export function SharpShotPoster({
                 height: p(32.152),
               }}
             >
-              <p
-                className="shrink-0 text-center font-bold uppercase leading-[1.1]"
-                style={{
-                  fontFamily: "var(--font-lexend-zetta), var(--font-jakarta)",
-                  fontSize: p(9.22),
-                }}
-              >
-                {c.week.map((word) => (
-                  <span key={word} className="block">
-                    {word}
-                  </span>
-                ))}
-              </p>
-              <OptionalImage
-                src={WORDMARK}
-                alt="22g"
-                className="shrink-0 object-contain"
-                style={{ width: p(55), height: p(23.913) }}
-                fallback={
-                  <span
-                    className="shrink-0 font-extrabold leading-none tracking-[-0.02em]"
-                    style={{ fontSize: p(23.913) }}
-                  >
-                    22g
-                  </span>
-                }
+              {/* The one lockup this build already ships, whited out: the file
+                  is the dark version every other screen puts on cream, and
+                  this card is white-on-ember. Same treatment Event2Splash and
+                  Event3Wrap give it. Its own alt text, because it is the only
+                  thing on the poster that says who ran this. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/gms-ntu-logo.png"
+                alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
+                className="h-auto shrink-0 select-none brightness-0 invert"
+                style={{ width: p(146.455) }}
               />
+
+              <div
+                className="flex shrink-0 items-center"
+                style={{ gap: p(5.367) }}
+              >
+                <p
+                  className="shrink-0 text-center font-bold uppercase leading-[1.1]"
+                  style={{
+                    fontFamily: "var(--font-lexend-zetta), var(--font-jakarta)",
+                    fontSize: p(6.185),
+                  }}
+                >
+                  {c.week.map((word) => (
+                    <span key={word} className="block">
+                      {word}
+                    </span>
+                  ))}
+                </p>
+                <OptionalImage
+                  src={WORDMARK}
+                  alt="22g"
+                  className="shrink-0 object-contain"
+                  style={{ width: p(36.898), height: p(16.042) }}
+                  fallback={
+                    <span
+                      className="shrink-0 font-extrabold leading-none tracking-[-0.02em]"
+                      style={{ fontSize: p(16.042) }}
+                    >
+                      22g
+                    </span>
+                  }
+                />
+              </div>
             </div>
 
             {/* Headline (923:8785): the sentence, then the time it is about,
@@ -334,6 +393,7 @@ export function SharpShotPoster({
               h={9.063}
               radius={20.768}
               rotate={-61}
+              flip
               // The frame stacks three copies of this one; that composites to
               // ~0.97, which is what the render shows.
               opacity={0.97}
@@ -347,6 +407,7 @@ export function SharpShotPoster({
               h={8.563}
               radius={17.622}
               rotate={-33}
+              flip
               opacity={0.7}
             />
 
@@ -391,8 +452,8 @@ export function SharpShotPoster({
             <dl
               className="absolute text-right font-bold leading-[1.1] opacity-80"
               style={{
-                left: p(170),
-                top: p(393),
+                left: p(167),
+                top: p(170),
                 width: p(151),
                 fontSize: p(13.09),
               }}
@@ -409,25 +470,45 @@ export function SharpShotPoster({
               <dd className="tabular-nums">{stamp}</dd>
             </dl>
 
-            {/* The claim the campaign is built on (925:8803). */}
-            <p
-              className="absolute text-center font-bold italic leading-[1.1]"
+            {/* The close, in its own pill (942:11403) - the one light
+                surface on the card, so the claim reads as a note rather than
+                as more of the offer. Its colours are the build's own
+                `surface-container` and `secondary`, which is exactly what the
+                design's tokens resolve to. */}
+            <div
+              className="absolute flex items-center justify-center bg-surface-container"
               style={{
-                left: p(27),
-                top: p(460),
-                width: p(285),
-                fontSize: p(13.09),
+                left: p(141),
+                top: p(383),
+                width: p(185),
+                height: p(59),
+                borderRadius: p(20),
+                paddingLeft: p(14),
+                paddingRight: p(10),
               }}
             >
-              {c.footnote}
-            </p>
+              <p
+                className="font-bold italic leading-[1.1] text-secondary"
+                style={{ width: p(161), fontSize: p(12.09) }}
+              >
+                {c.footnote}
+              </p>
+            </div>
+
+            {/* The follow card (942:11379), full width under the offer. */}
+            <div
+              className="absolute"
+              style={{ left: 0, top: p(466), width: p(340), height: p(115) }}
+            >
+              <GmsFollowCard u={p} />
+            </div>
 
             {/* How to get rid of it (925:9225). */}
             <p
               className="absolute text-center font-bold uppercase leading-[1.1] opacity-50"
               style={{
-                left: p(56),
-                top: p(507),
+                left: p(57),
+                top: p(596),
                 width: p(227),
                 fontSize: p(10.09),
                 letterSpacing: p(0.9081),
