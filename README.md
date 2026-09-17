@@ -595,24 +595,28 @@ lists the one file, its box in the frame and what stands in until it lands**.
 It is optional: with no `qr.png` there the board generates its own code from the
 play URL, so the board is live and correct before anything is uploaded.
 
-### Sharp Shot Week (the free-drink poster)
+### Sharp Shot Week (the free-drink pop-up)
 
 **Beat the clock and the poster takes over the screen.** A run under
-`SHARP_SHOT_THRESHOLD_MS` (30s) on `/22grams` opens the Sharp Shot poster on
-top of the post-game result: the campaign lockup, "Congratulations on beating
-the clock < 30s", the offer in orange, the drink, and the three details a
-barista reads - **the player's name, the time in plain seconds ("28.5
-seconds"), and the moment the run ended ("2026-09-21 12:35:00")**. Dismissing
-it ("Continue", or Escape) drops back onto the normal result screen.
+`SHARP_SHOT_THRESHOLD_MS` (30s) on `/22grams` opens the Sharp Shot poster over
+whatever step is showing, built to **Figma 925:9236**: a 340x536 ember card
+with the campaign lockup, "Congratulations on beating the clock < 30 s", the
+offer beside the drink, the UK Biobank line, and the three details a barista
+reads - **the player's name, the time in plain seconds ("28.5 seconds"), and
+the moment the run ended ("2026-09-21 12:35:00")**.
+
+**The whole poster is the close** ("tap anywhere to close"), so nothing sits on
+top of anything that has to be read. The backdrop is a real button, which is
+what carries that to a keyboard and a screen reader; Escape works too.
 
 The threshold is **one number** (`src/config/twentyTwoGrams.ts`) and every
 label on the poster is written from it, because the poster IS the voucher: a
-headline promising `< 30s` beside a funnel applying something else is a barista
-holding a screenshot nobody can honour. `isSharpShot()` is the only thing that
-answers "did this run earn a drink?", it is strictly less than the threshold
-(30.0s does not qualify - the poster says *beating* the clock), and a missing,
-zero or negative time is never a win. The venue named in the offer is the same
-single value. Pinned by `tests/config/sharpShot.test.ts`.
+headline promising `< 30 s` beside a funnel applying something else is a
+barista holding a screenshot nobody can honour. `isSharpShot()` is the only
+thing that answers "did this run earn a drink?", it is strictly less than the
+threshold (30.0s does not qualify - the poster says *beating* the clock), and a
+missing, zero or negative time is never a win. The venue named in the offer is
+the same single value. Pinned by `tests/config/sharpShot.test.ts`.
 
 **The funnel raises it, not a screen.** This arc has no post-game card at all -
 the 20th match walks straight into the "great job" beat and on into the quiz -
@@ -627,6 +631,14 @@ out this one's offer, and on the finish rather than a flag: a retake that beats
 the clock again has a new `gameFinishedAt`, so it raises a fresh poster, while
 dismissing one does not immediately reopen it.
 
+**The stamp is the run's own moment, not the render's.** `GAME_DONE` carries
+`at` (the caller reads the clock; the reducer stays pure) and the funnel stores
+it as `gameFinishedAt`, cleared by `RETAKE_GAME` with the time it belongs to.
+Reopening the poster therefore cannot restamp it. `formatStamp` writes it from
+the local date parts rather than through `toLocaleString`, whose output moves
+with the device's locale - a stamp reading `21/09/2026` on one phone and
+`9/21/2026` on the next is one staff cannot check at a glance.
+
 **`/22grams/poster-preview` shows it without a qualifying run.** The poster only
 appears under 30 seconds, which makes it awkward to review: checking the
 wording or the artwork would otherwise mean beating the clock every time. That
@@ -636,27 +648,29 @@ for the number given, whether the funnel would have raised the poster, so the
 29.9 / 30.0 boundary can be seen rather than argued about. It writes nothing:
 no score, no lead, no analytics, and it is `noindex`.
 
-**The stamp is the run's own moment, not the render's.** `GAME_DONE` carries
-`at` (the caller reads the clock; the reducer stays pure) and the funnel stores
-it as `gameFinishedAt`, cleared by `RETAKE_GAME` with the time it belongs to.
-Reopening the poster therefore cannot restamp it. `formatStamp` writes it from
-the local date parts rather than through `toLocaleString`, whose output moves
-with the device's locale - a stamp reading `21/09/2026` on one phone and
-`9/21/2026` on the next is one staff cannot check at a glance.
-
 **The free drink is not on the leaderboard yet.** The board's ember panel
 carries the event's three steps, from when this route had no prize; the offer
 now lives only on the poster. If it should be on the wall too, `HowItWorksPanel`
 in `app/22grams/leaderboard/page.tsx` is the panel to change, and
-`SHARP_SHOT_THRESHOLD_LABEL` is where the "< 30s" has to come from.
+`SHARP_SHOT_THRESHOLD_LABEL` is where the "< 30 s" has to come from.
 
-The poster is **not** a pixel port of the print artwork: that is A-series
-portrait, and scaling its type down by width puts the score block at about 9px
-on a phone, which for the one line staff have to read is the whole poster
-failing. The composition is the artwork's, at sizes chosen to read on a phone
-first. Its two images (`logo-22g.png`, `sharp-shot-drink.png`) are optional
-like every other - see `public/images/22grams/README.md` - so it is correct and
-redeemable before either lands.
+**How it is built.** The card draws in the design's own pixels: one unit,
+`--p`, is one design pixel - the card scaled to fill the width inside a 20px
+gutter, capped at 1.25x so a 340px card does not balloon on a desktop, and
+giving way to the height on a short screen. `--p` is a LENGTH rather than a
+unitless scale (the same idiom the TV boards use for `--u`), because CSS cannot
+divide a length by a length to get a ratio. Everything else is the project's
+own: the ember gradient is the one the bridge card and the speed popup already
+use, the text colour is the `cream` token (which is exactly the design's
+`cream/base`), and the dashes are `#fde68a`, the Processing Speed light tone.
+The lockup's face (Lexend Zetta) is imported in the component rather than the
+root layout, so only this screen pays for it.
+
+Its two images are optional like every other in this build - the wordmark falls
+back to type and the drink to a drawn cup - so the poster is correct and
+redeemable before either lands. **Both are exports the design already has**
+(`image 322` and `image 323` on that node); see
+`public/images/22grams/README.md` for their boxes.
 
 ## Translations (English and Bahasa Indonesia)
 

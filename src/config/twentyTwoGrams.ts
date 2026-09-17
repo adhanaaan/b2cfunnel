@@ -23,14 +23,14 @@ export const SHARP_SHOT_THRESHOLD_MS = 30_000;
 /** "30" - the threshold in whole seconds, for the labels below. */
 const THRESHOLD_SECONDS = SHARP_SHOT_THRESHOLD_MS / 1000;
 
-/** "< 30s", as the poster prints it (uppercased by CSS, not here). */
-export const SHARP_SHOT_THRESHOLD_LABEL = `< ${THRESHOLD_SECONDS}s`;
+/** "< 30 s", as the poster sets it (Figma 925:9236, uppercased by CSS). */
+export const SHARP_SHOT_THRESHOLD_LABEL = `< ${THRESHOLD_SECONDS} s`;
 
 /**
- * Where the drink is redeemed. One value, named on the poster - repoint it and
+ * Where the drink is redeemed, named on the poster. One value - repoint it and
  * only this event moves.
  */
-export const SHARP_SHOT_VENUE = "22g Frasers Tower";
+export const SHARP_SHOT_VENUE = "22 Grams Coffee Frasers Tower";
 
 /**
  * Did this run earn the drink?
@@ -52,8 +52,7 @@ export function isSharpShot(timeMs?: number): boolean {
 }
 
 /**
- * The poster's words, in the lines the artwork breaks them into - so no font
- * metric can move a break that the design set deliberately.
+ * The poster's words, to Figma 925:9236.
  *
  * Every line naming the threshold or the venue is written from the constants
  * above rather than typed out beside them.
@@ -62,30 +61,35 @@ export const SHARP_SHOT_POSTER = {
   /** The campaign lockup, top left, one word per line. */
   week: ["Sharp", "Shot", "Week"],
 
-  /** The headline, three lines, set in caps by CSS. */
-  heading: [
-    "Congratulations",
-    "on beating",
-    `the clock ${SHARP_SHOT_THRESHOLD_LABEL}`,
-  ],
+  /**
+   * The headline, in the design's two type sizes: the sentence, then the time
+   * it is about, set larger on its own line.
+   */
+  headingLead: "Congratulations on beating the clock",
+  headingThreshold: SHARP_SHOT_THRESHOLD_LABEL,
 
-  /** The offer, in the orange, two lines. */
-  reward: [
-    "Screenshot this poster and",
-    `Get your free drink @${SHARP_SHOT_VENUE}`,
-  ],
-
-  /** The one condition on the offer. */
-  fineprint: "*while redemptions last",
+  /**
+   * The offer, in the two paragraphs the design sets beside the drink.
+   *
+   * The first keeps the design's own line break, because its words are fixed
+   * and the break was authored. The second is one string and wraps inside its
+   * box, because it carries the venue: hard-coding those lines would put the
+   * layout at the mercy of a name nobody would think to re-break after
+   * changing it.
+   */
+  reward: {
+    screenshot: ["Screenshot this", "pop up and"],
+    drink: `Get your free drink @${SHARP_SHOT_VENUE}`,
+  },
 
   /** The unit the score is printed in: "28.5 seconds". */
   secondsSuffix: "seconds",
 
-  /** The close: the Lancet figure, then the occasion. */
-  footnote: "Up to 45% of dementia risk could be prevented",
-  occasion: "World Alzheimer's Month",
+  /** The close: the claim this campaign is actually built on. */
+  footnote:
+    "Unsweetened caffeinated coffee is linked to lower dementia risk (UK Biobank)",
 
-  /** The dismissal, under the poster - not part of the artwork. */
-  dismiss: "Continue",
+  /** How to get rid of it. The whole poster is the target. */
+  dismiss: "Tap anywhere to close",
   closeLabel: "Close",
 } as const;

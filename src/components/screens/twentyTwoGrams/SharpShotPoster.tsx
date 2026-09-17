@@ -2,39 +2,39 @@
 
 import { useEffect, useMemo } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Lexend_Zetta } from "next/font/google";
 import { SHARP_SHOT_POSTER } from "@/config/twentyTwoGrams";
 import { formatSeconds, formatStamp } from "@/lib/format";
 import { springs } from "@/lib/motion";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
 
 /**
- * Sharp Shot Week's reward poster (/22grams): the takeover a player gets for
- * beating the clock, built to be SCREENSHOTTED - which is what the offer asks
- * of them, and what decides almost every choice here.
+ * Sharp Shot Week's reward poster (/22grams), built to Figma 925:9236.
+ *
+ * The takeover a player gets for beating the clock, and the thing they
+ * screenshot to redeem the drink - which is what the offer asks of them, and
+ * what decides almost every choice here.
  *
  * Because the screenshot IS the voucher:
  *
- * - It is full-bleed, so a phone screenshot is the poster edge to edge rather
- *   than a card floating on whatever was behind it.
  * - The three details a barista checks - who, how fast, when - are on it, and
  *   the "when" is the moment the run ended (`finishedAt`), passed in from the
  *   funnel's state rather than read off the clock here, so reopening the
  *   poster cannot restamp it.
- * - Nothing but the dismissal is interactive, and that sits under the
- *   artwork's last line where it cannot land on top of anything that has to
- *   be read.
+ * - Nothing is interactive except closing it, and the design makes the WHOLE
+ *   poster the target ("tap anywhere to close") - so there is no button to
+ *   land on top of anything that has to be read.
  *
- * It is NOT a pixel port of the print artwork. That poster is A-series
- * portrait, and scaling its type down by width puts the score block at about
- * 9px on a phone - unreadable, which for the one line staff have to check is
- * the whole poster failing. So the composition is the artwork's (the lockup,
- * the caps headline, the orange offer, the drink, the score block bottom
- * right, the two closing lines) at sizes chosen to read on a phone first and
- * to grow with the screen from there.
+ * The design is a 340x536 card rather than a full-bleed screen, so it draws in
+ * its own pixels: one unit, `--p`, is the card scaled to the viewport, and
+ * every size below is the design's px times it, via `p()`. The scale fills the
+ * width inside a 20px gutter, is capped so the card does not balloon on a
+ * desktop, and gives way to the height on a short screen - so the composition
+ * is the Figma frame at any size rather than a re-flow of it.
  *
- * The two images are optional, as everywhere else in this build: the wordmark
+ * Its two images are optional, as everywhere else in this build: the wordmark
  * falls back to type and the drink to a drawn cup, so the poster is correct
- * and redeemable before either file lands.
+ * and redeemable before either file lands (public/images/22grams/README.md).
  */
 
 interface SharpShotPosterProps {
@@ -48,52 +48,157 @@ interface SharpShotPosterProps {
   onClose: () => void;
 }
 
-/** The poster's own palette - it is its own canvas, in none of the app's. */
-const NAVY = "#172340";
 /**
- * The offer's orange. A step down from the brand `#f77528`, which vibrates
- * against this navy at the size the offer is set; this holds.
+ * The lockup's face (Figma 925:8801). Imported here rather than in the root
+ * layout so only this screen pays for it: it sets three words at 9.22px and
+ * nothing else in the build uses it.
  */
-const ORANGE = "#e2611d";
+const lexendZetta = Lexend_Zetta({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-lexend-zetta",
+  display: "swap",
+});
+
+/**
+ * `n` design pixels, in the card's unit.
+ *
+ * `--p` is a LENGTH (one design pixel), not a unitless scale - the same idiom
+ * the TV boards use for `--u`. CSS cannot divide a length by a length to get a
+ * ratio, so the scale has to be carried as "how long is one design pixel" and
+ * multiplied by a plain number here.
+ */
+const p = (n: number) => `calc(var(--p) * ${n})`;
+
+/**
+ * The Processing Speed domain's light tone - the yellow of the two dashes and
+ * of the sparkles' warm end. Already this build's `#fde68a`.
+ */
+const SPEED_LIGHT = "#fde68a";
 
 /** Artwork, both optional - see public/images/22grams/README.md. */
 const WORDMARK = "/images/22grams/logo-22g.png";
 const DRINK = "/images/22grams/sharp-shot-drink.png";
 
 /**
+ * A sparkle (925:8793 / 925:9232): the glyph the daylight screens already use,
+ * filled with the design's near-transparent warm gradient.
+ *
+ * `alpha` scales that gradient. The frame stacks two copies of the right-hand
+ * sparkle, which composites to roughly twice the opacity of the single one at
+ * the top left; one element carrying the composite reads the same and leaves
+ * nothing for a reader to wonder about.
+ */
+function Sparkle({
+  left,
+  top,
+  alpha,
+}: {
+  left: number;
+  top: number;
+  alpha: number;
+}) {
+  return (
+    <span
+      aria-hidden
+      className="pointer-events-none absolute select-none bg-clip-text font-bold leading-none text-transparent"
+      style={{
+        left: p(left),
+        top: p(top),
+        width: p(57),
+        fontSize: p(65.671),
+        backgroundImage: `linear-gradient(to bottom, rgba(255, 255, 112, ${0.3 * alpha}), rgba(245, 158, 10, ${0.12 * alpha}))`,
+      }}
+    >
+      ✦
+    </span>
+  );
+}
+
+/**
+ * One of the two yellow dashes over the cup (925:9230, 925:9233). The design
+ * positions a box and centres a rotated, y-flipped rectangle in it; the flip
+ * is kept because the rounded ends are not symmetric about the long axis.
+ */
+function Dash({
+  left,
+  top,
+  boxW,
+  boxH,
+  w,
+  h,
+  radius,
+  rotate,
+  opacity,
+}: {
+  left: number;
+  top: number;
+  boxW: number;
+  boxH: number;
+  w: number;
+  h: number;
+  radius: number;
+  rotate: number;
+  opacity: number;
+}) {
+  return (
+    <span
+      aria-hidden
+      className="pointer-events-none absolute flex items-center justify-center"
+      style={{ left: p(left), top: p(top), width: p(boxW), height: p(boxH) }}
+    >
+      <span
+        className="block"
+        style={{
+          width: p(w),
+          height: p(h),
+          borderRadius: p(radius),
+          background: SPEED_LIGHT,
+          opacity,
+          transform: `rotate(${rotate}deg) scaleY(-1)`,
+        }}
+      />
+    </span>
+  );
+}
+
+/**
  * The drink, while the photograph has not landed: a cup in the poster's own
- * colours. A hole where the hero image goes would read as a broken poster,
- * and this one is still screenshot-worthy.
+ * colours, in the same 184x332 box. A hole in the corner would read as a
+ * broken poster, and this one is still screenshot-worthy.
  */
 function CupFallback() {
   return (
     <svg
-      viewBox="0 0 120 170"
+      viewBox="0 0 184 332"
       aria-hidden
-      className="max-h-[32dvh] w-auto max-w-full"
+      className="h-full w-full"
       role="presentation"
     >
-      {/* Lid - the clear dome the artwork shows, so it reads as a takeaway
-          cup rather than a grey slab. */}
-      <path d="M18 27h84l-6 11H24z" fill="rgba(255,255,255,0.14)" />
-      <rect x="12" y="19" width="96" height="9" rx="4.5" fill="rgba(255,255,255,0.22)" />
-      {/* Cup, tapering like a takeaway tumbler */}
-      <path d="M20 40h80l-10 118a8 8 0 0 1-8 7H38a8 8 0 0 1-8-7z" fill="#2a1408" />
-      {/* Coffee, with the milk cap the artwork shows */}
-      <path d="M22 50h76l-2 22H24z" fill="rgba(255,214,170,0.75)" />
-      <path d="M24 72h72l-8 84a6 6 0 0 1-6 5H38a6 6 0 0 1-6-5z" fill="#4a1c07" />
-      {/* The mark on the cup */}
-      <text
-        x="60"
-        y="118"
-        textAnchor="middle"
-        fill="rgba(255,255,255,0.5)"
-        fontSize="17"
-        fontWeight="700"
-        letterSpacing="1"
-      >
-        22g
-      </text>
+      {/* A cup in the proportions the photograph fills this box with: the
+          artwork is a hand holding one, so the cup is about two thirds of the
+          width and stands on the card's bottom edge. */}
+      <g>
+        {/* Lid: the clear dome, so it reads as a takeaway cup. */}
+        <rect x="34" y="110" width="116" height="13" rx="6.5" fill="rgba(255,255,255,0.26)" />
+        <path d="M42 123h100l-7 13H49z" fill="rgba(255,255,255,0.16)" />
+        {/* Cup, tapering like a tumbler, standing on the bottom edge. */}
+        <path d="M48 136h88l-11 196H59z" fill="#2a1408" />
+        {/* Coffee, with the milk cap the artwork shows. */}
+        <path d="M52 148h80l-2 26H54z" fill="rgba(255,214,170,0.75)" />
+        <path d="M54 174h76l-9 158H63z" fill="#4a1c07" />
+        <text
+          x="92"
+          y="250"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.5)"
+          fontSize="20"
+          fontWeight="700"
+          letterSpacing="1"
+        >
+          22g
+        </text>
+      </g>
     </svg>
   );
 }
@@ -130,25 +235,69 @@ export function SharpShotPoster({
     <AnimatePresence>
       {open && (
         <motion.div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="sharp-shot-heading"
-          className="fixed inset-0 z-[80] overflow-y-auto"
-          style={{ background: NAVY }}
+          className="fixed inset-0 z-[80] flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: reduced ? 0 : 0.25 }}
+          // The design makes the whole poster the close target, so the tap
+          // handler sits on the overlay rather than on a control inside it.
+          // The button below is what carries that to a keyboard and a screen
+          // reader; this is the pointer path, and it covers the card too.
+          onClick={onClose}
+          style={{
+            // One design pixel: fill the width inside a 20px gutter, never
+            // past 1.25x (a 340px card has nothing to gain from a desktop's
+            // width), and give way to the height on a short screen.
+            ["--p" as string]:
+              "min(1.25px, (100vw - 40px) / 340, (100dvh - 40px) / 536)",
+          }}
         >
+          {/* Backdrop. A real button so the close is reachable without a
+              pointer and announced to assistive tech; the overlay's own
+              handler is what makes the poster itself tappable. */}
+          <button
+            type="button"
+            aria-label={c.closeLabel}
+            onClick={onClose}
+            className="absolute inset-0 bg-night-ink/45 backdrop-blur-sm"
+          />
+
           <motion.div
-            className="mx-auto flex min-h-[100dvh] w-full max-w-[520px] flex-col px-6 pb-6 pt-7 text-white sm:px-8"
-            initial={reduced ? false : { scale: 0.98, y: 12 }}
-            animate={{ scale: 1, y: 0 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="sharp-shot-heading"
+            className={`${lexendZetta.variable} relative z-10 overflow-hidden bg-gradient-to-b from-[#e8782e] via-[#f09452] to-[#ffbb88] font-sans text-cream shadow-[0_24px_80px_-16px_rgba(122,46,12,0.55)]`}
+            style={{
+              width: p(340),
+              height: p(536),
+              borderRadius: p(20),
+            }}
+            initial={reduced ? false : { opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={reduced ? undefined : { opacity: 0, y: 16, scale: 0.97 }}
             transition={springs.enter}
           >
-            {/* Lockup row: the campaign, and the mark. */}
-            <div className="flex shrink-0 items-start justify-between">
-              <p className="text-[clamp(10px,2.8vw,13px)] font-medium uppercase leading-[1.9] tracking-[0.34em]">
+            <Sparkle left={283} top={136.11} alpha={2} />
+            <Sparkle left={6} top={29} alpha={1} />
+
+            {/* Top row (925:8802): the campaign lockup and the mark. */}
+            <div
+              className="absolute flex items-center justify-between"
+              style={{
+                left: p(18),
+                top: p(12.86),
+                width: p(304),
+                height: p(32.152),
+              }}
+            >
+              <p
+                className="shrink-0 text-center font-bold uppercase leading-[1.1]"
+                style={{
+                  fontFamily: "var(--font-lexend-zetta), var(--font-jakarta)",
+                  fontSize: p(9.22),
+                }}
+              >
                 {c.week.map((word) => (
                   <span key={word} className="block">
                     {word}
@@ -158,98 +307,161 @@ export function SharpShotPoster({
               <OptionalImage
                 src={WORDMARK}
                 alt="22g"
-                className="h-[clamp(26px,7.5vw,40px)] w-auto shrink-0 object-contain"
+                className="shrink-0 object-contain"
+                style={{ width: p(55), height: p(23.913) }}
                 fallback={
-                  <span className="shrink-0 text-[clamp(26px,7.5vw,40px)] font-extrabold leading-none tracking-[-0.02em]">
+                  <span
+                    className="shrink-0 font-extrabold leading-none tracking-[-0.02em]"
+                    style={{ fontSize: p(23.913) }}
+                  >
                     22g
                   </span>
                 }
               />
             </div>
 
-            {/* Headline, in the artwork's three lines. */}
+            {/* Headline (923:8785): the sentence, then the time it is about,
+                a size up on its own line. */}
             <h2
               id="sharp-shot-heading"
-              className="mt-[clamp(18px,5vw,30px)] shrink-0 text-center text-[clamp(21px,6.6vw,34px)] font-normal uppercase leading-[1.22] tracking-[0.035em]"
+              className="absolute font-extrabold"
+              style={{
+                left: p(27),
+                top: p(77.16),
+                width: p(299),
+                letterSpacing: p(-0.4465),
+              }}
             >
-              {c.heading.map((line) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
+              <span
+                className="block leading-[1.04]"
+                style={{ fontSize: p(29.768) }}
+              >
+                {c.headingLead}
+              </span>
+              <span
+                className="block leading-[1.04]"
+                style={{ fontSize: p(35.768) }}
+              >
+                {c.headingThreshold}
+              </span>
             </h2>
 
-            {/* The offer. */}
-            <p
-              className="mt-[clamp(14px,4vw,24px)] shrink-0 text-center text-[clamp(15px,4.4vw,23px)] font-medium leading-[1.4]"
-              style={{ color: ORANGE }}
+            {/* The drink (923:8791), flush into the bottom-left corner. */}
+            <div
+              className="absolute overflow-hidden"
+              style={{
+                left: 0,
+                top: p(204),
+                width: p(184),
+                height: p(332),
+                borderBottomLeftRadius: p(20),
+              }}
             >
-              {c.reward.map((line) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
-            </p>
-
-            <p className="mt-[clamp(12px,3.6vw,20px)] shrink-0 text-center text-[clamp(11px,3.2vw,16px)] font-medium">
-              {c.fineprint}
-            </p>
-
-            {/* The drink. It takes the height that is left, which makes it
-                the hero of a tall screen, but it is capped in dvh and allowed
-                to shrink (basis-0, min-h) so that on a short one it gives way
-                rather than pushing the score block off the screenshot - and
-                the score block is the part staff actually read. */}
-            <div className="flex min-h-[90px] flex-1 basis-0 items-center justify-center py-[clamp(8px,2.5vw,18px)]">
               <OptionalImage
                 src={DRINK}
                 alt=""
-                className="max-h-[32dvh] w-auto max-w-full object-contain"
+                className="h-full w-full object-cover"
                 fallback={<CupFallback />}
               />
             </div>
 
-            {/* Who, how fast, when - the three things staff read. Bottom
-                right, as the artwork places them. */}
-            <dl className="flex shrink-0 flex-col items-end gap-[2px] text-right text-[clamp(12px,3.6vw,18px)] font-medium leading-[1.55]">
-              <div className="contents">
-                <dt className="sr-only">Name</dt>
-                <dd className="max-w-full truncate">{name ?? "—"}</dd>
-              </div>
-              <div className="contents">
-                <dt className="sr-only">Time</dt>
-                <dd className="tabular-nums">
-                  {timeMs != null
-                    ? `${formatSeconds(timeMs)} ${c.secondsSuffix}`
-                    : "—"}
-                </dd>
-              </div>
-              <div className="contents">
-                <dt className="sr-only">Recorded at</dt>
-                <dd className="tabular-nums">{stamp}</dd>
-              </div>
-            </dl>
+            <Dash
+              left={154.93}
+              top={215.17}
+              boxW={23.322}
+              boxH={32.168}
+              w={31.756}
+              h={9.063}
+              radius={20.768}
+              rotate={-61}
+              // The frame stacks three copies of this one; that composites to
+              // ~0.97, which is what the render shows.
+              opacity={0.97}
+            />
+            <Dash
+              left={165.64}
+              top={227.29}
+              boxW={18.684}
+              boxH={16.287}
+              w={16.717}
+              h={8.563}
+              radius={17.622}
+              rotate={-33}
+              opacity={0.7}
+            />
 
-            {/* The close: the Lancet figure, then the occasion. */}
-            <div className="mt-[clamp(16px,4.5vw,26px)] shrink-0 text-center">
-              <p className="text-[clamp(12px,3.7vw,18px)] font-medium italic leading-[1.4] text-white/90">
-                {c.footnote}
+            {/* The offer (923:8788), beside the cup. */}
+            <div
+              className="absolute flex flex-col font-bold"
+              style={{
+                left: p(177),
+                top: p(237),
+                width: p(163),
+                gap: p(8.474),
+                fontSize: p(16.09),
+              }}
+            >
+              <p className="leading-[1.1]">
+                {c.reward.screenshot.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
               </p>
-              <p className="mt-1 text-[clamp(12px,3.7vw,18px)] font-normal leading-[1.4] text-white/90">
-                {c.occasion}
+              {/* Wraps inside the design's 159px box (925:8795). */}
+              <p className="leading-[1.1]" style={{ width: p(159) }}>
+                {c.reward.drink}
               </p>
             </div>
 
-            {/* Not part of the artwork: the way out. Held to a quiet weight so
-                it never competes with the offer in a screenshot. */}
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label={c.closeLabel}
-              className="mx-auto mt-[clamp(14px,4vw,22px)] shrink-0 rounded-full px-5 py-2 text-[13px] font-bold uppercase tracking-[0.22em] text-white/55 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60"
+            {/* Who, how fast, when - the three things staff read (923:8792). */}
+            <dl
+              className="absolute text-right font-bold leading-[1.1] opacity-80"
+              style={{
+                left: p(170),
+                top: p(393),
+                width: p(151),
+                fontSize: p(13.09),
+              }}
+            >
+              <dt className="sr-only">Name</dt>
+              <dd className="truncate">{name ?? "—"}</dd>
+              <dt className="sr-only">Time</dt>
+              <dd className="tabular-nums">
+                {timeMs != null
+                  ? `${formatSeconds(timeMs)} ${c.secondsSuffix}`
+                  : "—"}
+              </dd>
+              <dt className="sr-only">Recorded at</dt>
+              <dd className="tabular-nums">{stamp}</dd>
+            </dl>
+
+            {/* The claim the campaign is built on (925:8803). */}
+            <p
+              className="absolute text-center font-bold italic leading-[1.1]"
+              style={{
+                left: p(27),
+                top: p(460),
+                width: p(285),
+                fontSize: p(13.09),
+              }}
+            >
+              {c.footnote}
+            </p>
+
+            {/* How to get rid of it (925:9225). */}
+            <p
+              className="absolute text-center font-bold uppercase leading-[1.1] opacity-50"
+              style={{
+                left: p(56),
+                top: p(507),
+                width: p(227),
+                fontSize: p(10.09),
+                letterSpacing: p(0.9081),
+              }}
             >
               {c.dismiss}
-            </button>
+            </p>
           </motion.div>
         </motion.div>
       )}
