@@ -516,6 +516,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             name={state.name}
             email={state.email}
             timeMs={state.gameTimeMs}
+            finishedAt={state.gameFinishedAt}
             onContinue={next}
             onRetake={() => {
               track("game_retake", { variant: state.variant });

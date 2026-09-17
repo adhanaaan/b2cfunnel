@@ -14,6 +14,13 @@ import type { FunnelState } from "@/types/funnel";
  * Before the report exists, GAME_DONE is still the plain step forward.
  */
 
+/**
+ * A fixed finish time for every GAME_DONE below. The reducer never reads the
+ * clock - the caller supplies the moment - so a constant here keeps these
+ * assertions about the cursor rather than about when they happened to run.
+ */
+const AT = Date.UTC(2026, 8, 21, 4, 35, 0);
+
 const ANSWERS = {
   age: "40-49",
   sex: "female",
@@ -48,7 +55,7 @@ function atReport(): FunnelState {
     });
   }
   state = funnelReducer(state, { type: "SKIP_TO_KIND", kind: "game" });
-  state = funnelReducer(state, { type: "GAME_DONE", timeMs: 21000 });
+  state = funnelReducer(state, { type: "GAME_DONE", timeMs: 21000, at: AT });
   state = funnelReducer(state, { type: "SKIP_TO_KIND", kind: "analysing" });
   state = funnelReducer(state, { type: "ANALYSIS_DONE" });
   expect(currentStep(state).kind).toBe("result");
@@ -65,7 +72,7 @@ describe("retry from the phkl report", () => {
     expect(replaying.gameTimeMs).toBeUndefined();
     expect(replaying.result).toBe(report.result);
 
-    const back = funnelReducer(replaying, { type: "GAME_DONE", timeMs: 9000 });
+    const back = funnelReducer(replaying, { type: "GAME_DONE", timeMs: 9000, at: AT });
     expect(currentStep(back).kind).toBe("result");
     expect(back.gameTimeMs).toBe(9000);
     expect(back.result).toBe(report.result);
@@ -77,7 +84,7 @@ describe("retry from the phkl report", () => {
     expect(report.gameAttempts).toBe(1);
     const again = funnelReducer(
       funnelReducer(report, { type: "RETAKE_GAME" }),
-      { type: "GAME_DONE", timeMs: 9000 },
+      { type: "GAME_DONE", timeMs: 9000, at: AT },
     );
     expect(again.gameAttempts).toBe(2);
   });
@@ -87,7 +94,7 @@ describe("retry from the phkl report", () => {
       let state = createInitialState(variant);
       state = funnelReducer(state, { type: "SKIP_TO_KIND", kind: "game" });
       const game = state.cursor;
-      const done = funnelReducer(state, { type: "GAME_DONE", timeMs: 15000 });
+      const done = funnelReducer(state, { type: "GAME_DONE", timeMs: 15000, at: AT });
       expect(done.cursor).toBe(game + 1);
       expect(done.gameTimeMs).toBe(15000);
       expect(done.gameAttempts).toBe(1);
@@ -99,7 +106,7 @@ describe("retry from the phkl report", () => {
             type: "SKIP_TO_KIND",
             kind: "game",
           }),
-          { type: "GAME_DONE", timeMs: 15000 },
+          { type: "GAME_DONE", timeMs: 15000, at: AT },
         ),
       ).kind,
     ).toBe("greatJob");
