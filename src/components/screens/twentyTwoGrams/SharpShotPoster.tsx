@@ -2,17 +2,16 @@
 
 import { useEffect, useMemo } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { QRCodeSVG } from "qrcode.react";
 import { Lexend_Zetta } from "next/font/google";
 import { SHARP_SHOT_POSTER } from "@/config/twentyTwoGrams";
-import { GMS_SITE_URL } from "@/config/eventLinks";
 import { formatSeconds, formatStamp } from "@/lib/format";
 import { springs } from "@/lib/motion";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
 import { SharpShotCup } from "./SharpShotCup";
+import { GmsFollowCard } from "./GmsFollowCard";
 
 /**
- * Sharp Shot Week's reward poster (/22grams), built to Figma 925:9236.
+ * Sharp Shot Week's reward poster (/22grams), built to Figma 942:11120.
  *
  * The takeover a player gets for beating the clock, and the thing they
  * screenshot to redeem the drink - which is what the offer asks of them, and
@@ -28,7 +27,7 @@ import { SharpShotCup } from "./SharpShotCup";
  *   poster the target ("tap anywhere to close") - so there is no button to
  *   land on top of anything that has to be read.
  *
- * The design is a 340x536 card rather than a full-bleed screen, so it draws in
+ * The design is a 340x625 card rather than a full-bleed screen, so it draws in
  * its own pixels: one unit, `--p`, is the card scaled to the viewport, and
  * every size below is the design's px times it, via `p()`. The scale fills the
  * width inside a 20px gutter, is capped so the card does not balloon on a
@@ -96,10 +95,14 @@ function Sparkle({
   left,
   top,
   alpha,
+  width = 57,
+  fontSize = 65.671,
 }: {
   left: number;
   top: number;
   alpha: number;
+  width?: number;
+  fontSize?: number;
 }) {
   return (
     <span
@@ -108,8 +111,8 @@ function Sparkle({
       style={{
         left: p(left),
         top: p(top),
-        width: p(57),
-        fontSize: p(65.671),
+        width: p(width),
+        fontSize: p(fontSize),
         backgroundImage: `linear-gradient(to bottom, rgba(255, 255, 112, ${0.3 * alpha}), rgba(245, 158, 10, ${0.12 * alpha}))`,
       }}
     >
@@ -119,9 +122,13 @@ function Sparkle({
 }
 
 /**
- * One of the two yellow dashes over the cup (925:9230, 925:9233). The design
- * positions a box and centres a rotated, y-flipped rectangle in it; the flip
- * is kept because the rounded ends are not symmetric about the long axis.
+ * A tilted bar: the two yellow dashes over the cup (925:9230, 925:9233) and
+ * the pair off the top-right corner (942:11408). The design positions a box
+ * and centres a rotated rectangle in it, so that is what this does.
+ *
+ * `flip` is the dashes' y-mirror, kept because it is in the frame; on a shape
+ * this symmetric it changes nothing, which is why the corner pair leaves it
+ * off rather than carrying it for the sake of it.
  */
 function Dash({
   left,
@@ -132,7 +139,9 @@ function Dash({
   h,
   radius,
   rotate,
-  opacity,
+  opacity = 1,
+  flip = false,
+  background = SPEED_LIGHT,
 }: {
   left: number;
   top: number;
@@ -142,7 +151,9 @@ function Dash({
   h: number;
   radius: number;
   rotate: number;
-  opacity: number;
+  opacity?: number;
+  flip?: boolean;
+  background?: string;
 }) {
   return (
     <span
@@ -156,9 +167,9 @@ function Dash({
           width: p(w),
           height: p(h),
           borderRadius: p(radius),
-          background: SPEED_LIGHT,
+          background,
           opacity,
-          transform: `rotate(${rotate}deg) scaleY(-1)`,
+          transform: `rotate(${rotate}deg)${flip ? " scaleY(-1)" : ""}`,
         }}
       />
     </span>
@@ -212,7 +223,7 @@ export function SharpShotPoster({
             // past 1.25x (a 340px card has nothing to gain from a desktop's
             // width), and give way to the height on a short screen.
             ["--p" as string]:
-              "min(1.25px, (100vw - 40px) / 340, (100dvh - 40px) / 536)",
+              "min(1.25px, (100vw - 40px) / 340, (100dvh - 40px) / 625)",
           }}
         >
           {/* Backdrop. A real button so the close is reachable without a
@@ -232,7 +243,7 @@ export function SharpShotPoster({
             className={`${lexendZetta.variable} relative z-10 overflow-hidden bg-gradient-to-b from-[#e8782e] via-[#f09452] to-[#ffbb88] font-sans text-cream shadow-[0_24px_80px_-16px_rgba(122,46,12,0.55)]`}
             style={{
               width: p(340),
-              height: p(536),
+              height: p(625),
               borderRadius: p(20),
             }}
             initial={reduced ? false : { opacity: 0, y: 24, scale: 0.96 }}
@@ -240,8 +251,34 @@ export function SharpShotPoster({
             exit={reduced ? undefined : { opacity: 0, y: 16, scale: 0.97 }}
             transition={springs.enter}
           >
+            {/* The pair of tilted bars off the top-right corner (942:11408):
+                the solid Processing Speed tone with the soft gradient one
+                behind it, both at the design's 24 degrees. */}
+            <Dash
+              left={269}
+              top={33.44}
+              boxW={136.598}
+              boxH={74.934}
+              w={140.944}
+              h={19.274}
+              radius={13.265}
+              rotate={24}
+              opacity={1}
+            />
+            <Dash
+              left={259}
+              top={21}
+              boxW={121.029}
+              boxH={67.245}
+              w={124.362}
+              h={18.24}
+              radius={9.12}
+              rotate={24}
+              background="linear-gradient(to bottom, rgba(255, 255, 112, 0.3), rgba(245, 158, 10, 0.12))"
+            />
+
             <Sparkle left={283} top={136.11} alpha={2} />
-            <Sparkle left={6} top={29} alpha={1} />
+            <Sparkle left={5} top={22} alpha={1} width={86} fontSize={99.1} />
 
             {/* Top row: the institutional lockup at the left, then the
                 campaign lockup and the 22g mark grouped at the right
@@ -252,7 +289,7 @@ export function SharpShotPoster({
                 left: p(18),
                 top: p(12.86),
                 width: p(304),
-                height: p(34),
+                height: p(32.152),
               }}
             >
               {/* The one lockup this build already ships, whited out: the file
@@ -264,19 +301,19 @@ export function SharpShotPoster({
               <img
                 src="/gms-ntu-logo.png"
                 alt="Gray Matter Solutions, a spin-off from Nanyang Technological University, Singapore"
-                className="w-auto shrink-0 select-none brightness-0 invert"
-                style={{ height: p(34) }}
+                className="h-auto shrink-0 select-none brightness-0 invert"
+                style={{ width: p(146.455) }}
               />
 
               <div
                 className="flex shrink-0 items-center"
-                style={{ gap: p(15) }}
+                style={{ gap: p(5.367) }}
               >
                 <p
                   className="shrink-0 text-center font-bold uppercase leading-[1.1]"
                   style={{
                     fontFamily: "var(--font-lexend-zetta), var(--font-jakarta)",
-                    fontSize: p(9.22),
+                    fontSize: p(6.185),
                   }}
                 >
                   {c.week.map((word) => (
@@ -289,11 +326,11 @@ export function SharpShotPoster({
                   src={WORDMARK}
                   alt="22g"
                   className="shrink-0 object-contain"
-                  style={{ width: p(55), height: p(23.913) }}
+                  style={{ width: p(36.898), height: p(16.042) }}
                   fallback={
                     <span
                       className="shrink-0 font-extrabold leading-none tracking-[-0.02em]"
-                      style={{ fontSize: p(23.913) }}
+                      style={{ fontSize: p(16.042) }}
                     >
                       22g
                     </span>
@@ -356,6 +393,7 @@ export function SharpShotPoster({
               h={9.063}
               radius={20.768}
               rotate={-61}
+              flip
               // The frame stacks three copies of this one; that composites to
               // ~0.97, which is what the render shows.
               opacity={0.97}
@@ -369,6 +407,7 @@ export function SharpShotPoster({
               h={8.563}
               radius={17.622}
               rotate={-33}
+              flip
               opacity={0.7}
             />
 
@@ -409,32 +448,12 @@ export function SharpShotPoster({
               {c.fineprint}
             </p>
 
-            {/* Who measured it, over the score it belongs to. */}
-            <p
-              className="absolute text-right font-bold leading-[1.15] opacity-90"
-              style={{
-                left: p(171),
-                top: p(365),
-                width: p(151),
-                fontSize: p(9.6),
-              }}
-            >
-              {c.measuredBy.map((line, i) => (
-                <span
-                  key={line}
-                  className={i === c.measuredBy.length - 1 ? "block font-extrabold" : "block"}
-                >
-                  {line}
-                </span>
-              ))}
-            </p>
-
             {/* Who, how fast, when - the three things staff read (923:8792). */}
             <dl
               className="absolute text-right font-bold leading-[1.1] opacity-80"
               style={{
-                left: p(170),
-                top: p(393),
+                left: p(167),
+                top: p(170),
                 width: p(151),
                 fontSize: p(13.09),
               }}
@@ -451,78 +470,46 @@ export function SharpShotPoster({
               <dd className="tabular-nums">{stamp}</dd>
             </dl>
 
-            {/* The claim the campaign is built on (925:8803). The design
-                centres this across the card; it now shares the foot with the
-                code, so it takes the width left of it and centres in that. */}
-            <p
-              className="absolute text-center font-bold italic leading-[1.1]"
-              style={{
-                left: p(24),
-                top: p(450),
-                width: p(214),
-                fontSize: p(13.09),
-              }}
-            >
-              {c.footnote}
-            </p>
-
-            {/* Why that measurement is worth anything. */}
-            <p
-              className="absolute text-center font-bold leading-[1.1] opacity-75"
-              style={{
-                left: p(24),
-                top: p(497),
-                width: p(214),
-                fontSize: p(9.6),
-              }}
-            >
-              {c.provenance}
-            </p>
-
-            {/* The way to find out who made this. It encodes GMS' own site,
-                read from one place (GMS_SITE_URL) so it and the "That's a
-                wrap" link cannot open different addresses.
-
-                Level L and pure black on white, as the TV boards use - the
-                settings measured at a live event. This code is far smaller
-                than those and is read off a screenshot, so it takes every
-                module of size it can get: the quiet zone inside the SVG is
-                two modules rather than the spec'd four, and the white tile's
-                own padding makes up the rest, which buys the code about 12%
-                larger modules in the same box. */}
+            {/* The close, in its own pill (942:11403) - the one light
+                surface on the card, so the claim reads as a note rather than
+                as more of the offer. Its colours are the build's own
+                `surface-container` and `secondary`, which is exactly what the
+                design's tokens resolve to. */}
             <div
-              className="absolute flex flex-col items-center"
-              style={{ left: p(248), top: p(442), width: p(74) }}
+              className="absolute flex items-center justify-center bg-surface-container"
+              style={{
+                left: p(141),
+                top: p(383),
+                width: p(185),
+                height: p(59),
+                borderRadius: p(20),
+                paddingLeft: p(14),
+                paddingRight: p(10),
+              }}
             >
-              <div
-                className="flex w-full items-center justify-center bg-white"
-                style={{ padding: p(4), borderRadius: p(6) }}
-              >
-                <QRCodeSVG
-                  value={GMS_SITE_URL}
-                  className="h-full w-full"
-                  style={{ width: p(66), height: p(66) }}
-                  level="L"
-                  marginSize={2}
-                  fgColor="#000000"
-                  bgColor="#ffffff"
-                />
-              </div>
               <p
-                className="mt-[calc(var(--p)*4)] text-center font-bold leading-[1.15] opacity-90"
-                style={{ fontSize: p(8.6) }}
+                className="font-bold italic leading-[1.1] text-secondary"
+                style={{ width: p(161), fontSize: p(12.09) }}
               >
-                {c.scanLabel}
+                {c.footnote}
               </p>
+            </div>
+
+            {/* The follow card (942:11379), full width under the offer. */}
+            <div
+              className="absolute"
+              style={{ left: 0, top: p(466), width: p(340), height: p(115) }}
+            >
+              <GmsFollowCard u={p} />
             </div>
 
             {/* How to get rid of it (925:9225). */}
             <p
               className="absolute text-center font-bold uppercase leading-[1.1] opacity-50"
               style={{
-                left: p(24),
-                top: p(514),
-                width: p(214),
+                left: p(57),
+                top: p(596),
+                width: p(227),
                 fontSize: p(10.09),
                 letterSpacing: p(0.9081),
               }}

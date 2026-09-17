@@ -630,6 +630,14 @@ could beat it again. `SharpShotStickyCta` replaces `SiloamStickyCta` for this
 variant only, and the report buys the extra clearance its taller card needs
 rather than the shared section growing for every other event.
 
+**It carries two cards and turns between them every five seconds**
+(942:11389): the retry offer, and `GmsFollowCard`. One slot, because the report
+has room for one pinned thing and both have a claim on it - the drink is why
+they played, and GMS is who they would not otherwise learn about. They
+cross-fade rather than swapping through an empty slot, which on a pinned bar
+would read as the page losing its button, and the turn pauses while a pointer
+or the keyboard is on the banner so nobody loses a button mid-reach.
+
 One deliberate departure from that frame: the design layers the cut-out over
 "*while redemption last", leaving only the part of that line clear of the cup
 showing. Here the line sits in front of the cup instead - it is the one line on
@@ -689,32 +697,25 @@ now lives only on the poster. If it should be on the wall too, `HowItWorksPanel`
 in `app/22grams/leaderboard/page.tsx` is the panel to change, and
 `SHARP_SHOT_THRESHOLD_LABEL` is where the "< 30 s" has to come from.
 
-**Gray Matter Solutions is on it four times, and that is deliberate.** The card
-is redeemed at a partner's counter and named 22g three times over (the
-wordmark, the cup in the photograph, and the offer), so the house that built
-the test earns its own presence:
+**Gray Matter Solutions has its own band on it** (Figma 942:11120, the revised
+frame). The card is redeemed at a partner's counter and names 22g three times
+over, so the house that built the test carries: the lockup at the top left -
+`/gms-ntu-logo.png`, the one this build already ships, whited out with
+`brightness-0 invert` because the file is the dark version every other screen
+puts on cream and this card is white-on-ember (the same treatment
+`Event2Splash` and `Event3Wrap` give it, so there is no second copy to keep in
+step) - and the **"follow us" card** across the foot: the Instagram code,
+"World Alzheimer's Month", "Follow for more brain health events" and the
+address.
 
-- the lockup at the top left - `/gms-ntu-logo.png`, the one this build already
-  ships, whited out with `brightness-0 invert` because the file is the dark
-  version every other screen puts on cream and this card is white-on-ember.
-  Same treatment `Event2Splash` and `Event3Wrap` give it, so there is no second
-  copy of the lockup to keep in step;
-- **"Processing speed, measured by Gray Matter Solutions", over the score.**
-  The score is the one part of this card a player re-reads and shows people,
-  and until now nothing on it said where the number came from;
-- **"Built with NTU's Dementia Research Centre" at the foot** - why that
-  measurement is worth anything;
-- **a QR to `GMS_SITE_URL`**, bottom right. It encodes the same address the
-  "That's a wrap" screen links, read from one constant in `config/eventLinks.ts`
-  so the two can never open different places - the failure nobody would catch
-  from the outside (`tests/config/sharpShot.test.ts`).
-
-The code is small: the card was full, and it takes the width the foot lines
-give up rather than a re-cut frame. Level L and pure black on white as the TV
-boards use, but with a two-module quiet zone inside the SVG instead of the
-spec'd four, the white tile's own padding making up the rest - which buys about
-12% larger modules in the same box. It reads off a phone at close range; it is
-not a poster code to be scanned across a room.
+That card is `GmsFollowCard`, and it is a component because two surfaces show
+it: this band, and every other five seconds on the report's pinned banner. Both
+hand it a box and it fills what it is given, so the two cannot drift into
+different cards. Its address is printed AND encoded, derived from `GMS_SITE_URL`
+in `config/eventLinks.ts` so a reader cannot be shown one place and sent to
+another. Its code is the one file this poster still needs - see
+`public/images/22grams/README.md`; until it lands the card draws a plain code
+for the same profile, so it is scannable from the day it ships.
 
 **How it is built.** The card draws in the design's own pixels: one unit,
 `--p`, is one design pixel - the card scaled to fill the width inside a 20px

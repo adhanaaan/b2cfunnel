@@ -33,6 +33,27 @@ The drink is cropped to fill its box (`object-cover`), so give it the box's own
 left and right. The wordmark is fitted (`object-contain`), so trim the empty
 space around it rather than leaving it in the file.
 
+## The "follow us" card
+
+The dark band under the offer on the poster, and every other five seconds on
+the report's pinned banner (Figma 942:11389). It needs **one file, and it does
+not live in this folder** - it is a Gray Matter Solutions asset, not this
+event's, so it sits at the repo root beside the other GMS marks:
+
+| File | Shows | Box in the frame | Export at | Until it lands |
+| --- | --- | --- | --- | --- |
+| `public/gms-instagram-qr.png` | the styled Instagram code, with `@graymatter.solutions` set under it | 83.9x85 (square, near enough) | **512x512** | a plain black code for the same profile, drawn by the build |
+
+It is the tile in the design, not a screenshot of one: crop to the white
+rounded card itself, with no page around it. The card gives it its own 3.7px
+radius, and it is cropped to fill (`object-cover`), so anything far off square
+will lose its edges.
+
+Until it is there the card draws its own code from `GMS_INSTAGRAM_URL`
+(`src/config/eventLinks.ts`) - plain black, no handle under it - so the card is
+scannable from the day it ships. **Whoever uploads the artwork has to scan it
+first**: nothing in the code can check where it goes.
+
 ## Nothing else to upload
 
 The funnel's own screens (landing, primers, game, report) are the shared

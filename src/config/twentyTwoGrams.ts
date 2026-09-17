@@ -88,31 +88,25 @@ export const SHARP_SHOT_POSTER = {
   /** The unit the score is printed in: "28.5 seconds". */
   secondsSuffix: "seconds",
 
-  /**
-   * Who measured the thing the player is about to screenshot.
-   *
-   * It sits over the score rather than at the foot on purpose: the score is
-   * the one part of this card a player re-reads and shows people, and until
-   * now nothing on it said where the number came from.
-   */
-  measuredBy: ["Processing speed, measured by", "Gray Matter Solutions"],
-
-  /** Under the close: why that measurement is worth anything. */
-  provenance: "Built with NTU's Dementia Research Centre",
-
-  /**
-   * Under the code. Held to one line at the width the code leaves it - a
-   * longer label wraps onto two and the second runs off the card.
-   */
-  scanLabel: "Find out more",
-
-  /** The close: the claim this campaign is actually built on. */
+  /** The close, in its own pill under the offer (942:11403). */
   footnote:
     "Unsweetened caffeinated coffee is linked to lower dementia risk (UK Biobank)",
 
   /** How to get rid of it. The whole poster is the target. */
   dismiss: "Tap anywhere to close",
   closeLabel: "Close",
+} as const;
+
+/**
+ * The "follow us" card (Figma 942:11389): the dark band under the offer on the
+ * poster, and every other five seconds on the report's pinned banner.
+ *
+ * The address is not written here - it is derived from GMS_SITE_URL, so the
+ * link a reader sees and the one the code opens cannot come apart.
+ */
+export const GMS_FOLLOW_CARD = {
+  eyebrow: "World Alzheimer's Month",
+  heading: "Follow for more brain health events",
 } as const;
 
 /**
