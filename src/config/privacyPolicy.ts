@@ -360,22 +360,7 @@ export const IHHSEA_PRIVACY_POLICY_SECTIONS: PolicySection[] =
 export const PHKL_PRIVACY_POLICY_SECTIONS: PolicySection[] =
   partnerPolicySections(IHH_MALAYSIA);
 
-/**
- * The Siloam Neuroscience Summit policy
- * (/siloamneurosciencesummit/privacy-policy), behind the "Privacy Policy" link
- * in that landing's required consent row.
- *
- * Today it IS the general policy - the same sections, shared rather than
- * copied, so nothing has been forked and nothing can drift. It has a route and
- * an export of its own for one reason: this event runs in Indonesia, and the
- * policy is being rewritten against Indonesia's Personal Data Protection Law
- * (UU No. 27/2022) before the summit. When that wording lands it replaces the
- * right-hand side of this line and nothing else - every other event keeps
- * linking the Singapore PDPA policy it was written under.
- *
- * Until then the summit links a policy written against the PDPA 2012, which is
- * the law GMS collects under as a Singapore organisation, and which describes
- * accurately what this funnel stores.
- */
-export const SILOAM_PRIVACY_POLICY_SECTIONS: PolicySection[] =
-  PRIVACY_POLICY_SECTIONS;
+// The Siloam Neuroscience Summit's policy is NOT here. It is the one document
+// on this site not written against Singapore's PDPA: that event runs in
+// Indonesia, so its policy is written against UU No. 27/2022 and lives in
+// config/privacyPolicyIndonesia.ts, in both languages.

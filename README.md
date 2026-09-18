@@ -451,14 +451,14 @@ What this event holds of its own:
   the primers, the game and its guided tour, all fourteen questions, the
   analysing beat and the whole report, share sheet included. See
   **Translations** below.
-- **The #MambaCares landing** (`Event3Splash.tsx` with `design="siloam"`): the
-  plain two-row consent at the roomier 20px/12.5px size, no partner block. It
-  links a policy at **`/siloamneurosciencesummit/privacy-policy`**, which is
-  currently the general policy shared (not copied), so the rewrite against
-  Indonesia's Personal Data Protection Law (UU No. 27/2022) is one edit in
-  `config/privacyPolicy.ts` and cannot reach the Singapore policy every other
-  no-partner event links. **The consent wording and that policy are both still
-  to be confirmed against Indonesian law.**
+- **`/22grams`' landing** (`Event3Splash.tsx` with `design="siloam"`): the
+  no-partner landing at the roomier 20px/12.5px size, with that event's
+  **one-tick consent** - the player confirms whose answers these are, and the
+  line beneath states that registering is itself the newsletter consent. It is
+  the *same* `ONE_TICK_CONSENT_FORM` object `/22grams` uses, not a copy, so a
+  wording change reaches both; `tests/config/siloamPrivacyPolicy.test.ts` holds
+  the two landings equal bar the policy each links. Plus the language picker,
+  which `/22grams` has no need of.
 - **NTU Homecoming's call to action at the end** (`SiloamOffer.tsx`), in place
   of `/phkl`'s Memory Screening Package: the ReCOGnAIze assessment as the next
   step, and the team at the booth to take it from there. **No price, no poster
@@ -795,6 +795,50 @@ How it works, and the rules that matter:
   to `ACTION_TABLES`, and check `ordinalFor` in `lib/format.ts` handles how
   that language builds "2nd".
 
+## The Siloam summit's privacy policy (Indonesia's UU PDP)
+
+`/siloamneurosciencesummit/privacy-policy` is **the one document on this site
+not written against Singapore's PDPA**. That event runs in Indonesia, so its
+policy is written against **UU No. 27 Tahun 2022 tentang Pelindungan Data
+Pribadi** ("UU PDP"), in `src/config/privacyPolicyIndonesia.ts`. Every other
+policy still links the PDPA text in `config/privacyPolicy.ts`, and a test holds
+that separation.
+
+**It is served in Bahasa Indonesia and English, and opens in Indonesian.** That
+is not a nicety: art. 22 requires a request for consent to be put in Indonesian
+and to be plainly understandable, and this document is what the landing's
+consent row points at. The toggle is local state on the page - it deliberately
+does *not* inherit the funnel's language, because the consent row opens the
+policy in a new tab and a new tab's `sessionStorage` is a copy at best.
+
+It is not the general policy with a country swapped. Each section exists to
+answer something the UU PDP requires and the PDPA does not:
+
+| What the UU PDP requires | Where it lands |
+| --- | --- |
+| Health data is **specific** personal data (art. 4(2)) | §2 names the quiz answers and the Brain Health Score as such, rather than listing them as one row of five |
+| A **lawful basis per purpose** (art. 20(2)) | §3 pairs every purpose with its basis instead of resting everything on consent |
+| **Broader rights** (arts. 5-13): erasure, restriction, portability, objection to automated processing, compensation | §7 lists all of them; none has a PDPA equivalent |
+| **Automated processing** may be objected to (art. 10) | §10 answers it directly, because a Brain Health Score *is* automated processing |
+| Breach notified within **3 x 24 hours** (art. 46) | §9 commits to that, not to "as soon as practicable" |
+| **Cross-border transfer** conditions (art. 56) | §6 exists only because GMS is in Singapore, so every record this event takes leaves Indonesia immediately |
+| **Extraterritorial reach** (art. 2) | §1 says why a Singapore company is in scope at all |
+| Children need parental consent (art. 25) | §11 |
+
+**Still owed: legal review.** The text is accurate about what the funnel does
+(`/api/lead`, `/api/score`, `/api/newsletter`, `/api/response`) and about the
+statute it names, but it is a legal document and an Indonesian practitioner has
+to sign it off before the event. Put these two in front of them first, because
+they are what a request or a complaint gets measured against:
+
+1. the retention periods in `config/privacy.ts`, and
+2. the consent wording on the landing (`ONE_TICK_CONSENT_FORM`).
+
+`tests/config/siloamPrivacyPolicy.test.ts` is not legal review and does not
+pretend to be. It holds the failures nobody would see on the page: the wrong
+statute named, a right or a deadline dropped, one language drifting out of step
+with the other, or a contact address the rest of the site no longer answers on.
+
 ## /event-v6 (preview)
 
 `/event-v6` walks exactly the v3 flow, and exists only to compare consent
@@ -1058,13 +1102,15 @@ Three things on the Siloam summit are working defaults waiting on the client,
 each a one-line change and each flagged in the file it lives in:
 
 - **The landing's consent wording**, in both languages
-  (`COPY.screens.siloam.splash`, `config/copy.id.ts`). Written against
-  Singapore's PDPA framing and to be confirmed against Indonesia's Personal
-  Data Protection Law (UU No. 27/2022).
+  (`ONE_TICK_CONSENT_FORM` in `config/copy.ts`, `config/copy.id.ts`). It is
+  `/22grams`' wording, and the policy it links describes that shape. UU PDP
+  art. 22 requires a consent request to be put in Indonesian and to be plainly
+  understandable, so the Bahasa Indonesia rendering is the one that matters
+  here - both are for counsel to confirm with the policy.
 - **The privacy policy** at `/siloamneurosciencesummit/privacy-policy`
-  (`SILOAM_PRIVACY_POLICY_SECTIONS`). Currently the general PDPA policy,
-  shared; to be replaced by the reviewed Indonesian text, with an Indonesian
-  translation supplied alongside it rather than machine-translated here.
+  (`config/privacyPolicyIndonesia.ts`). Now written against Indonesia's UU PDP
+  in both languages - see the section below - but **not yet reviewed by
+  counsel**, which is the one thing still owed on it.
 - **The report's headline statistic**, in both languages
   (`COPY.screens.siloam.report.stat`). Currently the *global* Lancet 45%
   awaiting the Indonesian figure. Change both languages together.

@@ -2,11 +2,40 @@ import Link from "next/link";
 import { PRIVACY } from "@/config/privacy";
 import type { PolicySection } from "@/config/privacyPolicy";
 
+/**
+ * The page's own words, around the policy. Defaults are English, which is what
+ * every policy but the Siloam summit's is written in.
+ */
+export interface PrivacyPolicyChrome {
+  back: string;
+  /** The title, split so the second word keeps the ember gradient. */
+  title: [string, string];
+  /** Precedes the date, e.g. "Last updated". */
+  lastUpdated: string;
+  /** The law the policy is written against, after the date. */
+  law: string;
+}
+
+const DEFAULT_CHROME: PrivacyPolicyChrome = {
+  back: "Back to the challenge",
+  title: ["Privacy", "Policy"],
+  lastUpdated: "Last updated",
+  law: "Singapore Personal Data Protection Act 2012",
+};
+
 interface PrivacyPolicyDocumentProps {
   /** The policy's sections, in order (see config/privacyPolicy.ts). */
   sections: PolicySection[];
   /** Where "Back to the challenge" returns to: the landing that linked here. */
   backHref: string;
+  /**
+   * The words around the policy, for a document not written in English or not
+   * written against the PDPA. Omitted everywhere but the Siloam summit, which
+   * is the only policy on this site under another country's law.
+   */
+  chrome?: PrivacyPolicyChrome;
+  /** Rendered above the title - the summit's language toggle. */
+  toolbar?: React.ReactNode;
 }
 
 /**
@@ -19,6 +48,8 @@ interface PrivacyPolicyDocumentProps {
 export function PrivacyPolicyDocument({
   sections,
   backHref,
+  chrome = DEFAULT_CHROME,
+  toolbar,
 }: PrivacyPolicyDocumentProps) {
   return (
     <main className="relative isolate min-h-dvh px-5 pb-16 pt-8 text-charcoal">
@@ -37,21 +68,22 @@ export function PrivacyPolicyDocument({
           href={backHref}
           className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-ember-core transition hover:opacity-75"
         >
-          <span aria-hidden>←</span> Back to the challenge
+          <span aria-hidden>←</span> {chrome.back}
         </Link>
+
+        {toolbar && <div className="mt-6">{toolbar}</div>}
 
         <p className="mt-8 text-xs font-bold uppercase tracking-[0.22em] text-ember-core">
           {PRIVACY.organisation}
         </p>
         <h1 className="mt-3 text-[2.15rem] font-bold leading-[1.07] text-[#171717]">
-          Privacy{" "}
+          {chrome.title[0]}{" "}
           <span className="bg-gradient-to-b from-[#e8782e] via-[#f09452] to-[#ffbb88] bg-clip-text text-transparent">
-            Policy
+            {chrome.title[1]}
           </span>
         </h1>
         <p className="mt-3 text-sm text-outline">
-          Last updated {PRIVACY.lastUpdated} · Singapore Personal Data
-          Protection Act 2012
+          {chrome.lastUpdated} {PRIVACY.lastUpdated} · {chrome.law}
         </p>
 
         <div className="mt-8 space-y-4">

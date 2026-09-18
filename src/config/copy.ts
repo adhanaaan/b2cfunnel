@@ -90,6 +90,34 @@ const NO_PARTNER_SPLASH: CopyConfig["screens"]["event3"]["splash"] = {
 };
 
 /**
+ * The newer consent shape, introduced on /22grams and now shared with the
+ * Siloam summit: ONE tick rather than two.
+ *
+ * The tick is an authorisation - whose answers these are - and the line under
+ * it states that registering is itself the marketing consent, rather than
+ * asking for it again in a second box. `Event3Splash` renders this block or
+ * the older two-row pair, never both, and it switches on the block being
+ * present rather than on the event's name.
+ *
+ * Shared rather than copied because the two events are meant to be the same
+ * landing: a wording change to one is a wording change to both, which is what
+ * "make it the same as /22grams" has to mean if it is to stay true.
+ *
+ * NOTE FOR REVIEW: on the summit this wording is what an Indonesian player
+ * consents to, and the policy it links describes it under Indonesia's UU PDP.
+ * The Bahasa Indonesia rendering is in config/copy.id.ts, and both are for
+ * counsel to confirm - UU PDP art. 22 requires a consent request to be put in
+ * Indonesian and to be plainly understandable.
+ */
+const ONE_TICK_CONSENT_FORM = {
+  heading: "I hereby confirm that I am submitting this form:",
+  authorisation:
+    "On my own behalf; or on behalf of another person, and I confirm that I am authorized to provide the answers in this form.",
+  registerNote:
+    "By registering, I consent for Gray Matter Solutions to contact me with emails and newsletters.",
+} as const;
+
+/**
  * The screens the Pantai Hospital KL arc introduced (/phkl), and the two
  * parts of its report that every event built on that arc reuses: the header
  * and the risk section.
@@ -454,6 +482,11 @@ const SILOAM_SCREEN_COPY: SiloamCopy = {
   splash: {
     ...NO_PARTNER_SPLASH,
     privacyHref: "/siloamneurosciencesummit/privacy-policy",
+    // The landing is /22grams', one tick and all: the same block, not a copy
+    // of it. `consentRequired` and `consentMarketing` come through the spread
+    // above and go unused while this is set - Event3Splash renders one shape
+    // or the other, never both.
+    consentForm: ONE_TICK_CONSENT_FORM,
     // Sits above the two-option picker on the landing. Written in both
     // languages at once, so it reads to whoever is holding the phone before
     // they have chosen anything.
@@ -524,14 +557,9 @@ const TWENTY_TWO_GRAMS_SCREEN_COPY: TwentyTwoGramsCopy = {
     // answers they are giving, and registering is itself the marketing
     // consent. `consentRequired` and `consentMarketing` are inherited above
     // and go unused while this block is set - Event3Splash renders one or the
-    // other, never both.
-    consentForm: {
-      heading: "I hereby confirm that I am submitting this form:",
-      authorisation:
-        "On my own behalf; or on behalf of another person, and I confirm that I am authorized to provide the answers in this form.",
-      registerNote:
-        "By registering, I consent for Gray Matter Solutions to contact me with emails and newsletters.",
-    },
+    // other, never both. Shared with the Siloam summit, whose landing is
+    // meant to be this one.
+    consentForm: ONE_TICK_CONSENT_FORM,
   },
   report: {
     ...PHKL_ARC_COPY.report,
