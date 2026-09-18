@@ -1,35 +1,26 @@
 import type { Metadata } from "next";
-import { PrivacyPolicyDocument } from "@/components/privacy/PrivacyPolicyDocument";
-import { SILOAM_PRIVACY_POLICY_SECTIONS } from "@/config/privacyPolicy";
+import { SiloamPolicy } from "./SiloamPolicy";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Reaction Time Challenge",
+  title: "Kebijakan Privasi | Privacy Policy | Reaction Time Challenge",
   description:
-    "How Gray Matter Solutions collects, uses, discloses and protects personal data in the Reaction Time Challenge and Brain Health Check at the Siloam Neuroscience Summit.",
+    "Bagaimana Gray Matter Solutions mengumpulkan, menggunakan, dan melindungi data pribadi pada Siloam Neuroscience Summit, berdasarkan UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi.",
 };
 
 /**
- * /siloamneurosciencesummit/privacy-policy - the policy behind the "Privacy
- * Policy" link in the summit's required consent row.
+ * /siloamneurosciencesummit/privacy-policy - the policy behind the consent
+ * row on the summit's landing.
  *
- * A route of its own even though the text is currently the general policy's,
- * word for word (`SILOAM_PRIVACY_POLICY_SECTIONS` shares that array rather
- * than copying it). This event runs in Indonesia and its policy is being
- * rewritten against Indonesia's Personal Data Protection Law (UU No. 27/2022);
- * having the route already means that rewrite is one edit in
- * config/privacyPolicy.ts, with no chance of it reaching the Singapore policy
- * every other event links.
+ * The one document on this site NOT written against Singapore's PDPA. This
+ * event runs in Indonesia, so its policy is written against UU No. 27 Tahun
+ * 2022 tentang Pelindungan Data Pribadi, in Bahasa Indonesia and English; the
+ * text is in config/privacyPolicyIndonesia.ts, and the note at the top of that
+ * file explains which parts of the UU PDP each section exists to answer.
  *
- * The document itself stays in English until the reviewed Indonesian text is
- * supplied. It is the one thing on this route that is deliberately NOT
- * machine-translated with the rest of the funnel: it is what people are
- * consenting to.
+ * It opens in Indonesian, and the client component beside this one carries the
+ * toggle - the page itself stays a server component so the document is still
+ * in the HTML for anyone reading it without JavaScript.
  */
 export default function SiloamPrivacyPolicyPage() {
-  return (
-    <PrivacyPolicyDocument
-      sections={SILOAM_PRIVACY_POLICY_SECTIONS}
-      backHref="/siloamneurosciencesummit"
-    />
-  );
+  return <SiloamPolicy />;
 }

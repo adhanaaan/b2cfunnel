@@ -241,19 +241,27 @@ describe("22grams copy", () => {
   });
 
   /**
-   * The consent block is this event's alone. It replaces two ticks with one,
-   * and says that registering IS the newsletter consent - so a landing that
-   * picked it up by accident would start recording an opt-in nobody was asked
-   * for. Every other event must therefore still have none.
+   * The consent block replaces two ticks with one, and says that registering
+   * IS the newsletter consent - so a landing that picked it up by accident
+   * would start recording an opt-in nobody was asked for. Exactly two events
+   * are meant to carry it: this one, and the Siloam summit, whose landing was
+   * deliberately made the same as this one.
+   *
+   * And the SAME block, not a copy of it: "the same landing" is only true for
+   * as long as one wording change reaches both, so this asserts identity
+   * rather than equality.
    */
-  it("is the only landing on the one-tick consent block", () => {
+  it("shares its one-tick consent with the summit, and with nothing else", () => {
     const withBlock = (
       Object.keys(COPY.screens) as (keyof typeof COPY.screens)[]
     ).filter((key) => {
       const screen = COPY.screens[key] as { splash?: { consentForm?: unknown } };
       return screen?.splash?.consentForm !== undefined;
     });
-    expect(withBlock).toEqual(["22grams"]);
+    expect(withBlock.sort()).toEqual(["22grams", "siloam"]);
+    expect(COPY.screens.siloam.splash.consentForm).toBe(
+      COPY.screens["22grams"].splash.consentForm,
+    );
   });
 
   it("asks whose answers these are, and states the newsletter consent", () => {

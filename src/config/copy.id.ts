@@ -131,13 +131,28 @@ export const COPY_ID: DeepPartial<CopyConfig> = {
         body: "Ikuti tes mencocokkan simbol yang singkat untuk mengetahui kecepatan pemrosesan otak Anda.",
         namePlaceholder: "Nama",
         emailPlaceholder: "Email Anda",
-        // To be confirmed with the Indonesian policy this links to.
-        consentRequired:
-          "*Wajib.* Saya setuju untuk dihubungi mengenai hasil dan hadiah saya.",
+        // The one-tick consent this landing now shares with /22grams. UU PDP
+        // art. 22 requires a consent request to be put in Indonesian and to
+        // be plainly understandable, which makes THIS - not the English
+        // block it overlays - the wording an Indonesian player actually
+        // agrees to. For counsel to confirm alongside the policy it links.
+        consentForm: {
+          heading:
+            "Dengan ini saya menyatakan bahwa saya mengirimkan formulir ini:",
+          authorisation:
+            "Atas nama saya sendiri; atau atas nama orang lain, dan saya menyatakan bahwa saya berwenang untuk memberikan jawaban dalam formulir ini.",
+          registerNote:
+            "Dengan mendaftar, saya menyetujui Gray Matter Solutions menghubungi saya melalui email dan buletin.",
+        },
         consentRequiredError:
-          "Mohon setujui agar kami dapat mengirimkan hasil Anda.",
+          "Mohon setujui pernyataan di atas agar kami dapat mengirimkan hasil Anda.",
         nameError: "Mohon masukkan nama Anda.",
         emailError: "Mohon masukkan alamat email yang valid.",
+        // Kept for the two-row shape. Unused while `consentForm` is set,
+        // and left translated so removing that block cannot strand the
+        // landing in English.
+        consentRequired:
+          "*Wajib.* Saya setuju untuk dihubungi mengenai hasil dan hadiah saya.",
         consentMarketing:
           "Kirimi saya tips dan informasi kesehatan otak sesekali.",
         privacyLinkLabel: "Kebijakan Privasi",
