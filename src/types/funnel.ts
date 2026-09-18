@@ -54,6 +54,14 @@ export type QuizVariant =
   // a language choice - English or Bahasa Indonesia - offered on the landing
   // and carried through every screen behind it.
   | "siloam"
+  // /general: the Siloam Neuroscience Summit's arc, shared rather than rebuilt,
+  // with the summit's two Indonesian particulars dropped - there is no language
+  // choice (English only, like every event but the summit) and no policy of its
+  // own, so the landing is /22grams' and links the shared notice. The board at
+  // /general/leaderboard is the NTU Homecoming frame rather than the summit's
+  // prize board, because this event has no prize to put on one. Its own
+  // `general` bucket, so its standings rank only what is played here.
+  | "general"
   // 22 Grams (/22grams): the /ntuhomecoming arc again, shared rather than
   // rebuilt - the daylight flow with no partner consent page and no "That's a
   // wrap!" screen - on its own `22grams` bucket, with its own pause switch,

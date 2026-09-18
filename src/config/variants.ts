@@ -23,7 +23,8 @@ export function isPreviewVariant(variant: QuizVariant): boolean {
  * either side of the game, and #MambaCares is PHKL with no partner and a
  * fundraising report in place of the screening offer - so all of them share
  * the landing, the instructions and the warm game theme. 22 Grams (/22grams)
- * is NTU Homecoming again on a bucket of its own, so it lands here too.
+ * is NTU Homecoming again on a bucket of its own, so it lands here too, and
+ * /general is the Siloam summit again on a bucket of its own.
  */
 export function usesDaylightScreens(variant: QuizVariant): boolean {
   return (
@@ -38,6 +39,7 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
     variant === "urbanmilers" ||
     variant === "siloam" ||
     variant === "22grams" ||
+    variant === "general" ||
     variant === "event7"
   );
 }
@@ -72,6 +74,10 @@ export function usesMambaScreens(variant: QuizVariant): boolean {
  * those two - see LANGUAGES in config/language.ts). Every other event is
  * English-only and never mounts the picker, so `useLanguage()` hands them "en"
  * and `copyFor()` hands them the English COPY object itself, unchanged.
+ *
+ * /general runs the summit's own arc and is deliberately NOT here: dropping the
+ * language is the whole difference between the two routes, so it must be a
+ * `false` that a later edit to this helper cannot quietly turn into a picker.
  *
  * One helper rather than a `===` repeated at each branch, so adding the next
  * multilingual event cannot miss one.

@@ -384,6 +384,18 @@ const TWENTY_TWO_GRAMS_FLOW: FunnelStep[] = MAMBACARES_FLOW;
 const SILOAM_FLOW: FunnelStep[] = PHKL_FLOW;
 
 /**
+ * /general: the Siloam summit's arc, shared rather than rebuilt - and the
+ * summit's is /phkl's, so this is that same array again.
+ *
+ * What /general changes about the summit is its landing, its board and the
+ * language it is read in. None of those is a step, so the step sequence, and
+ * with it the question set and achievableAxisMax, is PHKL's exactly: a score
+ * recorded here sits on the same /100 scale as every score already recorded,
+ * and a later change to the arc reaches this event too.
+ */
+const GENERAL_FLOW: FunnelStep[] = PHKL_FLOW;
+
+/**
  * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
  * so the split-tick treatment of the partner consents (one box per clause) can
  * still be walked through and compared against the single tick that v3 ships.
@@ -442,6 +454,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   mambacares: MAMBACARES_FLOW,
   urbanmilers: URBANMILERS_FLOW,
   siloam: SILOAM_FLOW,
+  general: GENERAL_FLOW,
   "22grams": TWENTY_TWO_GRAMS_FLOW,
   event6: EVENT6_FLOW,
   event7: EVENT7_FLOW,

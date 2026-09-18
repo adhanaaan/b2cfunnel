@@ -252,6 +252,31 @@ export const SILOAM_PAUSED = false;
 export const SILOAM_SOURCE: string = "siloam";
 
 /**
+ * Independent pause switch for /general (and its TV board). Its own switch,
+ * like every other event's: /general runs the summit's arc and must never be
+ * closed by a change made to another event.
+ */
+export const GENERAL_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the /general funnel. Every /general score and report
+ * is tagged with it, its board filters to it and the rank on its report is read
+ * back from it.
+ *
+ * A bucket of its own is the whole reason this route exists alongside the
+ * summit, and it is what starts the board empty: standings are filtered by this
+ * tag, so /general opens clean with no Jakarta row on it, and no row already
+ * recorded is touched or moved to get there. Nothing is ever deleted - rows
+ * keep the tag they were written with.
+ *
+ * This is the value written to the `source` column for this event. Changing the
+ * literal strands every row already written under it, which is exactly how a
+ * second event day gets a fresh board: give this a new value - "general-day2" -
+ * and redeploy, and the earlier rows keep their tag and simply stop appearing.
+ */
+export const GENERAL_SOURCE: string = "general";
+
+/**
  * Independent pause switch for 22 Grams (/22grams and its TV board). Its own
  * switch, like every other event's: /22grams and /ntuhomecoming run the same
  * arc and must never be closed together by accident.
@@ -305,6 +330,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return URBANMILERS_SOURCE;
     case "siloam":
       return SILOAM_SOURCE;
+    case "general":
+      return GENERAL_SOURCE;
     case "22grams":
       return TWENTY_TWO_GRAMS_SOURCE;
     case "event2":

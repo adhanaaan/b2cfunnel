@@ -253,7 +253,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             state.variant === "phkl" ||
             state.variant === "urbanmilers" ||
             state.variant === "siloam" ||
-            state.variant === "22grams"
+            state.variant === "22grams" ||
+            state.variant === "general"
               ? state.variant
               : // Everything left on the community-run arc is #MambaCares or
                 // its /event-v7 preview, which walks that run's landing.
@@ -409,6 +410,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         state.variant === "phkl" ||
         state.variant === "siloam" ||
         state.variant === "22grams" ||
+        state.variant === "general" ||
         usesMambaScreens(state.variant)
       ) {
         return (
@@ -439,13 +441,18 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           />
         ) : null;
       }
-      if (state.variant === "siloam" || state.variant === "22grams") {
+      if (
+        state.variant === "siloam" ||
+        state.variant === "22grams" ||
+        state.variant === "general"
+      ) {
         // The booth report: PHKL's, with a close that ends in a conversation
         // rather than a checkout, in place of the Memory Screening Package.
         // The summit reads it in whichever language the landing was answered
         // in; /22grams runs the same report because there is nothing to book
-        // at a coffee counter either. Each reads its own close - see
-        // `boothReportFor` - so neither can print the other's.
+        // at a coffee counter either, and /general runs the summit's arc
+        // outright. Each reads its own close - see `boothReportFor` - so none
+        // of them can print another's.
         return state.result ? (
           <SiloamResultScreen
             result={state.result}

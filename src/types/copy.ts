@@ -479,6 +479,10 @@ export interface ScreenCopy {
   // end - a block of its own so this event's wording can be changed without
   // touching either of theirs.
   "22grams": TwentyTwoGramsCopy;
+  // /general: the summit's arc and report with /22grams' landing, in English
+  // only - a block of its own, as every event has, so this route's wording can
+  // be changed without touching the summit's or 22 Grams'.
+  general: GeneralCopy;
 }
 
 /**
@@ -744,6 +748,19 @@ export type BoothCloseReportCopy = SiloamCopy["report"];
  * picker on this one, so the splash is the plain daylight one.
  */
 export interface TwentyTwoGramsCopy extends PhklArcCopy {
+  splash: Event3Copy["splash"];
+  report: BoothCloseReportCopy;
+}
+
+/**
+ * /general: the Siloam summit's arc and its booth close, on /22grams' landing.
+ *
+ * The same shape as `TwentyTwoGramsCopy` and for the same reasons - the splash
+ * is the plain daylight one (no language picker to label) and the report is the
+ * booth close - but a block of its own, like every event's, so one route's
+ * wording can never be changed by editing another's.
+ */
+export interface GeneralCopy extends PhklArcCopy {
   splash: Event3Copy["splash"];
   report: BoothCloseReportCopy;
 }

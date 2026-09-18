@@ -3,6 +3,7 @@ import {
   DBS_DAY1_SOURCE,
   DBS_DAY2_SOURCE,
   EVENT3_SOURCE,
+  GENERAL_SOURCE,
   IHH_SOURCE,
   IHHSEA_SOURCE,
   MAMBACARES_SOURCE,
@@ -425,6 +426,7 @@ describe("22grams leaderboard source", () => {
       MAMBACARES_SOURCE,
       URBANMILERS_SOURCE,
       SILOAM_SOURCE,
+      GENERAL_SOURCE,
     ]) {
       expect(TWENTY_TWO_GRAMS_SOURCE).not.toBe(other);
     }
@@ -451,9 +453,76 @@ describe("22grams leaderboard source", () => {
       "mambacares",
       "urbanmilers",
       "siloam",
+      "general",
     ];
     for (const variant of others) {
       expect(eventSource(variant)).not.toBe(TWENTY_TWO_GRAMS_SOURCE);
+    }
+  });
+});
+
+
+/**
+ * /general is scoped the same way, and `general` is the literal the database's
+ * `source` column carries for it.
+ *
+ * This bucket is also what makes its board start EMPTY: /general runs the
+ * Siloam summit's arc, and only this tag keeps a summit in Jakarta off a screen
+ * running this route. A collision would merge two live boards with no error at
+ * all.
+ */
+describe("general leaderboard source", () => {
+  it("is the tag the database column expects", () => {
+    expect(GENERAL_SOURCE).toBe("general");
+  });
+
+  it("never collides with another event's bucket", () => {
+    for (const other of [
+      "event",
+      "event2",
+      "event3",
+      EVENT3_SOURCE,
+      DBS_DAY1_SOURCE,
+      DBS_DAY2_SOURCE,
+      ROTARY_SOURCE,
+      NTU_HOMECOMING_SOURCE,
+      IHHSEA_SOURCE,
+      IHH_SOURCE,
+      PHKL_SOURCE,
+      MAMBACARES_SOURCE,
+      URBANMILERS_SOURCE,
+      SILOAM_SOURCE,
+      TWENTY_TWO_GRAMS_SOURCE,
+    ]) {
+      expect(GENERAL_SOURCE).not.toBe(other);
+    }
+  });
+
+  // A score and the report that follows it must carry the SAME tag, or the
+  // board's completion rate divides one event's reports by another's players.
+  it("tags both the score and the lead from the /general funnel", () => {
+    expect(eventSource("general")).toBe(GENERAL_SOURCE);
+  });
+
+  it("leaves every other variant's tag alone", () => {
+    const others: QuizVariant[] = [
+      "full",
+      "woman",
+      "event",
+      "event2",
+      "event3",
+      "rotary",
+      "ntuhomecoming",
+      "ihhsearegatta",
+      "ihh",
+      "phkl",
+      "mambacares",
+      "urbanmilers",
+      "siloam",
+      "22grams",
+    ];
+    for (const variant of others) {
+      expect(eventSource(variant)).not.toBe(GENERAL_SOURCE);
     }
   });
 });
