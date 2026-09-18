@@ -36,6 +36,7 @@ describe("preview variants", () => {
       "urbanmilers",
       "siloam",
       "22grams",
+      "general",
     ];
     for (const variant of live) {
       expect(isPreviewVariant(variant), `${variant} must keep recording`).toBe(

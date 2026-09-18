@@ -40,7 +40,8 @@ interface Event3SplashProps {
    * the plain two-row landing at the roomier size.
    * "siloam" is that landing with one thing added: the language picker, at the
    * very top, where it is the first decision on the screen rather than a
-   * setting to be hunted for after reading a page you cannot read.
+   * setting to be hunted for after reading a page you cannot read; "general" is
+   * "22grams" again, which is that same landing without the picker.
    * Each one reads its own copy block and tags its own newsletter opt-ins, so
    * their wording can move independently.
    */
@@ -54,7 +55,8 @@ interface Event3SplashProps {
     | "mambacares"
     | "urbanmilers"
     | "siloam"
-    | "22grams";
+    | "22grams"
+    | "general";
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -161,7 +163,8 @@ export function Event3Splash({
     design === "mambacares" ||
     design === "urbanmilers" ||
     design === "siloam" ||
-    design === "22grams";
+    design === "22grams" ||
+    design === "general";
   // The newer consent shape (/22grams): one tick for the authorisation, and
   // registering as the marketing consent rather than a second tick. Driven by
   // the copy block rather than by the design name, so the landing that carries

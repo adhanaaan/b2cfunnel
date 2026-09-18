@@ -742,6 +742,80 @@ redeemable before either lands. **Both are exports the design already has**
 (`image 322` and `image 323` on that node); see
 `public/images/22grams/README.md` for their boxes.
 
+## /general
+
+The Reaction Time Challenge with no event's name on it - the route to point a
+one-off activation at when there is no partner, no prize and no country in the
+brief. `/general` runs the **`/siloamneurosciencesummit` arc** (which is
+`/phkl`'s) and closes on that event's booth report. The flow, in order:
+
+```
+landing -> speed primer -> select your age -> instructions -> game
+-> great job (auto) -> quiz primer -> the quiz (age already answered)
+-> analysing -> report
+```
+
+The flow array is shared (`GENERAL_FLOW = PHKL_FLOW`, the same array the summit
+takes), so the question set, `achievableAxisMax` and therefore every score
+recorded stay comparable with the summit's, `/phkl`'s and event2's
+(`tests/config/generalFlow.test.ts`). There is no post-game card, no
+questionnaire invite and no closing page: the report is the end of the arc.
+
+**Three things are deliberately not the summit's.**
+
+- **No language choice.** The summit is the only multilingual event on this
+  funnel; `/general` is English-only like every other route, so `app/general/page.tsx`
+  mounts no `LanguageProvider`, `offersLanguageChoice("general")` is **false**
+  and pinned so, and `copyFor("general", …)` hands back the `COPY` object
+  itself in every language rather than a merged copy of it. Nothing about the
+  translation layer is reachable from this route.
+- **The landing is `/22grams`'** - the plain landing at the roomier size with no
+  partner block, and the **one-tick consent** (`splash.consentForm`): a heading,
+  one tick confirming whose answers these are, and - stated rather than asked -
+  that registering is the consent to be emailed. The block is the *same object*
+  the summit and `/22grams` carry, not a copy, so one wording change reaches all
+  three (asserted by identity in `tests/config/twentyTwoGramsFlow.test.ts`). It
+  links the **shared** `/privacy-policy`, not the summit's Indonesian notice:
+  there is no country-specific policy to link from a route with no country in
+  its name, and inheriting one would be worse than linking none.
+- **The board is `/ntuhomecoming`'s**, not the summit's prize board: the scan
+  rail on the left and the live standings on the right, eight rows with the
+  leader on the gradient, then the fact strip and the footer. There is no prize
+  on this route, so there is no prize panel and the space buys full names on
+  every row instead. Its QR is built from `playUrlFor("general")` and it polls
+  `/api/leaderboard` and `/api/report-rate` scoped to the `general` tag. It is a
+  copy of that board rather than a shared component, as every board in this app
+  is: an event screen is the thing most likely to be redesigned mid-run, and two
+  events must never be able to change each other's TV.
+
+**The report is the summit's**, drawn by the same `SiloamOffer` and
+`SiloamStickyCta` - the ReCOGnAIze assessment and a conversation with the team,
+with no price and nothing to click through to. It has no `ctaThanks`, so the
+call to action stays the line it reads as rather than becoming a button: this
+route makes no promise to follow up that whoever is running it has not made.
+`offer.cta` ("Speak to our team at the booth") is **the line to settle per
+activation** - it is the only one that says where that conversation happens.
+Its headline statistic is the shared Lancet card read from `config/statCards.ts`
+rather than typed out, because unlike the summit's this one is not holding a
+slot for a country figure.
+
+**Each event still reads its own words.** `arcCopyFor`, `reportStatFor`,
+`phklReportFor` and `boothReportFor` are all keyed on the variant, so the three
+events on the booth report cannot print each other's close.
+
+**Its bucket is the point of the route.** `GENERAL_SOURCE` is the literal
+`general` - the value written to the `source` column on both `game_scores` and
+`leads` - so its board opens empty rather than on another event's standings, and
+nothing played here can move a board another route is still showing. Rows keep
+the tag they were written with; changing the literal strands every row already
+written under it, which is exactly how a second event day gets a fresh board
+(give it `general-day2` and redeploy). `GENERAL_PAUSED` is likewise its own
+switch, and the score endpoint reads it per source, so pausing this route never
+drops another's results.
+
+No board artwork is needed: this board generates its own QR from the play URL
+and carries no prize image.
+
 ## Translations (English and Bahasa Indonesia)
 
 One event uses this today, and the whole layer is **inert for every other**:
