@@ -37,7 +37,7 @@
  * V2 - this route (/siloamneurosciencesummit/leaderboard/v2) is
  * /siloamneurosciencesummit/leaderboard with ONE addition: a band of two live
  * stats directly above the Gray Matter fact strip - how long is left before
- * the challenge closes at 16:00 Jakarta time, and the fastest run on the board
+ * the challenge closes at 17:00 Jakarta time, and the fastest run on the board
  * so far. Everything else is the board as it ships, standings and all, off the
  * same `siloam` bucket of /api/leaderboard - the two routes show the same
  * event, and this one only says more about it.
@@ -93,14 +93,14 @@ const PLAY_URL = playUrlFor("siloam");
 const RATE_POLL_MS = 30000;
 
 /**
- * When the challenge closes, in Jakarta wall-clock hours (16:00 WIB).
+ * When the challenge closes, in Jakarta wall-clock hours (17:00 WIB).
  *
  * Jakarta is a fixed UTC+7 with no daylight saving, so the offset is a
  * constant rather than an Intl lookup: the board runs on a panel in the room
- * whose own clock may be set to anything, and the countdown has to mean 16:00
+ * whose own clock may be set to anything, and the countdown has to mean 17:00
  * *there* regardless.
  */
-const CLOSE_HOUR_WIB = 16;
+const CLOSE_HOUR_WIB = 17;
 const WIB_OFFSET_MS = 7 * 60 * 60 * 1000;
 /** The countdown ticks once a second - it is read as a clock, not a stat. */
 const TICK_MS = 1000;
@@ -574,10 +574,10 @@ function PrizePanel() {
 /* ------------------------------- Stat band ------------------------------- */
 
 /**
- * Milliseconds from `now` until today's 16:00 in Jakarta, clamped at zero.
+ * Milliseconds from `now` until today's 17:00 in Jakarta, clamped at zero.
  *
  * Worked in UTC on purpose: shifting `now` forward by the WIB offset puts the
- * Jakarta wall clock in the UTC fields of a Date, so the day that 16:00
+ * Jakarta wall clock in the UTC fields of a Date, so the day that 17:00
  * belongs to is Jakarta's day and not the panel's. Once it has passed it
  * stays at zero rather than rolling to tomorrow - the challenge closes once,
  * and a board that quietly started counting down 23 hours would be a lie.
