@@ -612,16 +612,6 @@ function formatCountdown(ms: number): string {
 }
 
 /**
- * A run in seconds to one decimal - "25.0" - which is how the room talks
- * about these times ("twenty-five seconds"), where the standings' own m:ss.s
- * is how they are compared. The unit is drawn beside it rather than baked in,
- * so the number keeps the tabular figures the rest of the board sets times in.
- */
-function formatSeconds(ms: number): string {
-  return (Math.max(0, ms) / 1000).toFixed(1);
-}
-
-/**
  * One stat: a small uppercase label over a large number, in a white card cut
  * to the same corner radius and hairline the standings rows use.
  */
@@ -629,7 +619,7 @@ function StatCard({
   label,
   children,
 }: {
-  label: string;
+  label: ReactNode;
   children: ReactNode;
 }) {
   return (
@@ -693,19 +683,22 @@ function StatBand({ recordMs }: { recordMs: number | null }) {
             ? "Closed"
             : formatCountdown(remaining)}
       </StatCard>
-      <StatCard label="Global leaderboard">
-        {recordMs === null ? (
-          <span style={{ color: EMPTY_TIME }}>--</span>
-        ) : (
+      {/* The record names itself over two lines, as the standings label does
+          not: "Top global leaderboard" alone would read as the thing this
+          whole board is, when what it means is the mark set before today. */}
+      <StatCard
+        label={
           <>
-            {formatSeconds(recordMs)}
-            <span
-              className="font-bold text-[length:calc(var(--u)*16)] board:text-[length:calc(var(--u)*22)]"
-              style={{ color: INK_FAINT, marginLeft: u(7) }}
-            >
-              seconds
-            </span>
+            Top global leaderboard
+            <br />
+            from past events
           </>
+        }
+      >
+        {recordMs === null ? (
+          <span style={{ color: EMPTY_TIME }}>-:--.-</span>
+        ) : (
+          formatTime(recordMs)
         )}
       </StatCard>
     </div>
