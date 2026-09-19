@@ -162,6 +162,16 @@ export const COPY_ID: DeepPartial<CopyConfig> = {
         // picks up the phone, before they have chosen anything.
         languageLabel: "Language · Bahasa",
       },
+      // The notice behind the landing while the standings are settled. Both
+      // halves have to survive the translation: the results are closed, and
+      // the game is still open to anyone who wants a go.
+      scoresFinal: {
+        eyebrow: "Tantangan telah ditutup",
+        heading: "Skor akhir sudah keluar",
+        body: "Kami telah merekap peringkat akhirnya, dan hasilnya kini *terkunci dan final*.",
+        note: "Permainannya sendiri masih bisa dimainkan. Jika Anda tetap ingin mencoba, silakan - kali ini murni untuk seru-seruan.",
+        cta: "Tetap mainkan",
+      },
       rail: {
         gameLabel: "Permainan",
         quizLabel: "Kuis kesehatan otak",

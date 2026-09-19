@@ -8,7 +8,11 @@ import {
   totalQuestions,
 } from "@/config/funnelFlow";
 import { computeScore } from "@/engine/scoring";
-import { SILOAM_SOURCE, eventSource } from "@/config/event";
+import {
+  SILOAM_SCORES_FINAL,
+  SILOAM_SOURCE,
+  eventSource,
+} from "@/config/event";
 import { EVENT_PATHS, SILOAM_OFFER_SECTION_ID } from "@/config/eventLinks";
 import {
   isPreviewVariant,
@@ -26,10 +30,13 @@ import {
 /**
  * The Siloam Neuroscience Summit (/siloamneurosciencesummit) is the PHKL arc
  * with a different landing, a different close and a language choice - none of
- * which is a step. What must hold: the STEPS are PHKL's exactly, so the
- * question set, the scoring maxima and therefore every score recorded stay
- * comparable with /phkl and with event2; and this event's rows are tagged with
- * a bucket of its own, so its standings never mix with another event's.
+ * which is a step - plus ONE step of its own behind the landing: the notice
+ * that the standings have been recapped and the winners announced
+ * (SILOAM_SCORES_FINAL). What must hold: everything from the primer onwards is
+ * PHKL's exactly, so the question set, the scoring maxima and therefore every
+ * score recorded stay comparable with /phkl and with event2; the notice never
+ * reaches another event; and this event's rows are tagged with a bucket of its
+ * own, so its standings never mix with another event's.
  */
 
 /** Question ids in flow order. An ageSelect step IS the age question. */
@@ -53,13 +60,56 @@ const ANSWER_SETS: Answers[] = [
 ];
 
 describe("siloam flow", () => {
-  it("walks the phkl arc, step for step", () => {
+  it("walks the phkl arc, step for step, behind its own notice", () => {
     for (const answers of ANSWER_SETS) {
-      expect(kindsIn(resolveFlow(answers, "siloam"))).toEqual(
+      const siloam = kindsIn(resolveFlow(answers, "siloam"));
+      // The notice is the ONLY difference, and it sits behind the landing:
+      // take it out and the two arcs are the same list.
+      expect(siloam.filter((kind) => kind !== "scoresFinal")).toEqual(
         kindsIn(resolveFlow(answers, "phkl")),
       );
+      // A notice is not a question, so nothing it does can move a score.
       expect(idsIn(resolveFlow(answers, "siloam"))).toEqual(
         idsIn(resolveFlow(answers, "phkl")),
+      );
+    }
+  });
+
+  // The whole point of the page: it is passed THROUGH on the way to the game,
+  // not parked in front of it. If the arc ever ended here it would read as a
+  // closed event, which is exactly what this event is not.
+  it("puts the results-are-final notice between the landing and the primer", () => {
+    expect(SILOAM_SCORES_FINAL).toBe(true);
+    const kinds = kindsIn(resolveFlow({}, "siloam"));
+    expect(kinds.indexOf("scoresFinal")).toBe(kinds.indexOf("nameGate") + 1);
+    expect(kinds.indexOf("scoresFinal")).toBe(kinds.indexOf("speedIntro") - 1);
+    expect(kinds.filter((k) => k === "scoresFinal")).toHaveLength(1);
+    expect(kinds.at(-1)).toBe("result");
+    // Everything behind it still runs - this opens a page, it does not close
+    // an event.
+    for (const kind of ["game", "analysing", "result"] as const) {
+      expect(kinds).toContain(kind);
+    }
+  });
+
+  // Inserted per variant, exactly as each event's challenge-closed switch is:
+  // /general runs this same arc, and a notice about a Jakarta prize-giving
+  // must never appear on it.
+  it("shows the notice at the summit and nowhere else", () => {
+    const others: QuizVariant[] = [
+      "phkl",
+      "general",
+      "22grams",
+      "mambacares",
+      "urbanmilers",
+      "event3",
+      "ihhsearegatta",
+      "event2",
+      "full",
+    ];
+    for (const variant of others) {
+      expect(kindsIn(resolveFlow({}, variant)), variant).not.toContain(
+        "scoresFinal",
       );
     }
   });
@@ -69,6 +119,7 @@ describe("siloam flow", () => {
       kindsIn(resolveFlow({ forgetfulness: "almostDaily" }, "siloam")),
     ).toEqual([
       "nameGate",
+      "scoresFinal", // while SILOAM_SCORES_FINAL is on
       "speedIntro",
       "ageSelect",
       "instructions",

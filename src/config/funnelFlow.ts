@@ -5,6 +5,7 @@ import {
   EVENT3_CHALLENGE_CLOSED,
   IHH_CHALLENGE_CLOSED,
   IHHSEA_CHALLENGE_CLOSED,
+  SILOAM_SCORES_FINAL,
 } from "@/config/event";
 
 /**
@@ -380,6 +381,13 @@ const TWENTY_TWO_GRAMS_FLOW: FunnelStep[] = MAMBACARES_FLOW;
  * and carried in a context (see components/LanguageContext.tsx), so switching
  * language never moves the cursor, never re-asks a question, and never changes
  * what is scored.
+ *
+ * One step IS this event's own, and it is not in this array either: while
+ * SILOAM_SCORES_FINAL is on, the "results are final" notice sits between the
+ * landing and the primer. It is inserted when the flow is resolved (see
+ * resolveFlow), so the arc this variant is MADE of stays PHKL's - which is what
+ * keeps the question set, achievableAxisMax and every summit score already
+ * recorded comparable with every other event's, notice or no notice.
  */
 const SILOAM_FLOW: FunnelStep[] = PHKL_FLOW;
 
@@ -428,6 +436,27 @@ const EVENT7_FLOW: FunnelStep[] = MAMBACARES_FLOW;
  * set, achievableAxisMax and therefore the comparability of every score
  * already recorded all still read the full arc.
  */
+/**
+ * A step added directly behind the first step of kind `after`, leaving the rest
+ * of the arc as it is - the "results are final" notice behind the summit's
+ * landing.
+ *
+ * The mirror of `closeAfter`, and applied the same way: when the flow is
+ * RESOLVED rather than in FLOWS itself. A notice is not a question, so it could
+ * not move a score either way, but keeping it out of the variant's definition
+ * is what makes that obvious - the question set, achievableAxisMax and every
+ * score already recorded all still read the arc as it was built.
+ */
+function insertAfter(
+  flow: FunnelStep[],
+  after: FunnelStep["kind"],
+  step: FunnelStep,
+): FunnelStep[] {
+  const at = flow.findIndex((s) => s.kind === after);
+  if (at < 0) return flow;
+  return [...flow.slice(0, at + 1), step, ...flow.slice(at + 1)];
+}
+
 function closeAfter(
   flow: FunnelStep[],
   after: FunnelStep["kind"],
@@ -537,6 +566,13 @@ export function resolveFlow(
     // Same arc, same last step - and its own switch, so closing the regatta
     // never closes /ihh.
     return closeAfter(flow, "nameGate");
+  }
+  // The summit after its prize-giving: the standings are recapped and the
+  // winners announced, so the landing hands the player that notice before the
+  // arc carries on. Everything behind it still runs - this opens a page, it
+  // does not close an event.
+  if (variant === "siloam" && SILOAM_SCORES_FINAL) {
+    return insertAfter(flow, "nameGate", { kind: "scoresFinal" });
   }
   return flow;
 }

@@ -56,6 +56,7 @@ import { PhklAnalysingScreen } from "@/components/screens/phkl/PhklAnalysingScre
 import { PhklResultScreen } from "@/components/screens/phkl/PhklResultScreen";
 import { MambaResultScreen } from "@/components/screens/mambacares/MambaResultScreen";
 import { SiloamResultScreen } from "@/components/screens/siloam/SiloamResultScreen";
+import { SiloamScoresFinal } from "@/components/screens/siloam/SiloamScoresFinal";
 import { SharpShotPoster } from "@/components/screens/twentyTwoGrams/SharpShotPoster";
 import { isSharpShot } from "@/config/twentyTwoGrams";
 
@@ -304,6 +305,12 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       // the last step of that flow.
       // Terminal - there is nothing behind it to advance to.
       return <Event3Wrap />;
+
+    case "scoresFinal":
+      // siloam, while SILOAM_SCORES_FINAL is on: the standings are recapped
+      // and the winners announced. Not terminal - it walks straight on into
+      // the primer and the rest of the arc, which is the point of it.
+      return <SiloamScoresFinal onContinue={next} />;
 
     case "speedIntro":
       // phkl: what processing speed is, before the age question and the game.

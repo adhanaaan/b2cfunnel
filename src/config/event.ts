@@ -235,6 +235,24 @@ export const URBANMILERS_SOURCE: string = "urbanmilers";
 export const SILOAM_PAUSED = false;
 
 /**
+ * The summit's standings have been recapped and the winners announced.
+ *
+ * Not a pause and not a challenge-closed switch: the whole arc stays walkable.
+ * It puts ONE page between the landing and the game - the notice that the
+ * results are final - so anyone who scans the code after the prize-giving is
+ * told where things stand before they play, and can still play if they want
+ * to. Nothing behind it changes: the game still records, the questionnaire and
+ * the report are untouched.
+ *
+ * Flip to `false` (and redeploy) to take the notice back out; the landing then
+ * leads straight into the processing-speed primer again, exactly as /phkl's
+ * does. It reaches the summit and nothing else - the notice is inserted per
+ * variant in resolveFlow, so /general and every event sharing that arc walk
+ * their own flow untouched.
+ */
+export const SILOAM_SCORES_FINAL = true;
+
+/**
  * Leaderboard bucket for the Siloam Neuroscience Summit funnel. Every
  * /siloamneurosciencesummit score and report is tagged with it, its board
  * filters to it and the rank on its report is read back from it - which is what
