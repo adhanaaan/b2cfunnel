@@ -37,10 +37,11 @@
  * V2 - this route (/siloamneurosciencesummit/leaderboard/v2) is
  * /siloamneurosciencesummit/leaderboard with ONE addition: a band of two live
  * stats directly above the Gray Matter fact strip - how long is left before
- * the challenge closes at 17:00 Jakarta time, and the fastest run on the board
- * so far. Everything else is the board as it ships, standings and all, off the
- * same `siloam` bucket of /api/leaderboard - the two routes show the same
- * event, and this one only says more about it.
+ * the challenge closes at 17:00 Jakarta time, and the global record. The
+ * standings are this event as they always were, off the `siloam` bucket of
+ * /api/leaderboard; the record beside them is deliberately NOT that bucket but
+ * the fastest row in the whole table, so the room sees the mark the game is
+ * played against and not only the one set in Jakarta today.
  *
  * The band costs the frame 76 design px, and the 1920x1080 frame has none
  * spare, so the two columns' own vertical padding is trimmed by exactly that
@@ -91,6 +92,13 @@ const PLAY_URL = playUrlFor("siloam");
  * rate moves over the course of an event, not shot to shot.
  */
 const RATE_POLL_MS = 30000;
+
+/**
+ * How often the global record is refreshed. Slower than the standings for the
+ * same reason as the rate: a record that has stood across every event so far
+ * does not change between two frames of this board.
+ */
+const RECORD_POLL_MS = 30000;
 
 /**
  * When the challenge closes, in Jakarta wall-clock hours (17:00 WIB).
@@ -650,18 +658,19 @@ function StatCard({
 }
 
 /**
- * The band above the fact strip: time left, and the time to beat.
+ * The band above the fact strip: time left, and the global record.
  *
  * The countdown is held back until the component has mounted - the board is
  * prerendered, and a clock rendered on the server is a clock that is already
  * wrong by the time it reaches the panel. Until then, and once the clock has
  * run out, the slot carries words rather than a frozen 00:00:00.
  *
- * The fastest run is read from the standings this board already polls, not
- * from a second request: whatever sits at rank 1 IS the fastest so far, so
- * asking again could only produce a second answer to the same question.
+ * The record is the fastest run in the whole table, which is why it arrives as
+ * a prop from its own unscoped poll rather than off the standings beside it:
+ * rank 1 there is the fastest in Jakarta today, and those are two different
+ * numbers on every day but the one where the record falls.
  */
-function StatBand({ fastestMs }: { fastestMs: number | null }) {
+function StatBand({ recordMs }: { recordMs: number | null }) {
   const [remaining, setRemaining] = useState<number | null>(null);
 
   useEffect(() => {
@@ -684,12 +693,12 @@ function StatBand({ fastestMs }: { fastestMs: number | null }) {
             ? "Closed"
             : formatCountdown(remaining)}
       </StatCard>
-      <StatCard label="Fastest so far">
-        {fastestMs === null ? (
+      <StatCard label="Global leaderboard">
+        {recordMs === null ? (
           <span style={{ color: EMPTY_TIME }}>--</span>
         ) : (
           <>
-            {formatSeconds(fastestMs)}
+            {formatSeconds(recordMs)}
             <span
               className="font-bold text-[length:calc(var(--u)*16)] board:text-[length:calc(var(--u)*22)]"
               style={{ color: INK_FAINT, marginLeft: u(7) }}
@@ -747,6 +756,8 @@ export default function SiloamLeaderboardBoardV2() {
   const [factIdx, setFactIdx] = useState(0);
   // null until the rate is worth showing (nobody has played, or too few have).
   const [reportPct, setReportPct] = useState<number | null>(null);
+  // The fastest run in the table, any event - null until the first load lands.
+  const [recordMs, setRecordMs] = useState<number | null>(null);
   const [celebration, setCelebration] = useState<Entry | null>(null);
   const prevTopRef = useRef<Set<string>>(new Set());
   const firstLoadRef = useRef(true);
@@ -826,6 +837,32 @@ export default function SiloamLeaderboardBoardV2() {
     };
     load();
     const id = setInterval(load, RATE_POLL_MS);
+    return () => {
+      active = false;
+      clearInterval(id);
+    };
+  }, []);
+
+  // The global record: the single fastest row in the table, asked for with no
+  // `source` at all, which is what makes it global - every other request this
+  // board sends is scoped to SILOAM_SOURCE. Keeps the last good value on error.
+  useEffect(() => {
+    let active = true;
+    const load = async () => {
+      try {
+        const res = await fetch("/api/leaderboard?limit=1", {
+          cache: "no-store",
+        });
+        const data = await res.json();
+        if (!active || !Array.isArray(data.entries)) return;
+        const best = data.entries[0];
+        if (typeof best?.timeMs === "number") setRecordMs(best.timeMs);
+      } catch {
+        /* keep the last good record */
+      }
+    };
+    load();
+    const id = setInterval(load, RECORD_POLL_MS);
     return () => {
       active = false;
       clearInterval(id);
@@ -934,7 +971,7 @@ export default function SiloamLeaderboardBoardV2() {
       </div>
 
       {/* The two live stats, directly above the fact strip. */}
-      <StatBand fastestMs={entries[0]?.timeMs ?? null} />
+      <StatBand recordMs={recordMs} />
 
       {/* Fact strip: the institutional lockup at the left, then the fact,
           running left to right inside the strip's 48px side margins so a long
