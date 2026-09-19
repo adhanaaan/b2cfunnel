@@ -677,6 +677,24 @@ export interface SiloamCopy extends PhklArcCopy {
   // No partner runs this event, so the landing is the plain daylight one, plus
   // the label above the language picker.
   splash: Event3Copy["splash"] & { languageLabel: string };
+  /**
+   * The notice behind the landing once the summit's standings have been
+   * recapped and its winners announced (SILOAM_SCORES_FINAL).
+   *
+   * Written to say two things in one screen, in this order: the results are
+   * settled, AND the game is still there to be played. The second is what the
+   * page is for - it ends on a way forward, not on a closed door.
+   *
+   * Words wrapped in *asterisks* are emphasised, in pairs.
+   */
+  scoresFinal: {
+    eyebrow: string;
+    heading: string;
+    body: string;
+    /** The invitation to play anyway, under the body. */
+    note: string;
+    cta: string;
+  };
   report: PhklArcCopy["report"] &
     PhklReportSharedCopy & {
       // The one button pinned to the bottom of the screen for the whole

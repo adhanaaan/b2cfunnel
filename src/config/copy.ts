@@ -493,6 +493,17 @@ const SILOAM_SCREEN_COPY: SiloamCopy = {
     // they have chosen anything.
     languageLabel: "Language · Bahasa",
   },
+  // Behind the landing once the standings are settled (SILOAM_SCORES_FINAL).
+  // Says where things stand and then hands the player straight on: the page
+  // exists to let someone play knowing the result cannot count, not to turn
+  // them away.
+  scoresFinal: {
+    eyebrow: "Challenge closed",
+    heading: "The scores are in",
+    body: "We've recapped the standings, and the results are now *locked and final*.",
+    note: "The challenge itself is still open. If you'd like a go, play on - this round is purely for the fun of it.",
+    cta: "Play anyway",
+  },
   report: {
     ...PHKL_ARC_COPY.report,
     ...PHKL_REPORT_SHARED,

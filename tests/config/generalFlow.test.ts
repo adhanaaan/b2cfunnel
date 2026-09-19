@@ -62,10 +62,19 @@ const ANSWER_SETS: Answers[] = [
 describe("general flow", () => {
   // The point of the route: it is the summit's arc on a bucket of its own, so
   // the two must not drift apart.
+  //
+  // One step is the summit's alone and must never reach here: the notice that
+  // its standings are recapped and its winners announced
+  // (SILOAM_SCORES_FINAL). It is inserted per variant when the flow is
+  // resolved, so it comes out of the comparison rather than out of the arc.
   it("walks the summit's arc, step for step", () => {
     for (const answers of ANSWER_SETS) {
-      expect(kindsIn(resolveFlow(answers, "general"))).toEqual(
-        kindsIn(resolveFlow(answers, "siloam")),
+      const summit = kindsIn(resolveFlow(answers, "siloam")).filter(
+        (kind) => kind !== "scoresFinal",
+      );
+      expect(kindsIn(resolveFlow(answers, "general"))).toEqual(summit);
+      expect(kindsIn(resolveFlow(answers, "general"))).not.toContain(
+        "scoresFinal",
       );
       expect(idsIn(resolveFlow(answers, "general"))).toEqual(
         idsIn(resolveFlow(answers, "siloam")),

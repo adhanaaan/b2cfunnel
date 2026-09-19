@@ -88,6 +88,11 @@ export type FunnelStep =
   // ihhsearegatta: the questionnaire invite between the post-game result and
   // the quiz - "Sure!" walks on, "Not now" goes back to the result card.
   | { kind: "quizInvite" }
+  // siloam: the notice between the landing and the rest of the arc while
+  // SILOAM_SCORES_FINAL is on - the standings have been recapped and the
+  // winners announced, and the game is still open to anyone who wants a go.
+  // Not terminal, unlike "wrap": it walks straight on into the arc.
+  | { kind: "scoresFinal" }
   // phkl: what processing speed is, with the GAME / QUIZ / RESULTS rail,
   // between the landing and the age question.
   | { kind: "speedIntro" }

@@ -94,6 +94,16 @@ describe("copyFor", () => {
     expect(id.screens.siloam.rail.resultsLabel).toBe("Hasil");
     expect(id.screens.siloam.report.header.timeLabel).toBe("Waktu");
     expect(id.screens.siloam.report.offer.cta).toBe("Temui tim kami di booth");
+    // The notice behind the landing. Both halves have to arrive translated:
+    // the results are settled, and the game is still open - a player told only
+    // the first, in a language they read, would put the phone down.
+    expect(id.screens.siloam.scoresFinal.cta).toBe("Tetap mainkan");
+    expect(id.screens.siloam.scoresFinal.heading).not.toBe(
+      COPY.screens.siloam.scoresFinal.heading,
+    );
+    expect(id.screens.siloam.scoresFinal.note).not.toBe(
+      COPY.screens.siloam.scoresFinal.note,
+    );
     expect(id.screens.symbolMatch.go).toBe("MULAI!");
     expect(id.bandLabels.moderate).toBe("Risiko sedang");
     expect(arcCopyFor("siloam", id)).toBe(id.screens.siloam);
@@ -296,6 +306,16 @@ describe("the placeholders the summit's screens fill in", () => {
       }
       const speedIntro = copyFor("siloam", language).screens.siloam.speedIntro;
       expect((speedIntro.body.match(/\*/g) ?? []).length % 2).toBe(0);
+      const scoresFinal = copyFor("siloam", language).screens.siloam.scoresFinal;
+      for (const line of [scoresFinal.body, scoresFinal.note]) {
+        expect((line.match(/\*/g) ?? []).length % 2, `${language}: ${line}`).toBe(
+          0,
+        );
+      }
+      // Nothing on this page is filled in at render time, in any language.
+      for (const line of Object.values(scoresFinal)) {
+        expect(line, language).not.toContain("{");
+      }
     }
   });
 
