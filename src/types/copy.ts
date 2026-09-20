@@ -483,6 +483,10 @@ export interface ScreenCopy {
   // only - a block of its own, as every event has, so this route's wording can
   // be changed without touching the summit's or 22 Grams'.
   general: GeneralCopy;
+  // Eisai's World Alzheimer's Day challenge (/eisai): /general's arc and close,
+  // with Eisai's name in the hero. Same shape, its own block, so the two
+  // routes' wording cannot drift into each other.
+  eisai: GeneralCopy;
 }
 
 /**

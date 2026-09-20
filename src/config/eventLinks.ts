@@ -23,6 +23,7 @@ export const EVENT_PATHS: Partial<Record<QuizVariant, string>> = {
   siloam: "/siloamneurosciencesummit",
   "22grams": "/22grams",
   general: "/general",
+  eisai: "/eisai",
   // The v7 preview shares the real event's link on purpose: a card sent from
   // a walkthrough should still take a friend to the run, not to the preview.
   event7: "/mambacares",

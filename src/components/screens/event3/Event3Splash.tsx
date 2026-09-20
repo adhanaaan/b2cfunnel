@@ -56,7 +56,8 @@ interface Event3SplashProps {
     | "urbanmilers"
     | "siloam"
     | "22grams"
-    | "general";
+    | "general"
+    | "eisai";
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -164,7 +165,8 @@ export function Event3Splash({
     design === "urbanmilers" ||
     design === "siloam" ||
     design === "22grams" ||
-    design === "general";
+    design === "general" ||
+    design === "eisai";
   // The newer consent shape (/22grams): one tick for the authorisation, and
   // registering as the marketing consent rather than a second tick. Driven by
   // the copy block rather than by the design name, so the landing that carries

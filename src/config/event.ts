@@ -295,6 +295,24 @@ export const GENERAL_PAUSED = false;
 export const GENERAL_SOURCE: string = "general";
 
 /**
+ * Independent pause switch for Eisai's World Alzheimer's Day challenge
+ * (/eisai and its TV board). Its own switch, like every other event's:
+ * closing one must never take another down with it.
+ */
+export const EISAI_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the Eisai funnel. Every /eisai score and report is
+ * tagged with it, and the Eisai board filters to it - which is what keeps its
+ * standings clear of every other event's history, /general's included.
+ *
+ * This is the value written to the `source` column for this event, and the
+ * whole reason /eisai exists alongside /general: the same arc, collected into
+ * a column of its own so the day's standings rank only Eisai.
+ */
+export const EISAI_SOURCE: string = "eisai";
+
+/**
  * Independent pause switch for 22 Grams (/22grams and its TV board). Its own
  * switch, like every other event's: /22grams and /ntuhomecoming run the same
  * arc and must never be closed together by accident.
@@ -350,6 +368,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return SILOAM_SOURCE;
     case "general":
       return GENERAL_SOURCE;
+    case "eisai":
+      return EISAI_SOURCE;
     case "22grams":
       return TWENTY_TWO_GRAMS_SOURCE;
     case "event2":
