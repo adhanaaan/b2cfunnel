@@ -669,6 +669,23 @@ const GENERAL_SCREEN_COPY: GeneralCopy = {
   },
 };
 
+/**
+ * Eisai's World Alzheimer's Day challenge (/eisai).
+ *
+ * /general's block entire, with one line changed: the hero names the host, as
+ * the poster beside the QR does ("Who's the fastest brain at Eisai?"). An
+ * internal staff event - GMS keeps the data and Eisai receives none of it - so
+ * there is no partner block and no partner consent, and the landing stays the
+ * plain one-tick one /general carries.
+ */
+const EISAI_SCREEN_COPY: GeneralCopy = {
+  ...GENERAL_SCREEN_COPY,
+  splash: {
+    ...GENERAL_SCREEN_COPY.splash,
+    heading: "Who's the *fastest brain* at Eisai?",
+  },
+};
+
 export const COPY: CopyConfig = {
   screens: {
     hook: {
@@ -1210,6 +1227,7 @@ export const COPY: CopyConfig = {
     siloam: SILOAM_SCREEN_COPY,
     "22grams": TWENTY_TWO_GRAMS_SCREEN_COPY,
     general: GENERAL_SCREEN_COPY,
+    eisai: EISAI_SCREEN_COPY,
     // GMS x Urban Milers (/urbanmilers): the same run's arc, word for word,
     // with this event named where the words name the event that is hosting it.
     // Its own block so a change to either run's wording cannot reach the
@@ -1384,6 +1402,7 @@ export function arcCopyFor(
   if (variant === "siloam") return copy.screens.siloam;
   if (variant === "22grams") return copy.screens["22grams"];
   if (variant === "general") return copy.screens.general;
+  if (variant === "eisai") return copy.screens.eisai;
   return copy.screens.phkl;
 }
 
@@ -1402,6 +1421,7 @@ export function reportStatFor(
   if (variant === "siloam") return copy.screens.siloam.report.stat;
   if (variant === "22grams") return copy.screens["22grams"].report.stat;
   if (variant === "general") return copy.screens.general.report.stat;
+  if (variant === "eisai") return copy.screens.eisai.report.stat;
   return STAT_CARDS_BY_ID.lancet2024;
 }
 
@@ -1421,6 +1441,7 @@ export function phklReportFor(
   if (variant === "siloam") return copy.screens.siloam.report;
   if (variant === "22grams") return copy.screens["22grams"].report;
   if (variant === "general") return copy.screens.general.report;
+  if (variant === "eisai") return copy.screens.eisai.report;
   return copy.screens.phkl.report;
 }
 
@@ -1440,5 +1461,6 @@ export function boothReportFor(
 ): BoothCloseReportCopy {
   if (variant === "22grams") return copy.screens["22grams"].report;
   if (variant === "general") return copy.screens.general.report;
+  if (variant === "eisai") return copy.screens.eisai.report;
   return copy.screens.siloam.report;
 }

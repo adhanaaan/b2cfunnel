@@ -404,6 +404,14 @@ const SILOAM_FLOW: FunnelStep[] = PHKL_FLOW;
 const GENERAL_FLOW: FunnelStep[] = PHKL_FLOW;
 
 /**
+ * Eisai's World Alzheimer's Day challenge (/eisai): /general's arc, shared
+ * rather than rebuilt. The two routes differ only in the name on the landing
+ * and the bucket their rows are tagged with, so a later change to the arc
+ * reaches both and neither one's question set can drift off the other's.
+ */
+const EISAI_FLOW: FunnelStep[] = GENERAL_FLOW;
+
+/**
  * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
  * so the split-tick treatment of the partner consents (one box per clause) can
  * still be walked through and compared against the single tick that v3 ships.
@@ -484,6 +492,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   urbanmilers: URBANMILERS_FLOW,
   siloam: SILOAM_FLOW,
   general: GENERAL_FLOW,
+  eisai: EISAI_FLOW,
   "22grams": TWENTY_TWO_GRAMS_FLOW,
   event6: EVENT6_FLOW,
   event7: EVENT7_FLOW,

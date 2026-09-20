@@ -62,6 +62,10 @@ export type QuizVariant =
   // prize board, because this event has no prize to put on one. Its own
   // `general` bucket, so its standings rank only what is played here.
   | "general"
+  // Eisai's World Alzheimer's Day challenge (/eisai): the /general arc and
+  // board with Eisai's name on the landing, on a bucket of its own. An
+  // internal staff event - GMS keeps the data, so there is no partner consent.
+  | "eisai"
   // 22 Grams (/22grams): the /ntuhomecoming arc again, shared rather than
   // rebuilt - the daylight flow with no partner consent page and no "That's a
   // wrap!" screen - on its own `22grams` bucket, with its own pause switch,
