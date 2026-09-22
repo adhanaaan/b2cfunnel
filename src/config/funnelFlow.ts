@@ -238,6 +238,14 @@ const EVENT3_FLOW: FunnelStep[] = DAYLIGHT_FLOW.flatMap((step) =>
 const ROTARY_FLOW: FunnelStep[] = DAYLIGHT_FLOW;
 
 /**
+ * /rotary - a Rotary club event other than KL-WAM. Shares KL-WAM's array
+ * rather than copying it: the two differ only in the bucket their rows carry,
+ * so a later change to the arc reaches both and neither one's question set can
+ * drift off the other's.
+ */
+const ROTARY_CLUB_FLOW: FunnelStep[] = ROTARY_FLOW;
+
+/**
  * NTU Homecoming (/ntuhomecoming): the same arc as Rotary - the daylight flow
  * as-is, so no partner consent page and no "That's a wrap!" screen. Shared
  * rather than rebuilt, so a later change to that arc reaches this event too and
@@ -481,6 +489,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   event2: EVENT2_FLOW,
   event3: EVENT3_FLOW,
   rotary: ROTARY_FLOW,
+  rotaryclub: ROTARY_CLUB_FLOW,
   ntuhomecoming: NTU_HOMECOMING_FLOW,
   ihhsearegatta: IHHSEA_FLOW,
   // /ihh is the regatta arc, shared rather than rebuilt: the two routes differ

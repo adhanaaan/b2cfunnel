@@ -248,6 +248,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           preview={preview}
           design={
             state.variant === "rotary" ||
+            state.variant === "rotaryclub" ||
             state.variant === "ntuhomecoming" ||
             state.variant === "ihhsearegatta" ||
             state.variant === "ihh" ||

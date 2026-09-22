@@ -11,6 +11,10 @@ export type QuizVariant =
   // Rotary KL-WAM (/rotaryklwam): the daylight arc with no partner consent
   // page - the landing leads straight into the instructions and their demo.
   | "rotary"
+  // A Rotary club event other than KL-WAM (/rotary): the same arc and the same
+  // generic wording, on a bucket of its own so each club's board ranks only
+  // its own room.
+  | "rotaryclub"
   // NTU Homecoming (/ntuhomecoming): the same arc as rotary - the daylight
   // flow with no partner consent page - on its own `ntuhomecoming` bucket.
   | "ntuhomecoming"
