@@ -48,6 +48,7 @@ interface Event3SplashProps {
   design?:
     | "v3"
     | "rotary"
+    | "rotaryclub"
     | "ntuhomecoming"
     | "ihhsearegatta"
     | "ihh"

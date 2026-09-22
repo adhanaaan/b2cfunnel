@@ -460,6 +460,9 @@ export interface ScreenCopy {
   event3: Event3Copy;
   event6: Event6Copy;
   rotary: NoPartnerSplashCopy;
+  // /rotary: a Rotary club other than KL-WAM. The same generic landing, in a
+  // block of its own so one club's wording can change without the other's.
+  rotaryclub: NoPartnerSplashCopy;
   ntuhomecoming: NoPartnerSplashCopy;
   ihhsearegatta: IhhseaCopy;
   // /ihh: the regatta block again, with its own privacy-policy link.

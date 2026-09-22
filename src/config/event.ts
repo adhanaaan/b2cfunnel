@@ -83,6 +83,24 @@ export const ROTARY_PAUSED = false;
 export const ROTARY_SOURCE = "rotaryklwam";
 
 /**
+ * Independent pause switch for /rotary - the Rotary route for clubs other than
+ * KL-WAM. Its own switch, like every other event's: closing one must never
+ * take another down with it.
+ */
+export const ROTARY_CLUB_PAUSED = false;
+
+/**
+ * Leaderboard bucket for /rotary.
+ *
+ * This route is meant to be reused by more than one club, so this is the line
+ * to change between events: point it at a new string (and redeploy) and the
+ * board opens empty for the next one. Previous scores keep the tag they were
+ * written with and stay in the table - they simply stop appearing. Nothing is
+ * ever deleted.
+ */
+export const ROTARY_CLUB_SOURCE: string = "rotary-2026-09-22";
+
+/**
  * Independent pause switch for NTU Homecoming (/ntuhomecoming and its TV
  * board). Its own switch, like every other event's: closing one must never
  * take another down with it.
@@ -352,6 +370,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return EVENT3_SOURCE;
     case "rotary":
       return ROTARY_SOURCE;
+    case "rotaryclub":
+      return ROTARY_CLUB_SOURCE;
     case "ntuhomecoming":
       return NTU_HOMECOMING_SOURCE;
     case "ihhsearegatta":

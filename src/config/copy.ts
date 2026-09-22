@@ -1138,6 +1138,12 @@ export const COPY: CopyConfig = {
       // only copy that differs. Every other screen reuses the v3/v2 copy.
       splash: NO_PARTNER_SPLASH,
     },
+    rotaryclub: {
+      // /rotary ships KL-WAM's landing, word for word: this event wanted no
+      // club name on it. Its own block so either club's wording can change
+      // without touching the other's.
+      splash: NO_PARTNER_SPLASH,
+    },
     ntuhomecoming: {
       // NTU Homecoming ships the same landing as Rotary, word for word. Its
       // own block so this event's wording can be changed on its own.
