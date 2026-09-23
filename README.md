@@ -394,7 +394,8 @@ uploaded: it reuses the regatta board's three photos from the repo root, as
 ## /urbanmilers (GMS x Urban Milers)
 
 `/urbanmilers` is the `/mambacares` arc on a leaderboard of its own: the same
-landing with no partner on it, the same primers either side of the game, the
+landing with no partner on it (but with `/22grams`' one-tick consent in place
+of the two ticks - the same `ONE_TICK_CONSENT_FORM` block), the same primers either side of the game, the
 same questionnaire, and the same report ending on the Dementia Singapore
 fundraiser. The flow array is shared (`URBANMILERS_FLOW = MAMBACARES_FLOW`), so
 the question set, `achievableAxisMax` and therefore every score recorded stay
@@ -409,8 +410,10 @@ What this run holds of its own is the part that must not be shared:
   other's players. Nothing is deleted to get there: every row already recorded
   keeps the tag it was written with. To clear this board later (a second run
   day), give `URBANMILERS_SOURCE` a new value and redeploy.
-- **Its own board**, at `/urbanmilers/leaderboard`: the #MambaCares board
-  pointed at that bucket, with its own artwork folder
+- **Its own board**, at `/urbanmilers/leaderboard` (Figma 1080:7643): a
+  generated "Scan to play" code that opens `/urbanmilers`, the prize card
+  (Novablast 6, Grab, Starbucks) and the 15-row standings, with its own
+  artwork folder
   (`public/images/urbanmilers/board/`, whose README lists every file and its
   size). Every file there is optional, so the board is live and correct before
   any of them land.

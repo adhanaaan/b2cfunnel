@@ -245,13 +245,15 @@ describe("22grams copy", () => {
    * IS the newsletter consent - so a landing that picked it up by accident
    * would start recording an opt-in nobody was asked for. Exactly three events
    * are meant to carry it: this one, the Siloam summit and /general, whose
-   * landings were both deliberately made the same as this one.
+   * landings were both deliberately made the same as this one, and
+   * /urbanmilers, whose landing is #MambaCares' with this consent in place of
+   * the two ticks.
    *
    * And the SAME block, not a copy of it: "the same landing" is only true for
    * as long as one wording change reaches all three, so this asserts identity
    * rather than equality.
    */
-  it("shares its one-tick consent with the summit, /general and /eisai, and with nothing else", () => {
+  it("shares its one-tick consent with the summit, /general, /eisai and /urbanmilers, and with nothing else", () => {
     const withBlock = (
       Object.keys(COPY.screens) as (keyof typeof COPY.screens)[]
     ).filter((key) => {
@@ -259,11 +261,20 @@ describe("22grams copy", () => {
       return screen?.splash?.consentForm !== undefined;
     });
     // /eisai is /general's block spread, so it carries the same form.
-    expect(withBlock.sort()).toEqual(["22grams", "eisai", "general", "siloam"]);
+    expect(withBlock.sort()).toEqual([
+      "22grams",
+      "eisai",
+      "general",
+      "siloam",
+      "urbanmilers",
+    ]);
     expect(COPY.screens.siloam.splash.consentForm).toBe(
       COPY.screens["22grams"].splash.consentForm,
     );
     expect(COPY.screens.general.splash.consentForm).toBe(
+      COPY.screens["22grams"].splash.consentForm,
+    );
+    expect(COPY.screens.urbanmilers.splash.consentForm).toBe(
       COPY.screens["22grams"].splash.consentForm,
     );
   });

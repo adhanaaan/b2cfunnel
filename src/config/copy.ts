@@ -1261,6 +1261,14 @@ export const COPY: CopyConfig = {
     // Its campaign figures are in config/urbanmilers.ts, not here.
     urbanmilers: {
       ...MAMBACARES_SCREEN_COPY,
+      // The one place this run's landing leaves #MambaCares': its consent is
+      // /22grams' one tick - the same block, not a copy of it - rather than
+      // the two-row pair. `consentRequired` and `consentMarketing` still come
+      // through the spread and go unused while this is set.
+      splash: {
+        ...MAMBACARES_SCREEN_COPY.splash,
+        consentForm: ONE_TICK_CONSENT_FORM,
+      },
       report: {
         ...MAMBACARES_SCREEN_COPY.report,
         donate: {
