@@ -26,7 +26,7 @@ const PLACES = [
   {
     rank: 3,
     ordinal: "3rd",
-    eyebrow: "Third place",
+    eyebrow: "Third fastest brain",
     prize: "$20 Starbucks Gift Card",
     image: "/images/urbanmilers/board/prize-3rd.png",
     accent: "#cd7f32",
@@ -35,7 +35,7 @@ const PLACES = [
   {
     rank: 2,
     ordinal: "2nd",
-    eyebrow: "Second place",
+    eyebrow: "Second fastest brain",
     prize: "$30 Grab voucher",
     image: "/images/urbanmilers/board/prize-2nd.png",
     accent: "#dbe3ee",
@@ -44,7 +44,7 @@ const PLACES = [
   {
     rank: 1,
     ordinal: "1st",
-    eyebrow: "Fastest mind",
+    eyebrow: "Fastest brain",
     prize: "Novablast 6",
     image: "/images/urbanmilers/board/prize-1st.png",
     accent: "#f7c15c",
@@ -231,7 +231,7 @@ export function UrbanMilersWinners() {
             {ready && entry && <Burst seed={place.rank} accent={place.accent} />}
 
             <motion.p
-              className="text-[2.2vh] font-bold uppercase tracking-[0.36em]"
+              className="text-[4vh] font-bold uppercase tracking-[0.3em]"
               style={{ color: CREAM_DIM }}
               initial={reduced ? false : { opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
@@ -244,7 +244,7 @@ export function UrbanMilersWinners() {
             <motion.p
               className="font-extrabold leading-[0.85] tracking-tight"
               style={{
-                fontSize: "22vh",
+                fontSize: "26vh",
                 color: place.accent,
                 textShadow: `0 0 8vh ${place.glow}aa`,
               }}
@@ -256,13 +256,13 @@ export function UrbanMilersWinners() {
             </motion.p>
 
             {!ready && (
-              <p className="mt-[4vh] text-[3vh] font-semibold" style={{ color: CREAM_DIM }}>
+              <p className="mt-[4vh] text-[4.5vh] font-semibold" style={{ color: CREAM_DIM }}>
                 {failed ? "Could not read the standings — tap “Take again”." : "Reading the standings…"}
               </p>
             )}
 
             {ready && !entry && (
-              <p className="mt-[3vh] text-[4vh] font-bold" style={{ color: CREAM_DIM }}>
+              <p className="mt-[3vh] text-[5.5vh] font-bold" style={{ color: CREAM_DIM }}>
                 No {place.ordinal} place — not enough runners played.
               </p>
             )}
@@ -271,7 +271,7 @@ export function UrbanMilersWinners() {
               <>
                 <motion.p
                   className="mt-[1vh] max-w-[88vw] truncate font-extrabold leading-tight"
-                  style={{ fontSize: "13vh" }}
+                  style={{ fontSize: "16vh" }}
                   initial={reduced ? false : { opacity: 0, y: 40, scale: 0.9 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ ...springs.enter, delay: 0.16 }}
@@ -281,7 +281,7 @@ export function UrbanMilersWinners() {
 
                 <motion.p
                   className="mt-[0.5vh] font-extrabold tabular-nums"
-                  style={{ fontSize: "9vh", color: EMBER }}
+                  style={{ fontSize: "11vh", color: EMBER }}
                   initial={reduced ? false : { opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
@@ -300,12 +300,12 @@ export function UrbanMilersWinners() {
                   <img
                     src={place.image}
                     alt=""
-                    className="h-[11vh] w-auto object-contain drop-shadow-2xl"
+                    className="h-[14vh] w-auto object-contain drop-shadow-2xl"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
                     }}
                   />
-                  <p className="text-[3.6vh] font-extrabold">{place.prize}</p>
+                  <p className="text-[5vh] font-extrabold">{place.prize}</p>
                 </motion.div>
               </>
             )}
