@@ -240,6 +240,14 @@ describe("urbanmilers copy", () => {
     ).toBeUndefined();
   });
 
+  // The landing is #MambaCares' bar the consent, which is /22grams' one tick -
+  // the same block, so a wording change there reaches this landing too.
+  it("ships the #MambaCares landing with /22grams' one-tick consent", () => {
+    const { consentForm, ...rest } = COPY.screens.urbanmilers.splash;
+    expect(rest).toEqual(COPY.screens.mambacares.splash);
+    expect(consentForm).toBe(COPY.screens["22grams"].splash.consentForm);
+  });
+
   // The two runs share every screen, so the words are the only thing naming
   // the event a player is actually at. Nothing on this route may say the
   // other run's name.

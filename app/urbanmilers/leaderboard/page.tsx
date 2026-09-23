@@ -1,21 +1,21 @@
 "use client";
 
 /**
- * The attract screen for /urbanmilers - the #MambaCares board (Figma 813:19115,
- * "Leaderboard — /phkl/leaderboard") pointed at this run's own bucket, designed
- * against a 1920x1080 panel read from 2-5m away.
+ * The attract screen for /urbanmilers (Figma 1080:7643, "Leaderboard -
+ * /mambacares/leaderboard" in the LITE ReCOGnAIze file), designed against a
+ * 1920x1080 panel read from 2-5m away.
  *
- * A copy of that board rather than a shared component, as every event's board
- * in this repo is: the two runs go up on different screens on different days
- * and each one's frame - its prizes, its artwork, its sponsor lines - moves
+ * A copy of the #MambaCares board rather than a shared component, as every
+ * event's board in this repo is: the two runs go up on different screens on
+ * different days and each one's frame - its prizes, its artwork - moves
  * without the other's.
  *
- * The run's board differs from every other event's in what it asks for. The
- * left column is the campaign - the prizes the fastest 15 minds are playing
- * for, and an ember card whose QR goes to the donation, not to the game - and
- * the right column is the standings: the leader on a wide white hero row with
- * the time to beat, then ranks 2-15 in two columns of seven. Underneath, the
- * fact strip and the band of event photography both boards share.
+ * The left column is the way in and the reason to: a peach panel with a code
+ * that opens this run's funnel ("Scan to play < 60 s"), and under it the ember
+ * prize card - the fastest mind's shoes as the headline, the 2nd and 3rd
+ * prizes beneath. The right column is the standings: the leader on a wide
+ * white hero row with the time to beat, then ranks 2-15 in two columns of
+ * seven. Underneath, the fact strip and the band of event photography.
  *
  * The Figma frame is absolutely positioned at 1920x1080, so the board draws in
  * its pixels. One design unit, `--u` (set on <main>), is the frame scaled to
@@ -38,16 +38,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 import { displayName, formatTime } from "@/lib/format";
 import { URBANMILERS_PAUSED, URBANMILERS_SOURCE } from "@/config/event";
-import { URBANMILERS_DONATION_URL } from "@/config/urbanmilers";
+import { playUrlFor } from "@/config/eventLinks";
 import { BRAIN_FACTS } from "@/config/tips";
 import { springs } from "@/lib/motion";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
 
 /**
- * Fifteen rows, as the design lays out: the leader (813:19125), then two
- * columns of seven (813:19117, 813:19126). The prize copy is written from this
- * number, so a board of a different depth cannot end up promising the wrong
- * one.
+ * Fifteen rows, as the design lays out: the leader (1080:7654), then two
+ * columns of seven (1080:7646, 1080:7655).
  */
 const TOP_N = 15;
 /** Rows per standings column - the two columns are the remainder, split. */
@@ -55,9 +53,9 @@ const COLUMN_N = (TOP_N - 1) / 2;
 
 /**
  * How deep a new entry has to land to take the board over for four seconds.
- * Three rather than the fifteen the prizes go to on purpose: at a booth with
- * a queue, a top-15 takeover would fire on nearly every early play and then
- * never again, which is noise rather than news.
+ * Three - the places the prizes go to - rather than the whole board on
+ * purpose: at a booth with a queue, a top-15 takeover would fire on nearly
+ * every early play and then never again, which is noise rather than news.
  */
 const CELEBRATE_N = 3;
 
@@ -91,14 +89,25 @@ const RANK_CHIP_BG = "#f6e8e0";
 const RANK_INK = "#7d5747";
 const INK_FAINT = "#a98d80";
 const EMPTY_TIME = "#dcc4b6";
-/** Text/Inverse - the ink the design puts on the ember card. */
-const INVERSE = "#fafafa";
+/** The deep brown the design sets the scan heading in. */
+const SCAN_INK = "#772211";
+/** Cream/Base - the ink the design puts on the ember prize card. */
+const CREAM = "#fff4ec";
 
 const CANVAS =
   "linear-gradient(151deg, #fff8f6 15%, #fdeee4 46%, #fbe3d3 85%)";
-const DONATE_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
-const PRIZE_GRADIENT = "linear-gradient(270deg, #fcf5ed 0%, #f7e3d4 100%)";
+const PRIZE_CARD_GRADIENT =
+  "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
+const SCAN_PANEL_GRADIENT =
+  "linear-gradient(270deg, #fcf5ed 0%, #f7e3d4 100%)";
 const STRIP_BG = "rgba(255, 255, 255, 0.72)";
+
+/**
+ * What the code on the board opens: this run's funnel, on production, however
+ * the board itself is being served (see playUrlFor). Generated from the route
+ * rather than uploaded, so the code cannot point anywhere but /urbanmilers.
+ */
+const PLAY_URL = playUrlFor("urbanmilers");
 
 /**
  * Artwork that is dropped in as files under public/images/urbanmilers/board/
@@ -107,37 +116,41 @@ const STRIP_BG = "rgba(255, 255, 255, 0.72)";
  * this route can go up before any of this run's own exports exist.
  */
 const BOARD_ART = "/images/urbanmilers/board";
-const DONATE_GIFT = `${BOARD_ART}/donate-gift.png`;
-const QR_IMAGE = `${BOARD_ART}/donate-qr.png`;
 
 /**
- * The prize drop: one composed image of everything in it, dropped into the
- * box the frame's own artwork group occupies (813:19285) - trimmed to the
- * leader row on the right and the donate card below, so nothing paints over
- * any of it. Whatever is in the file is what the board shows, at the size it
- * was composed; the file is fitted inside the box and centred, so an export
- * at the box's own 462:380 ratio uses all of it.
- *
- * One image rather than a slot per prize on purpose. The drop kept growing,
- * and each cutout's file carried its own margins, so every addition meant
- * measuring a PNG and solving for a box - and the board still did not look
- * like the composition the designer had in front of them. Composing it once,
- * in a design tool, and exporting the group is how /phkl's board does its
- * Grab render, and it puts the layout back in the designer's hands.
+ * The three prizes on the ember card (1080:7847), as the design words them.
+ * The words are data and the pictures are files, so the prizes can change
+ * between now and the run without editing a component.
  */
-const PRIZE_DROP = `${BOARD_ART}/prize-drop.png`;
-
-/**
- * The sponsors, as the panel prints them - one line per entry, broken where
- * the artwork leaves room rather than left to wrap into it. Keep the lines
- * roughly this length: the block grows downwards from a fixed top, and the
- * panel has about one line's clearance left.
- */
-const PRIZE_SPONSORS = [
-  "From PMAM, SALTIFY, PRFM,",
-  "2050, Sunday Shades,",
-  "and more!",
-];
+const PRIZES = {
+  first: {
+    eyebrow: "Fastest mind",
+    title: "Win a pair of Novablast 6!",
+    image: `${BOARD_ART}/prize-1st.png`,
+    alt: "A pair of ASICS Novablast 6 running shoes",
+  },
+  runnersUp: [
+    {
+      rank: "2nd",
+      amount: "$30",
+      label: "Grab voucher",
+      image: `${BOARD_ART}/prize-2nd.png`,
+      alt: "$30 Grab vouchers",
+      // The design's box for each cutout (1080:7856, 1080:7863).
+      width: 162,
+      textSize: 27,
+    },
+    {
+      rank: "3rd",
+      amount: "$20",
+      label: "Starbucks card",
+      image: `${BOARD_ART}/prize-3rd.png`,
+      alt: "A $20 Starbucks card",
+      width: 158,
+      textSize: 28,
+    },
+  ],
+};
 
 /**
  * The band of event photography along the bottom edge (813:19137, 813:19135,
@@ -329,71 +342,174 @@ function StandingsColumn({
   );
 }
 
-/* ------------------------------ Prize panel ----------------------------- */
+/* ------------------------------ Scan panel ------------------------------ */
 
 /**
- * The prizes (813:19148): a pale peach panel with the offer at 47px in, and
- * the drop - one composed image, PRIZE_DROP - breaking out of its top and its
- * right edge the way the design has it, which is why the panel does not clip.
+ * The code (1080:7875), generated from PLAY_URL. Nothing is uploaded for it on
+ * purpose: a generated code is always the route it says it is, where an
+ * exported one encodes whatever it was made from.
  *
- * The sponsor lines are data (PRIZE_SPONSORS) and the drop is a file, so the
- * prizes can change between now and the run without editing this component.
- * The names are copy, not the sponsor logos on the report (those live in
- * `src/config/urbanmilers.ts`).
+ * Scannability settings measured at a live event (#46): level L needs 29
+ * modules against M's 33, making each ~14% larger in the same box, and
+ * marginSize={4} puts the spec'd four-module quiet zone inside the SVG, where
+ * the design's black frame cannot eat into it. That is also why the design's
+ * logo in the middle of the code is left out - it needs a higher error level,
+ * and with it smaller modules, to survive being covered. Pure black thresholds
+ * better than the brand brown on a washed-out panel.
  */
-function PrizePanel() {
+function ScanCode() {
   return (
     <div
-      className="relative w-full px-[calc(var(--u)*24)] py-[calc(var(--u)*28)] board:ml-[calc(var(--u)*39)] board:h-[calc(var(--u)*288)] board:w-[calc(var(--u)*755)] board:px-0 board:py-0"
-      style={{ background: PRIZE_GRADIENT, borderRadius: u(20) }}
+      className="flex aspect-square w-full items-center justify-center bg-white"
+      style={{
+        padding: u(4),
+        border: `${u(10)} solid #111111`,
+        borderRadius: u(16),
+      }}
     >
-      <div className="relative z-10 flex min-w-0 flex-col gap-[calc(var(--u)*12)] pr-[38%] text-charcoal board:absolute board:left-[calc(var(--u)*47)] board:top-[calc(var(--u)*42)] board:w-[calc(var(--u)*495.726)] board:gap-[calc(var(--u)*15)] board:pr-0">
-        {/* 15 under the eyebrow and 23 under the title, not the frame's 26
-            and 12: the approved render sits the title closer to its eyebrow
-            and leaves the sponsor lines where they were. */}
-        <p
-          className="font-bold uppercase leading-[1.1] tracking-[0.23em]"
-          style={{ fontSize: u(20.726) }}
-        >
-          Top {TOP_N} fastest minds
-        </p>
-        <div className="flex flex-col gap-[calc(var(--u)*12)] board:gap-[calc(var(--u)*23)]">
-          <p className="text-[length:calc(var(--u)*38)] font-extrabold leading-[1.19] tracking-[-0.015em] board:w-[calc(var(--u)*448)] board:text-[length:calc(var(--u)*57.554)]">
-            Win prizes
-          </p>
-          <p className="text-[length:calc(var(--u)*22)] font-semibold leading-[1.34] tracking-[-0.015em] board:text-[length:calc(var(--u)*26)]">
-            {PRIZE_SPONSORS.map((line) => (
-              <span key={line} className="board:block">
-                {line}{" "}
-              </span>
-            ))}
-          </p>
-        </div>
-      </div>
-
-      {/* Frame 363,127 to 825,507: the artwork group's box, cut at the leader
-          row's left edge and the donate card's top edge. It breaks out of the
-          panel's top and right, as the design has it. On a phone the same
-          image sits at the panel's right edge, scaled to the panel. */}
-      <OptionalImage
-        src={PRIZE_DROP}
-        alt="This year's Urban Milers prize drop"
-        className="pointer-events-none absolute right-[-2%] top-[-8%] h-[116%] w-auto object-contain board:left-[calc(var(--u)*324)] board:right-auto board:top-[calc(var(--u)*-37)] board:h-[calc(var(--u)*380)] board:w-[calc(var(--u)*462)]"
+      <QRCodeSVG
+        value={PLAY_URL}
+        className="h-full w-full"
+        level="L"
+        marginSize={4}
+        fgColor="#000000"
+        bgColor="#ffffff"
+        title="Scan to play the Reaction Time Challenge"
       />
     </div>
   );
 }
 
 /**
- * What stands in the prize panel's place once URBANMILERS_PAUSED is on. The
- * prizes are what closes with the challenge, so only this panel changes: the
- * donate card below it, and the campaign behind it, run to their own deadline.
+ * The peach panel at the top of the left column (1080:7680): the code at 41px
+ * in, breaking out of the panel's top and bottom edges as the design has it,
+ * and the ask beside it at 305px in.
+ */
+function ScanPanel() {
+  return (
+    <div
+      className="relative flex w-full items-center gap-[calc(var(--u)*20)] p-[calc(var(--u)*20)] board:ml-[calc(var(--u)*39)] board:block board:h-[calc(var(--u)*233)] board:w-[calc(var(--u)*702)] board:p-0"
+      style={{ background: SCAN_PANEL_GRADIENT, borderRadius: u(20) }}
+    >
+      <div className="w-[40%] shrink-0 board:absolute board:left-[calc(var(--u)*41)] board:top-[calc(var(--u)*-11)] board:w-[calc(var(--u)*240)]">
+        <ScanCode />
+      </div>
+
+      <div className="flex min-w-0 flex-col gap-[calc(var(--u)*12)] board:contents">
+        <p
+          className="text-[length:calc(var(--u)*34)] font-extrabold leading-[1.04] tracking-[-0.015em] board:absolute board:left-[calc(var(--u)*305)] board:top-[calc(var(--u)*27)] board:w-[calc(var(--u)*425.796)] board:text-[length:calc(var(--u)*46.768)]"
+          style={{ color: SCAN_INK }}
+        >
+          Scan to play &lt; 60 s
+        </p>
+        <p className="text-[length:calc(var(--u)*22)] font-medium leading-[1.28] tracking-[-0.01em] text-charcoal board:absolute board:left-[calc(var(--u)*305)] board:top-[calc(var(--u)*95)] board:w-[calc(var(--u)*450)] board:text-[length:calc(var(--u)*30.36)]">
+          Play the <strong className="font-bold">speed</strong> game to see
+          your <strong className="font-bold">rank</strong> and get free{" "}
+          <strong className="font-bold">personalised</strong> insights.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------ Prize card ------------------------------ */
+
+/** The white pill naming a place (the design's "Rank chip"). */
+function PlaceChip({ children }: { children: string }) {
+  return (
+    <span
+      className="inline-flex shrink-0 items-center justify-center rounded-full bg-white font-extrabold uppercase leading-normal tracking-[0.08em]"
+      style={{
+        color: ORANGE_DEEP,
+        fontSize: u(19),
+        paddingInline: u(12),
+        paddingBlock: u(4),
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+/**
+ * The ember card (1080:7847): the fastest mind's prize as the headline, with
+ * its shoe breaking out of the card's top and right edges, and the 2nd and 3rd
+ * prizes in a row of two tiles underneath. The card does not clip, so the shoe
+ * can hang over the gap to the standings as it does in the frame.
+ */
+function PrizeCard() {
+  return (
+    <div
+      className="relative flex w-full flex-col gap-[calc(var(--u)*16)] p-[calc(var(--u)*24)] board:ml-[calc(var(--u)*39)] board:mt-[calc(var(--u)*31)] board:h-[calc(var(--u)*422)] board:w-[calc(var(--u)*755)] board:gap-[calc(var(--u)*10)] board:pb-0 board:pl-[calc(var(--u)*41)] board:pr-0 board:pt-[calc(var(--u)*43)]"
+      style={{ background: PRIZE_CARD_GRADIENT, borderRadius: u(20), color: CREAM }}
+    >
+      <div className="relative z-10 flex flex-col gap-[calc(var(--u)*10.592)] pr-[42%] board:h-[calc(var(--u)*176)] board:w-[calc(var(--u)*425.796)] board:pr-0">
+        <p
+          className="font-bold uppercase leading-[1.1] tracking-[0.23em]"
+          style={{ fontSize: u(20.379) }}
+        >
+          {PRIZES.first.eyebrow}
+        </p>
+        <p className="text-[length:calc(var(--u)*40)] font-extrabold leading-[1.04] tracking-[-0.015em] board:text-[length:calc(var(--u)*60.768)]">
+          {PRIZES.first.title}
+        </p>
+      </div>
+
+      {/* The runners-up: two equal tiles, each the cutout in a 170px box and
+          its chip and words beside it (1080:7854, 1080:7861). */}
+      <div className="flex gap-[calc(var(--u)*18)] board:w-[calc(var(--u)*719)]">
+        {PRIZES.runnersUp.map((prize) => (
+          <div
+            key={prize.rank}
+            className="flex min-w-0 flex-1 flex-col gap-[calc(var(--u)*10)] board:flex-row board:items-start"
+          >
+            <div className="flex h-[calc(var(--u)*120)] min-w-0 items-center justify-center board:h-[calc(var(--u)*170)] board:flex-1">
+              <OptionalImage
+                src={prize.image}
+                alt={prize.alt}
+                className="h-full max-w-full object-contain board:h-[calc(var(--u)*160)]"
+                style={{ width: u(prize.width) }}
+              />
+            </div>
+            <div className="flex min-w-0 flex-col items-start gap-[calc(var(--u)*10)] board:flex-1">
+              <PlaceChip>{prize.rank}</PlaceChip>
+              <p
+                className="font-bold leading-[1.25]"
+                style={{ fontSize: u(prize.textSize) }}
+              >
+                <span className="block">{prize.amount}</span>
+                <span className="block">{prize.label}</span>
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Frame 449,422 to 825,648: the shoe, hanging 31px past the card's
+          right edge and 6px over its top. On a phone it sits in the card's
+          top-right corner, beside the title. */}
+      <OptionalImage
+        src={PRIZES.first.image}
+        alt={PRIZES.first.alt}
+        className="pointer-events-none absolute right-[-2%] top-[-2%] w-[46%] object-contain board:left-[calc(var(--u)*410)] board:right-auto board:top-[calc(var(--u)*-6)] board:h-[calc(var(--u)*226)] board:w-[calc(var(--u)*376)]"
+      />
+      <span className="absolute right-[calc(var(--u)*16)] top-[calc(var(--u)*16)] z-10 board:left-[calc(var(--u)*673)] board:right-auto board:top-[calc(var(--u)*33)]">
+        <PlaceChip>1st</PlaceChip>
+      </span>
+    </div>
+  );
+}
+
+/**
+ * What stands in the left column's place once URBANMILERS_PAUSED is on. The
+ * route itself shows the "event ended" page then, so the code comes down with
+ * the prizes rather than inviting a scan into a closed challenge.
  */
 function WrapPanel({ total }: { total: number }) {
   return (
     <div
-      className="flex w-full flex-col justify-center px-[calc(var(--u)*24)] py-[calc(var(--u)*28)] board:ml-[calc(var(--u)*39)] board:h-[calc(var(--u)*288)] board:w-[calc(var(--u)*755)] board:px-[calc(var(--u)*47)] board:py-0"
-      style={{ background: PRIZE_GRADIENT, borderRadius: u(20) }}
+      className="flex w-full flex-col justify-center px-[calc(var(--u)*24)] py-[calc(var(--u)*28)] board:ml-[calc(var(--u)*39)] board:h-[calc(var(--u)*686)] board:w-[calc(var(--u)*755)] board:px-[calc(var(--u)*47)] board:py-0"
+      style={{ background: SCAN_PANEL_GRADIENT, borderRadius: u(20) }}
     >
       <p
         className="font-bold uppercase leading-[1.1] tracking-[0.23em] text-primary"
@@ -413,137 +529,6 @@ function WrapPanel({ total }: { total: number }) {
       >
         {total > 0 ? `${total} minds tested` : "Thanks for playing"}
       </p>
-    </div>
-  );
-}
-
-/* ----------------------------- Donate panel ----------------------------- */
-
-/**
- * The code (813:19150).
- *
- * The generated code is the default here, the opposite way round from /phkl's
- * board: it always encodes URBANMILERS_DONATION_URL, the same short link every
- * Donate button on the report opens, so the board and the funnel can never
- * point at two different campaigns. Uploaded artwork wins when it is there -
- * a code with the campaign's own branding in it - and whatever that file
- * encodes is what people get: nothing here can check it, so a code for the
- * wrong campaign is a wrong code.
- *
- * Scannability settings measured at a live event (#46): level L needs 29
- * modules against M's 33, making each ~14% larger in the same box, and
- * marginSize={4} puts the spec'd four-module quiet zone inside the SVG. Pure
- * black thresholds better than the brand brown on a washed-out panel.
- */
-function ScanCode() {
-  const [artwork, setArtwork] = useState(false);
-
-  useEffect(() => {
-    // The file is probed rather than rendered-and-caught: the board is
-    // prerendered, so an <img> at a name nobody has uploaded yet can 404
-    // before React hydrates, and its error event then fires into nothing -
-    // leaving a broken image where the code should be, on a 55" panel, with
-    // no way for anyone to scan around it. Probing means the generated code
-    // is what draws until a real file has actually loaded.
-    let cancelled = false;
-    const probe = new Image();
-    const show = () => {
-      if (!cancelled) setArtwork(true);
-    };
-    probe.onload = show;
-    probe.src = QR_IMAGE;
-    if (probe.complete && probe.naturalWidth > 0) show();
-    return () => {
-      cancelled = true;
-      probe.onload = null;
-    };
-  }, []);
-
-  if (artwork) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={QR_IMAGE}
-        alt="Scan to donate to Dementia Singapore"
-        onError={() => setArtwork(false)}
-        className="aspect-square w-full object-contain"
-        style={{ borderRadius: u(14.014) }}
-      />
-    );
-  }
-
-  return (
-    <div
-      className="flex aspect-square w-full items-center justify-center bg-white"
-      style={{ padding: u(12), borderRadius: u(14.014) }}
-    >
-      <QRCodeSVG
-        value={URBANMILERS_DONATION_URL}
-        className="h-full w-full"
-        level="L"
-        marginSize={4}
-        fgColor="#000000"
-        bgColor="#ffffff"
-      />
-    </div>
-  );
-}
-
-/**
- * The ember card (813:19292): the code, the ask, and the line under it, laid
- * out at the frame's own offsets. The donation box breaks out of the card's
- * bottom-right corner, so the card does not clip either.
- */
-function DonatePanel() {
-  return (
-    <div
-      className="relative flex w-full flex-col items-start gap-[calc(var(--u)*20)] p-[calc(var(--u)*24)] board:ml-[calc(var(--u)*36)] board:mt-[calc(var(--u)*55)] board:block board:h-[calc(var(--u)*330)] board:w-[calc(var(--u)*758)] board:p-0"
-      style={{ background: DONATE_GRADIENT, borderRadius: u(20) }}
-    >
-      <div className="w-[calc(var(--u)*254)] max-w-full shrink-0 board:absolute board:left-[calc(var(--u)*32)] board:top-[calc(var(--u)*34)]">
-        <ScanCode />
-      </div>
-
-      <div
-        className="flex min-w-0 flex-col gap-[calc(var(--u)*9.561)] board:absolute board:left-[calc(var(--u)*310)] board:top-[calc(var(--u)*33)] board:w-[calc(var(--u)*471.377)]"
-        style={{ color: INVERSE }}
-      >
-        <p
-          className="uppercase leading-none tracking-[0.1em]"
-          style={{ fontSize: u(19.965) }}
-        >
-          Scan to
-        </p>
-        <p className="font-extrabold tracking-[-0.016em]">
-          <span className="block text-[length:calc(var(--u)*32)] leading-[1.17] board:text-[length:calc(var(--u)*44.825)]">
-            Donate to
-          </span>
-          <span className="block text-[length:calc(var(--u)*30)] leading-[1.17] board:text-[length:calc(var(--u)*42.913)]">
-            Dementia Singapore
-          </span>
-        </p>
-      </div>
-
-      {/* Broken where the design breaks it (813:19291) rather than left to
-          wrap: the donation box sits over the end of this block, and the
-          design's break is what keeps a whole word from going under it. */}
-      <p
-        className="font-bold board:absolute board:left-[calc(var(--u)*313)] board:top-[calc(var(--u)*184)] board:w-[calc(var(--u)*421)]"
-        style={{ color: INVERSE, fontSize: u(22.601), lineHeight: 1.6 }}
-      >
-        Every dollar supports people living with dementia and the families
-        <br />
-        who care for them.
-      </p>
-
-      {/* 190px box at 608px in, 208px down - hanging past the card's right and
-          bottom edges (813:19294). Board only: on a phone the card is narrower
-          than the offset it needs. */}
-      <OptionalImage
-        src={DONATE_GIFT}
-        alt=""
-        className="pointer-events-none absolute hidden object-contain board:block board:left-[calc(var(--u)*608)] board:top-[calc(var(--u)*208)] board:size-[calc(var(--u)*190)]"
-      />
     </div>
   );
 }
@@ -702,8 +687,14 @@ export default function UrbanMilersLeaderboardBoard() {
             into the gap under the standings, as it does in the frame. */}
         <div className="flex min-w-0 flex-1 flex-col board:min-h-0 board:flex-row board:items-start">
           <div className="flex min-w-0 flex-col gap-[calc(var(--u)*28)] px-[calc(var(--u)*24)] pt-[calc(var(--u)*28)] board:w-[calc(var(--u)*825)] board:shrink-0 board:gap-0 board:px-0 board:pt-[calc(var(--u)*14)]">
-            {URBANMILERS_PAUSED ? <WrapPanel total={total} /> : <PrizePanel />}
-            <DonatePanel />
+            {URBANMILERS_PAUSED ? (
+              <WrapPanel total={total} />
+            ) : (
+              <>
+                <ScanPanel />
+                <PrizeCard />
+              </>
+            )}
           </div>
 
           <section
