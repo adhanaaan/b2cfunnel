@@ -253,6 +253,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             state.variant === "ihhsearegatta" ||
             state.variant === "ihh" ||
             state.variant === "phkl" ||
+            state.variant === "phkl2" ||
             state.variant === "urbanmilers" ||
             state.variant === "siloam" ||
             state.variant === "22grams" ||
@@ -417,6 +418,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       // #MambaCares runs the same arc, so it gets the same screen.
       if (
         state.variant === "phkl" ||
+        state.variant === "phkl2" ||
         state.variant === "siloam" ||
         state.variant === "22grams" ||
         state.variant === "general" ||
@@ -479,7 +481,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           />
         ) : null;
       }
-      if (state.variant === "phkl") {
+      if (state.variant === "phkl" || state.variant === "phkl2") {
         // The PHKL report carries the time and standing itself (there is no
         // post-game card in this arc) and its own "Retry": the reducer
         // brings a replay straight back here with the new time.

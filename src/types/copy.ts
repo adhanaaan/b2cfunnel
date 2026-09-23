@@ -468,6 +468,9 @@ export interface ScreenCopy {
   // /ihh: the regatta block again, with its own privacy-policy link.
   ihh: IhhseaCopy;
   phkl: PhklCopy;
+  // A second Pantai Hospital KL activation (/phkl-2): the same block with its
+  // own privacy-policy link, so a reader never leaves /phkl-2 mid-consent.
+  phkl2: PhklCopy;
   // GMS x #MambaCares (/mambacares): the PHKL arc with no partner on its
   // landing and a fundraising report at the end.
   mambacares: MambacaresCopy;

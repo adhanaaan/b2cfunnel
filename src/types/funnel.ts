@@ -35,6 +35,10 @@ export type QuizVariant =
   // no longer optional), and a long report ending on the memory screening
   // offer. Its own `phkl` bucket.
   | "phkl"
+  // A second Pantai Hospital KL activation (/phkl-2): the same arc, the same
+  // partner and the same board, on a bucket of its own so each activation's
+  // standings rank only its own room.
+  | "phkl2"
   // GMS x #MambaCares (/mambacares): the PHKL arc reused for the World
   // Alzheimer's Month community run - the same landing, primers, game, quiz
   // and analysing screens, with no partner on the landing and a report that

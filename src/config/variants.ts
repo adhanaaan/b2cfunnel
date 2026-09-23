@@ -36,6 +36,7 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
     variant === "ihhsearegatta" ||
     variant === "ihh" ||
     variant === "phkl" ||
+    variant === "phkl2" ||
     variant === "mambacares" ||
     variant === "urbanmilers" ||
     variant === "siloam" ||

@@ -412,6 +412,14 @@ const SILOAM_FLOW: FunnelStep[] = PHKL_FLOW;
 const GENERAL_FLOW: FunnelStep[] = PHKL_FLOW;
 
 /**
+ * A second Pantai Hospital KL activation (/phkl-2). Shares PHKL's array rather
+ * than copying it: the two differ only in the bucket their rows carry, so a
+ * later change to the arc reaches both and neither one's question set can
+ * drift off the other's.
+ */
+const PHKL2_FLOW: FunnelStep[] = PHKL_FLOW;
+
+/**
  * Eisai's World Alzheimer's Day challenge (/eisai): /general's arc, shared
  * rather than rebuilt. The two routes differ only in the name on the landing
  * and the bucket their rows are tagged with, so a later change to the arc
@@ -497,6 +505,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   // arc reaches both and neither one's question set can drift off the other's.
   ihh: IHHSEA_FLOW,
   phkl: PHKL_FLOW,
+  phkl2: PHKL2_FLOW,
   mambacares: MAMBACARES_FLOW,
   urbanmilers: URBANMILERS_FLOW,
   siloam: SILOAM_FLOW,
