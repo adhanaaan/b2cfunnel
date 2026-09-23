@@ -53,6 +53,7 @@ interface Event3SplashProps {
     | "ihhsearegatta"
     | "ihh"
     | "phkl"
+    | "phkl2"
     | "mambacares"
     | "urbanmilers"
     | "siloam"
@@ -155,13 +156,17 @@ export function Event3Splash({
   // The partner's block, on the landings that carry one (the regatta's and
   // PHKL's copy blocks are the only ones with it).
   const partner: { clauses: ConsentClause[] } | null =
-    design === "ihhsearegatta" || design === "ihh" || design === "phkl"
+    design === "ihhsearegatta" ||
+    design === "ihh" ||
+    design === "phkl" ||
+    design === "phkl2"
       ? copy.screens[design].splash.partnerConsent
       : null;
   // The landings designed since the 18px row was deprecated take the roomier
   // consent rows (see ConsentCheckbox); the earlier events keep what shipped.
   const roomy =
     design === "phkl" ||
+    design === "phkl2" ||
     design === "mambacares" ||
     design === "urbanmilers" ||
     design === "siloam" ||
@@ -249,7 +254,7 @@ export function Event3Splash({
           </motion.div>
         )}
 
-        {design === "phkl" ? (
+        {design === "phkl" || design === "phkl2" ? (
           <>
             {/* The partner's logo above the eyebrow, at the presence it has in
                 Figma 697:24953 - about a third of the column wide. The row

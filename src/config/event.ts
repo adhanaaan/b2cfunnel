@@ -203,6 +203,23 @@ export const PHKL_PAUSED = false;
 export const PHKL_SOURCE = "phkl";
 
 /**
+ * Independent pause switch for the second Pantai Hospital KL activation
+ * (/phkl-2 and its TV board). Its own switch, like every other event's:
+ * closing one must never take another down with it.
+ */
+export const PHKL2_PAUSED = false;
+
+/**
+ * Leaderboard bucket for /phkl-2. Its own tag, which is the whole reason the
+ * route exists alongside /phkl: the same activation run again, collected into
+ * a column of its own so the new room's board opens empty.
+ *
+ * Change it (and redeploy) to start a further activation on a fresh board;
+ * earlier scores keep the tag they were written with and stay in the table.
+ */
+export const PHKL2_SOURCE: string = "phkl-2";
+
+/**
  * Independent pause switch for the GMS x #MambaCares community run
  * (/mambacares). Its own switch, like every other event's: closing one must
  * never take another down with it. There is no challenge-closed switch for
@@ -380,6 +397,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return IHH_SOURCE;
     case "phkl":
       return PHKL_SOURCE;
+    case "phkl2":
+      return PHKL2_SOURCE;
     case "mambacares":
       return MAMBACARES_SOURCE;
     case "urbanmilers":

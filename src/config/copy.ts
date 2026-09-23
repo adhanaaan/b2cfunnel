@@ -6,6 +6,7 @@ import type {
   IhhseaCopy,
   MambacaresCopy,
   PhklArcCopy,
+  PhklCopy,
   PhklReportSharedCopy,
   SiloamCopy,
   TwentyTwoGramsCopy,
@@ -686,6 +687,82 @@ const EISAI_SCREEN_COPY: GeneralCopy = {
   },
 };
 
+/**
+ * Pantai Hospital Kuala Lumpur (/phkl), and the second activation that
+ * reuses it (/phkl-2). Hoisted so the two share one block: same partner,
+ * same wording, same report - only the privacy-policy link differs, so a
+ * reader never leaves the route they are consenting on.
+ */
+const PHKL_SCREEN_COPY: PhklCopy = {
+      ...PHKL_ARC_COPY,
+      // The Pantai Hospital KL landing (Figma 697:24953) is the regatta's with
+      // the partner's Malaysian wording under the third tick and its own
+      // privacy policy behind the required row's link.
+      splash: {
+        ...NO_PARTNER_SPLASH,
+        privacyHref: "/phkl/privacy-policy",
+        partnerConsent: {
+          clauses: [...PHKL_CONSENT_CLAUSES, PHKL_CONSENT_WITHDRAWAL],
+        },
+      },
+      report: {
+        ...PHKL_ARC_COPY.report,
+        ...PHKL_REPORT_SHARED,
+        sticky: {
+          book: "Book memory screening",
+        },
+        offer: {
+          eyebrow: "What to do now?",
+          heading: "Book your Memory Screening Package",
+          body: "Your brain carries you through every part of life. Understand how it's doing today, and what you can do to protect it for the years ahead.",
+          poster: {
+            hospital: "Pantai Hospital Kuala Lumpur",
+            hospitalNote: "By IHH Healthcare",
+            title: ["Memory", "Screening", "Package"],
+            price: "RM460",
+            includesHeading: "Package includes",
+            includes: [
+              "Specialist Consultation",
+              "Digital Cognitive Assessment",
+              "Laboratory Tests",
+            ],
+            whoHeading: "Who should consider screening?",
+            who: [
+              "Changes in mood or behaviour",
+              "Family history of Alzheimer's",
+              "Confusion with time or place",
+              "Difficulty concentrating",
+              "Age 40 and above",
+              "Frequent forgetfulness",
+            ],
+          },
+          proofParts: [
+            "Validated against MRI scans, built on a five-year NTU study of 1,500 people and published in ",
+            "Alzheimer's & Dementia",
+            ".",
+          ],
+          includesEyebrow: "What your screening includes",
+          assessmentHeading: [
+            "Digital Cognitive Assessment",
+            "10 minute brain health game",
+          ],
+          assessmentBody:
+            "An online assessment with games that measure speed, attention, decision making and memory.",
+          reportHeading: "Get your full report",
+          reportBody:
+            "Review your brain performance with actionable ways to improve.",
+          cta: "Book my screening",
+          quote:
+            "Each of these games measures a specific brain function the same way I would assess it in clinic. We are not testing whether you can play, we are testing how well each part of your brain is doing the work it does for you every day.",
+          quoteName: "A/Prof Nagaendran Kandiah",
+          quoteRole: [
+            "Co-founder, Gray Matter Solutions",
+            "MBBS, FAMS (Neurology), FRCP (Edin)",
+          ],
+        },
+      },
+    };
+
 export const COPY: CopyConfig = {
   screens: {
     hook: {
@@ -1160,73 +1237,15 @@ export const COPY: CopyConfig = {
         privacyHref: "/ihh/privacy-policy",
       },
     },
-    phkl: {
-      ...PHKL_ARC_COPY,
-      // The Pantai Hospital KL landing (Figma 697:24953) is the regatta's with
-      // the partner's Malaysian wording under the third tick and its own
-      // privacy policy behind the required row's link.
+    phkl: PHKL_SCREEN_COPY,
+    // /phkl-2 - the same activation run again, on a bucket of its own.
+    // PHKL's block entire, with the required row's link pointing at this
+    // route's own copy of the policy.
+    phkl2: {
+      ...PHKL_SCREEN_COPY,
       splash: {
-        ...NO_PARTNER_SPLASH,
-        privacyHref: "/phkl/privacy-policy",
-        partnerConsent: {
-          clauses: [...PHKL_CONSENT_CLAUSES, PHKL_CONSENT_WITHDRAWAL],
-        },
-      },
-      report: {
-        ...PHKL_ARC_COPY.report,
-        ...PHKL_REPORT_SHARED,
-        sticky: {
-          book: "Book memory screening",
-        },
-        offer: {
-          eyebrow: "What to do now?",
-          heading: "Book your Memory Screening Package",
-          body: "Your brain carries you through every part of life. Understand how it's doing today, and what you can do to protect it for the years ahead.",
-          poster: {
-            hospital: "Pantai Hospital Kuala Lumpur",
-            hospitalNote: "By IHH Healthcare",
-            title: ["Memory", "Screening", "Package"],
-            price: "RM460",
-            includesHeading: "Package includes",
-            includes: [
-              "Specialist Consultation",
-              "Digital Cognitive Assessment",
-              "Laboratory Tests",
-            ],
-            whoHeading: "Who should consider screening?",
-            who: [
-              "Changes in mood or behaviour",
-              "Family history of Alzheimer's",
-              "Confusion with time or place",
-              "Difficulty concentrating",
-              "Age 40 and above",
-              "Frequent forgetfulness",
-            ],
-          },
-          proofParts: [
-            "Validated against MRI scans, built on a five-year NTU study of 1,500 people and published in ",
-            "Alzheimer's & Dementia",
-            ".",
-          ],
-          includesEyebrow: "What your screening includes",
-          assessmentHeading: [
-            "Digital Cognitive Assessment",
-            "10 minute brain health game",
-          ],
-          assessmentBody:
-            "An online assessment with games that measure speed, attention, decision making and memory.",
-          reportHeading: "Get your full report",
-          reportBody:
-            "Review your brain performance with actionable ways to improve.",
-          cta: "Book my screening",
-          quote:
-            "Each of these games measures a specific brain function the same way I would assess it in clinic. We are not testing whether you can play, we are testing how well each part of your brain is doing the work it does for you every day.",
-          quoteName: "A/Prof Nagaendran Kandiah",
-          quoteRole: [
-            "Co-founder, Gray Matter Solutions",
-            "MBBS, FAMS (Neurology), FRCP (Edin)",
-          ],
-        },
+        ...PHKL_SCREEN_COPY.splash,
+        privacyHref: "/phkl-2/privacy-policy",
       },
     },
     mambacares: MAMBACARES_SCREEN_COPY,
