@@ -153,12 +153,19 @@ export function PhklScreeningOffer() {
       </Reveal>
 
       <Reveal className="mt-[22px]">
-        <OptionalImage
-          src="/images/phkl/memory-screening-package.png"
-          alt={`${c.poster.hospital} ${c.poster.title.join(" ")}, ${c.poster.price}`}
-          className="w-full rounded-[19px]"
-          fallback={<PosterCard />}
-        />
+        {/* The poster is a way in to the booking too: a tap on it opens the
+            same form as the button under it, in a new tab. */}
+        <BookingLink
+          placement="posterImage"
+          className="block rounded-[19px] transition active:scale-[0.99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-core"
+        >
+          <OptionalImage
+            src="/images/phkl/memory-screening-package.png"
+            alt={`${c.poster.hospital} ${c.poster.title.join(" ")}, ${c.poster.price}. ${c.cta}`}
+            className="w-full rounded-[19px]"
+            fallback={<PosterCard />}
+          />
+        </BookingLink>
       </Reveal>
 
       <Reveal className="mt-[22px]">
