@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * The attract screen for /urbanmilers (Figma 1080:7643, "Leaderboard -
- * /mambacares/leaderboard" in the LITE ReCOGnAIze file), designed against a
+ * The attract screen for /urbanmilers (Figma 1080:8131, "Leaderboard -
+ * /urbanmilers/leaderboard" in the LITE ReCOGnAIze file), designed against a
  * 1920x1080 panel read from 2-5m away.
  *
  * A copy of the #MambaCares board rather than a shared component, as every
@@ -10,12 +10,13 @@
  * different days and each one's frame - its prizes, its artwork - moves
  * without the other's.
  *
- * The left column is the way in and the reason to: a peach panel with a code
- * that opens this run's funnel ("Scan to play < 60 s"), and under it the ember
- * prize card - the fastest mind's shoes as the headline, the 2nd and 3rd
- * prizes beneath. The right column is the standings: the leader on a wide
- * white hero row with the time to beat, then ranks 2-15 in two columns of
- * seven. Underneath, the fact strip and the band of event photography.
+ * Three columns under the masthead. On the left, the way in: "Scan to play
+ * < 60 s" and a 480px code that opens this run's funnel. In the middle, the
+ * reason to: the ember prize card - the fastest mind's shoes as the headline,
+ * the 2nd and 3rd prizes at its foot. On the right, the standings: the leader
+ * on a wide ember hero row with the time to beat, then ranks 2-15 in two
+ * columns of seven, 2nd and 3rd in ember too. Underneath, the fact strip and
+ * the band of event photography.
  *
  * The Figma frame is absolutely positioned at 1920x1080, so the board draws in
  * its pixels. One design unit, `--u` (set on <main>), is the frame scaled to
@@ -33,6 +34,7 @@
  * standings.
  */
 
+import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
@@ -91,6 +93,11 @@ const INK_FAINT = "#a98d80";
 const EMPTY_TIME = "#dcc4b6";
 /** The deep brown the design sets the scan heading in. */
 const SCAN_INK = "#772211";
+/** Text/Inverse - the ink on the ember standings rows. */
+const INVERSE = "#fafafa";
+/** The warm cream of the leader's "time to beat" label. */
+const PRIZE_WARM = "#ffe4cf";
+const CHARCOAL = "#2d2d2d";
 /** Cream/Base - the ink the design puts on the ember prize card. */
 const CREAM = "#fff4ec";
 
@@ -118,7 +125,7 @@ const PLAY_URL = playUrlFor("urbanmilers");
 const BOARD_ART = "/images/urbanmilers/board";
 
 /**
- * The three prizes on the ember card (1080:7847), as the design words them.
+ * The three prizes on the ember card (1080:8428), as the design words them.
  * The words are data and the pictures are files, so the prizes can change
  * between now and the run without editing a component.
  */
@@ -132,22 +139,33 @@ const PRIZES = {
   runnersUp: [
     {
       rank: "2nd",
-      amount: "$30",
-      label: "Grab voucher",
+      label: "$30 Grab voucher",
       image: `${BOARD_ART}/prize-2nd.png`,
       alt: "$30 Grab vouchers",
-      // The design's box for each cutout (1080:7856, 1080:7863).
-      width: 162,
-      textSize: 27,
+      // Each tile's box, its cutout's box and where its chip sits, from the
+      // frame (1080:8436, 1080:8441; 1080:8445, 1080:8443).
+      tile: { left: 28, top: 490, width: 230 },
+      // One line, as the design sets it; the 3rd's wraps inside 205px.
+      labelWidth: null,
+      imageBox: 140.427,
+      imageW: 133.819,
+      imageH: 132.167,
+      gap: 8.26,
+      // The chip, from the tile's top-left corner.
+      chip: { x: 0, y: 0 },
     },
     {
       rank: "3rd",
-      amount: "$20",
-      label: "Starbucks card",
+      label: "$20 Starbucks Gift Card",
       image: `${BOARD_ART}/prize-3rd.png`,
-      alt: "A $20 Starbucks card",
-      width: 158,
-      textSize: 28,
+      alt: "A $20 Starbucks gift card",
+      tile: { left: 286, top: 483, width: 241 },
+      labelWidth: 205,
+      imageBox: 123.442,
+      imageW: 114.729,
+      imageH: 116.181,
+      gap: 7.261,
+      chip: { x: -10, y: 7 },
     },
   ],
 };
@@ -179,22 +197,22 @@ const keyOf = (e: Entry) => `${e.name}·${Math.round(e.timeMs)}`;
 /* ------------------------------- Masthead ------------------------------- */
 
 /**
- * The brain and the question, side by side (813:19144). The brain asset
+ * The brain and the question, side by side (1080:8160). The brain asset
  * carries its own "Frontal Lobe" label and sparkle, exactly as the design
  * places it. One line on the board, as the frame sets it; a smaller size on a
  * phone, where it wraps.
  */
 function Masthead() {
   return (
-    <div className="flex shrink-0 items-center gap-[calc(var(--u)*20)] px-[calc(var(--u)*24)] pt-[calc(var(--u)*28)] board:h-[calc(var(--u)*150)] board:gap-[calc(var(--u)*39)] board:px-0 board:pl-[calc(var(--u)*30)] board:pt-[calc(var(--u)*25)]">
+    <div className="flex shrink-0 items-center gap-[calc(var(--u)*20)] px-[calc(var(--u)*24)] pt-[calc(var(--u)*28)] board:h-[calc(var(--u)*150)] board:items-start board:gap-[calc(var(--u)*39)] board:px-0 board:pl-[calc(var(--u)*30)] board:pt-[calc(var(--u)*6)]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/images/event3/brain.webp"
         alt=""
         aria-hidden
-        className="w-[calc(var(--u)*110)] shrink-0 select-none board:h-[calc(var(--u)*125)] board:w-[calc(var(--u)*172.811)]"
+        className="w-[calc(var(--u)*110)] shrink-0 select-none board:h-[calc(var(--u)*141.05)] board:w-[calc(var(--u)*195)]"
       />
-      <h1 className="min-w-0 text-[length:calc(var(--u)*38)] font-extrabold leading-none tracking-[-0.015em] text-charcoal board:whitespace-nowrap board:text-[length:calc(var(--u)*62.881)]">
+      <h1 className="min-w-0 text-[length:calc(var(--u)*38)] font-extrabold leading-none tracking-[-0.015em] text-charcoal board:mt-[calc(var(--u)*39)] board:whitespace-nowrap board:text-[length:calc(var(--u)*62.881)]">
         Is your brain at its peak performance?
       </h1>
     </div>
@@ -204,50 +222,62 @@ function Masthead() {
 /* ------------------------------ Standings ------------------------------- */
 
 /**
- * One row (the "Event3 Board/Standing row" component, 406:3540). The leader is
- * the 119px hero spanning both standings columns, with the time to beat over
- * its time; the rest are the 73.6px white rows, peach rank chip, time in the
- * deep orange. An unclaimed slot is the component's Empty variant: a dashed
- * outline the design does not draw but the board needs, since fifteen rows
- * start the day empty.
+ * How a row is drawn. The leader is the 122px ember hero with the time to
+ * beat over its time; 2nd and 3rd are the ember variant of the ordinary row;
+ * the rest are white rows with a peach rank chip and the time in deep orange.
+ */
+type Tier = "leader" | "podium" | "rest";
+
+/**
+ * One row (the "Event3 Board/Standing row" component, 406:3540). An unclaimed
+ * slot is the component's Empty variant: a dashed outline the design does not
+ * draw but the board needs, since fifteen rows start the day empty.
  */
 function StandingRow({
   rank,
   entry,
-  leader = false,
+  tier = "rest",
 }: {
   rank: number;
   entry: Entry | null;
-  leader?: boolean;
+  tier?: Tier;
 }) {
+  const leader = tier === "leader";
+  // An empty podium slot is drawn like any other empty slot: an ember row
+  // with nobody in it would read as a claimed place.
+  const ember = entry !== null && tier !== "rest";
   return (
     <motion.li
       layout
       transition={springs.shuffle}
       className={`flex shrink-0 items-center ${
-        leader ? "h-[calc(var(--u)*119)]" : "h-[calc(var(--u)*73.645)]"
+        leader ? "h-[calc(var(--u)*122)]" : "h-[calc(var(--u)*73)]"
       }`}
       style={{
-        borderRadius: u(21.938),
-        paddingInline: u(21.024),
-        gap: u(19.196),
-        background: entry ? "#ffffff" : "rgba(255, 255, 255, 0.55)",
-        border: entry ? "none" : `${u(2)} dashed ${CARD_LINE}`,
-        boxShadow: leader
-          ? `0 ${u(14.626)} ${u(18.282)} rgba(51, 18, 0, 0.18)`
+        borderRadius: u(leader ? 26.512 : 21.938),
+        paddingInline: u(leader ? 25.408 : 21.024),
+        gap: u(leader ? 23.198 : 19.196),
+        background: ember
+          ? PRIZE_CARD_GRADIENT
           : entry
-            ? `0 ${u(1.828)} ${u(3.656)} rgba(51, 18, 0, 0.08), 0 ${u(7.313)} ${u(10.969)} rgba(51, 18, 0, 0.12)`
-            : "none",
+            ? "#ffffff"
+            : "rgba(255, 255, 255, 0.55)",
+        border: entry ? "none" : `${u(2)} dashed ${CARD_LINE}`,
+        boxShadow: !entry
+          ? "none"
+          : leader
+            ? `0 ${u(17.675)} ${u(22.094)} rgba(51, 18, 0, 0.18)`
+            : `0 ${u(1.828)} ${u(3.656)} rgba(51, 18, 0, 0.08), 0 ${u(7.313)} ${u(10.969)} rgba(51, 18, 0, 0.12)`,
       }}
     >
       <span
         className="flex shrink-0 items-center justify-center rounded-full font-extrabold leading-none"
         style={{
-          width: u(leader ? 59.417 : 45.705),
-          height: u(leader ? 59.417 : 45.705),
-          fontSize: u(leader ? 29.25 : 21.94),
-          background: RANK_CHIP_BG,
-          color: entry ? RANK_INK : INK_FAINT,
+          width: u(leader ? 71.805 : 45.705),
+          height: u(leader ? 71.805 : 45.705),
+          fontSize: u(leader ? 35.35 : 21.94),
+          background: ember ? "#ffffff" : RANK_CHIP_BG,
+          color: ember ? ORANGE_DEEP : entry ? RANK_INK : INK_FAINT,
         }}
       >
         {rank}
@@ -256,29 +286,32 @@ function StandingRow({
       {entry ? (
         <>
           <span
-            className={`min-w-0 flex-1 truncate font-extrabold text-charcoal ${
+            className={`min-w-0 flex-1 truncate font-extrabold ${
               leader
                 ? "leading-[1.05] tracking-[-0.01em]"
                 : "leading-[1.1] tracking-[-0.005em]"
             }`}
-            style={{ fontSize: u(leader ? 43.88 : 31.99) }}
+            style={{
+              fontSize: u(leader ? 53.02 : 31.99),
+              color: ember ? INVERSE : CHARCOAL,
+            }}
           >
             {displayName(entry.name)}
           </span>
           {leader ? (
             <span
               className="flex shrink-0 flex-col items-end"
-              style={{ gap: u(3.656) }}
+              style={{ gap: u(4.419) }}
             >
               <span
                 className="font-bold uppercase leading-[1.3] tracking-[0.25em]"
-                style={{ color: ORANGE_DEEP, fontSize: u(13.71) }}
+                style={{ color: PRIZE_WARM, fontSize: u(16.57) }}
               >
                 Time to beat
               </span>
               <span
-                className="font-extrabold leading-none tracking-[-0.01em] text-charcoal tabular-nums"
-                style={{ fontSize: u(59.417) }}
+                className="font-extrabold leading-none tracking-[-0.01em] text-white tabular-nums"
+                style={{ fontSize: u(71.8) }}
               >
                 {formatTime(entry.timeMs)}
               </span>
@@ -286,7 +319,10 @@ function StandingRow({
           ) : (
             <span
               className="shrink-0 font-extrabold leading-[1.05] tracking-[-0.005em] tabular-nums"
-              style={{ color: ORANGE_DEEP, fontSize: u(35.65) }}
+              style={{
+                color: ember ? INVERSE : ORANGE_DEEP,
+                fontSize: u(35.65),
+              }}
             >
               {formatTime(entry.timeMs)}
             </span>
@@ -298,16 +334,17 @@ function StandingRow({
             className="min-w-0 flex-1 truncate font-semibold leading-[1.3]"
             style={{
               color: INK_FAINT,
-              fontSize: u(leader ? 31.99 : 24.7),
+              fontSize: u(leader ? 36 : 22),
             }}
           >
-            Play to claim this spot
+            {/* Short enough to fit whole: the columns are 351px now. */}
+            {leader ? "Claim this spot" : "Claim it"}
           </span>
           <span
             className="shrink-0 font-extrabold leading-[1.05] tracking-[-0.005em] tabular-nums"
             style={{
               color: EMPTY_TIME,
-              fontSize: u(leader ? 59.417 : 35.65),
+              fontSize: u(leader ? 71.8 : 35.65),
             }}
           >
             -:-.-
@@ -318,7 +355,7 @@ function StandingRow({
   );
 }
 
-/** One of the two 518px columns of seven rows (813:19117, 813:19126). */
+/** One of the two 351px columns of seven rows (1080:8133, 1080:8142). */
 function StandingsColumn({
   rows,
   firstRank,
@@ -329,23 +366,27 @@ function StandingsColumn({
   return (
     <ol
       start={firstRank}
-      className="flex min-w-0 flex-col gap-[calc(var(--u)*10.969)] board:w-[calc(var(--u)*518)] board:shrink-0"
+      className="flex min-w-0 flex-col gap-[calc(var(--u)*10.969)] board:w-[calc(var(--u)*351)] board:shrink-0"
     >
-      {rows.map((e, i) => (
-        <StandingRow
-          key={e ? keyOf(e) : `empty-${firstRank + i}`}
-          rank={firstRank + i}
-          entry={e}
-        />
-      ))}
+      {rows.map((e, i) => {
+        const rank = firstRank + i;
+        return (
+          <StandingRow
+            key={e ? keyOf(e) : `empty-${rank}`}
+            rank={rank}
+            entry={e}
+            tier={rank <= CELEBRATE_N ? "podium" : "rest"}
+          />
+        );
+      })}
     </ol>
   );
 }
 
-/* ------------------------------ Scan panel ------------------------------ */
+/* ------------------------------ Scan column ----------------------------- */
 
 /**
- * The code (1080:7875), generated from PLAY_URL. Nothing is uploaded for it on
+ * The code (1080:8425), generated from PLAY_URL. Nothing is uploaded for it on
  * purpose: a generated code is always the route it says it is, where an
  * exported one encodes whatever it was made from.
  *
@@ -360,11 +401,11 @@ function StandingsColumn({
 function ScanCode() {
   return (
     <div
-      className="flex aspect-square w-full items-center justify-center bg-white"
+      className="flex aspect-square w-full items-center justify-center overflow-hidden bg-white"
       style={{
-        padding: u(4),
-        border: `${u(10)} solid #111111`,
-        borderRadius: u(16),
+        padding: u(8),
+        border: `${u(20)} solid #111111`,
+        borderRadius: u(40),
       }}
     >
       <QRCodeSVG
@@ -381,32 +422,28 @@ function ScanCode() {
 }
 
 /**
- * The peach panel at the top of the left column (1080:7680): the code at 41px
- * in, breaking out of the panel's top and bottom edges as the design has it,
- * and the ask beside it at 305px in.
+ * The left column (1080:8421): the ask, then the 480px code under it. No panel
+ * behind either - the code is the biggest thing on the board, so it can be
+ * scanned from the back of a queue.
  */
-function ScanPanel() {
+function ScanColumn() {
   return (
-    <div
-      className="relative flex w-full items-center gap-[calc(var(--u)*20)] p-[calc(var(--u)*20)] board:ml-[calc(var(--u)*39)] board:block board:h-[calc(var(--u)*233)] board:w-[calc(var(--u)*702)] board:p-0"
-      style={{ background: SCAN_PANEL_GRADIENT, borderRadius: u(20) }}
-    >
-      <div className="w-[40%] shrink-0 board:absolute board:left-[calc(var(--u)*41)] board:top-[calc(var(--u)*-11)] board:w-[calc(var(--u)*240)]">
-        <ScanCode />
-      </div>
-
-      <div className="flex min-w-0 flex-col gap-[calc(var(--u)*12)] board:contents">
+    <div className="flex w-full flex-col items-center gap-[calc(var(--u)*24)] board:ml-[calc(var(--u)*57)] board:mt-[calc(var(--u)*6)] board:w-[calc(var(--u)*480)] board:shrink-0 board:gap-[calc(var(--u)*45)]">
+      <div className="flex w-full flex-col gap-[calc(var(--u)*12)] board:gap-[calc(var(--u)*20)]">
         <p
-          className="text-[length:calc(var(--u)*34)] font-extrabold leading-[1.04] tracking-[-0.015em] board:absolute board:left-[calc(var(--u)*305)] board:top-[calc(var(--u)*27)] board:w-[calc(var(--u)*425.796)] board:text-[length:calc(var(--u)*46.768)]"
+          className="text-[length:calc(var(--u)*34)] font-extrabold leading-[1.04] tracking-[-0.015em] board:text-[length:calc(var(--u)*46.768)]"
           style={{ color: SCAN_INK }}
         >
           Scan to play &lt; 60 s
         </p>
-        <p className="text-[length:calc(var(--u)*22)] font-medium leading-[1.28] tracking-[-0.01em] text-charcoal board:absolute board:left-[calc(var(--u)*305)] board:top-[calc(var(--u)*95)] board:w-[calc(var(--u)*450)] board:text-[length:calc(var(--u)*30.36)]">
+        <p className="text-[length:calc(var(--u)*22)] font-medium leading-[1.28] tracking-[-0.01em] text-charcoal board:text-[length:calc(var(--u)*32.36)]">
           Play the <strong className="font-bold">speed</strong> game to see
           your <strong className="font-bold">rank</strong> and get free{" "}
           <strong className="font-bold">personalised</strong> insights.
         </p>
+      </div>
+      <div className="w-[70%] board:w-full">
+        <ScanCode />
       </div>
     </div>
   );
@@ -415,15 +452,22 @@ function ScanPanel() {
 /* ------------------------------ Prize card ------------------------------ */
 
 /** The white pill naming a place (the design's "Rank chip"). */
-function PlaceChip({ children }: { children: string }) {
+function PlaceChip({
+  children,
+  size,
+}: {
+  children: string;
+  /** The chip's font size in design px; its padding scales with it. */
+  size: number;
+}) {
   return (
     <span
       className="inline-flex shrink-0 items-center justify-center rounded-full bg-white font-extrabold uppercase leading-normal tracking-[0.08em]"
       style={{
         color: ORANGE_DEEP,
-        fontSize: u(19),
-        paddingInline: u(12),
-        paddingBlock: u(4),
+        fontSize: u(size),
+        paddingInline: u(size * 0.632),
+        paddingBlock: u(size * 0.21),
       }}
     >
       {children}
@@ -432,83 +476,109 @@ function PlaceChip({ children }: { children: string }) {
 }
 
 /**
- * The ember card (1080:7847): the fastest mind's prize as the headline, with
- * its shoe breaking out of the card's top and right edges, and the 2nd and 3rd
- * prizes in a row of two tiles underneath. The card does not clip, so the shoe
- * can hang over the gap to the standings as it does in the frame.
+ * The ember card (1080:8428), 538x716 in the middle column: the fastest
+ * mind's prize as the headline with its shoe under it, and the 2nd and 3rd
+ * prizes side by side at the foot, each with its place chip over its top-left
+ * corner. Laid out at the frame's own offsets on the board; stacked on a
+ * phone.
  */
 function PrizeCard() {
   return (
     <div
-      className="relative flex w-full flex-col gap-[calc(var(--u)*16)] p-[calc(var(--u)*24)] board:ml-[calc(var(--u)*39)] board:mt-[calc(var(--u)*31)] board:h-[calc(var(--u)*422)] board:w-[calc(var(--u)*755)] board:gap-[calc(var(--u)*10)] board:pb-0 board:pl-[calc(var(--u)*41)] board:pr-0 board:pt-[calc(var(--u)*43)]"
-      style={{ background: PRIZE_CARD_GRADIENT, borderRadius: u(20), color: CREAM }}
+      className="relative flex w-full flex-col gap-[calc(var(--u)*16)] p-[calc(var(--u)*24)] board:ml-[calc(var(--u)*33)] board:mt-[calc(var(--u)*6)] board:block board:h-[calc(var(--u)*716)] board:w-[calc(var(--u)*538)] board:shrink-0 board:p-0"
+      style={{
+        background: PRIZE_CARD_GRADIENT,
+        borderRadius: u(20),
+        color: CREAM,
+      }}
     >
-      <div className="relative z-10 flex flex-col gap-[calc(var(--u)*10.592)] pr-[42%] board:h-[calc(var(--u)*176)] board:w-[calc(var(--u)*425.796)] board:pr-0">
+      <div className="flex flex-col gap-[calc(var(--u)*10)] board:absolute board:left-[calc(var(--u)*38)] board:top-[calc(var(--u)*50)] board:w-[calc(var(--u)*444)]">
         <p
           className="font-bold uppercase leading-[1.1] tracking-[0.23em]"
           style={{ fontSize: u(20.379) }}
         >
           {PRIZES.first.eyebrow}
         </p>
-        <p className="text-[length:calc(var(--u)*40)] font-extrabold leading-[1.04] tracking-[-0.015em] board:text-[length:calc(var(--u)*60.768)]">
+        <p className="text-[length:calc(var(--u)*44)] font-extrabold leading-[1.04] tracking-[-0.015em] board:w-[calc(var(--u)*425.796)] board:text-[length:calc(var(--u)*60.768)]">
           {PRIZES.first.title}
         </p>
       </div>
 
-      {/* The runners-up: two equal tiles, each the cutout in a 170px box and
-          its chip and words beside it (1080:7854, 1080:7861). */}
-      <div className="flex gap-[calc(var(--u)*18)] board:w-[calc(var(--u)*719)]">
+      {/* The shoe (1080:8433) and its 1ST chip (1080:8434). */}
+      <div className="relative mx-auto w-[80%] board:absolute board:left-[calc(var(--u)*56.48)] board:top-[calc(var(--u)*218)] board:mx-0 board:h-[calc(var(--u)*255.479)] board:w-[calc(var(--u)*425.462)]">
+        <OptionalImage
+          src={PRIZES.first.image}
+          alt={PRIZES.first.alt}
+          className="aspect-[425/255] w-full object-contain board:h-full"
+        />
+        <span className="absolute left-[74%] top-[17%]">
+          <PlaceChip size={21.478}>1st</PlaceChip>
+        </span>
+      </div>
+
+      {/* The runners-up (1080:8436, 1080:8445), each a column of cutout and
+          words, with its place chip over the tile's top-left corner. Their
+          boxes are the frame's, passed in as variables so one class list
+          places both. */}
+      <div className="flex gap-[calc(var(--u)*16)] board:contents">
         {PRIZES.runnersUp.map((prize) => (
           <div
             key={prize.rank}
-            className="flex min-w-0 flex-1 flex-col gap-[calc(var(--u)*10)] board:flex-row board:items-start"
+            className="relative flex min-w-0 flex-1 flex-col items-center pt-[calc(var(--u)*16)] board:absolute board:left-[var(--tile-left)] board:top-[var(--tile-top)] board:w-[var(--tile-w)] board:pt-0"
+            style={
+              {
+                "--tile-left": u(prize.tile.left),
+                "--tile-top": u(prize.tile.top),
+                "--tile-w": u(prize.tile.width),
+                gap: u(prize.gap),
+              } as CSSProperties
+            }
           >
-            <div className="flex h-[calc(var(--u)*120)] min-w-0 items-center justify-center board:h-[calc(var(--u)*170)] board:flex-1">
+            <div
+              className="flex w-full items-center justify-center"
+              style={{ height: u(prize.imageBox) }}
+            >
               <OptionalImage
                 src={prize.image}
                 alt={prize.alt}
-                className="h-full max-w-full object-contain board:h-[calc(var(--u)*160)]"
-                style={{ width: u(prize.width) }}
+                className="max-w-full object-contain"
+                style={{ width: u(prize.imageW), height: u(prize.imageH) }}
               />
             </div>
-            <div className="flex min-w-0 flex-col items-start gap-[calc(var(--u)*10)] board:flex-1">
-              <PlaceChip>{prize.rank}</PlaceChip>
-              <p
-                className="font-bold leading-[1.25]"
-                style={{ fontSize: u(prize.textSize) }}
-              >
-                <span className="block">{prize.amount}</span>
-                <span className="block">{prize.label}</span>
-              </p>
-            </div>
+            <p
+              className={`text-center font-bold leading-[1.25] ${
+                prize.labelWidth === null ? "board:whitespace-nowrap" : ""
+              }`}
+              style={{
+                fontSize: u(26.433),
+                maxWidth: prize.labelWidth ? u(prize.labelWidth) : undefined,
+              }}
+            >
+              {prize.label}
+            </p>
+            <span
+              className="absolute"
+              style={{ left: u(prize.chip.x), top: u(prize.chip.y) }}
+            >
+              <PlaceChip size={15.695}>{prize.rank}</PlaceChip>
+            </span>
           </div>
         ))}
       </div>
-
-      {/* Frame 449,422 to 825,648: the shoe, hanging 31px past the card's
-          right edge and 6px over its top. On a phone it sits in the card's
-          top-right corner, beside the title. */}
-      <OptionalImage
-        src={PRIZES.first.image}
-        alt={PRIZES.first.alt}
-        className="pointer-events-none absolute right-[-2%] top-[-2%] w-[46%] object-contain board:left-[calc(var(--u)*410)] board:right-auto board:top-[calc(var(--u)*-6)] board:h-[calc(var(--u)*226)] board:w-[calc(var(--u)*376)]"
-      />
-      <span className="absolute right-[calc(var(--u)*16)] top-[calc(var(--u)*16)] z-10 board:left-[calc(var(--u)*673)] board:right-auto board:top-[calc(var(--u)*33)]">
-        <PlaceChip>1st</PlaceChip>
-      </span>
     </div>
   );
 }
 
 /**
- * What stands in the left column's place once URBANMILERS_PAUSED is on. The
+ * What stands in the code's and the prizes' place once URBANMILERS_PAUSED is
+ * on. The
  * route itself shows the "event ended" page then, so the code comes down with
  * the prizes rather than inviting a scan into a closed challenge.
  */
 function WrapPanel({ total }: { total: number }) {
   return (
     <div
-      className="flex w-full flex-col justify-center px-[calc(var(--u)*24)] py-[calc(var(--u)*28)] board:ml-[calc(var(--u)*39)] board:h-[calc(var(--u)*686)] board:w-[calc(var(--u)*755)] board:px-[calc(var(--u)*47)] board:py-0"
+      className="flex w-full flex-col justify-center px-[calc(var(--u)*24)] py-[calc(var(--u)*28)] board:ml-[calc(var(--u)*57)] board:mt-[calc(var(--u)*6)] board:h-[calc(var(--u)*716)] board:w-[calc(var(--u)*1051)] board:shrink-0 board:px-[calc(var(--u)*47)] board:py-0"
       style={{ background: SCAN_PANEL_GRADIENT, borderRadius: u(20) }}
     >
       <p
@@ -682,29 +752,27 @@ export default function UrbanMilersLeaderboardBoard() {
       <div className="relative z-10 mx-auto flex w-full flex-1 flex-col board:min-h-0 board:max-w-[calc(var(--u)*1920)]">
         <Masthead />
 
-        {/* The campaign on the left, the standings on the right - the frame's
-            825:1056 split. Any height a taller-than-16:9 screen adds falls
-            into the gap under the standings, as it does in the frame. */}
-        <div className="flex min-w-0 flex-1 flex-col board:min-h-0 board:flex-row board:items-start">
-          <div className="flex min-w-0 flex-col gap-[calc(var(--u)*28)] px-[calc(var(--u)*24)] pt-[calc(var(--u)*28)] board:w-[calc(var(--u)*825)] board:shrink-0 board:gap-0 board:px-0 board:pt-[calc(var(--u)*14)]">
-            {URBANMILERS_PAUSED ? (
-              <WrapPanel total={total} />
-            ) : (
-              <>
-                <ScanPanel />
-                <PrizeCard />
-              </>
-            )}
-          </div>
+        {/* Three columns, at the frame's offsets: the code, the prizes, the
+            standings. Any height a taller-than-16:9 screen adds falls under
+            them, into the gap above the fact strip. */}
+        <div className="flex min-w-0 flex-1 flex-col gap-[calc(var(--u)*28)] px-[calc(var(--u)*24)] pt-[calc(var(--u)*28)] board:min-h-0 board:flex-row board:items-start board:gap-0 board:px-0 board:pt-0">
+          {URBANMILERS_PAUSED ? (
+            <WrapPanel total={total} />
+          ) : (
+            <>
+              <ScanColumn />
+              <PrizeCard />
+            </>
+          )}
 
           <section
             aria-label="Speed game leaderboard"
-            className="mt-[calc(var(--u)*28)] flex min-w-0 flex-col px-[calc(var(--u)*24)] board:mt-0 board:w-[calc(var(--u)*1056)] board:shrink-0 board:px-0"
+            className="flex min-w-0 flex-col board:ml-[calc(var(--u)*34)] board:w-[calc(var(--u)*735)] board:shrink-0"
           >
             <ol className="flex min-w-0 flex-col">
-              <StandingRow rank={1} entry={rows[0]} leader />
+              <StandingRow rank={1} entry={rows[0]} tier="leader" />
             </ol>
-            <div className="mt-[calc(var(--u)*10.969)] flex min-w-0 flex-col gap-[calc(var(--u)*10.969)] board:mt-[calc(var(--u)*18)] board:flex-row board:gap-[calc(var(--u)*20)]">
+            <div className="mt-[calc(var(--u)*10.969)] flex min-w-0 flex-col gap-[calc(var(--u)*10.969)] board:mt-[calc(var(--u)*22)] board:flex-row board:gap-[calc(var(--u)*28)]">
               <StandingsColumn rows={rows.slice(1, 1 + COLUMN_N)} firstRank={2} />
               <StandingsColumn
                 rows={rows.slice(1 + COLUMN_N)}
