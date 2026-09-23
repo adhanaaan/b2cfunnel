@@ -87,9 +87,9 @@ export function SerifParts({ parts }: { parts: string[] }) {
 }
 
 /**
- * Every "book" button on the report, in two kinds. The button under the
- * poster is the booking itself and opens the form (PHKL_BOOKING_URL); the
- * sticky button rides above the whole report, so it walks the reader down to
+ * Every "book" link on the report, in two kinds. The button under the poster
+ * and the poster itself ("posterImage") are the booking and open the form
+ * (PHKL_BOOKING_URL) in a new tab; the sticky button rides above the whole report, so it walks the reader down to
  * the Memory Screening Package section first instead - nobody books before
  * they have seen what the package is. Both are real anchors rather than
  * buttons, so they work without JavaScript and read as links to assistive
@@ -100,13 +100,13 @@ export function BookingLink({
   className,
   children,
 }: {
-  placement: "sticky" | "poster";
+  placement: "sticky" | "poster" | "posterImage";
   className: string;
   children: ReactNode;
 }) {
   const variant = useVariant();
   const reduced = useReducedMotion();
-  const toForm = placement === "poster";
+  const toForm = placement !== "sticky";
 
   const scrollToPackage = (event: MouseEvent<HTMLAnchorElement>) => {
     const section = document.getElementById(PHKL_PACKAGE_SECTION_ID);
