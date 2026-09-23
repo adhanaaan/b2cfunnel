@@ -3,6 +3,7 @@ import type { DeepPartial } from "@/lib/deepMerge";
 import type { Language } from "@/config/language";
 import { COPY_ID } from "@/config/copy.id";
 import { COPY_ZH } from "@/config/copy.zh";
+import { COPY_MS } from "@/config/copy.ms";
 
 /**
  * Every translation this build ships, by language tag.
@@ -21,5 +22,6 @@ export const COPY_BY_LANGUAGE: Record<
   DeepPartial<CopyConfig>
 > = {
   zh: COPY_ZH,
+  ms: COPY_MS,
   id: COPY_ID,
 };

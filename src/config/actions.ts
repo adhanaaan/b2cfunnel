@@ -126,6 +126,45 @@ const DEFAULT_ACTIONS_ZH: string[] = [
   "如果超过一年没做健康检查，就预约一次。了解自己的指标，是改变它们的开始。",
 ];
 
+/**
+ * The same three tables in Bahasa Melayu, for /phkl-2. Keyed by the same
+ * factor ids, so only the words change.
+ */
+const ACTIONS_BY_FACTOR_MS: Record<string, string> = {
+  sleep:
+    "Sasarkan tidur 7 hingga 9 jam. Memori diperkukuh semasa tidur, dan kurang tidur paling awal terlihat sebagai fokus yang lemah.",
+  exercise:
+    "Tingkatkan sehingga 150 minit pergerakan cergas seminggu. Senaman aerobik yang kerap ialah antara tabiat yang paling disokong bukti untuk kesihatan otak.",
+  diet: "Tambah satu hidangan gaya Mediterranean sehari: sayur-sayuran, ikan, minyak zaitun, bijirin penuh.",
+  alcohol:
+    "Kurangkan alkohol, dan beri diri anda beberapa hari tanpa alkohol setiap minggu.",
+  smoking:
+    "Berhenti merokok ialah perubahan tunggal terbesar yang boleh anda lakukan di sini. Tanya kami tentang sokongan di booth.",
+  highBp:
+    "Periksa dan rawat tekanan darah anda. Tekanan darah pada usia pertengahan mempengaruhi kesihatan otak berdekad kemudian.",
+  highCholesterol:
+    "Tanya doktor anda tentang bacaan kolesterol anda dan sasaran yang sesuai untuk anda.",
+  diabetes:
+    "Kawal gula darah anda dalam julat yang sesuai bersama doktor. Glukosa yang stabil melindungi saluran darah kecil dalam otak anda.",
+  hearingLoss:
+    "Tempah ujian pendengaran. Masalah pendengaran yang tidak dirawat ialah antara faktor risiko boleh ubah terbesar dalam laporan Lancet 2024.",
+  visionLoss:
+    "Periksa mata anda, dan pastikan preskripsi cermin mata anda sentiasa terkini.",
+};
+
+const SPEED_ACTIONS_MS = {
+  strong:
+    "Teruskan apa yang anda lakukan. Kelajuan tindak balas anda baik, jadi lindunginya dengan tidur yang konsisten dan senaman yang kerap.",
+  build:
+    "Kelajuan tindak balas anda hanyalah gambaran sesaat, bukan keputusan muktamad. Tidur dan pergerakan yang kerap yang mengubahnya dari semasa ke semasa.",
+} as const;
+
+const DEFAULT_ACTIONS_MS: string[] = [
+  "Cabar otak anda setiap hari. Ambil laluan baharu ke tempat kerja, pelajari kemahiran baharu atau ubah rutin anda.",
+  "Kekal bersosial. Perbualan yang kerap ialah antara tabiat yang paling berkait dengan ketajaman fikiran.",
+  "Tempah saringan kesihatan jika sudah lebih setahun. Mengetahui bacaan anda ialah permulaan untuk mengubahnya.",
+];
+
 /** Every language's tables, picked by `pickActions`. */
 const ACTION_TABLES: Record<
   Language,
@@ -144,6 +183,11 @@ const ACTION_TABLES: Record<
     byFactor: ACTIONS_BY_FACTOR_ZH,
     speed: SPEED_ACTIONS_ZH,
     defaults: DEFAULT_ACTIONS_ZH,
+  },
+  ms: {
+    byFactor: ACTIONS_BY_FACTOR_MS,
+    speed: SPEED_ACTIONS_MS,
+    defaults: DEFAULT_ACTIONS_MS,
   },
   id: {
     byFactor: ACTIONS_BY_FACTOR_ID,

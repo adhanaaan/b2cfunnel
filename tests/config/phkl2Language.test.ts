@@ -14,7 +14,7 @@ import { ordinalFor } from "@/lib/format";
 import { STAT_CARDS_BY_ID } from "@/config/statCards";
 
 /**
- * /phkl-2 can be read in English, 中文 or Bahasa Indonesia. As on the summit,
+ * /phkl-2 can be read in English, 中文 or Bahasa Melayu. As on the summit,
  * the language changes words and nothing else, and /phkl - which reads the
  * same `phkl` block - stays English-only.
  */
@@ -25,11 +25,11 @@ const TRANSLATIONS = PHKL2_LANGUAGES.filter((l) => l !== "en");
 const pairedStars = (line: string) => (line.match(/\*/g) ?? []).length % 2 === 0;
 
 describe("the /phkl-2 picker", () => {
-  it("offers English, 中文 and Bahasa Indonesia, in that order", () => {
+  it("offers English, 中文 and Bahasa Melayu, in that order", () => {
     expect(languagesFor("phkl2").map((l) => l.label)).toEqual([
       "English",
       "中文",
-      "Bahasa Indonesia",
+      "Bahasa Melayu",
     ]);
   });
 
@@ -154,5 +154,28 @@ describe("the question bank in 中文", () => {
   it("wraps the ordinal", () => {
     expect(ordinalFor(1, "zh")).toBe("第1次");
     expect(ordinalFor(12, "zh")).toBe("第12次");
+  });
+});
+
+describe("the question bank in Bahasa Melayu", () => {
+  it("translates the age screen's options and keeps the scores", () => {
+    expect(questionsByIdFor("ms").age.options?.[0].label).toBe("18 hingga 29");
+    expect(questionsByIdFor("ms").age.options?.[4].score).toBe(12);
+  });
+
+  it("picks the same three actions, in other words", () => {
+    const input = {
+      drivingFactors: [{ id: "sleep" }, { id: "highBp" }],
+      band: "elevated" as const,
+      gameTimeMs: 41800,
+    };
+    const en = pickActions(input);
+    const ms = pickActions({ ...input, language: "ms" });
+    expect(ms).toHaveLength(3);
+    ms.forEach((text, i) => expect(text).not.toBe(en[i]));
+  });
+
+  it("prefixes the ordinal", () => {
+    expect(ordinalFor(2, "ms")).toBe("ke-2");
   });
 });

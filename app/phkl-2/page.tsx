@@ -7,7 +7,7 @@ import { PHKL2_PAUSED } from "@/config/event";
 export const metadata: Metadata = {
   title: "Reaction Time Challenge - Brain Health Check",
   description:
-    "How fast does your brain process? Take a quick symbol-matching test to find out your brain processing speed, then explore your full brain health profile. Available in English, 中文 and Bahasa Indonesia.",
+    "How fast does your brain process? Take a quick symbol-matching test to find out your brain processing speed, then explore your full brain health profile. Available in English, 中文 and Bahasa Melayu.",
   openGraph: {
     title: "Reaction Time Challenge",
     description:
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
  *
  * Three things only are its own:
  *
- * - **A language.** The landing offers English, 中文 or Bahasa Indonesia,
+ * - **A language.** The landing offers English, 中文 or Bahasa Melayu,
  *   between the intro line and the name field, and the choice carries through
  *   every screen behind it. `LanguageProvider` wraps the funnel here, as on
  *   the Siloam summit, so /phkl itself stays English-only.

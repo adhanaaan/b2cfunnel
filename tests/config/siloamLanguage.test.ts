@@ -56,7 +56,7 @@ describe("the language list", () => {
   });
 
   it("rejects anything that is not a language it can render", () => {
-    for (const bad of ["ms", "zh-TW", "", null, undefined, 7]) {
+    for (const bad of ["ms-MY", "zh-TW", "", null, undefined, 7]) {
       expect(isLanguage(bad)).toBe(false);
     }
     expect(languageLabel("id")).toBe("Bahasa Indonesia");

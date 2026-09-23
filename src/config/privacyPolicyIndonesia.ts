@@ -55,7 +55,7 @@ const LAW_EN = "Law No. 27 of 2022 on Personal Data Protection";
 const LAW_ID = "UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi";
 
 /** The languages the summit's policy is written in: the summit's own two. */
-export type SiloamPolicyLanguage = Exclude<Language, "zh">;
+export type SiloamPolicyLanguage = Exclude<Language, "zh" | "ms">;
 
 /** The strap under the policy's title, naming the law it is written against. */
 export const INDONESIA_POLICY_LAW: Record<SiloamPolicyLanguage, string> = {
