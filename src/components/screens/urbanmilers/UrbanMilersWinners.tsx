@@ -45,7 +45,7 @@ const PLACES = [
     rank: 1,
     ordinal: "1st",
     eyebrow: "Fastest mind",
-    prize: "A pair of Novablast 6",
+    prize: "Novablast 6",
     image: "/images/urbanmilers/board/prize-1st.png",
     accent: "#f7c15c",
     glow: "#b87313",
@@ -194,26 +194,15 @@ export function UrbanMilersWinners() {
 
       {/* Masthead: GMS, which the board carries and this was missing. */}
       <header className="relative z-10 flex shrink-0 items-center justify-between px-[3vw] pt-[3vh]">
-        <div className="flex items-center gap-[1.2vw]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/gms-logo.png"
-            alt="Gray Matter Solutions"
-            className="h-[6vh] w-auto"
-            style={{ filter: "brightness(0) invert(1)" }}
-          />
-          <div className="leading-tight">
-            <p
-              className="text-[1.5vh] font-bold uppercase tracking-[0.3em]"
-              style={{ color: EMBER }}
-            >
-              Urban Milers · Prize giving
-            </p>
-            <p className="text-[1.4vh] font-semibold" style={{ color: CREAM_DIM }}>
-              Reaction Time Challenge · Gray Matter Solutions
-            </p>
-          </div>
-        </div>
+        {/* The GMS mark alone. Nothing else belongs up here: the room is
+            looking at the name in the middle, not at a masthead. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/gms-logo.png"
+          alt="Gray Matter Solutions"
+          className="h-[6vh] w-auto"
+          style={{ filter: "brightness(0) invert(1)" }}
+        />
         <div className="flex items-center gap-[0.8vw]">
           {PLACES.map((p, i) => (
             <span
