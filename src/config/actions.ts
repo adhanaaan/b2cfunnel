@@ -90,6 +90,42 @@ const DEFAULT_ACTIONS_ID: string[] = [
   "Lakukan pemeriksaan kesehatan jika sudah lebih dari setahun. Mengetahui angka Anda adalah awal dari mengubahnya.",
 ];
 
+/**
+ * The same three tables in Simplified Chinese, for /phkl-2. Keyed by the same
+ * factor ids, so only the words change.
+ */
+const ACTIONS_BY_FACTOR_ZH: Record<string, string> = {
+  sleep:
+    "争取每晚睡 7 至 9 小时。记忆在夜间巩固，睡眠不足最先表现为注意力不集中。",
+  exercise:
+    "逐步做到每周 150 分钟的快走等运动。规律的有氧运动是对大脑健康最有依据的习惯之一。",
+  diet: "每天加一餐地中海式饮食：蔬菜、鱼、橄榄油、全谷物。",
+  alcohol: "少喝酒，每周给自己安排几天不喝酒。",
+  smoking:
+    "戒烟是您在这方面能做的最大改变。欢迎到摊位向我们了解戒烟支持。",
+  highBp:
+    "检查并控制您的血压。中年时期的血压会影响数十年后的大脑健康。",
+  highCholesterol: "向医生了解您的胆固醇数值，以及适合您的目标。",
+  diabetes:
+    "与医生一起把血糖控制在范围内。稳定的血糖能保护大脑中的微小血管。",
+  hearingLoss:
+    "预约听力检查。在 2024 年《柳叶刀》报告中，未经治疗的听力损失是最大的可改变风险因素之一。",
+  visionLoss: "检查视力，并确保眼镜度数保持最新。",
+};
+
+const SPEED_ACTIONS_ZH = {
+  strong:
+    "继续保持现在的习惯。您的反应速度很好，请用规律的睡眠和运动来守护它。",
+  build:
+    "您的反应速度只是一时的快照，而不是定论。睡眠和规律运动才能随着时间改变它。",
+} as const;
+
+const DEFAULT_ACTIONS_ZH: string[] = [
+  "每天挑战一下大脑。换条路线上班、学习一项新技能，或改变一下日常安排。",
+  "多与人交流。经常与人交谈是与保持思维敏锐关联最强的习惯之一。",
+  "如果超过一年没做健康检查，就预约一次。了解自己的指标，是改变它们的开始。",
+];
+
 /** Every language's tables, picked by `pickActions`. */
 const ACTION_TABLES: Record<
   Language,
@@ -103,6 +139,11 @@ const ACTION_TABLES: Record<
     byFactor: ACTIONS_BY_FACTOR,
     speed: SPEED_ACTIONS,
     defaults: DEFAULT_ACTIONS,
+  },
+  zh: {
+    byFactor: ACTIONS_BY_FACTOR_ZH,
+    speed: SPEED_ACTIONS_ZH,
+    defaults: DEFAULT_ACTIONS_ZH,
   },
   id: {
     byFactor: ACTIONS_BY_FACTOR_ID,

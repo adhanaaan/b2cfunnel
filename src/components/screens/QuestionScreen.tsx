@@ -3,6 +3,7 @@
 import type { Question, AnswerValue } from "@/types/question";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { ProgressBar } from "@/components/ui/ProgressBar";
+import { useCopy } from "@/components/LanguageContext";
 import { OptionButton } from "@/components/ui/OptionButton";
 
 interface QuestionScreenProps {
@@ -26,6 +27,8 @@ export function QuestionScreen({
   onNext,
   onBack,
 }: QuestionScreenProps) {
+  // The words around the question, in the language in play.
+  const quiz = useCopy().quiz;
   const isMulti = question.multiSelect === true;
   const selected: string[] = Array.isArray(value)
     ? value
@@ -55,7 +58,7 @@ export function QuestionScreen({
   return (
     <ScreenShell>
       <div className="mb-8">
-        <ProgressBar current={current} total={total} />
+        <ProgressBar current={current} total={total} label={quiz.progress} />
       </div>
 
       <div key={question.id}>
@@ -87,7 +90,7 @@ export function QuestionScreen({
             disabled={!canGoBack}
             className="rounded-lg px-4 py-2.5 text-sm font-semibold text-secondary transition hover:bg-surface-container disabled:invisible"
           >
-            ← Back
+            {quiz.back}
           </button>
 
           {isMulti && (
@@ -97,7 +100,7 @@ export function QuestionScreen({
               disabled={selected.length === 0}
               className="rounded-lg bg-primary px-6 py-3 text-base font-bold text-primary-on shadow-card transition hover:brightness-105 disabled:opacity-40"
             >
-              Continue
+              {quiz.continue}
             </button>
           )}
         </div>

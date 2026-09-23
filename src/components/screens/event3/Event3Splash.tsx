@@ -312,6 +312,15 @@ export function Event3Splash({
           {c.body}
         </motion.p>
 
+        {/* /phkl-2's language choice, between the intro line and the name
+            field: the last thing read before the form, so the form itself
+            and everything behind it can be read in the language picked. */}
+        {design === "phkl2" && (
+          <motion.div variants={item} className="mt-[2.5dvh] shrink-0">
+            <LanguagePicker />
+          </motion.div>
+        )}
+
         <motion.form
           variants={item}
           onSubmit={handleSubmit}

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { COPY } from "@/config/copy";
+import { useCopy } from "@/components/LanguageContext";
 import { ease } from "@/lib/motion";
 import { BookingLink } from "../ui";
 
@@ -13,7 +13,7 @@ import { BookingLink } from "../ui";
  * once the header has landed and then stays.
  */
 export function PhklStickyCta() {
-  const c = COPY.screens.phkl.report.sticky;
+  const c = useCopy().screens.phkl.report.sticky;
   const reduced = useReducedMotion();
 
   return (

@@ -977,4 +977,23 @@ export interface CopyConfig {
    */
   bandShortLabels: Record<BandName, string>;
   factorLabels: Record<string, string>;
+  /**
+   * The words around every question screen: the progress line, the two
+   * buttons, and each question group's title keyed by the English title the
+   * flow gives it (config/funnelFlow.ts), so a translation can rename a group
+   * without the flow - and so its scoring - knowing.
+   */
+  quiz: {
+    /** {current} and {total} are filled in. */
+    progress: string;
+    back: string;
+    continue: string;
+    groupTitles: Record<string, string>;
+  };
+  /**
+   * The statistic the /phkl report's risk section leads with: the Lancet
+   * card from config/statCards.ts, reachable through the copy so it can be
+   * translated with the rest of the report.
+   */
+  reportStat: { stat: string; body: string; source: string };
 }

@@ -48,11 +48,13 @@ export function ordinal(n: number): string {
  * English suffixes the number ("2nd record"); Bahasa Indonesia prefixes it
  * ("Rekor ke-2"), which no amount of suffixing gets to. The heading is one
  * string with a {ordinal} placeholder in both, so this is the only place the
- * two shapes have to be told apart.
+ * shapes have to be told apart. Chinese wraps it ("第2次").
  */
 export function ordinalFor(n: number, language: Language): string {
   const whole = Math.max(1, Math.round(n));
-  return language === "id" ? `ke-${whole}` : ordinal(whole);
+  if (language === "id") return `ke-${whole}`;
+  if (language === "zh") return `第${whole}次`;
+  return ordinal(whole);
 }
 
 /** The first word of a name, for a heading that speaks to the player. */

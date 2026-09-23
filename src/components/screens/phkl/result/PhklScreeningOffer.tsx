@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { COPY } from "@/config/copy";
+import { useCopy } from "@/components/LanguageContext";
 import { PHKL_PACKAGE_SECTION_ID } from "@/config/eventLinks";
 import { OptionalImage } from "../OptionalImage";
 import {
@@ -22,7 +22,7 @@ import {
  * replaces this the moment the file exists.
  */
 function PosterCard() {
-  const p = COPY.screens.phkl.report.offer.poster;
+  const p = useCopy().screens.phkl.report.offer.poster;
   const [currency, amount] = [
     p.price.replace(/[\d,]/g, ""),
     p.price.replace(/[^\d,]/g, ""),
@@ -134,7 +134,7 @@ function ReportShots() {
  * clinician's word. Carries the package anchor the sticky button scrolls to.
  */
 export function PhklScreeningOffer() {
-  const c = COPY.screens.phkl.report.offer;
+  const c = useCopy().screens.phkl.report.offer;
   const heading3 =
     "text-[20px] font-extrabold leading-[1.3] tracking-[-0.01em] text-[#1c110a]";
   const body = "text-[14.5px] leading-[1.58] text-[#6b5245]";

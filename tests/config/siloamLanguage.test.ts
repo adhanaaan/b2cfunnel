@@ -3,6 +3,7 @@ import {
   DEFAULT_LANGUAGE,
   LANGUAGES,
   isLanguage,
+  languagesFor,
   languageLabel,
   type Language,
 } from "@/config/language";
@@ -34,14 +35,16 @@ const TRANSLATIONS = ALL_LANGUAGES.filter((l) => l !== "en");
 describe("the language list", () => {
   // The brief was explicit: English and Bahasa Indonesia, and NOT the Mandarin
   // and Bahasa Melayu the ReCOGnAIze assessment offers. Neither belongs at an
-  // Indonesian summit, and both are one careless shared edit away.
-  it("is English and Bahasa Indonesia, and only those two", () => {
-    expect(LANGUAGES.map((l) => l.id)).toEqual(["en", "id"]);
-    expect(LANGUAGES.map((l) => l.label)).toEqual([
+  // Indonesian summit, and both are one careless shared edit away - the build
+  // now carries 中文 for /phkl-2, so the summit's own list is what is pinned.
+  it("offers the summit English and Bahasa Indonesia, and only those two", () => {
+    const summit = languagesFor("siloam");
+    expect(summit.map((l) => l.id)).toEqual(["en", "id"]);
+    expect(summit.map((l) => l.label)).toEqual([
       "English",
       "Bahasa Indonesia",
     ]);
-    const labels = LANGUAGES.map((l) => l.label.toLowerCase()).join(" ");
+    const labels = summit.map((l) => l.label.toLowerCase()).join(" ");
     for (const gone of ["melayu", "mandarin", "chinese", "中文"]) {
       expect(labels, `${gone} must not be offered`).not.toContain(gone);
     }
@@ -53,7 +56,7 @@ describe("the language list", () => {
   });
 
   it("rejects anything that is not a language it can render", () => {
-    for (const bad of ["ms", "zh", "", null, undefined, 7]) {
+    for (const bad of ["ms", "zh-TW", "", null, undefined, 7]) {
       expect(isLanguage(bad)).toBe(false);
     }
     expect(languageLabel("id")).toBe("Bahasa Indonesia");

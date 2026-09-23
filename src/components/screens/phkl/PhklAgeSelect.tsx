@@ -3,10 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { AGE_SELECT_QUESTION_ID } from "@/config/funnelFlow";
-import { QUESTIONS_BY_ID } from "@/config/questions";
 import { springs, stagger } from "@/lib/motion";
 import { Event3Shell } from "@/components/screens/event3/Event3Shell";
-import { useArcCopy } from "@/components/LanguageContext";
+import { useArcCopy, useQuestionsById } from "@/components/LanguageContext";
 
 interface PhklAgeSelectProps {
   /** The band already chosen, when the player comes back to this screen. */
@@ -42,7 +41,7 @@ export function PhklAgeSelect({
   onBack,
 }: PhklAgeSelectProps) {
   const c = useArcCopy().ageSelect;
-  const question = QUESTIONS_BY_ID[AGE_SELECT_QUESTION_ID];
+  const question = useQuestionsById()[AGE_SELECT_QUESTION_ID];
   const reduced = useReducedMotion();
   const [picked, setPicked] = useState<string | undefined>(value);
   const lockedRef = useRef(false);
