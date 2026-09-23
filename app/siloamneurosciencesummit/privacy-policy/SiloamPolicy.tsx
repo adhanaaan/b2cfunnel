@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { LANGUAGES, type Language } from "@/config/language";
+import { languagesFor } from "@/config/language";
+import type { SiloamPolicyLanguage as Language } from "@/config/privacyPolicyIndonesia";
 import {
   INDONESIA_POLICY_LAW,
   SILOAM_PRIVACY_POLICY_SECTIONS,
@@ -61,7 +62,7 @@ export function SiloamPolicy() {
           aria-label="Bahasa · Language"
           className="inline-flex items-center gap-1 rounded-full bg-white/70 p-1 shadow-[0_2px_12px_-4px_rgba(51,18,0,0.12)]"
         >
-          {LANGUAGES.map((option) => {
+          {(languagesFor("siloam") as { id: Language; label: string }[]).map((option) => {
             const active = option.id === language;
             return (
               <button

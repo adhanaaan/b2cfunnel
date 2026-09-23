@@ -322,6 +322,16 @@ export const COPY_ID: DeepPartial<CopyConfig> = {
     },
   },
 
+  quiz: {
+    progress: "Pertanyaan {current} dari {total}",
+    back: "\u2190 Kembali",
+    continue: "Lanjutkan",
+    groupTitles: {
+      "A bit of health history": "Sedikit riwayat kesehatan",
+      "Your lifestyle": "Gaya hidup Anda",
+    },
+  },
+
   bandLabels: {
     low: "Risiko rendah",
     moderate: "Risiko sedang",

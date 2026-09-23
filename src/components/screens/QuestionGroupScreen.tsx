@@ -3,6 +3,7 @@
 import type { Answers, AnswerValue, Option, Question } from "@/types/question";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { ProgressBar } from "@/components/ui/ProgressBar";
+import { useCopy } from "@/components/LanguageContext";
 import { useVariant } from "@/components/VariantContext";
 
 interface QuestionGroupScreenProps {
@@ -116,6 +117,8 @@ export function QuestionGroupScreen({
   onNext,
   onBack,
 }: QuestionGroupScreenProps) {
+  // The words around the question, in the language in play.
+  const quiz = useCopy().quiz;
   // Slider questions always have a valid default position, so they don't gate
   // the Continue button; button questions must be explicitly answered.
   const allAnswered = questions.every(
@@ -125,12 +128,12 @@ export function QuestionGroupScreen({
   return (
     <ScreenShell>
       <div className="mb-8">
-        <ProgressBar current={current} total={total} />
+        <ProgressBar current={current} total={total} label={quiz.progress} />
       </div>
 
       <div className="animate-fade-up">
         <h1 className="font-display text-2xl font-bold leading-snug text-charcoal sm:text-3xl">
-          {title}
+          {quiz.groupTitles[title] ?? title}
         </h1>
 
         <div className="mt-6 divide-y divide-outline-variant">
@@ -186,7 +189,7 @@ export function QuestionGroupScreen({
             disabled={!canGoBack}
             className="rounded-lg px-4 py-2.5 text-sm font-semibold text-secondary transition hover:bg-surface-container disabled:invisible"
           >
-            ← Back
+            {quiz.back}
           </button>
           <button
             type="button"
@@ -194,7 +197,7 @@ export function QuestionGroupScreen({
             disabled={!allAnswered}
             className="rounded-lg bg-primary px-6 py-3 text-base font-bold text-primary-on shadow-card transition hover:brightness-105 disabled:opacity-40"
           >
-            Continue
+            {quiz.continue}
           </button>
         </div>
       </div>

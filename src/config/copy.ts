@@ -1364,6 +1364,16 @@ export const COPY: CopyConfig = {
   },
 
   factorLabels: FACTOR_LABELS,
+
+  quiz: {
+    progress: "Question {current} of {total}",
+    back: "\u2190 Back",
+    continue: "Continue",
+    // English titles map to themselves; a translation overlays the values.
+    groupTitles: {},
+  },
+
+  reportStat: STAT_CARDS_BY_ID.lancet2024,
 };
 
 /**
@@ -1447,7 +1457,7 @@ export function reportStatFor(
   if (variant === "22grams") return copy.screens["22grams"].report.stat;
   if (variant === "general") return copy.screens.general.report.stat;
   if (variant === "eisai") return copy.screens.eisai.report.stat;
-  return STAT_CARDS_BY_ID.lancet2024;
+  return copy.reportStat;
 }
 
 /**

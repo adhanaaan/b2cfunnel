@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { LANGUAGES, type Language } from "@/config/language";
+import { languagesFor } from "@/config/language";
+import type { SiloamPolicyLanguage as Language } from "@/config/privacyPolicyIndonesia";
 import { PRIVACY } from "@/config/privacy";
 import type { PolicyBlock, PolicySection } from "@/config/privacyPolicy";
 import { PRIVACY_POLICY_SECTIONS } from "@/config/privacyPolicy";
@@ -21,7 +22,7 @@ import { COPY, copyFor } from "@/config/copy";
  * the site answers on.
  */
 
-const ALL: Language[] = LANGUAGES.map((l) => l.id);
+const ALL = languagesFor("siloam").map((l) => l.id) as Language[];
 
 /** Every string in a policy, headings included. */
 function textOf(sections: PolicySection[]): string[] {

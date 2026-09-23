@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Funnel } from "@/components/Funnel";
 import { EventEnded } from "@/components/screens/EventEnded";
+import { LanguageProvider } from "@/components/LanguageContext";
 import { PHKL2_PAUSED } from "@/config/event";
 
 export const metadata: Metadata = {
   title: "Reaction Time Challenge - Brain Health Check",
   description:
-    "How fast does your brain process? Take a quick symbol-matching test to find out your brain processing speed, then explore your full brain health profile.",
+    "How fast does your brain process? Take a quick symbol-matching test to find out your brain processing speed, then explore your full brain health profile. Available in English, 中文 and Bahasa Melayu.",
   openGraph: {
     title: "Reaction Time Challenge",
     description:
@@ -25,8 +26,12 @@ export const metadata: Metadata = {
  * rail, a "great job" beat into the quiz primer, and the long report that ends
  * on the Memory Screening Package.
  *
- * Two things only are its own:
+ * Three things only are its own:
  *
+ * - **A language.** The landing offers English, 中文 or Bahasa Melayu,
+ *   between the intro line and the name field, and the choice carries through
+ *   every screen behind it. `LanguageProvider` wraps the funnel here, as on
+ *   the Siloam summit, so /phkl itself stays English-only.
  * - **Its bucket.** Rows are tagged PHKL2_SOURCE, so this board opens empty
  *   and ranks only this activation. /phkl's standings stay on /phkl's board.
  * - **Its privacy-policy link.** The same policy, the same partner wording,
@@ -40,5 +45,9 @@ export const metadata: Metadata = {
  */
 export default function Phkl2Page() {
   if (PHKL2_PAUSED) return <EventEnded />;
-  return <Funnel variant="phkl2" />;
+  return (
+    <LanguageProvider>
+      <Funnel variant="phkl2" />
+    </LanguageProvider>
+  );
 }

@@ -1,30 +1,52 @@
+import type { QuizVariant } from "@/types/funnel";
+
 /**
  * The languages a funnel can be taken in.
  *
- * Only the Siloam Neuroscience Summit (/siloamneurosciencesummit) offers a
- * choice today - see `offersLanguageChoice` in config/variants.ts. Every other
- * event is English-only, and for them the whole layer is inert: `useLanguage()`
+ * Two events offer a choice today - see `offersLanguageChoice` in
+ * config/variants.ts - and each offers its own list (`languagesFor`): the
+ * Siloam Neuroscience Summit (/siloamneurosciencesummit) English and Bahasa
+ * Indonesia, and /phkl-2 English, 中文 and Bahasa Melayu. Every other event
+ * is English-only, and for them the whole layer is inert: `useLanguage()`
  * hands back "en", and `copyFor()` hands back the English COPY object itself
  * rather than a merged copy of it.
- *
- * The list is deliberately these TWO. The ReCOGnAIze assessment offers
- * Mandarin and Bahasa Melayu as well; neither belongs at an Indonesian summit,
- * and `tests/config/siloamLanguage.test.ts` pins the list so neither can be
- * added back by a shared edit.
  */
 
 /** A language tag, as written to storage and read by `copyFor()`. */
-export type Language = "en" | "id";
+export type Language = "en" | "zh" | "ms" | "id";
 
 /**
- * What the picker shows, in the order it shows them. Each label is written in
- * its OWN language: someone who cannot read the page cannot be expected to
- * find "Indonesian" in a list, but they will find "Bahasa Indonesia".
+ * Every language this build can render. Each label is written in its OWN
+ * language: someone who cannot read the page cannot be expected to find
+ * "Indonesian" in a list, but they will find "Bahasa Indonesia".
  */
 export const LANGUAGES: readonly { id: Language; label: string }[] = [
   { id: "en", label: "English" },
+  { id: "zh", label: "中文" },
+  { id: "ms", label: "Bahasa Melayu" },
   { id: "id", label: "Bahasa Indonesia" },
 ];
+
+/**
+ * What an event's picker shows, in the order it shows them.
+ *
+ * Per event, because the right list depends on the room. The summit is in
+ * Indonesia, so it offers English and Bahasa Indonesia and deliberately not
+ * 中文 or Bahasa Melayu (`tests/config/siloamLanguage.test.ts` pins that).
+ * /phkl-2 is in Kuala Lumpur, so it offers English, 中文 and Bahasa Melayu.
+ * An event that offers no choice gets English alone.
+ */
+export function languagesFor(
+  variant: QuizVariant,
+): readonly { id: Language; label: string }[] {
+  const ids: Language[] =
+    variant === "siloam"
+      ? ["en", "id"]
+      : variant === "phkl2"
+        ? ["en", "zh", "ms"]
+        : ["en"];
+  return LANGUAGES.filter((l) => ids.includes(l.id));
+}
 
 /**
  * Where the funnel opens before anyone chooses.

@@ -54,8 +54,11 @@ import type { PolicySection } from "@/config/privacyPolicy";
 const LAW_EN = "Law No. 27 of 2022 on Personal Data Protection";
 const LAW_ID = "UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi";
 
+/** The languages the summit's policy is written in: the summit's own two. */
+export type SiloamPolicyLanguage = Exclude<Language, "zh" | "ms">;
+
 /** The strap under the policy's title, naming the law it is written against. */
-export const INDONESIA_POLICY_LAW: Record<Language, string> = {
+export const INDONESIA_POLICY_LAW: Record<SiloamPolicyLanguage, string> = {
   en: `Indonesia ${LAW_EN} (UU PDP)`,
   id: `${LAW_ID} (UU PDP)`,
 };
@@ -451,7 +454,10 @@ const SECTIONS_ID: PolicySection[] = [
  * other: legal text has to be readable top to bottom, and a half-translated
  * clause is worse than an untranslated one.
  */
-export const SILOAM_PRIVACY_POLICY_SECTIONS: Record<Language, PolicySection[]> =
+export const SILOAM_PRIVACY_POLICY_SECTIONS: Record<
+  SiloamPolicyLanguage,
+  PolicySection[]
+> =
   {
     en: SECTIONS_EN,
     id: SECTIONS_ID,
