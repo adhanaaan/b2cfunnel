@@ -9,26 +9,30 @@ optional and picked up on the next deploy - while one is missing the board
 draws without it (never a broken image), so the board is live and correct
 before any of them land, and partial uploads are fine.
 
-The board is Figma 1080:7643 ("Leaderboard - /mambacares/leaderboard" in the
+The board is Figma 1080:8131 ("Leaderboard - /urbanmilers/leaderboard" in the
 LITE ReCOGnAIze file), at 1920x1080. **Export at 2x the box** so it stays sharp
 on a 4K panel. Artwork is fitted, not cropped (`object-contain`), so a
 transparent PNG keeps its shape - trim the empty space around each cutout, and
 export each one as it is seen in the frame (the design crops some of them).
 
-## Prizes (the orange card, bottom left)
+## Prizes (the orange card, in the middle)
 
 | File | Shows | Box on the board | Export at |
 | --- | --- | --- | --- |
-| `prize-1st.png` | the Novablast 6 shoes, over the card's top-right corner | 376x226 | **752x452** |
-| `prize-2nd.png` | the Grab vouchers | 162x160 | **324x320** |
-| `prize-3rd.png` | the Starbucks card in its envelope | 158x160 | **316x320** |
+| `prize-1st.png` | the Novablast 6 shoes, under the title | 425x255 | **850x510** |
+| `prize-2nd.png` | the Grab vouchers | 134x132 | **268x264** |
+| `prize-3rd.png` | the Starbucks card in its envelope | 115x116 | **230x232** |
+
+The 1ST/2ND/3RD chips are drawn by the board, so leave them out of the
+exports. If you already exported the files at the previous board's sizes, they
+still work: each is fitted into its box, not cropped.
 
 **The words** on the card - "Fastest mind", "Win a pair of Novablast 6!", the
 2nd and 3rd amounts and labels - are `PRIZES` at the top of
 `app/urbanmilers/leaderboard/page.tsx`. Change a prize there and swap its file
 here.
 
-## The QR code (the peach panel, top left)
+## The QR code (the left column)
 
 **Nothing to upload.** The board generates the code itself from this run's
 route - `https://brainhealthcheck.vercel.app/urbanmilers` (`playUrlFor` in

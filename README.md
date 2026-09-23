@@ -410,9 +410,9 @@ What this run holds of its own is the part that must not be shared:
   other's players. Nothing is deleted to get there: every row already recorded
   keeps the tag it was written with. To clear this board later (a second run
   day), give `URBANMILERS_SOURCE` a new value and redeploy.
-- **Its own board**, at `/urbanmilers/leaderboard` (Figma 1080:7643): a
-  generated "Scan to play" code that opens `/urbanmilers`, the prize card
-  (Novablast 6, Grab, Starbucks) and the 15-row standings, with its own
+- **Its own board**, at `/urbanmilers/leaderboard` (Figma 1080:8131): three
+  columns - a generated "Scan to play" code that opens `/urbanmilers`, the
+  prize card (Novablast 6, Grab, Starbucks) and the 15-row standings, with its own
   artwork folder
   (`public/images/urbanmilers/board/`, whose README lists every file and its
   size). Every file there is optional, so the board is live and correct before
