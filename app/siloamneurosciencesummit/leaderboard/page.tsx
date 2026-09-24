@@ -46,6 +46,7 @@ import {
   SILOAM_PRIZE_HEADLINE,
 } from "@/config/siloam";
 import { playUrlFor } from "@/config/eventLinks";
+import { GRAB_GIFT_BOX_IMAGE, GRAB_VOUCHER_IMAGE } from "@/config/prizeArt";
 import { BRAIN_FACTS } from "@/config/tips";
 import { springs } from "@/lib/motion";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
@@ -112,30 +113,22 @@ const PRIZE_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
 const STRIP_BG = "rgba(255, 255, 255, 0.72)";
 
 /**
- * Artwork that is dropped in as files under public/images/siloam/ (see the
- * README there). Each is optional: the board reads before it lands, and draws
- * a fallback in its place rather than a broken image.
+ * The QR artwork is dropped in as a file under public/images/siloam/ (see the
+ * README there); the Grab gift box and voucher stack are the shared renders
+ * under public/images/general/ (config/prizeArt.ts). Each is optional: the
+ * board reads before it lands, and draws nothing in its place rather than a
+ * broken image.
+ *
+ * The gift box is the artwork the design places (892:7176), and its 738x882
+ * fills the design's 369x441 box exactly - that box was sized for it.
  */
 const QR_IMAGE = "/images/siloam/qr.png";
-const PRIZE_IMAGE = "/images/siloam/prize-grab.png";
-const VOUCHER_IMAGE = "/images/siloam/prize-voucher.png";
-
-/**
- * The gift render /phkl already ships, used while this event's own export has
- * not landed. It is the same artwork the design places (892:7176), and its
- * 738x882 fills the design's 369x441 box exactly - that box was sized for it.
- * Swap it by dropping a file at PRIZE_IMAGE; nothing else changes.
- */
-const PRIZE_IMAGE_FALLBACK = "/images/phkl/prize-grab.png";
+const PRIZE_IMAGE = GRAB_GIFT_BOX_IMAGE;
+const VOUCHER_IMAGE = GRAB_VOUCHER_IMAGE;
 
 const keyOf = (e: Entry) => `${e.name}·${Math.round(e.timeMs)}`;
 
-/**
- * The gift render's box, shared by the uploaded artwork and the /phkl render
- * that stands in for it. One constant rather than two class lists: the
- * fallback has to occupy exactly the same box, or the panel reflows the moment
- * this event's own export lands.
- */
+/** The gift render's box: 369x441 at 458px in, 52px above the panel's top. */
 const PRIZE_ART_CLASS =
   "animate-symbol-drift pointer-events-none absolute right-[-3%] top-[-6%] h-[112%] w-auto object-contain board:left-[calc(var(--u)*458)] board:right-auto board:top-[calc(var(--u)*-52)] board:h-[calc(var(--u)*441)] board:w-[calc(var(--u)*369)]";
 
@@ -523,14 +516,6 @@ function PrizePanel() {
         alt={`Grab gift box and ${SILOAM_PRIZE.total} of vouchers`}
         className={PRIZE_ART_CLASS}
         style={PRIZE_ART_DRIFT}
-        fallback={
-          <OptionalImage
-            src={PRIZE_IMAGE_FALLBACK}
-            alt={`Grab gift box and ${SILOAM_PRIZE.total} of vouchers`}
-            className={PRIZE_ART_CLASS}
-            style={PRIZE_ART_DRIFT}
-          />
-        }
       />
 
       {/* The e-voucher stack (892:7220): a 181x179 render tilted 7 degrees,

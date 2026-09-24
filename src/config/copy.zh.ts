@@ -2,7 +2,8 @@ import type { CopyConfig, PhklCopy } from "@/types/copy";
 import type { DeepPartial } from "@/lib/deepMerge";
 
 /**
- * Simplified Chinese (中文), for /phkl-2 - the Pantai Hospital KL activation.
+ * Simplified Chinese (中文), for /phkl-2 and /phkl-3 - the Pantai Hospital KL
+ * activations.
  *
  * An OVERLAY, not a second copy config: `copyFor()` applies it over the English
  * `COPY` with `deepMerge`, so anything left out here renders in English rather
@@ -316,6 +317,7 @@ export const COPY_ZH: DeepPartial<CopyConfig> = {
     // /phkl-2's landing reads its own block; only the words move, so its
     // privacy link stays the English block's.
     phkl2: { splash: PHKL_ZH.splash },
+    phkl3: { splash: PHKL_ZH.splash },
   },
 
   bandLabels: {

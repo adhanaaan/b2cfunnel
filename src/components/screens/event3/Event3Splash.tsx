@@ -54,6 +54,7 @@ interface Event3SplashProps {
     | "ihh"
     | "phkl"
     | "phkl2"
+    | "phkl3"
     | "mambacares"
     | "urbanmilers"
     | "siloam"
@@ -159,7 +160,8 @@ export function Event3Splash({
     design === "ihhsearegatta" ||
     design === "ihh" ||
     design === "phkl" ||
-    design === "phkl2"
+    design === "phkl2" ||
+    design === "phkl3"
       ? copy.screens[design].splash.partnerConsent
       : null;
   // The landings designed since the 18px row was deprecated take the roomier
@@ -167,6 +169,7 @@ export function Event3Splash({
   const roomy =
     design === "phkl" ||
     design === "phkl2" ||
+    design === "phkl3" ||
     design === "mambacares" ||
     design === "urbanmilers" ||
     design === "siloam" ||
@@ -254,7 +257,7 @@ export function Event3Splash({
           </motion.div>
         )}
 
-        {design === "phkl" || design === "phkl2" ? (
+        {design === "phkl" || design === "phkl2" || design === "phkl3" ? (
           <>
             {/* The partner's logo above the eyebrow, at the presence it has in
                 Figma 697:24953 - about a third of the column wide. The row
@@ -312,10 +315,11 @@ export function Event3Splash({
           {c.body}
         </motion.p>
 
-        {/* /phkl-2's language choice, between the intro line and the name
-            field: the last thing read before the form, so the form itself
-            and everything behind it can be read in the language picked. */}
-        {design === "phkl2" && (
+        {/* /phkl-2's and /phkl-3's language choice, between the intro line
+            and the name field: the last thing read before the form, so the
+            form itself and everything behind it can be read in the language
+            picked. */}
+        {(design === "phkl2" || design === "phkl3") && (
           <motion.div variants={item} className="mt-[2.5dvh] shrink-0">
             <LanguagePicker />
           </motion.div>

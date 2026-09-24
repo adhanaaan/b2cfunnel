@@ -11,8 +11,6 @@ deploy, with no code change.
 | File | Where it goes | Box in the frame | Until it lands |
 | --- | --- | --- | --- |
 | `qr.png` | The "SCAN TO PLAY < 60s" block, under the yellow label | 388x388 | A code generated in the browser, always encoding the production `/siloamneurosciencesummit` URL |
-| `prize-grab.png` | The Grab gift render breaking out of the prize panel's top-right corner (`892:7176`) | 369x441 at 458px in, 52px above the panel's top; export at 2x | `/images/phkl/prize-grab.png`, the same render, which fills that box exactly |
-| `prize-voucher.png` | The tilted Grab e-voucher stack over the panel's bottom edge (`892:7220`) | 181x179 at 603px in, 242px down, tilted 7 degrees **by the board** - export it upright | **Nothing is drawn.** This is the one piece of the design the board is missing |
 
 ## The QR code
 
@@ -25,12 +23,13 @@ encodes whatever it was made from, and nothing in the code can check that** -
 so a code exported against a preview deploy is a wrong code that looks right.
 Generate it from `https://brainhealthcheck.vercel.app/siloamneurosciencesummit`.
 
-## The e-voucher
+## The Grab artwork
 
-`prize-voucher.png` is the only thing standing between this board and the
-design. Export `892:7220` from the Figma frame at 2x (362x358) with the tilt
-**removed** - the board applies the 7 degrees itself, so a pre-tilted export
-would be rotated twice.
+The gift render (`892:7176`) and the tilted e-voucher stack (`892:7220`) are
+not in this folder. They are Grab's artwork rather than this event's, and are
+the shared files in `public/images/general/` (`grab-gift-box.png`,
+`grab-voucher.png`) that every board with a Grab prize draws. See the README
+there for their boxes and export sizes.
 
 ## What this folder does NOT hold
 

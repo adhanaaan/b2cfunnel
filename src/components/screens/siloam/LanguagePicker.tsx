@@ -8,7 +8,8 @@ import { useVariant } from "@/components/VariantContext";
 /**
  * The language choice on a landing that offers one: pills in a segmented
  * control, each labelled in its own language. Which pills is the event's own
- * list (`languagesFor`): two on the Siloam summit, three on /phkl-2.
+ * list (`languagesFor`): two on the Siloam summit, three on /phkl-2 and
+ * /phkl-3.
  *
  * Deliberately NOT a `<select>`. A dropdown hides the options behind a tap,
  * which is the wrong trade for a two-option choice that has to be obvious to

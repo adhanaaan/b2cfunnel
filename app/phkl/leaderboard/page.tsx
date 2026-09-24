@@ -31,6 +31,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { displayName, formatTime } from "@/lib/format";
 import { PHKL_PAUSED, PHKL_SOURCE } from "@/config/event";
 import { playUrlFor } from "@/config/eventLinks";
+import { GRAB_COUPON_IMAGE, GRAB_GIFT_BOX_IMAGE } from "@/config/prizeArt";
 import { BRAIN_FACTS } from "@/config/tips";
 import { springs } from "@/lib/motion";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
@@ -93,12 +94,14 @@ const PRIZE_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
 const STRIP_BG = "rgba(255, 255, 255, 0.72)";
 
 /**
- * Artwork that is dropped in as files under public/images/phkl/ (see the
- * README there). Each is optional: the board reads before it lands.
+ * The QR artwork is dropped in as a file under public/images/phkl/ (see the
+ * README there); the Grab gift box and coupon are the shared renders under
+ * public/images/general/ (config/prizeArt.ts). Each is optional: the board
+ * reads before it lands.
  */
 const QR_IMAGE = "/images/phkl/qr.png";
-const PRIZE_IMAGE = "/images/phkl/prize-grab.png";
-const COUPON_IMAGE = "/images/phkl/prize-coupon.png";
+const PRIZE_IMAGE = GRAB_GIFT_BOX_IMAGE;
+const COUPON_IMAGE = GRAB_COUPON_IMAGE;
 
 const keyOf = (e: Entry) => `${e.name}·${Math.round(e.timeMs)}`;
 

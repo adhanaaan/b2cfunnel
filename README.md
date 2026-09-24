@@ -344,6 +344,42 @@ picks the file up the moment it lands.
 | `screening-devices.png` | the digital cognitive assessment on a phone, a tablet and a laptop | `/landing/woman-tablet.png` |
 | `report-1.png`, `report-2.png` | two pages of the full report | the frame is left out |
 
+The Grab gift box and coupon on the `/phkl` board are not in this folder. They
+are the shared renders in `public/images/general/` (`src/config/prizeArt.ts`),
+which every board with a Grab prize draws.
+
+## /phkl-3 (Pantai Hospital KL, third activation)
+
+`/phkl-3` is `/phkl-2` again: `/phkl`'s arc (`PHKL3_FLOW = PHKL_FLOW`), the IHH
+Healthcare Malaysia partner block and consent on the landing, the English /
+中文 / Bahasa Melayu picker, and the report ending on the Memory Screening
+Package. What it holds of its own:
+
+- **Its bucket**, `PHKL3_SOURCE = "phkl-3"`, so its board opens empty and ranks
+  only this activation. **Its own pause switch**, `PHKL3_PAUSED`.
+- **Its privacy-policy link**, `/phkl-3/privacy-policy` (`/phkl`'s policy,
+  served on this route).
+- **Its board**, at **`/phkl-3/leaderboard`**, built to Figma `892:7134`. It is
+  the frame the Siloam summit board was built to, in ringgit: the prize panel
+  names the total and then the ladder, from `PHKL3_PRIZE`
+  (`src/config/phkl3.ts`):
+
+| | |
+| --- | --- |
+| 1ST | RM 150 voucher |
+| 2ND | RM 100 voucher |
+| 3RD | RM 50 voucher |
+
+As on the summit, the headline's "RM 300" is summed from the ladder, and the
+"Top 3" and the three gradient rows read the ladder's length
+(`tests/config/phkl3Flow.test.ts`).
+
+Its QR artwork, when there is one, goes in `public/images/phkl-3/qr.png` (see
+the README there), never `/images/phkl/`. The design's own code is the `/phkl`
+one. Until the file lands, the board generates a code for the production
+`/phkl-3` URL. The gift box and the voucher stack are the shared files in
+`public/images/general/`.
+
 ## /mambacares/leaderboard (the #MambaCares board)
 
 The TV board for the GMS x #MambaCares community run, built to Figma
@@ -522,15 +558,13 @@ and times, and the language belongs to the player holding the phone rather than
 to the room. `BRAIN_FACTS` is the one block of prose on it, and is the first
 thing to translate if that changes.
 
-Images under `public/images/siloam/` - **that folder's README lists every file,
-its box in the frame and what stands in until it lands**. All optional; the
-board is live and correct before any of them land, and the gift render falls
-back to `/images/phkl/prize-grab.png`, which is the same artwork and fills the
-frame's 369x441 box exactly. **One piece is still missing: `prize-voucher.png`,
-the tilted e-voucher stack over the panel's bottom edge** (`892:7220`) - the
-board simply draws without it. The three quiz-primer photos are read from
-`/images/phkl/` (generic sleep/exercise/diet shots, shared rather than
-duplicated).
+The QR artwork goes under `public/images/siloam/` - **that folder's README
+lists it, its box in the frame and what stands in until it lands**. The Grab
+gift box and the tilted e-voucher stack (`892:7176`, `892:7220`) are the shared
+renders in `public/images/general/` (`src/config/prizeArt.ts`), the same files
+the `/phkl` boards draw. All optional; the board is live and correct before any
+of them land. The three quiz-primer photos are read from `/images/phkl/`
+(generic sleep/exercise/diet shots, shared rather than duplicated).
 
 ## /22grams (22 Grams)
 
@@ -1193,8 +1227,8 @@ each a one-line change and each flagged in the file it lives in:
   awaiting the Indonesian figure. Change both languages together.
 
 The **prize amounts are settled** (IDR 300k / 200k / 100k, confirmed by the
-client) and are no longer on this list. The one piece of board artwork still
-missing is `public/images/siloam/prize-voucher.png` - see that folder's README.
+client) and are no longer on this list, and the board's Grab artwork is in
+(`public/images/general/`).
 
 ## Out of scope (this build)
 

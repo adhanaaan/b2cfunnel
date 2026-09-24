@@ -1248,6 +1248,14 @@ export const COPY: CopyConfig = {
         privacyHref: "/phkl-2/privacy-policy",
       },
     },
+    // /phkl-3 - a third activation, the same way.
+    phkl3: {
+      ...PHKL_SCREEN_COPY,
+      splash: {
+        ...PHKL_SCREEN_COPY.splash,
+        privacyHref: "/phkl-3/privacy-policy",
+      },
+    },
     mambacares: MAMBACARES_SCREEN_COPY,
     siloam: SILOAM_SCREEN_COPY,
     "22grams": TWENTY_TWO_GRAMS_SCREEN_COPY,

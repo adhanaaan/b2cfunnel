@@ -471,6 +471,8 @@ export interface ScreenCopy {
   // A second Pantai Hospital KL activation (/phkl-2): the same block with its
   // own privacy-policy link, so a reader never leaves /phkl-2 mid-consent.
   phkl2: PhklCopy;
+  // A third activation (/phkl-3): the same block again, with its own link.
+  phkl3: PhklCopy;
   // GMS x #MambaCares (/mambacares): the PHKL arc with no partner on its
   // landing and a fundraising report at the end.
   mambacares: MambacaresCopy;

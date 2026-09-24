@@ -6,7 +6,8 @@ import type { QuizVariant } from "@/types/funnel";
  * Two events offer a choice today - see `offersLanguageChoice` in
  * config/variants.ts - and each offers its own list (`languagesFor`): the
  * Siloam Neuroscience Summit (/siloamneurosciencesummit) English and Bahasa
- * Indonesia, and /phkl-2 English, 中文 and Bahasa Melayu. Every other event
+ * Indonesia, and /phkl-2 and /phkl-3 English, 中文 and Bahasa Melayu. Every
+ * other event
  * is English-only, and for them the whole layer is inert: `useLanguage()`
  * hands back "en", and `copyFor()` hands back the English COPY object itself
  * rather than a merged copy of it.
@@ -33,7 +34,8 @@ export const LANGUAGES: readonly { id: Language; label: string }[] = [
  * Per event, because the right list depends on the room. The summit is in
  * Indonesia, so it offers English and Bahasa Indonesia and deliberately not
  * 中文 or Bahasa Melayu (`tests/config/siloamLanguage.test.ts` pins that).
- * /phkl-2 is in Kuala Lumpur, so it offers English, 中文 and Bahasa Melayu.
+ * /phkl-2 and /phkl-3 are in Kuala Lumpur, so they offer English, 中文 and
+ * Bahasa Melayu.
  * An event that offers no choice gets English alone.
  */
 export function languagesFor(
@@ -42,7 +44,7 @@ export function languagesFor(
   const ids: Language[] =
     variant === "siloam"
       ? ["en", "id"]
-      : variant === "phkl2"
+      : variant === "phkl2" || variant === "phkl3"
         ? ["en", "zh", "ms"]
         : ["en"];
   return LANGUAGES.filter((l) => ids.includes(l.id));

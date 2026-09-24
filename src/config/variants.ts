@@ -37,6 +37,7 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
     variant === "ihh" ||
     variant === "phkl" ||
     variant === "phkl2" ||
+    variant === "phkl3" ||
     variant === "mambacares" ||
     variant === "urbanmilers" ||
     variant === "siloam" ||
@@ -72,9 +73,9 @@ export function usesMambaScreens(variant: QuizVariant): boolean {
 /**
  * Variants that put the language choice to the player.
  *
- * Two do. The Siloam Neuroscience Summit, the first Indonesian event on this
- * funnel, offers English or Bahasa Indonesia; /phkl-2 offers English, 中文 or
- * Bahasa Melayu (each event's list is `languagesFor` in
+ * Three do. The Siloam Neuroscience Summit, the first Indonesian event on this
+ * funnel, offers English or Bahasa Indonesia; /phkl-2 and /phkl-3 offer
+ * English, 中文 or Bahasa Melayu (each event's list is `languagesFor` in
  * config/language.ts). Every other event is
  * English-only and never mounts the picker, so `useLanguage()` hands them "en"
  * and `copyFor()` hands them the English COPY object itself, unchanged.
@@ -87,5 +88,5 @@ export function usesMambaScreens(variant: QuizVariant): boolean {
  * multilingual event cannot miss one.
  */
 export function offersLanguageChoice(variant: QuizVariant): boolean {
-  return variant === "siloam" || variant === "phkl2";
+  return variant === "siloam" || variant === "phkl2" || variant === "phkl3";
 }

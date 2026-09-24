@@ -39,6 +39,10 @@ export type QuizVariant =
   // partner and the same board, on a bucket of its own so each activation's
   // standings rank only its own room.
   | "phkl2"
+  // A third Pantai Hospital KL activation (/phkl-3): /phkl-2 again - the same
+  // arc, partner and languages - on a bucket of its own, with a board of its
+  // own built to the prize-ladder frame (Figma 892:7134).
+  | "phkl3"
   // GMS x #MambaCares (/mambacares): the PHKL arc reused for the World
   // Alzheimer's Month community run - the same landing, primers, game, quiz
   // and analysing screens, with no partner on the landing and a report that

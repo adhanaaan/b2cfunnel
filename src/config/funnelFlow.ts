@@ -420,6 +420,12 @@ const GENERAL_FLOW: FunnelStep[] = PHKL_FLOW;
 const PHKL2_FLOW: FunnelStep[] = PHKL_FLOW;
 
 /**
+ * A third Pantai Hospital KL activation (/phkl-3). PHKL's array again, for
+ * /phkl-2's reason: only the bucket differs, so the arc cannot drift.
+ */
+const PHKL3_FLOW: FunnelStep[] = PHKL_FLOW;
+
+/**
  * Eisai's World Alzheimer's Day challenge (/eisai): /general's arc, shared
  * rather than rebuilt. The two routes differ only in the name on the landing
  * and the bucket their rows are tagged with, so a later change to the arc
@@ -506,6 +512,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   ihh: IHHSEA_FLOW,
   phkl: PHKL_FLOW,
   phkl2: PHKL2_FLOW,
+  phkl3: PHKL3_FLOW,
   mambacares: MAMBACARES_FLOW,
   urbanmilers: URBANMILERS_FLOW,
   siloam: SILOAM_FLOW,

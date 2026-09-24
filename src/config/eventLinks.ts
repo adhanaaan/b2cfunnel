@@ -20,6 +20,7 @@ export const EVENT_PATHS: Partial<Record<QuizVariant, string>> = {
   ihh: "/ihh",
   phkl: "/phkl",
   phkl2: "/phkl-2",
+  phkl3: "/phkl-3",
   mambacares: "/mambacares",
   urbanmilers: "/urbanmilers",
   siloam: "/siloamneurosciencesummit",
