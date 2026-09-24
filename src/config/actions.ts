@@ -91,8 +91,8 @@ const DEFAULT_ACTIONS_ID: string[] = [
 ];
 
 /**
- * The same three tables in Simplified Chinese, for /phkl-2. Keyed by the same
- * factor ids, so only the words change.
+ * The same three tables in Simplified Chinese, for /phkl-2 and /phkl-3. Keyed
+ * by the same factor ids, so only the words change.
  */
 const ACTIONS_BY_FACTOR_ZH: Record<string, string> = {
   sleep:
@@ -127,8 +127,8 @@ const DEFAULT_ACTIONS_ZH: string[] = [
 ];
 
 /**
- * The same three tables in Bahasa Melayu, for /phkl-2. Keyed by the same
- * factor ids, so only the words change.
+ * The same three tables in Bahasa Melayu, for /phkl-2 and /phkl-3. Keyed by
+ * the same factor ids, so only the words change.
  */
 const ACTIONS_BY_FACTOR_MS: Record<string, string> = {
   sleep:

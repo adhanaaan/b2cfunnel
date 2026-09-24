@@ -254,6 +254,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             state.variant === "ihh" ||
             state.variant === "phkl" ||
             state.variant === "phkl2" ||
+            state.variant === "phkl3" ||
             state.variant === "urbanmilers" ||
             state.variant === "siloam" ||
             state.variant === "22grams" ||
@@ -419,6 +420,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       if (
         state.variant === "phkl" ||
         state.variant === "phkl2" ||
+        state.variant === "phkl3" ||
         state.variant === "siloam" ||
         state.variant === "22grams" ||
         state.variant === "general" ||
@@ -481,7 +483,11 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           />
         ) : null;
       }
-      if (state.variant === "phkl" || state.variant === "phkl2") {
+      if (
+        state.variant === "phkl" ||
+        state.variant === "phkl2" ||
+        state.variant === "phkl3"
+      ) {
         // The PHKL report carries the time and standing itself (there is no
         // post-game card in this arc) and its own "Retry": the reducer
         // brings a replay straight back here with the new time.

@@ -1,15 +1,23 @@
 "use client";
 
 /**
- * The attract screen for /phkl-2, built to Figma 739:10645 ("Leaderboard —
- * /phkl/leaderboard"), designed against a 1920x1080 55" panel read from 2-5m
+ * The attract screen for /phkl-3, built to Figma 892:7134 ("Leaderboard —
+ * /phkl-3/leaderboard"), designed against a 1920x1080 55" panel read from 2-5m
  * away.
  *
- * The design puts the pitch on the left - the brain, the headline, the scan
- * block and the prize panel - and the live standings on the right, over a
- * fact strip and a band of event photography. Its podium is three rows deep:
- * the leader as the tall gradient hero, ranks 2 and 3 on the same gradient a
- * row height down, ranks 4-6 on white.
+ * The /phkl board's composition, with that frame's PRIZE LADDER in place of a
+ * single headline figure: the pitch on the left - the brain, the headline, the
+ * scan block and the prize panel, which now names the total and then what 1ST,
+ * 2ND and 3RD each win - and the live standings on the right, over a fact
+ * strip and a band of event photography. Its podium is three rows deep: the
+ * leader as the tall gradient hero, ranks 2 and 3 on the same gradient a row
+ * height down, ranks 4-6 on white.
+ *
+ * It is the frame the Siloam summit board was built to as well, and this is
+ * that board in ringgit: RM 150 / 100 / 50 for a total of RM 300
+ * (config/phkl3.ts), the headline at the design's own 41px (the summit's
+ * longer rupiah line needed 37px), and the voucher stack sat where the frame
+ * puts it.
  *
  * The Figma frame is absolutely positioned at 1920x1080, so the board draws in
  * its pixels. One design unit, `--u` (set on <main>), is the frame scaled to
@@ -21,17 +29,29 @@
  * and the two columns stack - there is no phone frame in the design, so the
  * stacked sizes are chosen to read on one.
  *
- * Self-contained: polls /api/leaderboard every 8s, scoped to the `phkl`
- * bucket, and keeps the last good standings on error.
+ * Self-contained: polls /api/leaderboard every 8s, scoped to the `phkl-3`
+ * bucket, and keeps the last good standings on error. That bucket is why this
+ * is a route of its own: the arc is /phkl-2's, and only the tag on each row
+ * keeps the earlier activations' standings off this room's screen.
+ *
+ * The board is in English while the funnel behind its QR code can be read in
+ * English, 中文 or Bahasa Melayu, as on /phkl-2: the board shows names and
+ * times, and the language belongs to the player holding the phone rather than
+ * to the room.
  */
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 import { displayName, formatTime } from "@/lib/format";
-import { PHKL2_PAUSED, PHKL2_SOURCE } from "@/config/event";
+import { PHKL3_PAUSED, PHKL3_SOURCE } from "@/config/event";
+import {
+  PHKL3_PODIUM_N,
+  PHKL3_PRIZE,
+  PHKL3_PRIZE_HEADLINE,
+} from "@/config/phkl3";
 import { playUrlFor } from "@/config/eventLinks";
-import { GRAB_COUPON_IMAGE, GRAB_GIFT_BOX_IMAGE } from "@/config/prizeArt";
+import { GRAB_GIFT_BOX_IMAGE, GRAB_VOUCHER_IMAGE } from "@/config/prizeArt";
 import { BRAIN_FACTS } from "@/config/tips";
 import { springs } from "@/lib/motion";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
@@ -41,10 +61,14 @@ interface Entry {
   timeMs: number;
 }
 
-/** Six rows, as the design lays out (739:10648-739:10653). */
+/** Six rows, as the design lays out (892:7137-892:7142). */
 const TOP_N = 6;
-/** The prize goes three deep, so three rows ride the gradient. */
-const PODIUM_N = 3;
+/**
+ * The prize goes three deep, so three rows ride the gradient - read from the
+ * prize ladder itself (config/phkl3.ts) rather than written again here, so
+ * the podium and the prize cannot promise different depths.
+ */
+const PODIUM_N = PHKL3_PODIUM_N;
 const POLL_MS = 8000;
 const FACT_MS = 8000;
 
@@ -53,7 +77,7 @@ const FACT_MS = 8000;
  * what the generated code encodes; uploaded artwork (QR_IMAGE) encodes
  * whatever it was made from.
  */
-const PLAY_URL = playUrlFor("phkl2");
+const PLAY_URL = playUrlFor("phkl3");
 
 /**
  * How often the completion stat is refreshed. Slower than the standings: the
@@ -94,21 +118,41 @@ const PRIZE_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
 const STRIP_BG = "rgba(255, 255, 255, 0.72)";
 
 /**
- * The QR artwork is dropped in as a file under public/images/phkl/ (see the
- * README there); the Grab gift box and coupon are the shared renders under
- * public/images/general/ (config/prizeArt.ts). Each is optional: the board
- * reads before it lands.
+ * The QR artwork is dropped in as a file under public/images/phkl-3/ (see the
+ * README there); the Grab gift box and voucher stack are the shared renders
+ * under public/images/general/ (config/prizeArt.ts). Each is optional: the
+ * board reads before it lands, and draws nothing in its place rather than a
+ * broken image.
+ *
+ * The QR has a folder of its own rather than /phkl's, and the design's own code
+ * (892:7164) is not used: both are /phkl's, and would send this room's players
+ * into another activation's bucket.
+ *
+ * The gift box is the artwork the design places (892:7176), and its 738x882
+ * fills the design's 369x441 box exactly - that box was sized for it.
  */
-const QR_IMAGE = "/images/phkl/qr.png";
+const QR_IMAGE = "/images/phkl-3/qr.png";
 const PRIZE_IMAGE = GRAB_GIFT_BOX_IMAGE;
-const COUPON_IMAGE = GRAB_COUPON_IMAGE;
+const VOUCHER_IMAGE = GRAB_VOUCHER_IMAGE;
 
 const keyOf = (e: Entry) => `${e.name}·${Math.round(e.timeMs)}`;
+
+/** The gift render's box: 369x441 at 458px in, 52px above the panel's top. */
+const PRIZE_ART_CLASS =
+  "animate-symbol-drift pointer-events-none absolute right-[-3%] top-[-6%] h-[112%] w-auto object-contain board:left-[calc(var(--u)*458)] board:right-auto board:top-[calc(var(--u)*-52)] board:h-[calc(var(--u)*441)] board:w-[calc(var(--u)*369)]";
+
+const PRIZE_ART_DRIFT = {
+  ["--drift-y" as string]: "-12px",
+  ["--drift-x" as string]: "0px",
+  ["--drift-tilt" as string]: "0deg",
+  ["--drift-tilt-to" as string]: "0deg",
+  ["--drift-duration" as string]: "5s",
+};
 
 /* ------------------------------- Masthead ------------------------------- */
 
 /**
- * The brain and the question, side by side (739:10656). The brain asset
+ * The brain and the question, side by side (892:7145). The brain asset
  * carries its own "Frontal Lobe" label and sparkle, exactly as the design
  * places it. The row is the design's 251px tall so the line under it lands
  * where the frame puts it; the brain (347px wide, and shorter than that box)
@@ -137,7 +181,7 @@ function Masthead() {
 
 /**
  * The standings label, centred on its column over the soft glow the design
- * lays behind it (739:10687): a 722.5x86.5 rectangle running off the right
+ * lays behind it (892:7174): a 722.5x86.5 rectangle running off the right
  * edge of the frame, filled with the Processing Speed domain's warm radial
  * gradient, centred left of the text. Stacked, the label simply heads the
  * list.
@@ -298,8 +342,8 @@ function StandingRow({
  * The generated code is the safety net rather than the default - it always
  * encodes PLAY_URL, so a board whose artwork has not landed yet, or whose file
  * is misnamed, still has a way in rather than a blank frame. Artwork wins
- * because it is the exact code the design was signed off with (739:10675),
- * frame and all.
+ * because it can carry the design's framed look (892:7164) - once it is
+ * exported from this route's own link, not copied from the frame.
  *
  * Whatever the artwork encodes is what players get - nothing here can check
  * that, so a code for the wrong URL is a wrong code.
@@ -362,9 +406,10 @@ function ScanCode() {
 
 /**
  * The yellow "scan to play" label sitting directly on top of the code, as one
- * block (739:10671) - the design aligns their left and right edges. The
- * design's 388px square, capped at the column when a phone is narrower than
- * that.
+ * block (892:7160). The design's 388px square, capped at the column when a
+ * phone is narrower than that. On the board the label is the frame's 379px,
+ * flush with the code's right edge and 9px in from its left (892:7161), so its
+ * text lines up with the masthead above rather than with the code's frame.
  */
 function ScanBlock() {
   return (
@@ -373,7 +418,7 @@ function ScanBlock() {
       style={{ width: u(388) }}
     >
       <p
-        className="flex w-full items-center justify-center whitespace-nowrap font-extrabold tracking-[0.12em]"
+        className="flex w-full items-center justify-center whitespace-nowrap font-extrabold tracking-[0.12em] board:ml-[calc(var(--u)*9)] board:w-[calc(var(--u)*379)]"
         style={{
           height: u(66),
           fontSize: u(28.37),
@@ -392,59 +437,113 @@ function ScanBlock() {
 /* ------------------------------ Prize panel ----------------------------- */
 
 /**
- * The prize (739:10677): an ember panel with the offer, and the Grab gift
- * render breaking out of its top and its right edge the way the design has it
- * (which is why the panel does not clip), with the coupon tucked under its
- * bottom-right corner. The offer runs from 41px in, and the title is set in
- * the design's own three lines - "Win a total of" a size down, then "RM 170
- * Grab" and "Vouchers" - so no font metric can move the break.
+ * One rung of the prize ladder (896:636): a white rank chip, then the amount.
+ *
+ * The chips are one fixed width rather than hugging their text, as the design
+ * sets them - "1ST" is narrower than "2ND" and "3RD", and letting each hug
+ * would stagger the three amounts beside them.
+ */
+function PrizeRow({ rank, label }: { rank: string; label: string }) {
+  return (
+    <li className="flex items-center gap-[calc(var(--u)*13)] board:gap-[calc(var(--u)*19.85)]">
+      <span
+        className="flex shrink-0 items-center justify-center rounded-full bg-white text-center font-extrabold leading-none w-[calc(var(--u)*46)] py-[calc(var(--u)*3)] text-[length:calc(var(--u)*13)] tracking-[0.08em] board:w-[calc(var(--u)*67)] board:py-[calc(var(--u)*4)] board:text-[length:calc(var(--u)*19)]"
+        style={{ color: ORANGE_DEEP }}
+      >
+        {rank}
+      </span>
+      <span className="whitespace-nowrap font-bold leading-[1.1] tracking-[-0.015em] text-cream text-[length:calc(var(--u)*20)] board:text-[length:calc(var(--u)*33.5)]">
+        {label}
+      </span>
+    </li>
+  );
+}
+
+/**
+ * The prize (892:7159): an ember panel carrying the offer, with the Grab
+ * artwork breaking out of its top and its right edge the way the design has it
+ * (which is why the panel does not clip).
+ *
+ * The offer runs from 41px in and the panel reserves its right 383px for that
+ * artwork, which is what keeps the text clear of the gift box rather than
+ * relying on the copy staying short. Inside: the depth, the total, and then
+ * the ladder - 1ST / 2ND / 3RD and what each one wins.
+ *
+ * NOTHING HERE IS A NUMBER. The depth, the three amounts and the total all
+ * come from PHKL3_PRIZE (config/phkl3.ts), where the total is summed from
+ * the ladder rather than typed beside it - so the headline cannot promise a
+ * pot the rows underneath it do not add up to, and the eyebrow cannot promise
+ * a depth the standings do not rank.
  */
 function PrizePanel() {
   return (
     <div
-      className="relative flex w-full items-center py-[calc(var(--u)*28)] pl-[calc(var(--u)*28)] pr-[40%] board:mb-[calc(var(--u)*5)] board:h-[calc(var(--u)*422)] board:w-[calc(var(--u)*775)] board:shrink-0 board:self-end board:py-0 board:pl-[calc(var(--u)*41)] board:pr-0"
+      className="relative flex w-full flex-col justify-center py-[calc(var(--u)*28)] pl-[calc(var(--u)*28)] pr-[40%] board:h-[calc(var(--u)*422)] board:w-[calc(var(--u)*775)] board:shrink-0 board:pb-[calc(var(--u)*59)] board:pl-[calc(var(--u)*41)] board:pr-[calc(var(--u)*383)] board:pt-[calc(var(--u)*43)]"
       style={{ background: PRIZE_GRADIENT, borderRadius: u(20) }}
     >
-      <div className="relative z-10 flex min-w-0 flex-col gap-[calc(var(--u)*8)] text-cream board:w-[calc(var(--u)*448)] board:gap-[calc(var(--u)*12.3)]">
-        <p className="text-[length:calc(var(--u)*16)] font-bold uppercase leading-[1.1] tracking-[0.23em] board:text-[length:calc(var(--u)*23.73)]">
-          Top 3 fastest minds
+      <div className="relative z-10 flex min-w-0 flex-col gap-[calc(var(--u)*8)] text-cream board:gap-[calc(var(--u)*12.33)]">
+        <p className="text-[length:calc(var(--u)*13)] font-bold uppercase leading-[1.1] tracking-[0.23em] board:text-[length:calc(var(--u)*19.73)]">
+          Top {PODIUM_N} fastest minds
         </p>
-        <p className="font-extrabold tracking-[-0.015em] board:whitespace-nowrap">
-          <span className="block text-[length:calc(var(--u)*30)] leading-[1.19] board:text-[length:calc(var(--u)*55.55)]">
-            Win a total of
-          </span>
-          <span className="block text-[length:calc(var(--u)*38)] leading-[1.19] board:text-[length:calc(var(--u)*69.55)]">
-            RM 170 Grab
-          </span>
-          <span className="block text-[length:calc(var(--u)*38)] leading-[1.04] board:text-[length:calc(var(--u)*69.55)]">
-            Vouchers
-          </span>
+
+        {/* The headline is set in the design's own two lines - "Win a total
+            of" over the amount - so no font metric can move the break. At the
+            design's 41px: the frame was set with exactly this string, "RM 300
+            Grab Vouchers".
+
+            The tracking is on each line, not on the <p>: an em of tracking
+            resolves at the element that declares it, so on the <p> it would be
+            0.015 of the default 16px rather than of 41px, and the looser line
+            (455px) breaks "Vouchers" onto a third line.
+
+            The box is the frame's 448px plus 8. Figma's 448 is that string's
+            own measured width (447.4px here), which leaves a renderer less
+            than a pixel before the break moves; 456 keeps the designed break
+            on any panel's browser, and still reaches no further into the gift
+            render's box than the design's text does.
+
+            The line is NOT set nowrap on purpose: a longer amount later should
+            wrap inside the panel rather than run silently under the gift
+            artwork to its right. */}
+        <p className="font-extrabold board:w-[calc(var(--u)*456)]">
+          {PHKL3_PRIZE_HEADLINE.map((line) => (
+            <span
+              key={line}
+              className="block text-[length:calc(var(--u)*24)] leading-[1.1] tracking-[-0.015em] board:text-[length:calc(var(--u)*41)]"
+            >
+              {line}
+            </span>
+          ))}
         </p>
+
+        <ul className="flex flex-col gap-[calc(var(--u)*10)] pt-[calc(var(--u)*8)] board:gap-[calc(var(--u)*14.89)] board:pt-[calc(var(--u)*12.41)]">
+          {PHKL3_PRIZE.ladder.map((tier) => (
+            <PrizeRow key={tier.rank} rank={tier.rank} label={tier.label} />
+          ))}
+        </ul>
       </div>
 
-      {/* The render sits over the panel's right edge, taller than the panel
-          itself - hence the offsets rather than a flow child. In the frame it
-          is 369x441 at 467px in from the panel's left, 22px above its top
-          (740:10745). */}
+      {/* The gift render sits over the panel's right edge, taller than the
+          panel itself - hence the offsets rather than a flow child. In the
+          frame it is 369x441 at 458px in from the panel's left and 52px above
+          its top (892:7176). */}
       <OptionalImage
         src={PRIZE_IMAGE}
-        alt="Grab gift box and vouchers"
-        className="animate-symbol-drift pointer-events-none absolute right-[-3%] top-[-6%] h-[112%] w-auto object-contain board:left-[calc(var(--u)*467)] board:right-auto board:top-[calc(var(--u)*-22)] board:h-[calc(var(--u)*441)] board:w-[calc(var(--u)*369)]"
-        style={{
-          ["--drift-y" as string]: "-12px",
-          ["--drift-x" as string]: "0px",
-          ["--drift-tilt" as string]: "0deg",
-          ["--drift-tilt-to" as string]: "0deg",
-          ["--drift-duration" as string]: "5s",
-        }}
+        alt={`Grab gift box and ${PHKL3_PRIZE.total} of vouchers`}
+        className={PRIZE_ART_CLASS}
+        style={PRIZE_ART_DRIFT}
       />
-      {/* The coupon (741:11216): a 77px box at 706.5px in, 352.4px down,
-          hanging 41px below the panel's bottom edge. Its tilt is baked into
-          the export, so nothing is rotated here. */}
+
+      {/* The e-voucher stack (892:7220): a 181x178.6 render tilted 7 degrees
+          about its centre, so it hangs over the panel's bottom edge under the
+          gift box. The frame gives the tilted render's bounding box - 201.4 x
+          199.3 at 603px in and 242px down - and the upright box centred in it
+          sits at 613.2, 252.4, which is what is placed here before the
+          rotation. */}
       <OptionalImage
-        src={COUPON_IMAGE}
+        src={VOUCHER_IMAGE}
         alt=""
-        className="pointer-events-none absolute hidden object-contain board:block board:left-[calc(var(--u)*706.5)] board:top-[calc(var(--u)*352.4)] board:size-[calc(var(--u)*77.2)]"
+        className="pointer-events-none absolute hidden rotate-[-7deg] object-contain board:block board:left-[calc(var(--u)*613.2)] board:top-[calc(var(--u)*252.4)] board:h-[calc(var(--u)*178.6)] board:w-[calc(var(--u)*181)]"
       />
     </div>
   );
@@ -453,7 +552,7 @@ function PrizePanel() {
 /* ------------------------------ Photo band ------------------------------ */
 
 /**
- * The band of event photography along the bottom edge (739:10661-10663).
+ * The band of event photography along the bottom edge (892:7150-892:7152).
  * Three frames, in the widths the design shows of each (its frames overlap;
  * these are the visible parts, 491:681:748); each is optional, so the band
  * simply thins out (and finally disappears) until the photos are dropped in.
@@ -488,7 +587,7 @@ function PhotoBand() {
 
 /* --------------------------------- Board -------------------------------- */
 
-export default function Phkl2LeaderboardBoard() {
+export default function Phkl3LeaderboardBoard() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [total, setTotal] = useState(0);
   const [factIdx, setFactIdx] = useState(0);
@@ -522,7 +621,7 @@ export default function Phkl2LeaderboardBoard() {
     const load = async () => {
       try {
         const res = await fetch(
-          `/api/leaderboard?limit=${TOP_N}&source=${encodeURIComponent(PHKL2_SOURCE)}`,
+          `/api/leaderboard?limit=${TOP_N}&source=${encodeURIComponent(PHKL3_SOURCE)}`,
           { cache: "no-store" },
         );
         const data = await res.json();
@@ -533,7 +632,7 @@ export default function Phkl2LeaderboardBoard() {
 
         // New podium entrants (skip the very first load: nothing is "new").
         const podium = next.slice(0, PODIUM_N);
-        if (!firstLoadRef.current && !PHKL2_PAUSED) {
+        if (!firstLoadRef.current && !PHKL3_PAUSED) {
           for (const e of podium) {
             if (!prevTopRef.current.has(keyOf(e))) queueRef.current.push(e);
           }
@@ -561,7 +660,7 @@ export default function Phkl2LeaderboardBoard() {
     const load = async () => {
       try {
         const res = await fetch(
-          `/api/report-rate?source=${encodeURIComponent(PHKL2_SOURCE)}`,
+          `/api/report-rate?source=${encodeURIComponent(PHKL3_SOURCE)}`,
           { cache: "no-store" },
         );
         const data = await res.json();
@@ -618,14 +717,19 @@ export default function Phkl2LeaderboardBoard() {
       <div className="relative z-10 mx-auto flex w-full flex-1 flex-col board:min-h-0 board:max-w-[calc(var(--u)*1920)] board:flex-row">
         {/* Left: the pitch. */}
         <div className="flex min-w-0 flex-col px-[calc(var(--u)*24)] pt-[calc(var(--u)*36)] board:w-[calc(var(--u)*1274)] board:shrink-0 board:justify-center board:pb-[calc(var(--u)*54)] board:pl-[calc(var(--u)*26)] board:pr-0 board:pt-[calc(var(--u)*46)]">
-          <Masthead />
-          <p className="mt-[calc(var(--u)*16)] text-[length:calc(var(--u)*24)] font-medium leading-[1.28] tracking-[-0.01em] text-charcoal board:mt-0 board:text-[length:calc(var(--u)*33.36)]">
-            Play the <strong className="font-bold">speed</strong> game to see
-            your <strong className="font-bold">rank</strong> and get free{" "}
-            <strong className="font-bold">personalised</strong> insights.
-          </p>
+          {/* The frame sets the masthead and the line under it 9px further
+              in than the scan row (35px against 26px, 892:7144), in line with
+              the yellow label's text rather than the code's black frame. */}
+          <div className="board:pl-[calc(var(--u)*9)]">
+            <Masthead />
+            <p className="mt-[calc(var(--u)*16)] text-[length:calc(var(--u)*24)] font-medium leading-[1.28] tracking-[-0.01em] text-charcoal board:mt-0 board:text-[length:calc(var(--u)*33.36)]">
+              Play the <strong className="font-bold">speed</strong> game to see
+              your <strong className="font-bold">rank</strong> and get free{" "}
+              <strong className="font-bold">personalised</strong> insights.
+            </p>
+          </div>
 
-          {PHKL2_PAUSED ? (
+          {PHKL3_PAUSED ? (
             <div
               className="mt-[calc(var(--u)*28)] flex flex-col items-center justify-center bg-white text-center shadow-card board:mt-[calc(var(--u)*52)] board:h-[calc(var(--u)*454)] board:w-[calc(var(--u)*1201)]"
               style={{
@@ -654,7 +758,7 @@ export default function Phkl2LeaderboardBoard() {
               </p>
             </div>
           ) : (
-            <div className="mt-[calc(var(--u)*28)] flex flex-col gap-[calc(var(--u)*24)] board:mt-[calc(var(--u)*52)] board:flex-row board:items-start board:gap-[calc(var(--u)*38)]">
+            <div className="mt-[calc(var(--u)*28)] flex flex-col gap-[calc(var(--u)*24)] board:mt-[calc(var(--u)*52)] board:flex-row board:items-center board:gap-[calc(var(--u)*38)]">
               <ScanBlock />
               <PrizePanel />
             </div>
@@ -663,7 +767,7 @@ export default function Phkl2LeaderboardBoard() {
 
         {/* Right: the live standings. */}
         <div className="flex min-w-0 flex-col px-[calc(var(--u)*24)] pt-[calc(var(--u)*40)] board:w-[calc(var(--u)*646)] board:shrink-0 board:justify-center board:pb-[calc(var(--u)*76)] board:pl-0 board:pr-[calc(var(--u)*20)] board:pt-[calc(var(--u)*46)]">
-          <BoardLabel live={!PHKL2_PAUSED} />
+          <BoardLabel live={!PHKL3_PAUSED} />
           <ol
             className="mt-[calc(var(--u)*16)] flex min-w-0 flex-col board:mt-[calc(var(--u)*41.5)]"
             style={{ gap: u(13.26) }}
@@ -792,7 +896,7 @@ export default function Phkl2LeaderboardBoard() {
                 className="font-bold uppercase tracking-[0.34em] text-primary"
                 style={{ fontSize: u(20.38) }}
               >
-                New top 3
+                New top {PODIUM_N}
               </p>
               <p
                 className="font-extrabold leading-none tracking-[-0.015em]"

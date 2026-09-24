@@ -1,7 +1,7 @@
 import type { QuestionText } from "@/config/questions.id";
 
 /**
- * The question bank in Simplified Chinese (中文), for /phkl-2.
+ * The question bank in Simplified Chinese (中文), for /phkl-2 and /phkl-3.
  *
  * WORDS ONLY, like config/questions.id.ts: no ids, no axes, no `showIf` and no
  * scores. `questionsFor()` reads the English bank and replaces only the prompts
