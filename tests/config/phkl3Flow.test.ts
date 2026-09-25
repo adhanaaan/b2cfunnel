@@ -159,6 +159,33 @@ describe("phkl-3 copy", () => {
   });
 });
 
+describe("phkl-3 IHH consent, in every language", () => {
+  // A required consent is only a consent if the player can read it: every
+  // clause of IHH Healthcare Malaysia's block, and every link label in it,
+  // must be in the language the landing is showing. The link targets are the
+  // English block's in every language.
+  it("translates every clause and link label, and keeps the links", () => {
+    const en = COPY.screens.phkl3.splash.partnerConsent;
+    for (const { id } of languagesFor("phkl3")) {
+      if (id === "en") continue;
+      const block = copyFor("phkl3", id).screens.phkl3.splash.partnerConsent;
+      expect(block.clauses, id).toHaveLength(en.clauses.length);
+      block.clauses.forEach((clause, i) => {
+        expect(clause.text, `${id} clause ${i}`).not.toBe(en.clauses[i].text);
+        expect(clause.text.includes("{link}"), `${id} clause ${i}`).toBe(
+          en.clauses[i].link != null,
+        );
+        expect(clause.link?.href, `${id} clause ${i}`).toBe(en.clauses[i].link?.href);
+        if (en.clauses[i].link && !en.clauses[i].link!.href.startsWith("mailto:")) {
+          expect(clause.link?.label, `${id} clause ${i}`).not.toBe(en.clauses[i].link?.label);
+        }
+      });
+      expect(block.requiredError, id).toBeTruthy();
+      expect(block.requiredError, id).not.toBe(en.requiredError);
+    }
+  });
+});
+
 describe("phkl-3 prize", () => {
   it("is the ladder the design sets, in order", () => {
     expect(PHKL3_PRIZE.ladder.map((t) => [t.rank, t.label])).toEqual([
