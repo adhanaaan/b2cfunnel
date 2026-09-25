@@ -253,7 +253,7 @@ describe("22grams copy", () => {
    * as long as one wording change reaches all three, so this asserts identity
    * rather than equality.
    */
-  it("shares its one-tick consent with the summit, /general, /eisai and /urbanmilers, and with nothing else", () => {
+  it("shares its one-tick consent with the summit, /general, /eisai, /urbanmilers and /phkl-3, and with nothing else", () => {
     const withBlock = (
       Object.keys(COPY.screens) as (keyof typeof COPY.screens)[]
     ).filter((key) => {
@@ -265,6 +265,7 @@ describe("22grams copy", () => {
       "22grams",
       "eisai",
       "general",
+      "phkl3",
       "siloam",
       "urbanmilers",
     ]);
@@ -275,6 +276,9 @@ describe("22grams copy", () => {
       COPY.screens["22grams"].splash.consentForm,
     );
     expect(COPY.screens.urbanmilers.splash.consentForm).toBe(
+      COPY.screens["22grams"].splash.consentForm,
+    );
+    expect(COPY.screens.phkl3.splash.consentForm).toBe(
       COPY.screens["22grams"].splash.consentForm,
     );
   });

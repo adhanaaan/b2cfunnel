@@ -156,7 +156,11 @@ export function Event3Splash({
   const c = v3 ? copy.screens.event3.splash : copy.screens[design].splash;
   // The partner's block, on the landings that carry one (the regatta's and
   // PHKL's copy blocks are the only ones with it).
-  const partner: { clauses: ConsentClause[] } | null =
+  const partner: {
+    clauses: ConsentClause[];
+    required?: boolean;
+    requiredError?: string;
+  } | null =
     design === "ihhsearegatta" ||
     design === "ihh" ||
     design === "phkl" ||
@@ -205,6 +209,11 @@ export function Event3Splash({
       setError(c.consentRequiredError);
       return;
     }
+    // Where the partner's block says so (/phkl-3), its tick gates entry too.
+    if (partner?.required && !partnerConsent) {
+      setError(partner.requiredError ?? c.consentRequiredError);
+      return;
+    }
     // What the player agreed to about marketing. With the newer block there is
     // no second tick to read: the line under the one they ticked says that
     // registering IS the consent, so submitting the form gives it.
@@ -223,9 +232,10 @@ export function Event3Splash({
         }),
       }).catch(() => {});
     }
-    // The partner's tick never blocks play either: what the player chose is
-    // recorded either way, so a decline is stored as a decline. Landings
-    // without the block pass nothing, and the state stays "never asked".
+    // Unless it is required, the partner's tick never blocks play either:
+    // what the player chose is recorded either way, so a decline is stored as
+    // a decline. Landings without the block pass nothing, and the state stays
+    // "never asked".
     onSubmit(
       name.trim(),
       email.trim(),
@@ -422,7 +432,10 @@ export function Event3Splash({
               <ConsentCheckbox
                 roomy={roomy}
                 checked={partnerConsent}
-                onChange={setPartnerConsent}
+                onChange={(v) => {
+                  setPartnerConsent(v);
+                  if (v) setError(null);
+                }}
               >
                 <span className="flex flex-col gap-2 leading-[1.5]">
                   {partner.clauses.map((clause) => (

@@ -327,7 +327,29 @@ export const COPY_MS: DeepPartial<CopyConfig> = {
     // /phkl-2's landing reads its own block; only the words move, so its
     // privacy link stays the English block's.
     phkl2: { splash: PHKL_MS.splash },
-    phkl3: { splash: PHKL_MS.splash },
+    // /phkl-3's landing asks for two required ticks (config/copy.ts): the
+    // one-tick authorisation, and the IHH block made required.
+    // NOTE FOR REVIEW: the authorisation block and both errors are new
+    // translations, for a native reader to confirm.
+    phkl3: {
+      splash: {
+        ...PHKL_MS.splash,
+        consentForm: {
+          heading: "Saya dengan ini mengesahkan bahawa saya menghantar borang ini:",
+          authorisation:
+            "Bagi pihak saya sendiri; atau bagi pihak orang lain, dan saya mengesahkan bahawa saya diberi kuasa untuk memberikan jawapan dalam borang ini.",
+          registerNote:
+            "Dengan mendaftar, saya bersetuju untuk Gray Matter Solutions menghubungi saya melalui e-mel dan surat berita.",
+        },
+        consentRequiredError:
+          "Sila sahkan kenyataan di atas supaya kami boleh menghantar keputusan anda.",
+        partnerConsent: {
+          ...PHKL_MS.splash?.partnerConsent,
+          requiredError:
+            "Sila bersetuju dengan persetujuan IHH Healthcare Malaysia untuk meneruskan.",
+        },
+      },
+    },
   },
 
   bandLabels: {
