@@ -1248,12 +1248,25 @@ export const COPY: CopyConfig = {
         privacyHref: "/phkl-2/privacy-policy",
       },
     },
-    // /phkl-3 - a third activation, the same way.
+    // /phkl-3 - a third activation, with its own link and its own consent:
+    // two ticks, both required. The first is /22grams' one-tick block (the
+    // same block, not a copy), in place of the contact and tips rows; the
+    // second is the IHH Healthcare Malaysia block, word for word, which this
+    // activation makes a condition of entry rather than an opt-in.
     phkl3: {
       ...PHKL_SCREEN_COPY,
       splash: {
         ...PHKL_SCREEN_COPY.splash,
         privacyHref: "/phkl-3/privacy-policy",
+        consentForm: ONE_TICK_CONSENT_FORM,
+        consentRequiredError:
+          "Please confirm the statement above so we can send you your results.",
+        partnerConsent: {
+          ...PHKL_SCREEN_COPY.splash.partnerConsent,
+          required: true,
+          requiredError:
+            "Please agree to the IHH Healthcare Malaysia consent to continue.",
+        },
       },
     },
     mambacares: MAMBACARES_SCREEN_COPY,

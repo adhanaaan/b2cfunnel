@@ -92,8 +92,9 @@ describe("phkl-3 flow", () => {
 
 describe("phkl-3 copy", () => {
   it("carries the partner consent, and links the policy on its own route", () => {
-    expect(COPY.screens.phkl3.splash.partnerConsent).toBe(
-      COPY.screens.phkl.splash.partnerConsent,
+    // The same partner, so the same clauses - word for word.
+    expect(COPY.screens.phkl3.splash.partnerConsent.clauses).toBe(
+      COPY.screens.phkl.splash.partnerConsent.clauses,
     );
     expect(COPY.screens.phkl3.splash.privacyHref).toBe("/phkl-3/privacy-policy");
     expect(COPY.screens.phkl2.splash.privacyHref).toBe("/phkl-2/privacy-policy");
@@ -101,6 +102,40 @@ describe("phkl-3 copy", () => {
 
   it("reads /phkl's report, so the offer cannot drift", () => {
     expect(arcCopyFor("phkl3").report).toEqual(arcCopyFor("phkl").report);
+  });
+
+  // Two ticks on this landing, both required: the one-tick authorisation in
+  // place of the contact and tips rows, and the IHH block made a condition of
+  // entry. /phkl and /phkl-2 keep their optional partner row.
+  it("asks for two required ticks: the authorisation and the IHH consent", () => {
+    const splash = COPY.screens.phkl3.splash;
+    expect(splash.consentForm).toBe(COPY.screens["22grams"].splash.consentForm);
+    expect(splash.partnerConsent.required).toBe(true);
+    expect(splash.partnerConsent.requiredError).toBeTruthy();
+    expect(COPY.screens.phkl.splash.partnerConsent.required).toBeUndefined();
+    expect(COPY.screens.phkl2.splash.partnerConsent.required).toBeUndefined();
+    expect(COPY.screens.phkl2.splash.consentForm).toBeUndefined();
+  });
+
+  it("asks for both ticks in every language it offers", () => {
+    for (const { id } of languagesFor("phkl3")) {
+      const splash = copyFor("phkl3", id).screens.phkl3.splash;
+      expect(splash.partnerConsent.required, id).toBe(true);
+      expect(splash.partnerConsent.clauses, id).toHaveLength(
+        COPY.screens.phkl3.splash.partnerConsent.clauses.length,
+      );
+      if (id !== "en") {
+        expect(splash.consentForm?.authorisation, id).not.toBe(
+          COPY.screens.phkl3.splash.consentForm?.authorisation,
+        );
+        expect(splash.partnerConsent.requiredError, id).not.toBe(
+          COPY.screens.phkl3.splash.partnerConsent.requiredError,
+        );
+        expect(splash.consentRequiredError, id).not.toBe(
+          COPY.screens.phkl3.splash.consentRequiredError,
+        );
+      }
+    }
   });
 
   it("offers /phkl-2's languages", () => {
@@ -120,6 +155,33 @@ describe("phkl-3 copy", () => {
           COPY.screens.phkl3.splash.cta,
         );
       }
+    }
+  });
+});
+
+describe("phkl-3 IHH consent, in every language", () => {
+  // A required consent is only a consent if the player can read it: every
+  // clause of IHH Healthcare Malaysia's block, and every link label in it,
+  // must be in the language the landing is showing. The link targets are the
+  // English block's in every language.
+  it("translates every clause and link label, and keeps the links", () => {
+    const en = COPY.screens.phkl3.splash.partnerConsent;
+    for (const { id } of languagesFor("phkl3")) {
+      if (id === "en") continue;
+      const block = copyFor("phkl3", id).screens.phkl3.splash.partnerConsent;
+      expect(block.clauses, id).toHaveLength(en.clauses.length);
+      block.clauses.forEach((clause, i) => {
+        expect(clause.text, `${id} clause ${i}`).not.toBe(en.clauses[i].text);
+        expect(clause.text.includes("{link}"), `${id} clause ${i}`).toBe(
+          en.clauses[i].link != null,
+        );
+        expect(clause.link?.href, `${id} clause ${i}`).toBe(en.clauses[i].link?.href);
+        if (en.clauses[i].link && !en.clauses[i].link!.href.startsWith("mailto:")) {
+          expect(clause.link?.label, `${id} clause ${i}`).not.toBe(en.clauses[i].link?.label);
+        }
+      });
+      expect(block.requiredError, id).toBeTruthy();
+      expect(block.requiredError, id).not.toBe(en.requiredError);
     }
   });
 });

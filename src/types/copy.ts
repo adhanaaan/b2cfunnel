@@ -882,10 +882,19 @@ export interface MambacaresCopy extends PhklArcCopy {
 export interface IhhseaCopy {
   // The landing carries the partner's consent as a third row under the two
   // the daylight landing already has: one tick over the whole block, in the
-  // partner's own words, optional like the marketing opt-in above it.
+  // partner's own words, optional like the marketing opt-in above it - unless
+  // the block says it is required.
   splash: Event3Copy["splash"] & {
     partnerConsent: {
       clauses: ConsentClause[];
+      /**
+       * Whether the tick gates entry, like the required contact consent.
+       * Optional: absent (every event that shipped before /phkl-3) is the
+       * optional row, where a decline is recorded as a decline.
+       */
+      required?: boolean;
+      /** Shown when a required partner tick is left empty on submit. */
+      requiredError?: string;
     };
   };
   // The bridge card opens on the player's wish rather than on their reflexes,
