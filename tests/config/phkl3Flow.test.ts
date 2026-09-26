@@ -189,8 +189,8 @@ describe("phkl-3 IHH consent, in every language", () => {
 describe("phkl-3 prize", () => {
   it("is the ladder the design sets, in order", () => {
     expect(PHKL3_PRIZE.ladder.map((t) => [t.rank, t.label])).toEqual([
-      ["1ST", "RM 150 voucher"],
-      ["2ND", "RM 100 voucher"],
+      ["1ST", "RM 200 voucher"],
+      ["2ND", "RM 150 voucher"],
       ["3RD", "RM 50 voucher"],
     ]);
   });
@@ -199,9 +199,9 @@ describe("phkl-3 prize", () => {
   // to X, so the total is summed from the ladder, and this holds it there.
   it("sums its headline total from the ladder rather than repeating it", () => {
     const sum = PHKL3_PRIZE.ladder.reduce((n, t) => n + t.ringgit, 0);
-    expect(sum).toBe(300);
+    expect(sum).toBe(400);
     expect(PHKL3_PRIZE.total).toBe(`RM ${sum}`);
-    expect(PHKL3_PRIZE_HEADLINE).toEqual(["Win a total of", "RM 300 Grab Vouchers"]);
+    expect(PHKL3_PRIZE_HEADLINE).toEqual(["Win a total of", "RM 400 Grab Vouchers"]);
   });
 
   it("sets the podium depth the standings rank to", () => {

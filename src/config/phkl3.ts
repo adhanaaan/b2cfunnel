@@ -27,8 +27,8 @@ const rm = (ringgit: number) => `RM ${ringgit}`;
  * the eyebrow and the rows of this ladder are one number in one place.
  */
 const LADDER = [
-  { rank: "1ST", ringgit: 150 },
-  { rank: "2ND", ringgit: 100 },
+  { rank: "1ST", ringgit: 200 },
+  { rank: "2ND", ringgit: 150 },
   { rank: "3RD", ringgit: 50 },
 ] as const;
 
@@ -37,11 +37,11 @@ export const PHKL3_PRIZE = {
   ladder: LADDER.map((tier) => ({
     rank: tier.rank,
     ringgit: tier.ringgit,
-    /** "RM 150 voucher" - what the row prints. */
+    /** "RM 200 voucher" - what the row prints. */
     label: `${rm(tier.ringgit)} voucher`,
   })),
 
-  /** "RM 300" - the sum of the ladder, never typed out beside it. */
+  /** "RM 400" - the sum of the ladder, never typed out beside it. */
   total: rm(LADDER.reduce((sum, tier) => sum + tier.ringgit, 0)),
 } as const;
 

@@ -14,7 +14,7 @@
  * height down, ranks 4-6 on white.
  *
  * It is the frame the Siloam summit board was built to as well, and this is
- * that board in ringgit: RM 150 / 100 / 50 for a total of RM 300
+ * that board in ringgit: RM 200 / 150 / 50 for a total of RM 400
  * (config/phkl3.ts), the headline at the design's own 41px (the summit's
  * longer rupiah line needed 37px), and the voucher stack sat where the frame
  * puts it.
@@ -488,8 +488,8 @@ function PrizePanel() {
 
         {/* The headline is set in the design's own two lines - "Win a total
             of" over the amount - so no font metric can move the break. At the
-            design's 41px: the frame was set with exactly this string, "RM 300
-            Grab Vouchers".
+            design's 41px: the frame was set with "RM 300 Grab Vouchers", and
+            "RM 400" is about the same width, so the new prize keeps the break.
 
             The tracking is on each line, not on the <p>: an em of tracking
             resolves at the element that declares it, so on the <p> it would be
