@@ -24,6 +24,8 @@ interface Event3SplashProps {
     email: string,
     tipsConsent: boolean,
     partnerConsent?: boolean,
+    /** Only the landings that ask for a team pass one. */
+    team?: string,
   ) => void;
   /** Preview variants walk the screen without recording the opt-in anywhere. */
   preview?: boolean;
@@ -60,6 +62,7 @@ interface Event3SplashProps {
     | "siloam"
     | "22grams"
     | "general"
+    | "otp"
     | "eisai";
 }
 
@@ -188,6 +191,10 @@ export function Event3Splash({
   const reduced = useReducedMotion();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  // Only the quiz-night landing asks for a team; everywhere else this
+  // stays "" and is never passed on.
+  const [team, setTeam] = useState("");
+  const asksForTeam = design === "otp";
   const [contactConsent, setContactConsent] = useState(false);
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [partnerConsent, setPartnerConsent] = useState(false);
@@ -201,6 +208,12 @@ export function Event3Splash({
     }
     if (!EMAIL_RE.test(email.trim())) {
       setError(c.emailError);
+      return;
+    }
+    // A score with no team cannot be scored, so the quiz-night landing
+    // refuses to start without one.
+    if (asksForTeam && team.trim().length === 0) {
+      setError("Please enter your team name.");
       return;
     }
     // PDPA: consent to be contacted is what lets us email the result and
@@ -241,6 +254,7 @@ export function Event3Splash({
       email.trim(),
       marketing,
       partner ? partnerConsent : undefined,
+      asksForTeam ? team.trim() : undefined,
     );
   };
 
@@ -359,6 +373,17 @@ export function Event3Splash({
             aria-label="Email"
             className={inputClass}
           />
+          {asksForTeam && (
+            <input
+              type="text"
+              value={team}
+              onChange={(e) => setTeam(e.target.value)}
+              placeholder="Your team name"
+              aria-label="Team name"
+              maxLength={60}
+              className={inputClass}
+            />
+          )}
           <div className="space-y-1.5 pt-0.5">
             {consentForm ? (
               // One tick, under a heading, with the newsletter consent stated

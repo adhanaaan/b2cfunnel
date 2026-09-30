@@ -50,7 +50,13 @@ export async function insertWithOptionalColumns(
 
     // Drop the column the database named, or (when it named none) the last one
     // still in play, and try again until only the required columns are left.
-    const named = remaining.find((key) => isMissingColumnError(error, key));
+    // Match on the name in the message, not on isMissingColumnError(error, key):
+    // that helper returns true for *any* key once the code is 42703/PGRST204, so
+    // it would drop whichever column happens to be first rather than the one the
+    // database complained about - losing the other optional values with it.
+    const named = remaining.find(
+      (key) => typeof error.message === "string" && error.message.includes(key),
+    );
     if (!named && !isMissingColumnError(error)) return { error };
     const drop = named ?? remaining[remaining.length - 1];
     console.warn(`[supabase] ${drop} column missing; retrying without it.`);

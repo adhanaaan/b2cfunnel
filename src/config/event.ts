@@ -347,6 +347,18 @@ export const GENERAL_PAUSED = false;
 export const GENERAL_SOURCE: string = "general";
 
 /**
+ * Independent pause switch for the One Trick Pony quiz night (/onetrickpony).
+ * Its own switch, like every other event's.
+ */
+export const OTP_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the quiz night. Its own tag, so a pub's bonus round
+ * never mixes with a hospital activation's standings.
+ */
+export const OTP_SOURCE: string = "onetrickpony";
+
+/**
  * Independent pause switch for Eisai's World Alzheimer's Day challenge
  * (/eisai and its TV board). Its own switch, like every other event's:
  * closing one must never take another down with it.
@@ -426,6 +438,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return SILOAM_SOURCE;
     case "general":
       return GENERAL_SOURCE;
+    case "otp":
+      return OTP_SOURCE;
     case "eisai":
       return EISAI_SOURCE;
     case "22grams":

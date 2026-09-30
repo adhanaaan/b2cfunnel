@@ -44,6 +44,8 @@ interface ScorePayload {
    * peers without a second lookup into the lead.
    */
   ageBand?: string;
+  /** The team that played, where the landing asks for one. */
+  team?: string;
   /**
    * Whether the player ticked the brain-health-tips box on the landing page.
    * Optional: omitted by variants that never asked, and stored as null there.
@@ -110,6 +112,9 @@ export async function POST(req: Request) {
         : null,
       typeof payload.ageBand === "string" && payload.ageBand.trim()
         ? payload.ageBand.trim().slice(0, 16)
+        : null,
+      typeof payload.team === "string" && payload.team.trim()
+        ? payload.team.trim().slice(0, 60)
         : null,
     );
   } catch (err) {

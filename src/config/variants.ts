@@ -43,6 +43,7 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
     variant === "siloam" ||
     variant === "22grams" ||
     variant === "general" ||
+    variant === "otp" ||
     variant === "eisai" ||
     variant === "event7"
   );
