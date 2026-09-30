@@ -853,6 +853,76 @@ drops another's results.
 No board artwork is needed: this board generates its own QR from the play URL
 and carries no prize image.
 
+## /onetrickpony (One Trick Pony quiz night)
+
+Round 5 of a pub quiz night, run as the bonus round. `/onetrickpony` runs
+**`/general`'s arc** (which is the summit's, which is `/phkl`'s), so every score
+stays comparable with every other event's, on its own `onetrickpony` bucket.
+
+Two things make this route unlike every other one in the app.
+
+### It asks for a name and a team, and nothing else
+
+No email, and therefore no consent block: with no address taken there is nothing
+to send, no list to join and nothing left to consent to. `Event3Splash` gates
+the email field, its validation and the whole consent block on `asksForEmail`,
+false for the `otp` design alone. Marketing consent is forced false with it, so
+the newsletter write is skipped rather than firing with an empty address.
+
+Consequences, all deliberate:
+
+- **No leads.** `leads` holds people we can reach; a row with an empty email is
+  one nobody can act on, so the funnel writes none. Players still reach the
+  board and the anonymous response profile. **There is no follow-up list from
+  this event.**
+- **The close cannot promise an email.** `/general`'s says the score is "on its
+  way to your inbox". This route overrides that one line; the rest is
+  `/general`'s word for word (`tests/config/otpFlow.test.ts`).
+- **Ranking a player needs another identifier.** The result screen looks a
+  player up by email, so `/api/leaderboard` takes `name` as a fallback,
+  consulted only when no email is given.
+
+### The team rides inside the name
+
+`submitScore` stores the team **twice**: in the optional `team` column, and
+folded into `name` as `"Adnan · The Quizzengers"` (`boardNameFor`). The column
+is optional, and `insertWithOptionalColumns` drops an optional column *silently*
+on a database that has not had the migration run - so the copy in the name is
+the one that cannot be lost, and everything that reads a team reads it from
+there (`splitBoardName`).
+
+To get the tidy column as well:
+
+```sql
+alter table public.game_scores add column if not exists team text;
+```
+
+The round is fully scoreable either way.
+
+This also forced a fix in `getLeaderboard`, which kept one entry per **email**:
+every row here carries the same empty one, so a whole room would have collapsed
+into a single entry. It now keys on the email where there is one and the stored
+name where there is not (`tests/lib/leaderboardDedupe.test.ts`).
+
+### Two boards
+
+| Route | What it is |
+| --- | --- |
+| `/onetrickpony/leaderboard` | The attract screen: scan rail, the prize, the eight fastest individuals |
+| `/onetrickpony/teams` | The team standings, for scoring the round |
+
+Two screens rather than one panel doing both: the first is what the room scans
+from and is already full, the second is what the host puts up to score. Teams
+are ranked on their **fastest player** (`TEAM_METRIC` in `src/lib/supabase/game.ts`,
+flip to `"average"` to change it). Best-run ranking means every extra person a
+team gets to scan is another chance at a quicker time; ranking on the average
+would demote a team for getting more of its table to play. Both figures are
+printed either way, so the constant changes the order and the emphasis and
+nothing else.
+
+Teams are matched case- and space-insensitively (`teamKey`), because the names
+are typed by hand, on phones, in a bar.
+
 ## Translations (English and Bahasa Indonesia)
 
 One event uses this today, and the whole layer is **inert for every other**:
