@@ -412,12 +412,35 @@ const SILOAM_FLOW: FunnelStep[] = PHKL_FLOW;
 const GENERAL_FLOW: FunnelStep[] = PHKL_FLOW;
 
 /**
- * One Trick Pony quiz night (/onetrickpony): /general's arc, shared rather
- * than rebuilt. The bonus round is the game, and the score is written the
- * moment it finishes - so the board fills whether or not anybody goes on to
- * answer the questionnaire behind it.
+ * One Trick Pony quiz night (/onetrickpony): the GAME, and nothing else.
+ *
+ * Not /general's arc. This is a bonus round inside somebody else's quiz night -
+ * the room has four rounds of questions behind it and four more to come, and a
+ * fourteen-question health questionnaire on top of that is the surest way to
+ * lose them halfway through. Name and team, how to play, play, your time.
+ *
+ * Its own array rather than a filter of /general's: what this route needs is
+ * not "the arc minus some steps", it is five screens, and writing them out is
+ * how it stays five screens when somebody edits the arc.
+ *
+ * Nothing downstream of the game runs, which is the point and has consequences
+ * worth being explicit about: no quiz, so no Brain Health Score, no report, no
+ * lead and no `analysing` step. The score still reaches the board, because that
+ * is written the moment the game finishes and never depended on the rest.
+ *
+ * `achievableAxisMax` sums question steps and this array has none, so it is 0
+ * here. Nothing reads it, because nothing computes a result on this route - but
+ * putting a question back without putting the whole arc back would give this
+ * route a scale of its own that no other event shares, and its scores would
+ * stop being comparable with anybody's.
  */
-const OTP_FLOW: FunnelStep[] = GENERAL_FLOW;
+const OTP_FLOW: FunnelStep[] = [
+  { kind: "nameGate" },
+  { kind: "speedIntro" },
+  { kind: "instructions" },
+  { kind: "game" },
+  { kind: "gameResult" },
+];
 
 /**
  * A second Pantai Hospital KL activation (/phkl-2). Shares PHKL's array rather

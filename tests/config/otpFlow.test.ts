@@ -7,20 +7,57 @@ import { usesDaylightScreens } from "@/config/variants";
 import { boardNameFor } from "@/lib/boardName";
 
 /**
- * /onetrickpony is Round 5 of a pub quiz night: the arc /general runs, on its
- * own score bucket, asking for a name and a team and NOTHING else.
+ * /onetrickpony is Round 5 of a pub quiz night, and it is the GAME and nothing
+ * else: name and team, how to play, play, your time.
  *
- * That last part is the unusual bit and the part worth pinning. Every other
- * landing in this app takes an email and a consent tick; this one takes
- * neither, which means three things have to stay true together - the form must
- * not ask, the copy must not promise, and the board must still be able to tell
- * two players apart without an address to do it with.
+ * Two things about it are unlike every other route here, and both are the kind
+ * that come back if nothing holds them down.
+ *
+ * It asks for no email, so no consent block - which means the form must not
+ * ask, the copy must not promise anything by email, and the board must still be
+ * able to tell two players apart with no address to do it with.
+ *
+ * And it has no questionnaire, because the room is midway through somebody
+ * else's quiz night. That means no question steps at all, which is also why
+ * putting one back would need care: `achievableAxisMax` sums question steps, so
+ * a route with some questions but not the arc's would score on a scale no other
+ * event shares.
  */
 describe("/onetrickpony", () => {
-  it("runs /general's steps exactly, so its scores stay comparable", () => {
-    const steps = (v: "otp" | "general") =>
-      resolveFlow({}, v).map((s) => JSON.stringify(s));
-    expect(steps("otp")).toEqual(steps("general"));
+  it("is the game and nothing else", () => {
+    expect(resolveFlow({}, "otp").map((s) => s.kind)).toEqual([
+      "nameGate",
+      "speedIntro",
+      "instructions",
+      "game",
+      "gameResult",
+    ]);
+  });
+
+  it("asks no questions at all", () => {
+    const kinds = resolveFlow({}, "otp").map((s) => s.kind);
+    expect(kinds).not.toContain("question");
+    expect(kinds).not.toContain("questionGroup");
+    expect(kinds).not.toContain("ageSelect");
+  });
+
+  /** No quiz means no score to reveal, so none of that arc may be reachable. */
+  it("never reaches the questionnaire, the report or a lead", () => {
+    const kinds = resolveFlow({}, "otp").map((s) => s.kind);
+    for (const gone of ["analysing", "result", "emailGate", "quizIntro"]) {
+      expect(kinds).not.toContain(gone);
+    }
+  });
+
+  it("ends on the post-game card, so the player sees their time", () => {
+    const flow = resolveFlow({}, "otp");
+    expect(flow[flow.length - 1].kind).toBe("gameResult");
+  });
+
+  it("is shorter than the arc it used to share", () => {
+    expect(resolveFlow({}, "otp").length).toBeLessThan(
+      resolveFlow({}, "general").length,
+    );
   });
 
   it("writes to its own bucket, and its neighbours write to theirs", () => {

@@ -13,6 +13,8 @@ import {
   IHHSEA_SOURCE,
   NTU_HOMECOMING_PAUSED,
   NTU_HOMECOMING_SOURCE,
+  OTP_PAUSED,
+  OTP_SOURCE,
   PHKL_PAUSED,
   PHKL_SOURCE,
   ROTARY_PAUSED,
@@ -85,9 +87,11 @@ export async function POST(req: Request) {
                   ? TWENTY_TWO_GRAMS_PAUSED
                   : payload.source === GENERAL_SOURCE
                     ? GENERAL_PAUSED
-                    : payload.source === "event2"
-                      ? EVENT2_PAUSED
-                      : EVENT_PAUSED;
+                    : payload.source === OTP_SOURCE
+                      ? OTP_PAUSED
+                      : payload.source === "event2"
+                        ? EVENT2_PAUSED
+                        : EVENT_PAUSED;
   if (paused) {
     return NextResponse.json({ ok: true, stored: false });
   }
@@ -96,7 +100,14 @@ export async function POST(req: Request) {
   const email = typeof payload.email === "string" ? payload.email.trim() : "";
   const timeMs = Number(payload.timeMs);
 
-  if (!name || !EMAIL_RE.test(email) || !Number.isFinite(timeMs) || timeMs <= 0) {
+  // An address is OPTIONAL, and must be real only if one was given. The
+  // quiz-night landing (/onetrickpony) collects a name and a team and no email
+  // at all, and requiring one here rejected every score it sent with a 400 -
+  // silently, because the funnel fires this write and does not wait on it.
+  // What actually identifies a score is the name and the time.
+  const emailOk = email === "" || EMAIL_RE.test(email);
+
+  if (!name || !emailOk || !Number.isFinite(timeMs) || timeMs <= 0) {
     return NextResponse.json({ error: "Invalid score payload." }, { status: 400 });
   }
 
