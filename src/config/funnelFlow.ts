@@ -412,6 +412,14 @@ const SILOAM_FLOW: FunnelStep[] = PHKL_FLOW;
 const GENERAL_FLOW: FunnelStep[] = PHKL_FLOW;
 
 /**
+ * One Trick Pony quiz night (/onetrickpony): /general's arc, shared rather
+ * than rebuilt. The bonus round is the game, and the score is written the
+ * moment it finishes - so the board fills whether or not anybody goes on to
+ * answer the questionnaire behind it.
+ */
+const OTP_FLOW: FunnelStep[] = GENERAL_FLOW;
+
+/**
  * A second Pantai Hospital KL activation (/phkl-2). Shares PHKL's array rather
  * than copying it: the two differ only in the bucket their rows carry, so a
  * later change to the arc reaches both and neither one's question set can
@@ -517,6 +525,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   urbanmilers: URBANMILERS_FLOW,
   siloam: SILOAM_FLOW,
   general: GENERAL_FLOW,
+  otp: OTP_FLOW,
   eisai: EISAI_FLOW,
   "22grams": TWENTY_TWO_GRAMS_FLOW,
   event6: EVENT6_FLOW,

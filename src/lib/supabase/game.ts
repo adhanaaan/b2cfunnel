@@ -32,11 +32,19 @@ export async function submitScore(
   tipsConsent?: boolean | null,
   partnerConsent?: boolean | null,
   ageBand?: string | null,
+  team?: string | null,
 ): Promise<void> {
   if (!isSupabaseConfigured()) return;
   const sb = getServerSupabase();
+  const cleanTeam = team?.trim() ? team.trim().slice(0, 60) : null;
   const row = {
-    name,
+    // The team is written twice on purpose, and this is the copy that cannot
+    // be lost: `team` below is an optional column, and an optional column on a
+    // database that has not had the migration run is dropped SILENTLY. On a
+    // night where the team is the whole point of the scoring, folding it into
+    // the name means a missed migration costs formatting, not data - and it is
+    // what the board prints anyway, so the room can see who played for whom.
+    name: cleanTeam ? `${name} · ${cleanTeam}` : name,
     email,
     time_ms: Math.round(timeMs),
     source: source ?? null,
@@ -46,6 +54,7 @@ export async function submitScore(
       tips_consent: tipsConsent ?? null,
       partner_consent: partnerConsent ?? null,
       age_band: ageBand ?? null,
+      team: cleanTeam,
     },
     row,
     (values) => sb.from("game_scores").insert(values),

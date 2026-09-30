@@ -763,6 +763,26 @@ const PHKL_SCREEN_COPY: PhklCopy = {
       },
     };
 
+/**
+ * One Trick Pony quiz night (/onetrickpony): the fifth round of a pub quiz.
+ *
+ * /general's block, with the hero saying what the round is rather than asking
+ * a question - the room has already been told what is happening, and the
+ * screen's job is to get them into the game. The landing also asks for a TEAM
+ * (see Event3Splash's `asksForTeam`), because every score has to be
+ * attributable to one for the round to be scored at all.
+ */
+const OTP_SCREEN_COPY: GeneralCopy = {
+  ...GENERAL_SCREEN_COPY,
+  splash: {
+    ...GENERAL_SCREEN_COPY.splash,
+    eyebrow: "Round 5 · Bonus",
+    heading: "How *fast* is your *brain*?",
+    body: "One minute, one game. Your time goes on the board for your team.",
+    cta: "Play the bonus round",
+  },
+};
+
 export const COPY: CopyConfig = {
   screens: {
     hook: {
@@ -1273,6 +1293,7 @@ export const COPY: CopyConfig = {
     siloam: SILOAM_SCREEN_COPY,
     "22grams": TWENTY_TWO_GRAMS_SCREEN_COPY,
     general: GENERAL_SCREEN_COPY,
+    otp: OTP_SCREEN_COPY,
     eisai: EISAI_SCREEN_COPY,
     // GMS x Urban Milers (/urbanmilers): the same run's arc, word for word,
     // with this event named where the words name the event that is hosting it.
@@ -1466,6 +1487,7 @@ export function arcCopyFor(
   if (variant === "siloam") return copy.screens.siloam;
   if (variant === "22grams") return copy.screens["22grams"];
   if (variant === "general") return copy.screens.general;
+  if (variant === "otp") return copy.screens.otp;
   if (variant === "eisai") return copy.screens.eisai;
   return copy.screens.phkl;
 }
@@ -1485,6 +1507,7 @@ export function reportStatFor(
   if (variant === "siloam") return copy.screens.siloam.report.stat;
   if (variant === "22grams") return copy.screens["22grams"].report.stat;
   if (variant === "general") return copy.screens.general.report.stat;
+  if (variant === "otp") return copy.screens.otp.report.stat;
   if (variant === "eisai") return copy.screens.eisai.report.stat;
   return copy.reportStat;
 }
@@ -1505,6 +1528,7 @@ export function phklReportFor(
   if (variant === "siloam") return copy.screens.siloam.report;
   if (variant === "22grams") return copy.screens["22grams"].report;
   if (variant === "general") return copy.screens.general.report;
+  if (variant === "otp") return copy.screens.otp.report;
   if (variant === "eisai") return copy.screens.eisai.report;
   return copy.screens.phkl.report;
 }
@@ -1525,6 +1549,7 @@ export function boothReportFor(
 ): BoothCloseReportCopy {
   if (variant === "22grams") return copy.screens["22grams"].report;
   if (variant === "general") return copy.screens.general.report;
+  if (variant === "otp") return copy.screens.otp.report;
   if (variant === "eisai") return copy.screens.eisai.report;
   return copy.screens.siloam.report;
 }

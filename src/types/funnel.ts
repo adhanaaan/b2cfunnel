@@ -74,6 +74,9 @@ export type QuizVariant =
   // prize board, because this event has no prize to put on one. Its own
   // `general` bucket, so its standings rank only what is played here.
   | "general"
+  // One Trick Pony quiz night (/onetrickpony): the bonus round of a pub quiz,
+  // so every attempt carries the TEAM that played it.
+  | "otp"
   // Eisai's World Alzheimer's Day challenge (/eisai): the /general arc and
   // board with Eisai's name on the landing, on a bucket of its own. An
   // internal staff event - GMS keeps the data, so there is no partner consent.
@@ -144,6 +147,9 @@ export interface FunnelState {
   cursor: number; // index into the resolved flow
   answers: Answers;
   name?: string;
+  // The team a player is on, where the landing asks (the quiz-night bonus
+  // round). Undefined everywhere else - most events have no teams.
+  team?: string;
   email?: string; // event: the Accenture/leaderboard email captured up front
   personalEmail?: string; // event: personal email captured at the end for results
   emailCaptured: boolean;
@@ -179,6 +185,8 @@ export type FunnelAction =
       type: "SUBMIT_EMAIL";
       name: string;
       email: string;
+      /** Only the landings that ask for one pass this. */
+      team?: string;
       tipsConsent?: boolean;
       partnerConsent?: boolean;
     }

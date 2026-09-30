@@ -35,6 +35,7 @@ describe("submitScore", () => {
       tips_consent: true,
       partner_consent: true,
       age_band: null,
+      team: null,
     });
   });
 
@@ -102,6 +103,61 @@ describe("submitScore", () => {
       source: "dbs-day1",
       tips_consent: true,
       age_band: null,
+      team: null,
     });
+  });
+
+  /**
+   * The quiz-night round is scored BY TEAM, so a row with no team is a row
+   * that cannot be scored. `team` is an optional column, and an optional
+   * column on a database that has not had its migration run is dropped
+   * silently - so the team is also folded into the name, which is the copy
+   * that cannot be lost, and is what the board prints anyway.
+   */
+  it("writes the team to its column and into the name", async () => {
+    await submitScore(
+      "Adnan",
+      "adnan@example.com",
+      35051.7,
+      "onetrickpony",
+      null,
+      null,
+      null,
+      "  The Quizzengers  ",
+    );
+
+    expect(insert).toHaveBeenCalledWith({
+      name: "Adnan · The Quizzengers",
+      email: "adnan@example.com",
+      time_ms: 35052,
+      source: "onetrickpony",
+      tips_consent: null,
+      partner_consent: null,
+      age_band: null,
+      team: "The Quizzengers",
+    });
+  });
+
+  it("leaves the name alone when no team was asked for", async () => {
+    await submitScore("Ada", "ada@example.com", 1000, "general");
+    const row = insert.mock.calls[0][0] as { name: string; team: unknown };
+    expect(row.name).toBe("Ada");
+    expect(row.team).toBeNull();
+  });
+
+  /**
+   * The point of the fallback: on a database with no `team` column the insert
+   * is retried without it, and the team still reaches the row inside the name.
+   */
+  it("keeps the team in the name when the column does not exist", async () => {
+    insert
+      .mockResolvedValueOnce({ error: { code: "42703", message: 'column "team" does not exist' } })
+      .mockResolvedValueOnce({ error: null });
+
+    await submitScore("Adnan", "a@example.com", 1000, "onetrickpony", null, null, null, "Quizzengers");
+
+    const retried = insert.mock.calls.at(-1)?.[0] as { name: string; team?: unknown };
+    expect(retried.team).toBeUndefined();
+    expect(retried.name).toBe("Adnan · Quizzengers");
   });
 });

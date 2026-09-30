@@ -34,6 +34,7 @@ export function useFunnel(variant: QuizVariant) {
       email: string,
       tipsConsent?: boolean,
       partnerConsent?: boolean,
+      team?: string,
     ) =>
       dispatch({
         type: "SUBMIT_EMAIL",
@@ -41,6 +42,7 @@ export function useFunnel(variant: QuizVariant) {
         email,
         tipsConsent,
         partnerConsent,
+        team,
       }),
     [],
   );

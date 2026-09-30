@@ -55,6 +55,9 @@ export function funnelReducer(
         ...state,
         name: action.name,
         email: action.email,
+        // Left untouched when the landing does not ask, so a variant with no
+        // teams keeps it undefined rather than storing an empty string.
+        team: action.team ?? state.team,
         emailCaptured: true,
         // Left untouched when the gate doesn't ask, so they stay undefined
         // ("never asked") rather than becoming a false we never collected.

@@ -201,6 +201,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         tipsConsent: state.tipsConsent,
         partnerConsent: state.partnerConsent,
         source: eventSource(state.variant) ?? "event",
+        // Only the quiz-night landing collects one; undefined elsewhere.
+        team: state.team,
         // The age band, on the arcs that ask for it before the game (phkl);
         // absent everywhere else and stored as null.
         ageBand:
@@ -259,6 +261,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             state.variant === "siloam" ||
             state.variant === "22grams" ||
             state.variant === "general" ||
+            state.variant === "otp" ||
             state.variant === "eisai"
               ? state.variant
               : // Everything left on the community-run arc is #MambaCares or
@@ -424,6 +427,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         state.variant === "siloam" ||
         state.variant === "22grams" ||
         state.variant === "general" ||
+        state.variant === "otp" ||
         state.variant === "eisai" ||
         usesMambaScreens(state.variant)
       ) {
@@ -459,6 +463,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         state.variant === "siloam" ||
         state.variant === "22grams" ||
         state.variant === "general" ||
+        state.variant === "otp" ||
         state.variant === "eisai"
       ) {
         // The booth report: PHKL's, with a close that ends in a conversation
