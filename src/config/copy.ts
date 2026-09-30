@@ -780,6 +780,22 @@ const OTP_SCREEN_COPY: GeneralCopy = {
     heading: "How *fast* is your *brain*?",
     body: "One minute, one game. Your time goes on the board for your team - fastest brain in the bar takes a custom Stanley.",
     cta: "Play the bonus round",
+    // `consentForm` comes through the spread above and goes UNUSED: this
+    // landing asks for a name and a team and nothing else, so Event3Splash
+    // renders no email field and no consent block for it. Left in place rather
+    // than removed because the moment this route asks for an address again the
+    // block it must show is the one every other GMS landing shows, and that is
+    // this one.
+  },
+  report: {
+    ...GENERAL_SCREEN_COPY.report,
+    offer: {
+      ...GENERAL_SCREEN_COPY.report.offer,
+      // No address is collected on this route, so nothing is on its way to
+      // anyone's inbox. Saying otherwise would be a promise the round cannot
+      // keep - the rest of the close is the summit's, unchanged.
+      body: "Today's quiz estimates your risk profile; the ReCOGnAIze assessment shows how your brain is actually performing.",
+    },
   },
 };
 

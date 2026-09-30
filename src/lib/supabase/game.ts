@@ -1,5 +1,6 @@
 import { getServerSupabase, isSupabaseConfigured } from "./server";
 import { insertWithOptionalColumns } from "./optionalColumn";
+import { TEAM_MAX_LENGTH, boardNameFor } from "@/lib/boardName";
 
 export interface LeaderboardEntry {
   name: string;
@@ -36,7 +37,9 @@ export async function submitScore(
 ): Promise<void> {
   if (!isSupabaseConfigured()) return;
   const sb = getServerSupabase();
-  const cleanTeam = team?.trim() ? team.trim().slice(0, 60) : null;
+  const cleanTeam = team?.trim()
+    ? team.trim().slice(0, TEAM_MAX_LENGTH)
+    : null;
   const row = {
     // The team is written twice on purpose, and this is the copy that cannot
     // be lost: `team` below is an optional column, and an optional column on a
@@ -44,7 +47,7 @@ export async function submitScore(
     // night where the team is the whole point of the scoring, folding it into
     // the name means a missed migration costs formatting, not data - and it is
     // what the board prints anyway, so the room can see who played for whom.
-    name: cleanTeam ? `${name} · ${cleanTeam}` : name,
+    name: boardNameFor(name, cleanTeam),
     email,
     time_ms: Math.round(timeMs),
     source: source ?? null,
@@ -85,11 +88,20 @@ export async function getLeaderboard(
 
   if (error || !data) return [];
 
-  // data is sorted ascending, so the first row per email is that player's best.
+  // data is sorted ascending, so the first row per player is that player's best.
+  //
+  // Keyed on the email where there is one. Where there is not - the quiz-night
+  // landing takes a name and a team and no address - it keys on the stored name
+  // instead, which on those routes carries the team ("Adnan · The Quizzengers").
+  // Keying every address-less row on "" would collapse a whole room into a
+  // single entry and leave one name on the board all night.
   const best = new Map<string, LeaderboardEntry>();
   for (const r of data as { name: string; email: string; time_ms: number }[]) {
-    if (!best.has(r.email)) {
-      best.set(r.email, { name: r.name, email: r.email, timeMs: r.time_ms });
+    const key = r.email?.trim()
+      ? `email:${r.email.trim().toLowerCase()}`
+      : `name:${r.name.trim().toLowerCase()}`;
+    if (!best.has(key)) {
+      best.set(key, { name: r.name, email: r.email, timeMs: r.time_ms });
     }
   }
   return [...best.values()]

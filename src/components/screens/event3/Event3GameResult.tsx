@@ -19,6 +19,9 @@ import { useShareCard } from "./useShareCard";
 interface Event3GameResultProps {
   name?: string;
   email?: string;
+  /** The name the score is stored under (team included), for ranking
+      a player who gave no address. */
+  boardName?: string;
   timeMs?: number;
   /** Continue into the brain-health quiz. */
   onContinue: () => void;
@@ -45,6 +48,7 @@ const item = {
 export function Event3GameResult({
   name,
   email,
+  boardName,
   timeMs,
   onContinue,
   onRetake,
@@ -64,7 +68,7 @@ export function Event3GameResult({
   const source = eventSource(variant);
   const playUrl = playUrlFor(variant);
   // Live standings: the fastest so far and your rank.
-  const standing = useStanding(source, email, timeMs);
+  const standing = useStanding(source, email, timeMs, boardName);
   const { share, sharing, shareNote, qrHost } = useShareCard({
     name,
     timeMs,

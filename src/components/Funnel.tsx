@@ -59,6 +59,7 @@ import { SiloamResultScreen } from "@/components/screens/siloam/SiloamResultScre
 import { SiloamScoresFinal } from "@/components/screens/siloam/SiloamScoresFinal";
 import { SharpShotPoster } from "@/components/screens/twentyTwoGrams/SharpShotPoster";
 import { isSharpShot } from "@/config/twentyTwoGrams";
+import { boardNameFor } from "@/lib/boardName";
 
 /** A stable, human-readable name for a funnel step (for drop-off analytics). */
 function stepKey(step: FunnelStep): string {
@@ -146,7 +147,11 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
       // reports by players for one event day.
       source: eventSource(state.variant) ?? undefined,
     };
-    if (!preview) {
+    // No address means no lead: `leads` exists to hold people we can reach, and
+    // a row with an empty email is one nobody can ever act on. The quiz-night
+    // landing (/onetrickpony) collects no address by design, so its players
+    // reach the board and the anonymous profile below, and not this table.
+    if (!preview && payload.email.trim().length > 0) {
       void fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -478,6 +483,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             result={state.result}
             name={state.name}
             email={state.email}
+            boardName={boardNameFor(state.name, state.team)}
             gameTimeMs={state.gameTimeMs}
             gameAttempts={state.gameAttempts}
             ageBand={ageBand}
@@ -566,6 +572,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
           <Event3GameResult
             name={state.name}
             email={state.email}
+            boardName={boardNameFor(state.name, state.team)}
             timeMs={state.gameTimeMs}
             onContinue={next}
             onRetake={() => {

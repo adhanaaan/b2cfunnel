@@ -195,6 +195,13 @@ export function Event3Splash({
   // stays "" and is never passed on.
   const [team, setTeam] = useState("");
   const asksForTeam = design === "otp";
+  /**
+   * The quiz-night landing takes a name and a team and nothing else - no
+   * address, and so no consent block either, because with nothing to send and
+   * no marketing list to join there is nothing left to consent to. Everywhere
+   * else this stays true and the form is unchanged.
+   */
+  const asksForEmail = design !== "otp";
   const [contactConsent, setContactConsent] = useState(false);
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [partnerConsent, setPartnerConsent] = useState(false);
@@ -206,7 +213,7 @@ export function Event3Splash({
       setError(c.nameError);
       return;
     }
-    if (!EMAIL_RE.test(email.trim())) {
+    if (asksForEmail && !EMAIL_RE.test(email.trim())) {
       setError(c.emailError);
       return;
     }
@@ -218,7 +225,10 @@ export function Event3Splash({
     }
     // PDPA: consent to be contacted is what lets us email the result and
     // reach the prize winner, so it gates entry rather than being assumed.
-    if (!contactConsent) {
+    // Nothing to consent to on a landing that collects no address, so the
+    // gate comes off with the block rather than blocking on a tick that is
+    // never rendered.
+    if (asksForEmail && !contactConsent) {
       setError(c.consentRequiredError);
       return;
     }
@@ -230,7 +240,10 @@ export function Event3Splash({
     // What the player agreed to about marketing. With the newer block there is
     // no second tick to read: the line under the one they ticked says that
     // registering IS the consent, so submitting the form gives it.
-    const marketing = consentForm ? true : marketingConsent;
+    // With no address collected there is no list to join, and the `consentForm`
+    // that would otherwise imply consent is never shown - so this is false, and
+    // the newsletter write below is skipped rather than firing with "".
+    const marketing = asksForEmail ? (consentForm ? true : marketingConsent) : false;
 
     // The marketing opt-in never blocks play. Fire-and-forget so a slow write
     // can't hold up the challenge.
@@ -363,16 +376,18 @@ export function Event3Splash({
             aria-label="Name"
             className={inputClass}
           />
-          <input
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={c.emailPlaceholder}
-            aria-label="Email"
-            className={inputClass}
-          />
+          {asksForEmail && (
+            <input
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={c.emailPlaceholder}
+              aria-label="Email"
+              className={inputClass}
+            />
+          )}
           {asksForTeam && (
             <input
               type="text"
@@ -384,6 +399,10 @@ export function Event3Splash({
               className={inputClass}
             />
           )}
+          {/* The whole consent block, which comes off with the email field:
+              with no address taken there is no contact to authorise and no
+              list to join, so there is nothing here to agree to. */}
+          {asksForEmail && (
           <div className="space-y-1.5 pt-0.5">
             {consentForm ? (
               // One tick, under a heading, with the newsletter consent stated
@@ -472,6 +491,7 @@ export function Event3Splash({
               </ConsentCheckbox>
             )}
           </div>
+          )}
 
           {error && (
             <p className="text-[13px] font-medium text-error" role="alert">

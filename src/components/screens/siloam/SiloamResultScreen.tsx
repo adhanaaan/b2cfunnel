@@ -20,6 +20,9 @@ interface SiloamResultScreenProps {
   result: ScoreResult;
   name?: string;
   email?: string;
+  /** The name the score is stored under (team included), for ranking
+      a player who gave no address. */
+  boardName?: string;
   gameTimeMs?: number;
   gameAttempts?: number;
   /** The `age` option the player chose before the game. */
@@ -49,6 +52,7 @@ export function SiloamResultScreen({
   result,
   name,
   email,
+  boardName,
   gameTimeMs,
   gameAttempts,
   ageBand,
@@ -57,7 +61,7 @@ export function SiloamResultScreen({
   const variant = useVariant();
   const source = eventSource(variant);
   const playUrl = playUrlFor(variant);
-  const standing = useStanding(source, email, gameTimeMs);
+  const standing = useStanding(source, email, gameTimeMs, boardName);
   const { share, sharing, shareNote, qrHost } = useShareCard({
     name,
     timeMs: gameTimeMs,

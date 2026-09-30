@@ -33,6 +33,12 @@ export function useStanding(
   source: string | null,
   email?: string,
   refreshKey?: number,
+  /**
+   * Who to rank when there is no address - the name the score was stored
+   * under, team and all. Only sent when `email` is empty, so no caller that
+   * has an address changes behaviour. See the leaderboard route.
+   */
+  boardName?: string,
 ): Standing {
   const [standing, setStanding] = useState<Standing>(EMPTY);
 
@@ -43,7 +49,11 @@ export function useStanding(
         const res = await fetch(
           `/api/leaderboard?limit=1` +
             (source ? `&source=${encodeURIComponent(source)}` : "") +
-            (email ? `&email=${encodeURIComponent(email)}` : ""),
+            (email
+              ? `&email=${encodeURIComponent(email)}`
+              : boardName
+                ? `&name=${encodeURIComponent(boardName)}`
+                : ""),
           { cache: "no-store" },
         );
         const data = await res.json();
@@ -64,7 +74,7 @@ export function useStanding(
       cancelled = true;
       clearTimeout(t);
     };
-  }, [email, source, refreshKey]);
+  }, [boardName, email, source, refreshKey]);
 
   return standing;
 }
