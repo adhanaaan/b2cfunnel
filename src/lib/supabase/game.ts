@@ -1,6 +1,11 @@
 import { getServerSupabase, isSupabaseConfigured } from "./server";
 import { insertWithOptionalColumns } from "./optionalColumn";
-import { TEAM_MAX_LENGTH, boardNameFor } from "@/lib/boardName";
+import {
+  TEAM_MAX_LENGTH,
+  boardNameFor,
+  splitBoardName,
+  teamKey,
+} from "@/lib/boardName";
 
 export interface LeaderboardEntry {
   name: string;
@@ -107,4 +112,90 @@ export async function getLeaderboard(
   return [...best.values()]
     .sort((a, b) => a.timeMs - b.timeMs)
     .slice(0, limit);
+}
+
+/** One team's standing, built from its players' best runs. */
+export interface TeamStanding {
+  /** The team as the first player to name it typed it. */
+  team: string;
+  /** The team's fastest run - what it is ranked on by default. */
+  bestMs: number;
+  /** Who set it. */
+  bestPlayer: string;
+  /** The mean of its players' best runs. */
+  averageMs: number;
+  /** How many DIFFERENT players have played for it. */
+  players: number;
+}
+
+/**
+ * How teams are ranked against each other.
+ *
+ * "best" - the team's fastest player. The default, and the one that suits an
+ * event: every extra person a team gets to scan is another chance at a quicker
+ * time, so it rewards pulling the whole table in. Ranking on the average does
+ * the opposite - one slow teammate drags a team down, which quietly tells the
+ * slower half of the room not to play.
+ *
+ * "average" - the mean of the team's players' best runs. Flip this constant to
+ * switch; the board prints both figures either way, so only the ordering and
+ * the labelled column change.
+ */
+export type TeamMetric = "best" | "average";
+export const TEAM_METRIC: TeamMetric = "best";
+
+/**
+ * Team standings for one event.
+ *
+ * Built on top of `getLeaderboard`, so a player counts once at their best run
+ * here exactly as they do on the individual board - a team cannot climb by
+ * having one member play twenty times.
+ *
+ * The team is read out of the stored NAME rather than the `team` column: the
+ * column is optional and a database that has not had the migration run drops it
+ * silently, so it may be empty on the night. The name always carries the team.
+ */
+export async function getTeamLeaderboard(
+  source?: string | null,
+  metric: TeamMetric = TEAM_METRIC,
+): Promise<TeamStanding[]> {
+  // 200 is what getLeaderboard reads anyway; every player of the night is far
+  // inside that for a room of eight teams.
+  const players = await getLeaderboard(200, source);
+
+  const byTeam = new Map<
+    string,
+    { team: string; times: number[]; bestPlayer: string }
+  >();
+
+  for (const p of players) {
+    const { player, team } = splitBoardName(p.name);
+    // A score with no team belongs to no team, and is left to the individual
+    // board rather than being filed under a made-up one.
+    if (!team) continue;
+    const key = teamKey(team);
+    const found = byTeam.get(key);
+    if (found) {
+      found.times.push(p.timeMs);
+    } else {
+      // `players` is already fastest-first, so the first row for a team is its
+      // best run and the spelling that lands on the board is the one whoever
+      // set it typed.
+      byTeam.set(key, { team, times: [p.timeMs], bestPlayer: player });
+    }
+  }
+
+  const standings: TeamStanding[] = [...byTeam.values()].map((t) => ({
+    team: t.team,
+    bestMs: Math.min(...t.times),
+    bestPlayer: t.bestPlayer,
+    averageMs: t.times.reduce((a, b) => a + b, 0) / t.times.length,
+    players: t.times.length,
+  }));
+
+  return standings.sort((a, b) =>
+    metric === "average"
+      ? a.averageMs - b.averageMs
+      : a.bestMs - b.bestMs,
+  );
 }
