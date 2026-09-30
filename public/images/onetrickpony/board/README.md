@@ -1,43 +1,47 @@
 # /onetrickpony board artwork
 
-The prize cutouts on the ember card at `/onetrickpony/leaderboard`.
+The prize picture on the ember card at `/onetrickpony/leaderboard`.
 
-Every file here is **optional**. The board reads before any of them land and
-each one appears the moment its file is committed, so the route can go up
-before the artwork exists — which is exactly what happened on the night. A
-missing file leaves the prize's words in place and nothing else.
+There is **one prize** on this board, by the host's call: the custom Stanley for
+the single fastest time of the night. The runner-up cutouts that were here (a
+Grab voucher and a Starbucks card, copied from the /urbanmilers board) came out
+with them.
 
-| File | What it is | Status |
-| --- | --- | --- |
-| `prize-1st.svg` | The custom Stanley | a **drawing**, not a photograph — see below |
-| `prize-2nd.png` | Grab vouchers | copied from the /urbanmilers board |
-| `prize-3rd.png` | Starbucks gift card | copied from the /urbanmilers board |
+| File | What it is |
+| --- | --- |
+| `prize-1st.svg` | The custom Stanley — a **drawing**, not a photograph |
 
-The 2nd and 3rd files are this route's **own copies**, not a reference into
-`public/images/urbanmilers/board/`. Same reason the boards are copies rather
-than a shared component: re-dressing one event's prizes must not be able to
-change another event's TV.
+The file is **optional**. The board reads before it lands and it appears the
+moment it is committed, so the route can go up before any artwork exists — which
+is exactly what happened on the night. A missing file leaves the prize's words
+in place and nothing else; a broken-image icon on a 55" panel mid-round is the
+one thing that must not happen.
 
 ## The Stanley
 
-`prize-1st.svg` is an original illustration — a tumbler with its handle, lid and
-straw, drawn in the card's own cream so it sits on the ember rather than on top
-of it. There was no photograph of the actual prize to use, and a drawing of the
-thing beats a hole in the middle of the card.
+`prize-1st.svg` is an original illustration drawn from a photograph of the
+actual prize: the white Quencher, its squared handle, the clear lid with the
+straw nub, and the ridge where the barrel steps down to the base. The engraving
+is the real one, word for word —
 
-Its engraved band is deliberately **blank**. "Custom" is what makes the prize,
-but putting a mark on it would be inventing branding nobody approved, and the
-board is read by a room.
+```
+BRAIN
+SPEED
+CHAMPION
+OTP
+```
 
-To swap in a real photograph: put it at `prize-1st.svg`'s path with whatever
-extension it has, and change the one `image:` line in `PRIZES.first` (top of
-`app/onetrickpony/leaderboard/page.tsx`) to match. Transparent background,
-portrait or square, around 1200px on the long edge for a 55" panel. The slot is
-`object-contain`, so an odd ratio letterboxes rather than crops.
+— and it is the reason the drawing works at all on a board. It is what makes
+the prize custom, so it has to be legible from across the room; a phone photo
+taken at the bar under the venue's purple lighting would not have been.
 
-If a file ever goes missing, the card falls back to words and the 1ST chip comes
-off with the picture — it never shows a broken image.
+The Stanley wordmark and the bear mark on the real tumbler are **not** drawn.
+Reproducing another company's marks on a screen a whole room reads is not
+something to do without being asked, and the engraving alone identifies the
+prize.
 
-Note the 2nd-prize artwork has **$10** printed on the voucher itself. The board
-labels it `$30 Grab voucher`, and the label is what the words say — replace the
-file if the mismatch is going to be read from across the room.
+To swap in a photograph instead: put it beside this file and change the one
+`image:` line in `PRIZES.first` (top of
+`app/onetrickpony/leaderboard/page.tsx`) to match its name. Background knocked
+out, portrait or square, around 1200px on the long edge for a 55" panel. The
+slot is `object-contain`, so an odd ratio letterboxes rather than crops.

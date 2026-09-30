@@ -27,7 +27,7 @@
  * screen.
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
@@ -70,9 +70,9 @@ const HOW_TO = [
 const BOARD_ART = "/images/onetrickpony/board";
 
 /**
- * The three prizes on the ember card. The words are data and the pictures are
- * files, so the prizes can change between now and the round without editing a
- * component.
+ * The prize on the ember card. One prize only, by the host's call: the words
+ * are data and the picture is a file, so it can change between now and the
+ * round without editing a component.
  */
 const PRIZES = {
   first: {
@@ -83,21 +83,9 @@ const PRIZES = {
     // photograph (any format, same name) and nothing else needs touching.
     image: `${BOARD_ART}/prize-1st.svg`,
     alt: "A custom Stanley tumbler",
+    /** Under the picture: what a single prize has to be explicit about. */
+    footnote: "Single fastest time of the night takes it home",
   },
-  runnersUp: [
-    {
-      rank: "2nd",
-      label: "$30 Grab voucher",
-      image: `${BOARD_ART}/prize-2nd.png`,
-      alt: "A $30 Grab voucher",
-    },
-    {
-      rank: "3rd",
-      label: "$20 Starbucks card",
-      image: `${BOARD_ART}/prize-3rd.png`,
-      alt: "A $20 Starbucks gift card",
-    },
-  ],
 };
 
 // Board palette (kept local: the board is its own full-bleed canvas).
@@ -155,7 +143,6 @@ const T = {
   // after the leader's time - it is what the room is playing for.
   prizeTitle: "text-[clamp(1.25rem,min(4.4vh,5.2vw),2.75rem)]",
   prizeLabel: "text-[clamp(0.6875rem,min(1.9vh,2.6vw),1.25rem)]",
-  prizeChip: "text-[clamp(0.5rem,min(1.3vh,2vw),0.875rem)]",
 };
 
 function initials(name: string) {
@@ -439,41 +426,19 @@ function ScanRail() {
 
 /* ------------------------------ Prize card ------------------------------ */
 
-/** The circled place number that sits over a prize's artwork. */
-function PlaceChip({ children }: { children: string }) {
-  return (
-    <span
-      className={`${T.prizeChip} flex aspect-square items-center justify-center rounded-full font-extrabold uppercase leading-none tracking-wide`}
-      style={{
-        height: "clamp(1.375rem,min(3.4vh,4.6vw),2.25rem)",
-        background: "#ffffff",
-        color: ORANGE_DEEP,
-        boxShadow: "0 4px 12px -4px rgba(51,18,0,0.35)",
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
 /**
- * The ember card in the middle column: the Stanley as the headline, the two
- * runner-up prizes side by side at its foot, each with its place chip over the
- * artwork. Every image is optional - with none of them present the card is
- * still the three prizes in words, which is what went on screen on the night.
+ * The ember card in the middle column. One prize, so the Stanley takes the
+ * whole of it rather than sharing the foot with runners-up: the picture is the
+ * argument for scanning, and at this size it makes it from across the bar.
+ *
+ * The picture is optional. If the file ever goes missing the card falls back to
+ * words and still reads - a broken-image icon on a 55" panel is the one thing
+ * that must not happen mid-round.
  */
 function PrizeCard() {
-  // There is no cutout of the Stanley in hand. Rather than leave a third of the
-  // card empty (or framed in a dashed box, which reads as a broken asset from
-  // across a bar), the slot falls back to words - and the 1ST chip comes off
-  // with the picture, since with no artwork under it there is nothing for it to
-  // sit on and the eyebrow already says whose prize this is.
-  const [hasHeroArt, setHasHeroArt] = useState(true);
-  const onHeroMissing = useCallback(() => setHasHeroArt(false), []);
-
   return (
     <div
-      className="flex h-full min-h-0 w-full flex-col justify-between gap-[2vh] rounded-2xl p-[clamp(1rem,2.6vh,2rem)]"
+      className="flex h-full min-h-0 w-full flex-col justify-between gap-[1.4vh] rounded-2xl p-[clamp(1rem,2.6vh,2rem)]"
       style={{
         background: PRIZE_CARD_GRADIENT,
         color: CREAM,
@@ -493,16 +458,11 @@ function PrizeCard() {
         </p>
       </div>
 
-      {/* The Stanley. There is no cutout of it in hand, so the slot falls back
-          to a typographic panel rather than standing empty - a third of the
-          card's height of nothing reads as a bug from across a bar. Drop
-          prize-1st.png in and the picture takes the same space. */}
-      <div className="relative flex min-h-0 flex-1 items-center justify-center">
+      <div className="flex min-h-0 flex-1 items-center justify-center">
         <OptionalImage
           src={PRIZES.first.image}
           alt={PRIZES.first.alt}
-          className="max-h-full w-auto max-w-[78%] object-contain drop-shadow-[0_14px_28px_rgba(51,18,0,0.35)]"
-          onMissing={onHeroMissing}
+          className="max-h-full w-auto max-w-[86%] object-contain drop-shadow-[0_14px_28px_rgba(51,18,0,0.35)]"
           fallback={
             <p
               className={`${T.prizeTitle} px-[0.4em] text-center font-extrabold leading-[1.15] tracking-tight`}
@@ -516,35 +476,16 @@ function PrizeCard() {
             </p>
           }
         />
-        {hasHeroArt && (
-          <span className="absolute left-[4%] top-0">
-            <PlaceChip>1st</PlaceChip>
-          </span>
-        )}
       </div>
 
-      <div className="flex shrink-0 items-start gap-[1.2em]">
-        {PRIZES.runnersUp.map((prize) => (
-          <div
-            key={prize.rank}
-            className="relative flex min-w-0 flex-1 flex-col items-center gap-[0.5em]"
-          >
-            <OptionalImage
-              src={prize.image}
-              alt={prize.alt}
-              className="h-[clamp(2.5rem,min(9vh,11vw),6rem)] w-auto max-w-full object-contain"
-            />
-            <p
-              className={`${T.prizeLabel} text-center font-bold leading-[1.25]`}
-            >
-              {prize.label}
-            </p>
-            <span className="absolute -left-[0.2em] -top-[0.4em]">
-              <PlaceChip>{prize.rank}</PlaceChip>
-            </span>
-          </div>
-        ))}
-      </div>
+      {/* With nothing for 2nd and 3rd, the board has to say out loud that one
+          time wins - otherwise the eight rows above imply eight prizes. */}
+      <p
+        className={`${T.prizeLabel} shrink-0 text-center font-bold leading-[1.3]`}
+        style={{ color: PRIZE_WARM }}
+      >
+        {PRIZES.first.footnote}
+      </p>
     </div>
   );
 }
