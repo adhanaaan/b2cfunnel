@@ -923,6 +923,15 @@ nothing else.
 Teams are matched case- and space-insensitively (`teamKey`), because the names
 are typed by hand, on phones, in a bar.
 
+**There is no cap on how many teams can play.** Eight are expected, but the
+ninth is the one the board is designed for: a team name typed two ways is a new
+team, and on a fixed eight-row board a quick one would push a real team off with
+nothing on screen to say it had. So eight is the MINIMUM number of slots and the
+table grows from there, tightening its type past nine rows so both lines of
+every row still fit. `MAX_ROWS` (14) is a legibility limit rather than a data
+one, and the masthead always reports the true count, so the board cannot quietly
+hide a team.
+
 ## Translations (English and Bahasa Indonesia)
 
 One event uses this today, and the whole layer is **inert for every other**:

@@ -38,8 +38,22 @@ interface TeamStanding {
   players: number;
 }
 
-/** Eight teams tonight; the extra rows keep the board honest if a ninth lands. */
-const ROWS = 8;
+/**
+ * The board shows EVERY team that has played, not a fixed eight.
+ *
+ * Eight teams are expected, but the ninth is the one to design for: a team name
+ * typed two ways ("Quiz Khalifa", "Quiz Kalifa") is a new team, and if it were
+ * quick it would push a real one off a fixed board with nothing to say it had.
+ * So eight is the MINIMUM number of slots - enough that an empty board still
+ * reads as a board - and the table grows from there.
+ *
+ * `MAX_ROWS` is a legibility limit, not a data one: past this many rows on a
+ * 55" panel the type is too small to read from across a bar. If it is ever hit,
+ * the count in the masthead says how many teams are in, so the board never
+ * quietly hides some of them.
+ */
+const MIN_ROWS = 8;
+const MAX_ROWS = 14;
 const POLL_MS = 8000;
 
 const PLAY_URL = playUrlFor("otp");
@@ -72,6 +86,13 @@ const T = {
   timeL: "text-[clamp(1.375rem,min(6vh,8vw),4.0625rem)]",
   time: "text-[clamp(1rem,min(3.8vh,4.8vw),2.5rem)]",
   sub: "text-[clamp(0.5625rem,min(1.6vh,2.4vw),1.0625rem)]",
+  // Compact set, for when enough teams are in that a row is too short for two
+  // lines at full size. Every row keeps both lines - which team, and who set
+  // its time - rather than dropping the second, because the second line is what
+  // a host reads out.
+  teamC: "text-[clamp(0.8125rem,min(2.6vh,3.6vw),1.75rem)]",
+  subC: "text-[clamp(0.5rem,min(1.25vh,2vw),0.875rem)]",
+  timeC: "text-[clamp(0.875rem,min(3vh,4vw),2rem)]",
   rowEmpty: "text-[clamp(0.8125rem,min(2.4vh,3.6vw),1.625rem)]",
   scanHead: "text-[clamp(1.375rem,min(3.7vh,4.1vw),2.5rem)]",
   footer: "text-[clamp(0.5625rem,min(1.5vh,2.2vw),1rem)]",
@@ -137,10 +158,17 @@ function TeamRow({
   rank,
   team,
   leader,
+  compact,
 }: {
   rank: number;
   team: TeamStanding | null;
   leader: boolean;
+  /**
+   * Set once enough teams are in that the leader's row is too short for the
+   * full treatment. Without it the "Team to beat" label and the oversized time
+   * are taller than the row they sit in, and clip against its top edge.
+   */
+  compact: boolean;
 }) {
   const badgeBg = leader
     ? "#ffffff"
@@ -161,9 +189,9 @@ function TeamRow({
     <motion.li
       layout
       transition={springs.shuffle}
-      className="flex min-h-0 items-center gap-[0.9em] rounded-2xl px-[0.7em] py-[0.4em] sm:px-[1.1em] lg:py-0"
+      className="flex min-h-0 items-center gap-[0.9em] overflow-hidden rounded-2xl px-[0.7em] py-[0.4em] sm:px-[1.1em] lg:py-0"
       style={{
-        flex: leader ? 1.5 : 1,
+        flex: leader ? (compact ? 1.2 : 1.5) : 1,
         background: leader
           ? LEADER_GRADIENT
           : team
@@ -194,14 +222,14 @@ function TeamRow({
         <>
           <span className="flex min-w-0 flex-1 flex-col justify-center">
             <span
-              className={`${leader ? T.teamL : T.team} truncate font-extrabold leading-tight ${leader ? "text-white" : "text-charcoal"}`}
+              className={`${compact ? T.teamC : leader ? T.teamL : T.team} truncate font-extrabold leading-tight ${leader ? "text-white" : "text-charcoal"}`}
             >
               {team.team}
             </span>
             {/* Who set the time, and how many of the table turned up - the two
                 things a host reads out when the round is scored. */}
             <span
-              className={`${T.sub} truncate font-semibold`}
+              className={`${compact ? T.subC : T.sub} truncate font-semibold`}
               style={{ color: leader ? LEADER_LABEL : INK_FAINT }}
             >
               {team.bestPlayer} · {team.players}{" "}
@@ -210,7 +238,7 @@ function TeamRow({
             </span>
           </span>
           <span className="flex shrink-0 flex-col items-end leading-none">
-            {leader && (
+            {leader && !compact && (
               <span
                 className={`${T.micro} font-bold uppercase tracking-[0.25em]`}
                 style={{ color: LEADER_LABEL }}
@@ -219,7 +247,7 @@ function TeamRow({
               </span>
             )}
             <span
-              className={`${leader ? T.timeL : T.time} mt-[0.15em] font-extrabold tabular-nums ${leader ? "text-white" : ""}`}
+              className={`${compact ? T.timeC : leader ? T.timeL : T.time} mt-[0.15em] font-extrabold tabular-nums ${leader ? "text-white" : ""}`}
               style={leader ? undefined : { color: ORANGE_DEEP }}
             >
               {formatTime(team.bestMs)}
@@ -330,7 +358,7 @@ export default function OneTrickPonyTeamBoard() {
     const load = async () => {
       try {
         const res = await fetch(
-          `/api/team-leaderboard?limit=${ROWS}&source=${encodeURIComponent(OTP_SOURCE)}`,
+          `/api/team-leaderboard?limit=${MAX_ROWS}&source=${encodeURIComponent(OTP_SOURCE)}`,
           { cache: "no-store" },
         );
         const data = await res.json();
@@ -349,7 +377,10 @@ export default function OneTrickPonyTeamBoard() {
     };
   }, []);
 
-  const rows = Array.from({ length: ROWS }, (_, i) => teams[i] ?? null);
+  const rows = Array.from(
+    { length: Math.min(Math.max(MIN_ROWS, teams.length), MAX_ROWS) },
+    (_, i) => teams[i] ?? null,
+  );
 
   return (
     <main
@@ -426,6 +457,7 @@ export default function OneTrickPonyTeamBoard() {
                 rank={i + 1}
                 team={t}
                 leader={i === 0 && !!t}
+                compact={rows.length > 9}
               />
             ))}
           </AnimatePresence>
