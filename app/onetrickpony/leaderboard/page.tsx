@@ -78,7 +78,10 @@ const PRIZES = {
   first: {
     eyebrow: "Tonight's top prize",
     title: "Win a custom Stanley",
-    image: `${BOARD_ART}/prize-1st.png`,
+    // An SVG, not a photo: there is no shot of the actual prize, and a drawing
+    // of the thing beats a hole in the card. Overwrite this file with a
+    // photograph (any format, same name) and nothing else needs touching.
+    image: `${BOARD_ART}/prize-1st.svg`,
     alt: "A custom Stanley tumbler",
   },
   runnersUp: [

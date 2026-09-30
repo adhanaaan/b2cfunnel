@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 440" role="img" aria-label="A custom Stanley tumbler">
+  <title>A custom Stanley tumbler</title>
+  <defs>
+    <!-- The body is lit from the left, so the cream rolls to a warm shadow on
+         the right - enough to read as a cylinder from across a room without
+         any outline. -->
+    <linearGradient id="otp-body" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="26%" stop-color="#fff6ef"/>
+      <stop offset="62%" stop-color="#f7ddcd"/>
+      <stop offset="100%" stop-color="#e9c3ac"/>
+    </linearGradient>
+    <linearGradient id="otp-lid" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#fffdfb"/>
+      <stop offset="55%" stop-color="#f3d9c8"/>
+      <stop offset="100%" stop-color="#dcb096"/>
+    </linearGradient>
+    <linearGradient id="otp-straw" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#fff7f1"/>
+      <stop offset="100%" stop-color="#e5bfa6"/>
+    </linearGradient>
+    <!-- Clips the highlight and the engraved band to the body silhouette. -->
+    <clipPath id="otp-body-clip">
+      <path d="M62 104 h196 l-24 276 a26 26 0 0 1 -26 24 h-96 a26 26 0 0 1 -26 -24 z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Handle, behind the body. -->
+  <path d="M252 150 q58 14 58 68 q0 54 -58 68"
+        fill="none" stroke="#e7bda4" stroke-width="26" stroke-linecap="round"/>
+  <path d="M252 150 q58 14 58 68 q0 54 -58 68"
+        fill="none" stroke="#fdeadd" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Straw. -->
+  <rect x="186" y="6" width="20" height="72" rx="10" fill="url(#otp-straw)"/>
+
+  <!-- Body. -->
+  <path d="M62 104 h196 l-24 276 a26 26 0 0 1 -26 24 h-96 a26 26 0 0 1 -26 -24 z"
+        fill="url(#otp-body)"/>
+
+  <g clip-path="url(#otp-body-clip)">
+    <!-- Specular highlight down the left face. -->
+    <rect x="84" y="104" width="22" height="300" rx="11" fill="#ffffff" opacity="0.72"/>
+    <!-- The "custom" part: an engraved band where a logo would be etched.
+         Deliberately blank - inventing a mark for it would put branding on the
+         board that nobody approved. -->
+    <rect x="62" y="206" width="196" height="64" fill="#e8c5af" opacity="0.5"/>
+    <rect x="62" y="206" width="196" height="3" fill="#d9ab90" opacity="0.55"/>
+    <rect x="62" y="267" width="196" height="3" fill="#d9ab90" opacity="0.55"/>
+  </g>
+
+  <!-- Lid: the collar, then the domed cap over it. -->
+  <rect x="52" y="78" width="216" height="32" rx="12" fill="url(#otp-lid)"/>
+  <rect x="58" y="52" width="204" height="34" rx="16" fill="url(#otp-lid)"/>
+  <rect x="58" y="52" width="204" height="10" rx="5" fill="#ffffff" opacity="0.55"/>
+</svg>
