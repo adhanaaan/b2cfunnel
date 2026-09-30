@@ -778,7 +778,7 @@ const OTP_SCREEN_COPY: GeneralCopy = {
     ...GENERAL_SCREEN_COPY.splash,
     eyebrow: "Round 5 · Bonus",
     heading: "How *fast* is your *brain*?",
-    body: "One minute, one game. Your time goes on the board for your team.",
+    body: "One minute, one game. Your time goes on the board for your team - fastest brain in the bar takes a custom Stanley.",
     cta: "Play the bonus round",
   },
 };

@@ -1,29 +1,36 @@
 "use client";
 
 /**
- * The attract screen for /onetrickpony (designed against a 1920x1080 55" panel,
- * read from 2-5m away, but laid out to reflow down to a phone).
+ * The attract screen for Round 5 of the One Trick Pony quiz night (designed
+ * against a 1920x1080 55" panel, read from 2-5m away across a full bar, but
+ * laid out to reflow down to a phone).
  *
- * The NTU Homecoming board, as briefed, pointed at this route's own bucket:
- * two columns on a wide screen - the scan rail and the live standings, which
- * take the width the v3 board gives its prize card. There is no prize on this
- * one either, and the space buys what it is worth more: full names on every
- * row. Collapses to standings-over-scan on tablet and mobile. Type is clamped
- * between a mobile floor and the panel size so the same markup serves both.
- * Self-contained: polls /api/leaderboard every 8s and keeps the last good
- * standings on error.
+ * Three columns on a wide screen, as /urbanmilers has them: the scan rail, the
+ * ember prize card, and the live standings. The prize card is the reason the
+ * room scans - the custom Stanley as the headline with the two runner-up
+ * prizes at its foot - so it gets the middle of the board rather than a corner.
+ * Collapses to standings, then prizes, then scan on tablet and mobile. Type is
+ * clamped between a mobile floor and the panel size so the same markup serves
+ * both. Self-contained: polls /api/leaderboard every 8s and keeps the last
+ * good standings on error.
  *
- * A copy of that board rather than a shared component, on purpose and in line
- * with every other board in this app: an event's screen is the one thing that
- * gets redesigned mid-run, and two events must never be able to change each
- * other's TV. The only thing the two boards share is the bucket they DO NOT
- * share - OTP_SOURCE is what keeps NTU Homecoming's standings off this
+ * Standings rows read "Player · Team", because that is how submitScore writes
+ * the name for this route - the team is folded into the name so it survives a
+ * database with no `team` column. The board needs no knowledge of that: it
+ * prints the name it is given.
+ *
+ * A copy of the other boards rather than a shared component, on purpose and in
+ * line with every other board in this app: an event's screen is the one thing
+ * that gets redesigned mid-run, and two events must never be able to change
+ * each other's TV. The only thing the boards share is the bucket they DO NOT
+ * share - OTP_SOURCE is what keeps every other event's standings off this
  * screen.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
+import { OptionalImage } from "@/components/screens/phkl/OptionalImage";
 import { formatTime } from "@/lib/format";
 import { OTP_PAUSED, OTP_SOURCE } from "@/config/event";
 import { playUrlFor } from "@/config/eventLinks";
@@ -49,10 +56,46 @@ const PLAY_URL = playUrlFor("otp");
 const RATE_POLL_MS = 30000;
 
 const HOW_TO = [
-  "Play the speed game",
-  "1-min quiz on what's slowing you",
-  "Get your brain health report",
+  "Scan and enter your team",
+  "Play the 60-second speed game",
+  "Your time goes on the board",
 ];
+
+/**
+ * Artwork that is dropped in as files under public/images/onetrickpony/board/
+ * (see the README there). Every one is optional: the board reads before any of
+ * them land, and each appears the moment its file is committed - which is why
+ * this route could go up on the day with no Stanley cutout in hand.
+ */
+const BOARD_ART = "/images/onetrickpony/board";
+
+/**
+ * The three prizes on the ember card. The words are data and the pictures are
+ * files, so the prizes can change between now and the round without editing a
+ * component.
+ */
+const PRIZES = {
+  first: {
+    eyebrow: "Tonight's top prize",
+    title: "Win a custom Stanley",
+    image: `${BOARD_ART}/prize-1st.png`,
+    alt: "A custom Stanley tumbler",
+  },
+  runnersUp: [
+    {
+      rank: "2nd",
+      label: "$30 Grab voucher",
+      image: `${BOARD_ART}/prize-2nd.png`,
+      alt: "A $30 Grab voucher",
+    },
+    {
+      rank: "3rd",
+      label: "$20 Starbucks card",
+      image: `${BOARD_ART}/prize-3rd.png`,
+      alt: "A $20 Starbucks gift card",
+    },
+  ],
+};
 
 // Board palette (kept local: the board is its own full-bleed canvas).
 const ORANGE_DEEP = "#e35d0e";
@@ -73,6 +116,11 @@ const SCAN_HIGHLIGHT = "#fde68a";
 const CANVAS =
   "linear-gradient(150deg, #fff8f6 15%, #fdeee4 46%, #fbe3d3 85%)";
 const LEADER_GRADIENT = "linear-gradient(90deg, #f77528 0%, #ff9a4d 100%)";
+/** Cream/Base - the ink on the ember prize card, as /urbanmilers sets it. */
+const CREAM = "#fff4ec";
+/** The warm cream the prize card uses for its secondary line. */
+const PRIZE_WARM = "#ffe4cf";
+const PRIZE_CARD_GRADIENT = "linear-gradient(160deg, #f77528 0%, #ff9a4d 100%)";
 
 /**
  * Clamped type sizes. The middle term is `min(vh, vw)` on purpose: the board is
@@ -92,11 +140,19 @@ const T = {
   rowTime: "text-[clamp(1rem,min(3.6vh,4.8vw),2.4375rem)]",
   rowEmpty: "text-[clamp(0.8125rem,min(2.4vh,3.6vw),1.625rem)]",
   scanTitle: "text-[clamp(1rem,min(3vh,4.4vw),2rem)]",
-  // The scan headline is the loudest type on the board: sized off the 48.6px
-  // base of the design, with the emphasised words stepped up in em from there.
-  scanHead: "text-[clamp(1.375rem,min(4.5vh,4.8vw),3.0375rem)]",
+  // The scan headline is the loudest type on the board, with the emphasised
+  // words stepped up in em from its base. Sized smaller here than on the
+  // two-column boards: the prize card takes a third of the width, and at the
+  // 48.6px base of the design "in < 60 SECONDS" no longer holds one line in
+  // what is left - it wrapped and pushed the QR off the bottom of the panel.
+  scanHead: "text-[clamp(1.375rem,min(3.7vh,4.1vw),2.5rem)]",
   fact: "text-[clamp(0.75rem,min(2.5vh,3.4vw),1.6875rem)]",
   footer: "text-[clamp(0.5625rem,min(1.5vh,2.2vw),1rem)]",
+  // Prize card. The 1st-prize title is the second-loudest thing on the board
+  // after the leader's time - it is what the room is playing for.
+  prizeTitle: "text-[clamp(1.25rem,min(4.4vh,5.2vw),2.75rem)]",
+  prizeLabel: "text-[clamp(0.6875rem,min(1.9vh,2.6vw),1.25rem)]",
+  prizeChip: "text-[clamp(0.5rem,min(1.3vh,2vw),0.875rem)]",
 };
 
 function initials(name: string) {
@@ -122,7 +178,7 @@ function Masthead({ live }: { live: boolean }) {
           <p
             className={`${T.eyebrow} font-bold uppercase tracking-[0.3em] text-primary`}
           >
-            Reaction Time Challenge
+            Round 5 · Brain Speed Bonus
           </p>
           <p
             className={`${T.chip} flex shrink-0 items-center gap-2 rounded-full bg-white px-[1.1em] py-[0.5em] font-bold text-secondary shadow-card`}
@@ -144,8 +200,14 @@ function Masthead({ live }: { live: boolean }) {
         <h1
           className={`${T.h1} mt-2 font-extrabold leading-none tracking-tight text-charcoal`}
         >
-          How <span className="text-primary">fast</span> is the room today?
+          Fastest <span className="text-primary">brain</span> in the bar
         </h1>
+        <p
+          className={`${T.micro} mt-2 font-bold uppercase tracking-[0.25em]`}
+          style={{ color: INK_FAINT }}
+        >
+          One Trick Pony · Quiz Night · 98 Club Street
+        </p>
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -271,7 +333,7 @@ function StandingRow({
             className={`${T.rowEmpty} min-w-0 flex-1 truncate font-semibold`}
             style={{ color: INK_FAINT }}
           >
-            Play to claim this spot
+            Open spot - your team could take it
           </span>
           <span
             className={`${T.rowTime} shrink-0 font-extrabold tabular-nums`}
@@ -301,12 +363,12 @@ function ScanRail() {
       >
         SCAN TO{" "}
         <span className="text-[1.27em]" style={{ color: SCAN_ACCENT }}>
-          MEASURE
+          PLAY
         </span>
         <br />
-        YOUR{" "}
+        FOR YOUR{" "}
         <span className="text-[1.29em]" style={{ color: SCAN_ACCENT }}>
-          SPEED
+          TEAM
         </span>
         <br />
         <span className="text-[1.18em]">
@@ -340,7 +402,7 @@ function ScanRail() {
               black thresholds better than the brand brown on a washed-out
               projector and is indistinguishable across a room. */}
           <div
-            className="flex size-[min(70vw,40vh)] max-w-full items-center justify-center rounded-[1.4rem] bg-white p-[0.25rem] lg:size-[min(29vw,46vh)]"
+            className="flex size-[min(70vw,40vh)] max-w-full items-center justify-center rounded-[1.4rem] bg-white p-[0.25rem] lg:size-[min(24vw,40vh)]"
             style={{ border: "0.5rem solid #111111" }}
           >
             <QRCodeSVG
@@ -367,6 +429,118 @@ function ScanRail() {
             }}
           />
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------ Prize card ------------------------------ */
+
+/** The circled place number that sits over a prize's artwork. */
+function PlaceChip({ children }: { children: string }) {
+  return (
+    <span
+      className={`${T.prizeChip} flex aspect-square items-center justify-center rounded-full font-extrabold uppercase leading-none tracking-wide`}
+      style={{
+        height: "clamp(1.375rem,min(3.4vh,4.6vw),2.25rem)",
+        background: "#ffffff",
+        color: ORANGE_DEEP,
+        boxShadow: "0 4px 12px -4px rgba(51,18,0,0.35)",
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+/**
+ * The ember card in the middle column: the Stanley as the headline, the two
+ * runner-up prizes side by side at its foot, each with its place chip over the
+ * artwork. Every image is optional - with none of them present the card is
+ * still the three prizes in words, which is what went on screen on the night.
+ */
+function PrizeCard() {
+  // There is no cutout of the Stanley in hand. Rather than leave a third of the
+  // card empty (or framed in a dashed box, which reads as a broken asset from
+  // across a bar), the slot falls back to words - and the 1ST chip comes off
+  // with the picture, since with no artwork under it there is nothing for it to
+  // sit on and the eyebrow already says whose prize this is.
+  const [hasHeroArt, setHasHeroArt] = useState(true);
+  const onHeroMissing = useCallback(() => setHasHeroArt(false), []);
+
+  return (
+    <div
+      className="flex h-full min-h-0 w-full flex-col justify-between gap-[2vh] rounded-2xl p-[clamp(1rem,2.6vh,2rem)]"
+      style={{
+        background: PRIZE_CARD_GRADIENT,
+        color: CREAM,
+        boxShadow: "0 18px 44px -16px rgba(51,18,0,0.32)",
+      }}
+    >
+      <div className="shrink-0">
+        <p
+          className={`${T.eyebrow} font-bold uppercase leading-[1.1] tracking-[0.23em]`}
+        >
+          {PRIZES.first.eyebrow}
+        </p>
+        <p
+          className={`${T.prizeTitle} mt-[0.4em] font-extrabold leading-[1.04] tracking-tight`}
+        >
+          {PRIZES.first.title}
+        </p>
+      </div>
+
+      {/* The Stanley. There is no cutout of it in hand, so the slot falls back
+          to a typographic panel rather than standing empty - a third of the
+          card's height of nothing reads as a bug from across a bar. Drop
+          prize-1st.png in and the picture takes the same space. */}
+      <div className="relative flex min-h-0 flex-1 items-center justify-center">
+        <OptionalImage
+          src={PRIZES.first.image}
+          alt={PRIZES.first.alt}
+          className="max-h-full w-auto max-w-[78%] object-contain drop-shadow-[0_14px_28px_rgba(51,18,0,0.35)]"
+          onMissing={onHeroMissing}
+          fallback={
+            <p
+              className={`${T.prizeTitle} px-[0.4em] text-center font-extrabold leading-[1.15] tracking-tight`}
+              style={{ color: PRIZE_WARM }}
+            >
+              Fastest brain
+              <br />
+              of the night
+              <br />
+              takes it home
+            </p>
+          }
+        />
+        {hasHeroArt && (
+          <span className="absolute left-[4%] top-0">
+            <PlaceChip>1st</PlaceChip>
+          </span>
+        )}
+      </div>
+
+      <div className="flex shrink-0 items-start gap-[1.2em]">
+        {PRIZES.runnersUp.map((prize) => (
+          <div
+            key={prize.rank}
+            className="relative flex min-w-0 flex-1 flex-col items-center gap-[0.5em]"
+          >
+            <OptionalImage
+              src={prize.image}
+              alt={prize.alt}
+              className="h-[clamp(2.5rem,min(9vh,11vw),6rem)] w-auto max-w-full object-contain"
+            />
+            <p
+              className={`${T.prizeLabel} text-center font-bold leading-[1.25]`}
+            >
+              {prize.label}
+            </p>
+            <span className="absolute -left-[0.2em] -top-[0.4em]">
+              <PlaceChip>{prize.rank}</PlaceChip>
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -523,12 +697,11 @@ export default function OneTrickPonyLeaderboardBoard() {
         <Masthead live={!OTP_PAUSED} />
       </header>
 
-      {/* Body: scan | standings. The standings take the column the v3 board
-          spends on its prize card, so long names have room to sit unclipped;
-          the scan rail keeps the width (and so the QR size) it has there.
-          Reflows to a single column - standings first - below lg. */}
-      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 lg:grid-cols-[588fr_1155fr] lg:gap-[1.6vw] lg:px-[3vw] lg:py-[2vh]">
-        <div className="order-2 lg:order-1 lg:min-h-0">
+      {/* Body: scan | prizes | standings, as /urbanmilers has them. Reflows to
+          a single column below lg, in the order the phone wants it: standings
+          first (the thing being refreshed), then the prizes, then the scan. */}
+      <div className="relative z-10 grid min-h-0 flex-1 gap-4 px-[4vw] py-4 lg:grid-cols-[560fr_460fr_900fr] lg:gap-[1.6vw] lg:px-[3vw] lg:py-[2vh]">
+        <div className="order-3 lg:order-1 lg:min-h-0">
           {OTP_PAUSED ? (
             <div
               className="flex h-full flex-col items-center justify-center rounded-2xl bg-white p-6 text-center shadow-card"
@@ -540,13 +713,13 @@ export default function OneTrickPonyLeaderboardBoard() {
                 That&apos;s a wrap
               </p>
               <p className={`${T.scanTitle} mt-3 font-extrabold leading-tight`}>
-                The challenge has ended
+                Round 5 is done
               </p>
               <p
                 className={`${T.rowEmpty} mt-3 font-semibold text-secondary`}
               >
                 {total > 0
-                  ? `${total} minds tested today`
+                  ? `${total} brains tested tonight`
                   : "Thanks for playing"}
               </p>
             </div>
@@ -555,7 +728,13 @@ export default function OneTrickPonyLeaderboardBoard() {
           )}
         </div>
 
-        <ol className="order-1 flex min-h-0 flex-col gap-2 lg:order-2 lg:gap-[1.2vh]">
+        {/* The prizes stay up after the round closes: the room still wants to
+            see what the winner just took. */}
+        <div className="order-2 min-h-0 lg:order-2">
+          <PrizeCard />
+        </div>
+
+        <ol className="order-1 flex min-h-0 flex-col gap-2 lg:order-3 lg:gap-[1.2vh]">
           {rows.map((e, i) => (
             <StandingRow
               key={e ? keyOf(e) : `empty-${i}`}
