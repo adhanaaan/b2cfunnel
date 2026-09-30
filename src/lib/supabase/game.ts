@@ -141,6 +141,13 @@ export interface TeamStanding {
  * switch; the board prints both figures either way, so only the ordering and
  * the labelled column change.
  */
+/**
+ * How many players the team standings are built from. Not a display limit -
+ * nothing here is shown to anyone - just a ceiling on how much of an event is
+ * read in one go, set far past any turnout a single activation has seen.
+ */
+const TEAM_PLAYER_CEILING = 5000;
+
 export type TeamMetric = "best" | "average";
 export const TEAM_METRIC: TeamMetric = "best";
 
@@ -159,9 +166,11 @@ export async function getTeamLeaderboard(
   source?: string | null,
   metric: TeamMetric = TEAM_METRIC,
 ): Promise<TeamStanding[]> {
-  // 200 is what getLeaderboard reads anyway; every player of the night is far
-  // inside that for a room of eight teams.
-  const players = await getLeaderboard(200, source);
+  // Every player of the event, not a page of them: a team's standing is wrong
+  // if even one of its players was cut off the end of the list. The underlying
+  // query reads the whole source anyway, so this only has to be past any real
+  // night's turnout.
+  const players = await getLeaderboard(TEAM_PLAYER_CEILING, source);
 
   const byTeam = new Map<
     string,

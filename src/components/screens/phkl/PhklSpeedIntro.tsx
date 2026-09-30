@@ -18,7 +18,18 @@ const item = {
  * button; one is added so the step is never a dead end and can be worked from
  * a keyboard.
  */
-export function PhklSpeedIntro({ onContinue }: { onContinue: () => void }) {
+export function PhklSpeedIntro({
+  onContinue,
+  showRail = true,
+}: {
+  onContinue: () => void;
+  /**
+   * The GAME / QUIZ / RESULTS rail. Off where the game is the whole funnel
+   * (/onetrickpony): a rail that promises two stops the player will never
+   * reach is worse than no rail, and a one-stop journey needs none.
+   */
+  showRail?: boolean;
+}) {
   const c = useArcCopy().speedIntro;
   const reduced = useReducedMotion();
 
@@ -33,9 +44,11 @@ export function PhklSpeedIntro({ onContinue }: { onContinue: () => void }) {
         initial={reduced ? "show" : "hidden"}
         animate="show"
       >
-        <motion.div variants={item} className="pt-1">
-          <PhklProgressRail stage="game" />
-        </motion.div>
+        {showRail && (
+          <motion.div variants={item} className="pt-1">
+            <PhklProgressRail stage="game" />
+          </motion.div>
+        )}
 
         <div className="flex flex-1 flex-col items-center justify-center text-center">
           <motion.p

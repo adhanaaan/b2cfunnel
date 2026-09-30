@@ -326,7 +326,14 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
 
     case "speedIntro":
       // phkl: what processing speed is, before the age question and the game.
-      return <PhklSpeedIntro onContinue={next} />;
+      // No rail on the quiz night: the game is the whole funnel there, so
+      // there are no later stops to show.
+      return (
+        <PhklSpeedIntro
+          onContinue={next}
+          showRail={state.variant !== "otp"}
+        />
+      );
 
     case "ageSelect":
       // phkl: the quiz's `age` question, asked before the game on a daylight
@@ -574,6 +581,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             email={state.email}
             boardName={boardNameFor(state.name, state.team)}
             timeMs={state.gameTimeMs}
+            // The quiz night ends here: the game IS the bonus round.
+            terminal={state.variant === "otp"}
             onContinue={next}
             onRetake={() => {
               track("game_retake", { variant: state.variant });

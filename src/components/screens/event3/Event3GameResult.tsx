@@ -25,6 +25,12 @@ interface Event3GameResultProps {
   timeMs?: number;
   /** Continue into the brain-health quiz. */
   onContinue: () => void;
+  /**
+   * Hides the bridge into the questionnaire and its CTA. Set where the game is
+   * the whole funnel (/onetrickpony): the card would otherwise invite the
+   * player into a quiz that does not exist, behind a button that goes nowhere.
+   */
+  terminal?: boolean;
   /** Play the reaction game again for a fresh time. */
   onRetake: () => void;
 }
@@ -52,6 +58,7 @@ export function Event3GameResult({
   timeMs,
   onContinue,
   onRetake,
+  terminal = false,
 }: Event3GameResultProps) {
   const reduced = useReducedMotion();
   // The daylight result screen serves several events. Both the standings it
@@ -223,6 +230,7 @@ export function Event3GameResult({
 
         {/* Bridge into the quiz, with the brain sitting in front of the
             card's top edge. The asset carries its own label and sparkle. */}
+        {!terminal && (
         <motion.div variants={item} className="relative mt-3 pt-20 tall:pt-24">
           <div className="pointer-events-none absolute -right-1 bottom-[calc(100%-8.25rem)] z-20 h-[135px] w-[220px] tall:bottom-[calc(100%-9.5rem)] tall:h-[150px] tall:w-[240px]">
             <BrainHero className="h-full w-full" />
@@ -281,6 +289,7 @@ export function Event3GameResult({
             </motion.button>
           </div>
         </motion.div>
+        )}
       </motion.div>
 
       <ProcessingSpeedPopup open={popupOpen} onClose={() => setPopupOpen(false)} />

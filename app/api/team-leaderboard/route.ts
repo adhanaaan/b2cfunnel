@@ -15,7 +15,10 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const source = url.searchParams.get("source")?.trim() || null;
-  const limit = Math.min(Number(url.searchParams.get("limit")) || 12, 50);
+  // Generous on purpose: the caller decides how many rows it can legibly show,
+  // and `totalTeams` below always reports the true count, so a board can say how
+  // many teams are in even when it cannot draw them all.
+  const limit = Math.min(Number(url.searchParams.get("limit")) || 50, 200);
 
   const teams = await getTeamLeaderboard(source);
 
