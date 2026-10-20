@@ -366,11 +366,11 @@ Package. What it holds of its own:
 
 | | |
 | --- | --- |
-| 1ST | RM 150 voucher |
-| 2ND | RM 100 voucher |
+| 1ST | RM 200 voucher |
+| 2ND | RM 150 voucher |
 | 3RD | RM 50 voucher |
 
-As on the summit, the headline's "RM 300" is summed from the ladder, and the
+As on the summit, the headline's "RM 400" is summed from the ladder, and the
 "Top 3" and the three gradient rows read the ladder's length
 (`tests/config/phkl3Flow.test.ts`).
 
