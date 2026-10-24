@@ -693,6 +693,39 @@ const EISAI_SCREEN_COPY: GeneralCopy = {
  * same wording, same report - only the privacy-policy link differs, so a
  * reader never leaves the route they are consenting on.
  */
+/**
+ * Menopause Awareness Month (/menopause).
+ *
+ * /general's block with the landing turned to the campaign. The arc, the
+ * questions, the report and the consent are /general's untouched - what
+ * changes is the reason someone scans.
+ *
+ * On the wording: brain fog around menopause is one of the most commonly
+ * reported experiences of it, and saying so is the hook. What the copy must
+ * NOT do is turn that into a clinical claim - the game times how fast you take
+ * in what you see and respond, and that is all it is said to do here. No
+ * causation between menopause and any condition, nothing about risk, nothing
+ * the compliance rail (src/config/compliance.ts) would have to catch. The
+ * closing report is /general's, which already carries the mandatory
+ * disclaimers.
+ */
+const MENOPAUSE_SCREEN_COPY: GeneralCopy = {
+  ...GENERAL_SCREEN_COPY,
+  splash: {
+    ...GENERAL_SCREEN_COPY.splash,
+    eyebrow: "Menopause Awareness Month",
+    heading: "*Brain fog* is real. Let's *time* it.",
+    body: "Changes in focus and memory are among the most common experiences of menopause - and rarely measured. Take the 60-second symbol-matching test and see your brain's processing speed.",
+    cta: "Take the 60-second test",
+  },
+};
+
+/**
+ * Pantai Hospital Kuala Lumpur (/phkl), and the second activation that
+ * reuses it (/phkl-2). Hoisted so the two share one block: same partner,
+ * same wording, same report - only the privacy-policy link differs, so a
+ * reader never leaves the route they are consenting on.
+ */
 const PHKL_SCREEN_COPY: PhklCopy = {
       ...PHKL_ARC_COPY,
       // The Pantai Hospital KL landing (Figma 697:24953) is the regatta's with
@@ -1311,6 +1344,7 @@ export const COPY: CopyConfig = {
     general: GENERAL_SCREEN_COPY,
     otp: OTP_SCREEN_COPY,
     eisai: EISAI_SCREEN_COPY,
+    menopause: MENOPAUSE_SCREEN_COPY,
     // GMS x Urban Milers (/urbanmilers): the same run's arc, word for word,
     // with this event named where the words name the event that is hosting it.
     // Its own block so a change to either run's wording cannot reach the
@@ -1505,6 +1539,7 @@ export function arcCopyFor(
   if (variant === "general") return copy.screens.general;
   if (variant === "otp") return copy.screens.otp;
   if (variant === "eisai") return copy.screens.eisai;
+  if (variant === "menopause") return copy.screens.menopause;
   return copy.screens.phkl;
 }
 
@@ -1525,6 +1560,7 @@ export function reportStatFor(
   if (variant === "general") return copy.screens.general.report.stat;
   if (variant === "otp") return copy.screens.otp.report.stat;
   if (variant === "eisai") return copy.screens.eisai.report.stat;
+  if (variant === "menopause") return copy.screens.menopause.report.stat;
   return copy.reportStat;
 }
 
@@ -1546,6 +1582,7 @@ export function phklReportFor(
   if (variant === "general") return copy.screens.general.report;
   if (variant === "otp") return copy.screens.otp.report;
   if (variant === "eisai") return copy.screens.eisai.report;
+  if (variant === "menopause") return copy.screens.menopause.report;
   return copy.screens.phkl.report;
 }
 
@@ -1567,5 +1604,6 @@ export function boothReportFor(
   if (variant === "general") return copy.screens.general.report;
   if (variant === "otp") return copy.screens.otp.report;
   if (variant === "eisai") return copy.screens.eisai.report;
+  if (variant === "menopause") return copy.screens.menopause.report;
   return copy.screens.siloam.report;
 }

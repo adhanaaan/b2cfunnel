@@ -377,6 +377,24 @@ export const EISAI_PAUSED = false;
 export const EISAI_SOURCE: string = "eisai";
 
 /**
+ * Independent pause switch for Menopause Awareness Month (/menopause and its
+ * TV board). Its own switch, like every other event's: closing one must never
+ * take another down with it.
+ */
+export const MENOPAUSE_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the Menopause Awareness Month campaign.
+ *
+ * Dated, unlike /eisai's: this is a campaign that runs for a month and will
+ * very likely run again next October. An undated "menopause" bucket would
+ * quietly rank 2027's players against 2026's, and the board would open on a
+ * year-old time nobody in the room can beat. A new month gets a new value
+ * here, and every past row stays exactly where it is.
+ */
+export const MENOPAUSE_SOURCE: string = "menopause-2026-10";
+
+/**
  * Independent pause switch for 22 Grams (/22grams and its TV board). Its own
  * switch, like every other event's: /22grams and /ntuhomecoming run the same
  * arc and must never be closed together by accident.
@@ -442,6 +460,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return OTP_SOURCE;
     case "eisai":
       return EISAI_SOURCE;
+    case "menopause":
+      return MENOPAUSE_SOURCE;
     case "22grams":
       return TWENTY_TWO_GRAMS_SOURCE;
     case "event2":

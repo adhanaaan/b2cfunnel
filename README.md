@@ -853,6 +853,75 @@ drops another's results.
 No board artwork is needed: this board generates its own QR from the play URL
 and carries no prize image.
 
+## /menopause (Menopause Awareness Month)
+
+The brain speed challenge for Menopause Awareness Month. `/menopause` runs
+**`/general`'s arc** (which is the summit's, which is `/phkl`'s), so its
+question set, `achievableAxisMax` and therefore every score it records stay
+comparable with every other event's.
+
+Two things only are its own.
+
+### The landing speaks to the campaign
+
+```
+Menopause Awareness Month
+Brain fog is real. Let's time it.
+Changes in focus and memory are among the most common experiences of
+menopause - and rarely measured. Take the 60-second symbol-matching test
+and see your brain's processing speed.
+```
+
+This is the first landing whose words are about a health experience rather
+than a host's name, so the compliance rail (`src/config/compliance.ts`) matters
+more here than anywhere else in the app. Brain fog around menopause is among
+the most commonly reported experiences of it, and saying so is the hook. The
+copy stops there:
+
+- no claim about **cause**, and none about **risk**
+- **dementia is not mentioned**, and nothing suggests menopause leads to it
+- of the game it says only that it times how fast you take in what you see and
+  respond, which is what it does
+
+`tests/config/menopauseFlow.test.ts` asserts all of that against
+`BANNED_PATTERNS` directly, so the wording can be edited without anyone having
+to remember the rail. The report at the end is `/general`'s and carries the
+mandatory disclaimers unchanged.
+
+### Its own bucket, dated
+
+```ts
+export const MENOPAUSE_SOURCE: string = "menopause-2026-10";
+```
+
+Dated, unlike `/eisai`'s. This campaign runs for a month and will very likely
+run again next October; an undated `menopause` bucket would quietly rank 2027's
+players against 2026's and open the board on a year-old time nobody in the room
+can beat. **A new month gets a new value here**, and every past row stays
+exactly where it is. A test asserts the value stays dated.
+
+### The board
+
+`/menopause/leaderboard` is the quiz night's three-column board - scan rail,
+ember prize card, live standings - rather than `/eisai`'s prize-less two-column
+one, because this campaign has a prize: the Stanley, to the fastest time of the
+month.
+
+The prize artwork is **its own copy** under `public/images/menopause/board/`,
+not a reference into the quiz night's. Same reason the boards are copies: one
+event's prize must not be able to change another event's TV. The one real
+difference is the engraving - the quiz night's tumbler reads `BRAIN SPEED
+CHAMPION OTP`, and this one's band is deliberately blank until somebody says
+what the campaign's prize will carry.
+
+### Full arc, not game-only
+
+Unlike `/onetrickpony`, which is the game alone, this route keeps the
+questionnaire and the report. A month-long awareness campaign is the one place
+they earn their keep: the report **is** the awareness, and the game is only
+what gets someone to start. Pointing `MENOPAUSE_FLOW` at a game-only array is
+the change if that is ever not wanted.
+
 ## /onetrickpony (One Trick Pony quiz night)
 
 Round 5 of a pub quiz night, run as the bonus round. `/onetrickpony` runs

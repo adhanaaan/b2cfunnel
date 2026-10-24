@@ -465,6 +465,19 @@ const PHKL3_FLOW: FunnelStep[] = PHKL_FLOW;
 const EISAI_FLOW: FunnelStep[] = GENERAL_FLOW;
 
 /**
+ * Menopause Awareness Month (/menopause): /general's arc, shared rather than
+ * rebuilt - same reason as /eisai. The campaign differs in what the landing
+ * says and the bucket its rows are tagged with, neither of which is a step, so
+ * sharing the array is what keeps its question set and `achievableAxisMax`
+ * identical and its scores comparable with every other event's.
+ *
+ * Deliberately NOT /onetrickpony's game-only flow: a month-long awareness
+ * campaign is the one place the questionnaire and the report earn their keep -
+ * the report is the awareness, the game is only what gets someone to start.
+ */
+const MENOPAUSE_FLOW: FunnelStep[] = GENERAL_FLOW;
+
+/**
  * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
  * so the split-tick treatment of the partner consents (one box per clause) can
  * still be walked through and compared against the single tick that v3 ships.
@@ -550,6 +563,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   general: GENERAL_FLOW,
   otp: OTP_FLOW,
   eisai: EISAI_FLOW,
+  menopause: MENOPAUSE_FLOW,
   "22grams": TWENTY_TWO_GRAMS_FLOW,
   event6: EVENT6_FLOW,
   event7: EVENT7_FLOW,

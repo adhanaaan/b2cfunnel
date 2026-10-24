@@ -267,7 +267,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
             state.variant === "22grams" ||
             state.variant === "general" ||
             state.variant === "otp" ||
-            state.variant === "eisai"
+            state.variant === "eisai" ||
+            state.variant === "menopause"
               ? state.variant
               : // Everything left on the community-run arc is #MambaCares or
                 // its /event-v7 preview, which walks that run's landing.
@@ -441,6 +442,7 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         state.variant === "general" ||
         state.variant === "otp" ||
         state.variant === "eisai" ||
+        state.variant === "menopause" ||
         usesMambaScreens(state.variant)
       ) {
         return (
@@ -476,7 +478,8 @@ export function Funnel({ variant = "full" }: { variant?: QuizVariant }) {
         state.variant === "22grams" ||
         state.variant === "general" ||
         state.variant === "otp" ||
-        state.variant === "eisai"
+        state.variant === "eisai" ||
+        state.variant === "menopause"
       ) {
         // The booth report: PHKL's, with a close that ends in a conversation
         // rather than a checkout, in place of the Memory Screening Package.
