@@ -81,6 +81,9 @@ export type QuizVariant =
   // board with Eisai's name on the landing, on a bucket of its own. An
   // internal staff event - GMS keeps the data, so there is no partner consent.
   | "eisai"
+  // Menopause Awareness Month (/menopause): the /general arc with the
+  // campaign's own landing and its own bucket.
+  | "menopause"
   // 22 Grams (/22grams): the /ntuhomecoming arc again, shared rather than
   // rebuilt - the daylight flow with no partner consent page and no "That's a
   // wrap!" screen - on its own `22grams` bucket, with its own pause switch,

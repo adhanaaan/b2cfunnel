@@ -253,19 +253,20 @@ describe("22grams copy", () => {
    * as long as one wording change reaches all three, so this asserts identity
    * rather than equality.
    */
-  it("shares its one-tick consent with the summit, /general, /eisai, /urbanmilers, /phkl-3 and /onetrickpony, and with nothing else", () => {
+  it("shares its one-tick consent with the summit, /general, /eisai, /urbanmilers, /phkl-3, /onetrickpony and /menopause, and with nothing else", () => {
     const withBlock = (
       Object.keys(COPY.screens) as (keyof typeof COPY.screens)[]
     ).filter((key) => {
       const screen = COPY.screens[key] as { splash?: { consentForm?: unknown } };
       return screen?.splash?.consentForm !== undefined;
     });
-    // /eisai and /onetrickpony are /general's block spread, so they carry the
-    // same form.
+    // /eisai, /onetrickpony and /menopause are /general's block spread, so
+    // they carry the same form.
     expect(withBlock.sort()).toEqual([
       "22grams",
       "eisai",
       "general",
+      "menopause",
       "otp",
       "phkl3",
       "siloam",

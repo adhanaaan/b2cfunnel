@@ -45,6 +45,7 @@ export function usesDaylightScreens(variant: QuizVariant): boolean {
     variant === "general" ||
     variant === "otp" ||
     variant === "eisai" ||
+    variant === "menopause" ||
     variant === "event7"
   );
 }

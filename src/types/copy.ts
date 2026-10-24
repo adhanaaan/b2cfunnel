@@ -498,6 +498,7 @@ export interface ScreenCopy {
   // with Eisai's name in the hero. Same shape, its own block, so the two
   // routes' wording cannot drift into each other.
   eisai: GeneralCopy;
+  menopause: GeneralCopy;
 }
 
 /**
