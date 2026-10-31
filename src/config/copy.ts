@@ -709,6 +709,30 @@ const EISAI_SCREEN_COPY: GeneralCopy = {
  * closing report is /general's, which already carries the mandatory
  * disclaimers.
  */
+/**
+ * Halloween gatherings (/halloween).
+ *
+ * /general's block with the landing turned to the night. One link handed round
+ * a birthday lunch and a party, so the hook is the RACE - "who you can beat" -
+ * rather than a host's name or a health experience.
+ *
+ * On the theming: it is carried by the eyebrow, the word "tonight" and the
+ * board's night palette, and that is as far as it goes. The obvious Halloween
+ * joke here is a dead/slow pun, and this is a brain health company - making
+ * the slow end of a cognition score the punchline is not a joke GMS can tell.
+ * The night is the occasion, not the subject.
+ */
+const HALLOWEEN_SCREEN_COPY: GeneralCopy = {
+  ...GENERAL_SCREEN_COPY,
+  splash: {
+    ...GENERAL_SCREEN_COPY.splash,
+    eyebrow: "Halloween",
+    heading: "Whose brain is *quickest* tonight?",
+    body: "Sixty seconds, one symbol-matching test. Find out your brain's processing speed - then see who in the room you can beat.",
+    cta: "Take the 60-second test",
+  },
+};
+
 const MENOPAUSE_SCREEN_COPY: GeneralCopy = {
   ...GENERAL_SCREEN_COPY,
   splash: {
@@ -1345,6 +1369,7 @@ export const COPY: CopyConfig = {
     otp: OTP_SCREEN_COPY,
     eisai: EISAI_SCREEN_COPY,
     menopause: MENOPAUSE_SCREEN_COPY,
+    halloween: HALLOWEEN_SCREEN_COPY,
     // GMS x Urban Milers (/urbanmilers): the same run's arc, word for word,
     // with this event named where the words name the event that is hosting it.
     // Its own block so a change to either run's wording cannot reach the
@@ -1540,6 +1565,7 @@ export function arcCopyFor(
   if (variant === "otp") return copy.screens.otp;
   if (variant === "eisai") return copy.screens.eisai;
   if (variant === "menopause") return copy.screens.menopause;
+  if (variant === "halloween") return copy.screens.halloween;
   return copy.screens.phkl;
 }
 
@@ -1561,6 +1587,7 @@ export function reportStatFor(
   if (variant === "otp") return copy.screens.otp.report.stat;
   if (variant === "eisai") return copy.screens.eisai.report.stat;
   if (variant === "menopause") return copy.screens.menopause.report.stat;
+  if (variant === "halloween") return copy.screens.halloween.report.stat;
   return copy.reportStat;
 }
 
@@ -1583,6 +1610,7 @@ export function phklReportFor(
   if (variant === "otp") return copy.screens.otp.report;
   if (variant === "eisai") return copy.screens.eisai.report;
   if (variant === "menopause") return copy.screens.menopause.report;
+  if (variant === "halloween") return copy.screens.halloween.report;
   return copy.screens.phkl.report;
 }
 
@@ -1605,5 +1633,6 @@ export function boothReportFor(
   if (variant === "otp") return copy.screens.otp.report;
   if (variant === "eisai") return copy.screens.eisai.report;
   if (variant === "menopause") return copy.screens.menopause.report;
+  if (variant === "halloween") return copy.screens.halloween.report;
   return copy.screens.siloam.report;
 }

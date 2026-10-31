@@ -478,6 +478,18 @@ const EISAI_FLOW: FunnelStep[] = GENERAL_FLOW;
 const MENOPAUSE_FLOW: FunnelStep[] = GENERAL_FLOW;
 
 /**
+ * Halloween gatherings (/halloween): /general's arc, shared rather than
+ * rebuilt, for the same reason every other borrowed arc shares it - the
+ * question set and `achievableAxisMax` stay identical, so a time set at a
+ * party is comparable with one set at a hospital booth.
+ *
+ * The full arc rather than /onetrickpony's game-only one: the point of handing
+ * this round at a gathering is the brain health teaser, and the report is the
+ * teaser. The race is what gets somebody to start it.
+ */
+const HALLOWEEN_FLOW: FunnelStep[] = GENERAL_FLOW;
+
+/**
  * Event v6 (/event-v6, preview): the same flow as v3, kept as its own variant
  * so the split-tick treatment of the partner consents (one box per clause) can
  * still be walked through and compared against the single tick that v3 ships.
@@ -564,6 +576,7 @@ const FLOWS: Record<QuizVariant, FunnelStep[]> = {
   otp: OTP_FLOW,
   eisai: EISAI_FLOW,
   menopause: MENOPAUSE_FLOW,
+  halloween: HALLOWEEN_FLOW,
   "22grams": TWENTY_TWO_GRAMS_FLOW,
   event6: EVENT6_FLOW,
   event7: EVENT7_FLOW,

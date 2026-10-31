@@ -499,6 +499,7 @@ export interface ScreenCopy {
   // routes' wording cannot drift into each other.
   eisai: GeneralCopy;
   menopause: GeneralCopy;
+  halloween: GeneralCopy;
 }
 
 /**
