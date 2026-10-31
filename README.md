@@ -853,6 +853,76 @@ drops another's results.
 No board artwork is needed: this board generates its own QR from the play URL
 and carries no prize image.
 
+## /halloween (Halloween gatherings)
+
+One link handed round several gatherings on the same night - a birthday lunch,
+then a party - with friends racing each other. `/halloween` runs **`/general`'s
+arc**, so a time set at a party sits on the same scale as one set at a hospital
+booth.
+
+Three things are its own.
+
+### One bucket for the whole night
+
+```ts
+export const HALLOWEEN_SOURCE: string = "halloween-2026";
+```
+
+Dated by **year**, because Halloween comes round again - but deliberately NOT
+dated per gathering. Everybody who plays that night lands on one board, which
+is the entire appeal of handing the link round; a bucket per party would split
+the race the link exists to create. A test pins the shape.
+
+### The hook is the race
+
+Every other borrowed-arc route names an organisation on its landing. This one
+has nobody to name, so it asks who you can beat:
+
+```
+Halloween
+Whose brain is quickest tonight?
+Sixty seconds, one symbol-matching test. Find out your brain's processing
+speed - then see who in the room you can beat.
+```
+
+**On the theming:** it is the eyebrow, the word "tonight" and the board's night
+palette, and no further. The obvious Halloween joke on a speed score is a
+dead/slow pun, and the slow end of a processing-speed result is somebody's real
+result - not a punchline a brain health company can make. The night is the
+occasion, never the score. `tests/config/halloweenFlow.test.ts` asserts the copy
+against `BANNED_PATTERNS` and against that pun specifically.
+
+### The board runs dark
+
+`/halloween/leaderboard` is the prize-less two-column board (scan rail and
+standings, no prize card - there is no prize at a friend's party, and the width
+is worth more spent on full names), but on a **night canvas** rather than the
+cream one every other board uses.
+
+Partly the occasion, mostly the room: this goes up on a TV at a gathering with
+the lights down, where a full-white 55" panel glares and washes out. Warm
+near-black (`#1a1210`, the ink the winner screens stage on) with the same ember
+orange carries the theme and reads better across a dark room.
+
+Two things the dark canvas forced, both local to that file:
+
+- **The GMS logo sits on a cream chip.** `gms-ntu-logo.png` is dark artwork
+  drawn for a light page and would otherwise be black-on-black. The chip keeps
+  the approved mark rather than inverting the file.
+- **The highlighter keeps dark ink.** `< 60 SECONDS` sits on yellow, so its
+  text is pinned to the ink colour instead of inheriting the page's cream.
+
+The palette lives in that one file, which is the point of every board being a
+copy rather than a shared component: no other event's TV can be dragged into
+the dark with it.
+
+### Full arc, not game-only
+
+Like `/menopause` and unlike `/onetrickpony`. The reason to hand this round at
+a gathering is the brain health teaser, and the report **is** the teaser - the
+race is only what gets somebody to start it. Pointing `HALLOWEEN_FLOW` at a
+game-only array is the change if that is ever not wanted.
+
 ## /menopause (Menopause Awareness Month)
 
 The brain speed challenge for Menopause Awareness Month. `/menopause` runs

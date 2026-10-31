@@ -11,6 +11,8 @@ import {
   IHH_SOURCE,
   IHHSEA_PAUSED,
   IHHSEA_SOURCE,
+  HALLOWEEN_PAUSED,
+  HALLOWEEN_SOURCE,
   MENOPAUSE_PAUSED,
   MENOPAUSE_SOURCE,
   NTU_HOMECOMING_PAUSED,
@@ -89,13 +91,15 @@ export async function POST(req: Request) {
                   ? TWENTY_TWO_GRAMS_PAUSED
                   : payload.source === GENERAL_SOURCE
                     ? GENERAL_PAUSED
-                    : payload.source === MENOPAUSE_SOURCE
-                      ? MENOPAUSE_PAUSED
-                      : payload.source === OTP_SOURCE
-                        ? OTP_PAUSED
-                        : payload.source === "event2"
-                          ? EVENT2_PAUSED
-                          : EVENT_PAUSED;
+                    : payload.source === HALLOWEEN_SOURCE
+                      ? HALLOWEEN_PAUSED
+                      : payload.source === MENOPAUSE_SOURCE
+                        ? MENOPAUSE_PAUSED
+                        : payload.source === OTP_SOURCE
+                          ? OTP_PAUSED
+                          : payload.source === "event2"
+                            ? EVENT2_PAUSED
+                            : EVENT_PAUSED;
   if (paused) {
     return NextResponse.json({ ok: true, stored: false });
   }

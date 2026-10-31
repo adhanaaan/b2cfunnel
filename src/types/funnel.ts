@@ -84,6 +84,9 @@ export type QuizVariant =
   // Menopause Awareness Month (/menopause): the /general arc with the
   // campaign's own landing and its own bucket.
   | "menopause"
+  // Halloween gatherings (/halloween): the /general arc, for friends racing
+  // each other at a party rather than a booth.
+  | "halloween"
   // 22 Grams (/22grams): the /ntuhomecoming arc again, shared rather than
   // rebuilt - the daylight flow with no partner consent page and no "That's a
   // wrap!" screen - on its own `22grams` bucket, with its own pause switch,

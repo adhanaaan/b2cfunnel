@@ -395,6 +395,27 @@ export const MENOPAUSE_PAUSED = false;
 export const MENOPAUSE_SOURCE: string = "menopause-2026-10";
 
 /**
+ * Independent pause switch for the Halloween route (/halloween and its board).
+ * Its own switch, like every other event's: closing one must never take
+ * another down with it.
+ */
+export const HALLOWEEN_PAUSED = false;
+
+/**
+ * Leaderboard bucket for the Halloween gatherings.
+ *
+ * Dated, for the same reason the menopause one is: Halloween comes round every
+ * year, and an undated bucket would rank next year's players against this
+ * year's and open the board on a time nobody in the room can beat.
+ *
+ * NOT dated per party, though. This is one link handed round several
+ * gatherings on the same night - a birthday lunch, then a party - and the
+ * whole appeal is that everyone who plays lands on one board. A separate
+ * bucket per gathering would split the race the link exists to create.
+ */
+export const HALLOWEEN_SOURCE: string = "halloween-2026";
+
+/**
  * Independent pause switch for 22 Grams (/22grams and its TV board). Its own
  * switch, like every other event's: /22grams and /ntuhomecoming run the same
  * arc and must never be closed together by accident.
@@ -462,6 +483,8 @@ export function eventSource(variant: QuizVariant): string | null {
       return EISAI_SOURCE;
     case "menopause":
       return MENOPAUSE_SOURCE;
+    case "halloween":
+      return HALLOWEEN_SOURCE;
     case "22grams":
       return TWENTY_TWO_GRAMS_SOURCE;
     case "event2":
